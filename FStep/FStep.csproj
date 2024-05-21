@@ -26,7 +26,6 @@
     <Folder Include="Controllers\Moder\" />
     <Folder Include="Data\" />
     <Folder Include="ViewComponents\" />
-    <Folder Include="ViewModels\" />
     <Folder Include="Views\Shared\Components\" />
   </ItemGroup>
 
