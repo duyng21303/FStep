@@ -1,4 +1,5 @@
 using FStep.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 namespace FStep
@@ -15,8 +16,19 @@ namespace FStep
 			{
 				option.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
 			});
+			builder.Services.AddSession(options =>
+			{
+				options.IdleTimeout = TimeSpan.FromSeconds(10);
+				options.Cookie.HttpOnly = true;
+				options.Cookie.IsEssential = true;
+			});
+			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options
+				=>
+			{
+				options.LoginPath = "/Account/Login";
+				options.AccessDeniedPath = "/AccessDenied";
+			});
 			var app = builder.Build();
-
 			// Configure the HTTP request pipeline.
 			if (!app.Environment.IsDevelopment())
 			{
@@ -30,6 +42,9 @@ namespace FStep
 
 			app.UseRouting();
 
+			app.UseSession();
+
+			app.UseAuthentication();
 			app.UseAuthorization();
 
 			app.MapControllerRoute(
