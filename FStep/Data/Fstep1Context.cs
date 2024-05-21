@@ -262,9 +262,7 @@ public partial class Fstep1Context : DbContext
             entity.ToTable("Role");
 
             entity.Property(e => e.IdRole).HasColumnName("id_role");
-            entity.Property(e => e.RoleName)
-                .HasMaxLength(50)
-                .HasColumnName("role_name");
+            entity.Property(e => e.RoleName).HasColumnName("role_name");
         });
 
         modelBuilder.Entity<Transaction>(entity =>
