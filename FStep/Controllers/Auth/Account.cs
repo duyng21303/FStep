@@ -16,13 +16,15 @@ namespace FStep.Controllers.Auth
 		{
 			db = context;
 		}
-		[HttpGet]
-		public IActionResult Login(string? ReturnUrl)
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Login(string? ReturnUrl)
 		{
 			ViewBag.ReturnUrl = ReturnUrl;
 			return View();
 		}
 		[HttpPost]
+		[AllowAnonymous]
 		public async Task<IActionResult> Login(LoginVM model, string? ReturnUrl)
 		{
 			ViewBag.ReturnUrl = ReturnUrl;
@@ -48,6 +50,7 @@ namespace FStep.Controllers.Auth
 						else
 						{
 							var role = db.Roles.SingleOrDefault(role => role.IdRole == user.IdRole).RoleName;
+
 							var claims = new List<Claim>
 							{
 								new Claim(ClaimTypes.Email, user.Email),
