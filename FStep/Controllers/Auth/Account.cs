@@ -16,13 +16,15 @@ namespace FStep.Controllers.Auth
 		{
 			db = context;
 		}
-		[HttpGet]
-		public IActionResult Login(string? ReturnUrl)
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Login(string? ReturnUrl)
 		{
 			ViewBag.ReturnUrl = ReturnUrl;
 			return View();
 		}
 		[HttpPost]
+		[AllowAnonymous]
 		public async Task<IActionResult> Login(LoginVM model, string? ReturnUrl)
 		{
 			ViewBag.ReturnUrl = ReturnUrl;
@@ -41,19 +43,21 @@ namespace FStep.Controllers.Auth
 					}
 					else
 					{
-						if(user.Password == model.password)
+						if(user.Password != model.password)
 						{
 							ModelState.AddModelError("Error", "Sai tên đăng nhập hoặc mật khẩu");
 						}
 						else
 						{
+							var role = db.Roles.SingleOrDefault(role => role.IdRole == user.IdRole).RoleName;
+
 							var claims = new List<Claim>
 							{
 								new Claim(ClaimTypes.Email, user.Email),
 								new Claim(ClaimTypes.Name, user.Name),
 								new Claim("UserID", user.IdUser),
                                 //claim-role động
-                                new Claim(ClaimTypes.Role, user.IdRoleNavigation.RoleName)
+                                new Claim(ClaimTypes.Role, role)
 							};
 							var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 							var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
@@ -77,6 +81,11 @@ namespace FStep.Controllers.Auth
 		{
 			await HttpContext.SignOutAsync();
 			return Redirect("/");
+		}
+		[Authorize]
+		public IActionResult Profile()
+		{
+			return View();
 		}
 	}
 }
