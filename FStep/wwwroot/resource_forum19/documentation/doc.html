@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="description" content="">
+      <meta name="author" content="">
+      <title>Documentation - Forum HTML Template</title>
+      <link rel="shortcut icon" href="favicon.ico">
+
+      <!-- stylesheet -->
+      <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
+      <link rel="stylesheet" type="text/css" href="assets/css/jasny-bootstrap.css">
+      <link rel="stylesheet" type="text/css" href="assets/css/doc.css">
+      <link rel="stylesheet" type="text/css" href="assets/css/shDocumenter.css">
+      <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+      <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <header id="header">
+         <div class="container-full">
+            <div class="row">
+               <div class="col-sm-2 visible-xs">
+                  <div class="navbar-mobile navbar-default">
+                     <button type="button" class="navbar-toggle" data-toggle="offcanvas" data-recalc="false" data-target=".navmenu" data-canvas=".canvas"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+                  </div>
+               </div>
+               <div class="col-sm-3 col-lg-3">
+                  <div id="logo"> <span><a href="doc.html"><img src="images/logo.png"  alt="" class="img-responsive" /></a></span> </div>
+               </div>
+               <div class="col-sm-4 col-lg-5">
+                  <div id="slogan"> <span>Documentation for <span class="color">Forum HTML Template</span></span> </div>
+               </div>
+               <div class="col-sm-5 col-lg-4">
+
+               </div>
+            </div>
+         </div>
+      </header>
+      <div class="canvas">
+         <div id="content">
+            <div class="navmenu navmenu-default navmenu-fixed-left offcanvas-xs" id="navmenu">
+               <ul class="nav navmenu-nav">
+                  <li><a href="#documenter_cover">Getting Started</a></li>
+                  <li><a href="#folder_structure">Folder Structure</a></li>
+                  <li><a href="#html_structure">HTML Structure</a></li>
+                  <li><a href="#css_files_and_structure">CSS Files and Structure</a></li>
+                  <li><a href="#less">Less Files and Structure</a></li>
+                  <li><a href="#javascript">JavaScript</a></li>
+                  <li><a href="#icons">Icons</a></li>
+                  <li><a href="#fonts">Fonts</a></li>
+                  <li><a href="#psd_files">PSD Files</a></li>
+                  <li><a href="#gulp">Project builder - GULP</a></li>
+                  <li><a href="#sources_and_credits">Sources and Credits</a></li>
+               </ul>
+            </div>
+            <div id="page-content">
+               <section class="chapter" id="documenter_cover">
+                  <h1>Forum HTML</h1>
+                  <h2>Premium HTML 5 website</h2>
+                  <ul>
+                     <li>Created: 2019.</li>
+                     <li>By: author <a href="#"> Profile </a></li>
+                  </ul>
+                  <p>Thank you for purchasing our theme. If you have any questions that are beyond the scope of this help file, please feel free to email us via our support <a href="#">forum</a>. Thank you very much! <br>
+                     <br>
+                     <strong>Forum HTML</strong> is Html5 + CSS3 Website template and works fine in all major browsers and IE from version 9. It's powered by jQuery and you'll find nice and discreet interactivity.  The code is clearly written and you will find comments for each considerable parts. <br>
+                     <br>
+                     Lets take a closer look at the structure of Html, Css, JavaScript.
+                  </p>
+               </section>
+               <section class="chapter" id="folder_structure">
+                  <h3>Folder Structure</h3>
+                  <p>Here they are, sorted alphabetically:</p>
+                  <ol>
+                     <li><strong>documentation</strong> - Documentation for Forum HTML site template</li>
+                     <li><strong>html</strong> - Main folder for template</li>
+                     <li><strong>psd</strong> - Design source files</li>
+                     <li><strong>src</strong> - A source that to build the project with GULP</li>
+                  </ol>
+                  <h4>HTML folder structure:</h4>
+                  <ul>
+                     <li>
+                        <strong>/build</strong>
+                        <ul>
+                          <li><strong>/css</strong> (Template CSS)</li>
+                          <li><strong>/external</strong> (External plugins)</li>
+                          <li><strong>/favicon</strong> (Template favicon)</li>
+                          <li><strong>/images</strong> (All Images)</li>
+                          <li><strong>/scss</strong> (Template scss)</li>
+                          <li><strong>/fonts</strong> (Font Awesome)</li>
+                          <li><strong>/js</strong> (All js)</li>
+                        </ul>
+                     </li>
+                  </ul>
+               </section>
+               <section class="chapter" id="html_structure">
+                  <h3>HTML Structure</h3>
+
+                  <h4>Grid:</h4>
+                  <p>Based on Bootstrap, a sleek, intuitive, and powerful front-end framework.</p>
+                  <p>Bootstrap makes use of certain HTML elements and CSS properties that require the use of the HTML5 doctype. Include it at the beginning of all your projects.</p>
+                  <pre class="brush: html">
+    &lt;!DOCTYPE html&gt;
+        &lt;html lang="en"&gt;
+            ...
+        &lt;/html&gt;</pre>
+                  <p>The default Bootstrap grid system utilizes 12 columns.</p>
+                  <p>For a simple two column layout, create a <code>.row</code> and add the appropriate number of <code>.col-lg-*</code> columns. As this is a 12-column grid, each <code>.col-lg-*</code> spans a number of those 12 columns, and should always add up to 12 for each row (or the number of columns in the parent).</p>
+                  <pre class="brush: html">
+    &lt;div class="row"&gt;
+        &lt;div class="col-lg-4"&gt;...&lt;/div&gt;
+        &lt;div class="col-lg-8"&gt;...&lt;/div&gt;
+    &lt;/div&gt;</pre>
+                  <p>Given this example, we have .col-lg-4 and .col-lg-8, making for 12 total columns and a complete row.</p>
+                  <p>Move columns to the right using <code>.col-lg-offset-*</code> classes. Each class increases the left margin of a column by a whole column. For example, <code>.col-lg-offset-4</code> moves <code>.col-lg-4</code> over four columns.</p>
+                  <pre class="brush: html">
+    &lt;div class="row"&gt;
+            &lt;div class="col-lg-4"&gt;...&lt;/div&gt;
+            &lt;div class="col-lg-4 col-lg-offset-2"&gt;...&lt;/div&gt;
+        &lt;/div&gt;</pre>
+                  <br>
+                  <p>If you need more information, please visit this site: http://getbootstrap.com/css/#grid</p>
+               </section>
+               <section class="chapter" id="css_files_and_structure">
+                  <h3>Scss Files</h3>
+                  <p>Css file located at <strong>css</strong> folder.</p>
+                  <ul>
+                     <li><strong>style.css</strong> - Theme main CSS file.</li>
+                  </ul>
+               </section>
+               <section class="chapter" id="less">
+                  <h3>Scss Files</h3>
+                  <p>All Scss files located at <strong>scss</strong> folder.</p>
+                  <ul>
+                      <li><strong>style.scss</strong> - Theme main less file.</li>
+                  </ul>
+               </section>
+               <section class="chapter" id="javascript">
+                  <h3>JavaScript</h3>
+                  <p>All JS files located at <strong>js</strong> folder.</p>
+                  <ul>
+                     <li><strong>js/bundle.js</strong> - Theme main JS file.</li>
+                     <li><strong>external/</strong> - external plugins JS files</li>
+                  </ul>
+
+                  <p>and other. </p>
+                  <p>If you need more information, please visit plugins official sites.</p>
+               </section>
+               <section class="chapter" id="icons">
+                  <h3>Icons</h3>
+                 <p><strong> Demo icons you can see:</strong> src/includes/svg-sprite/demo.html</p>
+                  <p><strong>SVG Sprite that connects to the pages to see:</strong> src/includes/svg-sprite/sprite.html (*Created with: <a href="https://elrumordelaluz.github.io/micro-svg-spreact/" target="_blank">https://elrumordelaluz.github.io/micro-svg-spreact/</a>)</p>
+                  <p>
+                    <strong>Icon items:</strong> src/includes/svg-sprite/item/**.svg
+                  </p>
+               </section>
+               <section class="chapter" id="fonts">
+                  <h3>Fonts</h3>
+                  To change the custom font, please take a look in the Forum.css:
+                  <pre class="brush: css">
+  /* Google font */
+  (src/scss/_variables.scss)
+  @import url('https://fonts.googleapis.com/css?family=Krub:400,500,600');
+</pre>
+                  To change fonts, go to http://www.google.com/webfonts, choose new fonts and use the generated code.
+               </section>
+               <section class="chapter" id="psd_files">
+                  <h3>PSD Files</h3>
+                  <p>Design source files located at <strong>psd</strong> folder.</p>
+               </section>
+               <section class="chapter" id="gulp">
+                  <h3>Gulp</h3>
+                  <p>To build the project was used - GULP.  Gulp is a toolkit that helps you automate painful or time-consuming tasks in your development workflow.</p>
+                  <p>
+                    <strong>Link on documentation: <a href="https://gulpjs.com/" target="_blank">https://gulpjs.com/</a></strong>
+                  </p>
+                  <p><strong>To project deployment the project you need in cmd enter command:</strong> "npm i"</p>
+                  <p><strong>To start the server:</strong> "gulp watch"</p>
+                  <p><strong>To build the project:</strong> "gulp build"</p>
+               </section>
+               <section class="chapter" id="sources_and_credits">
+                  <h3>Sources and Credits</h3>
+                  <p>We have used the following  files as listed.</p>
+                  <ul class="marked-list">
+                      <li><a href="http://jquery.com/" target="_blank">jQuery</a> - JavaScript Library</li>
+                      <li><a href="http://getbootstrap.com/" target="_blank">Bootstrap</a> - Bootstrap by Twitter</li>
+                      <li><a href="https://dimsemenov.com/plugins/magnific-popup/" target="_blank">Magnific popup</a> - Is a responsive lightbox</li>
+                      <li><a href="https://github.com/utatti/perfect-scrollbar" target="_blank">Perfect scrollbar</a> - Minimalistic but perfect custom scrollbar plugin</li>
+                  </ul>
+                    <hr />
+                  <p>Hope that you will enjoy in Forum HTML as much as I've enjoyed designing this template.</p>
+               </section>
+            </div>
+         </div>
+      </div>
+      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+      <script type="text/javascript" src="assets/js/bootstrap.js"></script>
+      <script type="text/javascript" src="assets/js/jasny-bootstrap.min.js"></script>
+      <script src="assets/js/shCore.js"></script>
+      <script src="assets/js/shBrushCss.js"></script>
+      <script src="assets/js/shBrushXml.js"></script>
+      <script src="assets/js/shBrushJScript.js"></script>
+      <script>SyntaxHighlighter.defaults['toolbar'] = false;
+         SyntaxHighlighter.all();
+      </script>
+      <script>
+         $(document).ready(function() {
+          $('.nav.navmenu-nav a').click(function(){
+            $('.nav.navmenu-nav a').removeClass('active');
+            $(this).addClass('active');
+            $('html, body').animate({
+              scrollTop: $( $(this).attr('href') ).offset().top - 100
+            }, 500);
+            return false;
+          });
+           $('.dropdown').on('show.bs.dropdown', function(e){
+             $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
+           });
+           $('.dropdown').on('hide.bs.dropdown', function(e){
+             $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
+           });
+         });
+      </script>
+   </body>
+</html>

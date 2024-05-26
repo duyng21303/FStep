@@ -7,6 +7,8 @@ public partial class Notification
 {
     public int IdNotification { get; set; }
 
+    public string? Name { get; set; }
+
     public string? Content { get; set; }
 
     public DateTime? Date { get; set; }

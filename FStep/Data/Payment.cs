@@ -9,7 +9,7 @@ public partial class Payment
 
     public DateTime? PayTime { get; set; }
 
-    public decimal? Amount { get; set; }
+    public float? Amount { get; set; }
 
     public string? ExternalMomoTransactionCode { get; set; }
 
