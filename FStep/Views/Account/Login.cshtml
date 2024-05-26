@@ -16,43 +16,45 @@
 		<!-- Spinner End -->
 		<!-- Sign In Start -->
 		<div class="container-fluid">
-			<div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
-				<div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
-					<form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewBag.ReturnUrl">
-						<div class="text-danger" asp-validation-summary="ModelOnly"></div>
-						<div class="bg-light rounded p-4 p-sm-5 my-4 mx-3">
-							<div class="d-flex align-items-center justify-content-between mb-3">
-								<a href="index.html" class="">
-									<h3 class="text-primary"><i class="fa fa-hashtag me-2"></i></h3>
-								</a>
-								<h3>Sign In</h3>
+            <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
+                <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+                    <div class="bg-light rounded p-4 p-sm-5 my-4 mx-3">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <a href="index.html">
+                                <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i></h3>
+                            </a>
+                            <h3>Sign In</h3>
+                        </div>
+                        <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewBag.ReturnUrl">
+                            <div class="form-floating mb-3">
+                                <input asp-for="@Model.userName" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+                                <label asp-for="@Model.userName" for="floatingInput"></label>
+                                <span asp-validation-for="@Model.userName" class="text-danger"></span>
+                            </div>
+                            <div class="form-floating mb-4">
+                                <input asp-for="@Model.password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                                <label asp-for="@Model.password" for="floatingPassword"></label>
+                                <span asp-validation-for="@Model.password" class="text-danger"></span>
+                            </div>
+                            <div class="text-danger mb-3">
+                                @Html.ValidationMessage("Error")
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                <a href="#">Forgot Password</a>
+                            </div>
+                            <button type="submit" class="btn btn-primary py-3 w-100 mb-4">
+                                Sign In
+                            </button>
+                        </form>
+                        <p class="text-center mb-0">Don't have an Account? <a href="/Registration/Register">Sign Up</a></p>
+                        <form asp-controller="Account" asp-action="ExternalLogin" method="post" class="text-center mt-3">
+                            <input type="hidden" name="provider" value="Google" />
+                            <button type="submit" class="btn btn-secondary">Login with Google</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
-							</div>
-							<div class="form-floating mb-3">
-								<input asp-for="@Model.userName" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
-								<label asp-for="@Model.userName" for="floatingInput">Email address</label>
-								<span asp-validation-for="@Model.userName" class="text-danger">
-								</span>
-							</div>
-							<div class="form-floating mb-4">
-								<input asp-for="@Model.password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
-								<label asp-for="@Model.password" for="floatingPassword">Password</label>
-								<span asp-validation-for="@Model.password" class="text-danger">
-								</span>
-							</div>
-							<div class="d-flex align-items-center justify-content-between mb-4">
-								<a href="">Forgot Password</a>
-							</div>
-							<button type="submit" class="btn btn-primary py-3 w-100 mb-4">Sign In</button>
-					</form>
-					<p class="text-center mb-0">Don't have an Account? <a href="">Sign Up</a></p>
-					<form asp-controller="Account" asp-action="ExternalLogin" method="post">
-						<input type="hidden" name="provider" value="Google" />
-						<button type="submit" class="btn btn-secondary">Login with Google</button>
-					</form>
-				</div>
-
-			</div>
 		</div>
 	</div>
 	<!-- Sign In End -->

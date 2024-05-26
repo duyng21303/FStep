@@ -1,4 +1,5 @@
 ﻿using FStep.Data;
+using FStep.Helpers;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +43,7 @@ namespace FStep
 				googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
 				// Cấu hình Url callback lại từ Google (không thiết lập thì mặc định là /signin-google)
 			});
+			builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 			var app = builder.Build();
 			// Configure the HTTP request pipeline.
 			if (!app.Environment.IsDevelopment())

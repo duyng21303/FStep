@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace Ecommerce.Helpers
+namespace FStep.Helpers
 {
     public static class SessionExtensions
     {

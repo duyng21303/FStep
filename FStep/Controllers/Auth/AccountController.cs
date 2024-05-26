@@ -7,6 +7,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using FStep.Helpers;
 
 namespace FStep.Controllers.Auth
 {
@@ -47,7 +48,7 @@ namespace FStep.Controllers.Auth
 					}
 					else
 					{
-						if (user.Password != model.password)
+						if (user.Password != model.password.ToMd5Hash(user.HashKey))
 						{
 							ModelState.AddModelError("Error", "Sai tên đăng nhập hoặc mật khẩu");
 						}
