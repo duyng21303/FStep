@@ -29,6 +29,8 @@ public partial class User
 
     public string? TokenGoogle { get; set; }
 
+    public string? HashKey { get; set; }
+
     public virtual ICollection<Chat> Chats { get; set; } = new List<Chat>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
