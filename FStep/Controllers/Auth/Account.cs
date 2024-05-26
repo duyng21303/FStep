@@ -49,15 +49,14 @@ namespace FStep.Controllers.Auth
 						}
 						else
 						{
-							var role = db.Roles.SingleOrDefault(role => role.IdRole == user.IdRole).RoleName;
 
 							var claims = new List<Claim>
 							{
-								new Claim(ClaimTypes.Email, user.Email),
-								new Claim(ClaimTypes.Name, user.Name),
-								new Claim("UserID", user.IdUser),
+								new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
+								new Claim(ClaimTypes.Name, user.Name ?? string.Empty),
+								new Claim("UserID", user.IdUser ?? string.Empty),
                                 //claim-role động
-                                new Claim(ClaimTypes.Role, role)
+                                new Claim(ClaimTypes.Role, user.Role ?? string.Empty)
 							};
 							var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 							var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
