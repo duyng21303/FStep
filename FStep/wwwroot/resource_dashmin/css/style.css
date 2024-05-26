@@ -34,9 +34,9 @@
     transition: .5s;
 }
 
-.btn.btn-primary {
-    color: #FFFFFF;
-}
+    .btn.btn-primary {
+        color: #084367;
+    }
 
 .btn-square {
     width: 38px;
