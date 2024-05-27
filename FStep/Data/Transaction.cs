@@ -13,15 +13,17 @@ public partial class Transaction
 
     public int? Quantity { get; set; }
 
-    public decimal? Amount { get; set; }
+    public float? Amount { get; set; }
 
     public string? Note { get; set; }
-
-    public string? IdUserSeller { get; set; }
 
     public int IdPost { get; set; }
 
     public string IdUserBuyer { get; set; } = null!;
+
+    public string IdUserSeller { get; set; } = null!;
+
+    public int? Type { get; set; }
 
     public virtual Post IdPostNavigation { get; set; } = null!;
 

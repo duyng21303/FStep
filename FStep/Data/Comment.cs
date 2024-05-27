@@ -11,9 +11,9 @@ public partial class Comment
 
     public DateTime? Date { get; set; }
 
-    public string IdUser { get; set; } = null!;
-
     public int IdPost { get; set; }
+
+    public string IdUser { get; set; } = null!;
 
     public virtual Post IdPostNavigation { get; set; } = null!;
 

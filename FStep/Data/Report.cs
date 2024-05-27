@@ -11,13 +11,13 @@ public partial class Report
 
     public DateTime? Date { get; set; }
 
-    public int IdPost { get; set; }
+    public int? IdComment { get; set; }
 
-    public int IdComment { get; set; }
+    public int? IdPost { get; set; }
 
-    public virtual Comment IdCommentNavigation { get; set; } = null!;
+    public virtual Comment? IdCommentNavigation { get; set; }
 
-    public virtual Post IdPostNavigation { get; set; } = null!;
+    public virtual Post? IdPostNavigation { get; set; }
 
     public virtual ICollection<UserNotification> UserNotifications { get; set; } = new List<UserNotification>();
 }

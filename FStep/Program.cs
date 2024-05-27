@@ -1,4 +1,7 @@
-using FStep.Data;
+﻿using FStep.Data;
+using FStep.Helpers;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace FStep
@@ -15,8 +18,33 @@ namespace FStep
 			{
 				option.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
 			});
-			var app = builder.Build();
+			//builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+		//.AddEntityFrameworkStores<Fstep1Context>();
+		//.AddDefaultTokenProviders();
 
+			builder.Services.AddSession(options =>
+			{
+				options.IdleTimeout = TimeSpan.FromSeconds(10);
+				options.Cookie.HttpOnly = true;
+				options.Cookie.IsEssential = true;
+			});
+			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options
+				=>
+			{
+				options.LoginPath = "/Account/Login";
+				options.AccessDeniedPath = "/AccessDenied";
+			}).AddGoogle(googleOptions =>
+			{
+				// Đọc thông tin Authentication:Google từ appsettings.json
+				IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
+
+				// Thiết lập ClientID và ClientSecret để truy cập API google
+				googleOptions.ClientId = googleAuthNSection["ClientId"];
+				googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
+				// Cấu hình Url callback lại từ Google (không thiết lập thì mặc định là /signin-google)
+			});
+			builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+			var app = builder.Build();
 			// Configure the HTTP request pipeline.
 			if (!app.Environment.IsDevelopment())
 			{
@@ -30,6 +58,9 @@ namespace FStep
 
 			app.UseRouting();
 
+			app.UseSession();
+
+			app.UseAuthentication();
 			app.UseAuthorization();
 
 			app.MapControllerRoute(
