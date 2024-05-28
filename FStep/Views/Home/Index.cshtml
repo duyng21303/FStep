@@ -1,144 +1,97 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model X.PagedList.IPagedList<FStep.ViewModels.ExchangePostVM>
+@using X.PagedList.Mvc.Core;
 
-<div class="container">
-    <div class="tt-topic-list">
-        <div class="tt-list-header">
-            <div class="tt-col-topic">Topic</div>
-            <div class="tt-col-category">Category</div>
-            <div class="tt-col-value hide-mobile">Likes</div>
-            <div class="tt-col-value hide-mobile">Replies</div>
-            <div class="tt-col-value hide-mobile">Views</div>
-            <div class="tt-col-value">Activity</div>
-        </div>
-        <div class="tt-topic-alert tt-alert-default" role="alert">
-            <a href="#" target="_blank">4 new posts</a> are added recently, click here to load them.
-        </div>
-        <div class="tt-item tt-itemselect">
-            <div class="tt-col-avatar">
-                <svg class="tt-icon">
-                    <use xlink:href="#icon-ava-k"></use>
-                </svg>
-            </div>
-            <div class="tt-col-description">
-                <h6 class="tt-title">
-                    <a href="page-single-topic.html">
-                        <svg class="tt-icon">
-                            <use xlink:href="#icon-pinned"></use>
-                        </svg>
-                        Halloween Costume Contest 2018
-                    </a>
-                </h6>
-                <div class="row align-items-center no-gutters">
-                    <div class="col-11">
-                        <ul class="tt-list-badge">
-                            <li class="show-mobile"><a href="#"><span class="tt-color01 tt-badge">politics</span></a></li>
-                            <li><a href="#"><span class="tt-badge">contests</span></a></li>
-                            <li><a href="#"><span class="tt-badge">authors</span></a></li>
-                        </ul>
-                    </div>
-                    <div class="col-1 ml-auto show-mobile">
-                        <div class="tt-value">1h</div>
-                    </div>
-                </div>
-            </div>
-            <div class="tt-col-category"><span class="tt-color01 tt-badge">politics</span></div>
-            <div class="tt-col-value hide-mobile">985</div>
-            <div class="tt-col-value tt-color-select hide-mobile">502</div>
-            <div class="tt-col-value hide-mobile">15.1k</div>
-            <div class="tt-col-value hide-mobile">1h</div>
-        </div>
 
-        <div class="tt-item">
-            <div class="tt-col-avatar">
-                <svg class="tt-icon">
-                    <use xlink:href="#icon-ava-c"></use>
-                </svg>
-            </div>
-            <div class="tt-col-description">
-                <h6 class="tt-title">
-                    <a href="page-single-topic.html">
-                        Review Queue Changes for VideoHive & PhotoDune
-                    </a>
-                </h6>
-                <div class="row align-items-center no-gutters">
-                    <div class="col-11">
-                        <ul class="tt-list-badge">
-                            <li class="show-mobile"><a href="#"><span class="tt-color04 tt-badge">pets</span></a></li>
-                            <li><a href="#"><span class="tt-badge">videohive</span></a></li>
-                            <li><a href="#"><span class="tt-badge">photodune</span></a></li>
-                        </ul>
-                    </div>
-                    <div class="col-1 ml-auto show-mobile">
-                        <div class="tt-value">1d</div>
-                    </div>
-                </div>
-            </div>
-            <div class="tt-col-category"><span class="tt-color04 tt-badge">pets</span></div>
-            <div class="tt-col-value  hide-mobile">308</div>
-            <div class="tt-col-value tt-color-select  hide-mobile">660</div>
-            <div class="tt-col-value  hide-mobile">8.3k</div>
-            <div class="tt-col-value hide-mobile">1d</div>
-        </div>
+<div>
+	<section id="slider">
+		<!--slider-->
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12">
+					<div id="slider-carousel" class="carousel slide" data-ride="carousel">
+						<ol class="carousel-indicators">
+							<li data-target="#slider-carousel" data-slide-to="0" class="active"></li>
+							<li data-target="#slider-carousel" data-slide-to="1"></li>
+							<li data-target="#slider-carousel" data-slide-to="2"></li>
+						</ol>
 
-        <div class="tt-item tt-item-popup">
-            <div class="tt-col-avatar">
-                <svg class="tt-icon">
-                    <use xlink:href="#icon-ava-f"></use>
-                </svg>
-            </div>
-            <div class="tt-col-message">
-                Looks like you are new here. Register for free, learn and contribute.
-            </div>
-            <div class="tt-col-btn">
-                <button type="button" class="btn btn-primary">Log in</button>
-                <button type="button" class="btn btn-secondary">Sign up</button>
-                <button type="button" class="btn-icon">
-                    <svg class="tt-icon">
-                        <use xlink:href="#icon-cancel"></use>
-                    </svg>
-                </button>
-            </div>
-        </div>
-        <div class="tt-item">
-            <div class="tt-col-avatar">
-                <svg class="tt-icon">
-                    <use xlink:href="#icon-ava-c"></use>
-                </svg>
-            </div>
-            <div class="tt-col-description">
-                <h6 class="tt-title">
-                    <a href="page-single-topic.html">
-                        Review Queue Changes for VideoHive & PhotoDune
-                    </a>
-                </h6>
-                <div class="row align-items-center no-gutters">
-                    <div class="col-11">
-                        <ul class="tt-list-badge">
-                            <li class="show-mobile"><a href="#"><span class="tt-color04 tt-badge">pets</span></a></li>
-                            <li><a href="#"><span class="tt-badge">videohive</span></a></li>
-                            <li><a href="#"><span class="tt-badge">photodune</span></a></li>
-                        </ul>
-                    </div>
-                    <div class="col-1 ml-auto show-mobile">
-                        <div class="tt-value">1d</div>
-                    </div>
-                </div>
-            </div>
-            <div class="tt-col-category"><span class="tt-color04 tt-badge">pets</span></div>
-            <div class="tt-col-value  hide-mobile">308</div>
-            <div class="tt-col-value tt-color-select  hide-mobile">660</div>
-            <div class="tt-col-value  hide-mobile">8.3k</div>
-            <div class="tt-col-value hide-mobile">1d</div>
-        </div>
+						<div class="carousel-inner">
+							<div class="item active">
+								<div class="col-sm-6">
+									<h1><span>F</span>-STEP</h1>
+									<h2>FU Student Item Exchange</h2>
+									<p>Easily swap items with other FU students. Whether it’s a laptop for a textbook or a mouse for a notebook, trade what you have for what you need.</p>
+								</div>
+								<div class="col-sm-6">
+									<img src="~/image/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="girl img-responsive" alt="" />
+								</div>
+							</div>
+							<div class="item">
+								<div class="col-sm-6">
+									<h1><span>F</span>-STEP</h1>
+									<h2>Student-to-Student Gear Exchange</h2>
+									<p>Trade your study essentials with other FU students. From computers to school supplies, find what you need through simple and direct exchanges. </p>
+								</div>
+								<div class="col-sm-6">
+									<img src="~/image/sliden-laptop-exchange.png" class="girl img-responsive" alt="" />
+								</div>
+							</div>
+							<div class="item">
+								<div class="col-sm-6">
+									<h1><span>F</span>-STEP</h1>
+									<h2>Free Ecommerce Template</h2>
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
+								</div>
+								<div class="col-sm-6">
+									<img src="~/image/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="girl img-responsive" alt="" />
+								</div>
+							</div>
+						</div>
 
-        <div class="tt-row-btn">
-            <button type="button" class="btn-icon js-topiclist-showmore">
-                <svg class="tt-icon">
-                    <use xlink:href="#icon-load_lore_icon"></use>
-                </svg>
-            </button>
-        </div>
-    </div>
+						<a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
+							<i class="fa fa-angle-left"></i>
+						</a>
+						<a href="#slider-carousel" class="right control-carousel hidden-xs" data-slide="next">
+							<i class="fa fa-angle-right"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section><!--/slider-->
+	<!-- Show List Sale Post -->
+	<div class="container-fluid fruit py-5">
+		<div class="container py-5">
+			<h1 class="mb-4">Exchange: Suggestion today</h1>
+			<div class="row g-4">
+				<div class="col-lg-12">
+					<div class="row g-4">
+						<!-- Start of post item column -->
+						@foreach (var item in Model)
+						{
+							<div class="col-md-6 col-lg-4 col-xl-3">
+								<div class="rounded position-relative fruit-item">
+									<div class="fruit-img">
+										<img src="@Url.Content("~/image/" + item.Image)" class="img-fluid w-100 rounded-top" alt="Laptop">
+									</div>
+									<div class="p-4 border border-secondary border-top-0 rounded-bottom">
+										<h4>@item.Title</h4>
+										<p>@item.Description</p>
+										<p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate.ToString("dd/MM/yyyy")</span></p>
+									</div>
+								</div>
+							</div>
+						}
+					</div>
+					<!-- Create relationship between page and page -->
+					@Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }))
+					<!-- Model: pageList chứa thông tin về các trang hiện tại, số trang, số lượng mục trên mỗi trang-->
+					<!-- page => Url.Action("Index", new { page = page }): lamba expression tạo liên kết giữa các trang -->
+					<!--          /ControllerName/Index?page=x                  -->
+					<!-- End create -->
+				</div>
+			</div>
+			<!-- End Show -->
+		</div>
+	</div>
 </div>
