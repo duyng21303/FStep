@@ -13,6 +13,9 @@ namespace FStep.Controllers.Auth
 {
 	public class AccountController : Controller
 	{
+		public const string USER_NAME = "USER_NAME";
+
+
 		private readonly Fstep1Context db;
 		private readonly SignInManager<IdentityUser> _signInManager;
 		private readonly UserManager<IdentityUser> _userManager;
@@ -58,7 +61,7 @@ namespace FStep.Controllers.Auth
 							{
 								 new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
 								 new Claim(ClaimTypes.Name, user.Name ?? string.Empty),
-								 new Claim("UskerID", user.IdUser ?? string.Empty),
+								 new Claim("UserID", user.IdUser ?? string.Empty),
 								 new Claim(ClaimTypes.Role, user.Role ?? string.Empty)
 							};
 							var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -66,6 +69,10 @@ namespace FStep.Controllers.Auth
 							await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
 							if (Url.IsLocalUrl(ReturnUrl))
 							{
+								if (string.IsNullOrEmpty(HttpContext.Session.GetString(USER_NAME)))
+								{
+									HttpContext.Session.SetString(USER_NAME, model.userName);
+								}
 								return Redirect(ReturnUrl);
 							}
 							else

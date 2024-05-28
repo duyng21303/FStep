@@ -44,6 +44,12 @@ namespace FStep
 				// Cấu hình Url callback lại từ Google (không thiết lập thì mặc định là /signin-google)
 			});
 			builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+			builder.Services.AddDistributedMemoryCache();
+
+			
+
+
 			var app = builder.Build();
 			// Configure the HTTP request pipeline.
 			if (!app.Environment.IsDevelopment())
