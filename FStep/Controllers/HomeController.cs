@@ -14,13 +14,17 @@ namespace FStep.Controllers
 
 		public HomeController(FstepDBContext context) => db = context;
 
-		public IActionResult Index(int? page)
+		public IActionResult Index(String? query, int? page)
 		{ 
 			int pageSize = 12; // số lượng sản phẩm mỗi trang 
             int pageNumber = (page ?? 1);   // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
             var ExchangePost = db.Posts.AsQueryable();
 			ExchangePost = ExchangePost.Where(p => p.Type == "Exchange" && !(p.Status == false));    //check exchangePost là những post thuộc type "exhcange" và có status = 1
 
+			if (!string.IsNullOrEmpty(query))
+			{
+				ExchangePost = ExchangePost.Where(p => p.Content.Contains(query));
+			}
             var result = ExchangePost.Select(s => new ExchangePostVM
 			{
 				idPost = s.IdPost,
@@ -31,18 +35,25 @@ namespace FStep.Controllers
 			}).OrderByDescending(o => o.idPost) ;
 
 			var pageList = result.ToPagedList(pageNumber, pageSize);
+
+			ViewBag.Query = query;
 			return View(pageList);
 		}
 
 
-		public IActionResult Sale(int? page)
+		public IActionResult Sale(String? query, int? page)
 		{
 			int pageSize = 12; // số lượng sản phẩm mỗi trang 
             int pageNumber = (page ?? 1);  // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
             var SalePost = db.Posts.AsQueryable();
 			SalePost = SalePost.Where(p => p.Type == "Sale" && !(p.Status == false));
 
-			var result = SalePost.Select(s => new SalePostVM
+            if (!string.IsNullOrEmpty(query))
+            {
+                SalePost = SalePost.Where(p => p.Content.Contains(query));
+            }
+
+            var result = SalePost.Select(s => new SalePostVM
 			{
 				idPost = s.IdPost,
 				Title = s.Content,
@@ -53,6 +64,8 @@ namespace FStep.Controllers
 			}).OrderByDescending(o => o.idPost);
 
             var pageList = result.ToPagedList(pageNumber, pageSize);
+
+            ViewBag.Query = query;
             return View(pageList);
         }
 

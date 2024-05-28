@@ -36,6 +36,7 @@
     <Folder Include="Controllers\Customer\" />
     <Folder Include="Controllers\Moder\" />
     <Folder Include="ViewComponents\" />
+    <Folder Include="Views\Search\" />
     <Folder Include="Views\Shared\Components\" />
   </ItemGroup>
 
