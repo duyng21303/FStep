@@ -2,63 +2,81 @@
 @using X.PagedList.Mvc.Core;
 
 <div>
+
     <!--/slider-->
-    <section id="slider">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div id="slider-carousel" class="carousel slide" data-ride="carousel">
-                        <ol class="carousel-indicators">
-                            <li data-target="#slider-carousel" data-slide-to="0" class="active"></li>
-                            <li data-target="#slider-carousel" data-slide-to="1"></li>
-                            <li data-target="#slider-carousel" data-slide-to="2"></li>
-                        </ol>
+	<div class="carousel">
+		<section id="slider">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-12">
+						<div id="slider-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+							<ol class="carousel-indicators">
+								<li data-bs-target="#slider-carousel" data-bs-slide-to="0" class="active"></li>
+								<li data-bs-target="#slider-carousel" data-bs-slide-to="1"></li>
+								<li data-bs-target="#slider-carousel" data-bs-slide-to="2"></li>
+							</ol>
 
-                        <div class="carousel-inner">
-                            <div class="item active">
-                                <div class="col-sm-6">
-                                    <h1><span>F</span>-STEP</h1>
-                                    <h2>FU Student Item Exchange</h2>
-                                    <p>Easily swap items with other FU students. Whether it’s a laptop for a textbook or a mouse for a notebook, trade what you have for what you need.</p>
-                                </div>
-                                <div class="col-sm-6">
-                                    <img src="~/image/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="girl img-responsive" alt="" />
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="col-sm-6">
-                                    <h1><span>F</span>-STEP</h1>
-                                    <h2>Student-to-Student Gear Exchange</h2>
-                                    <p>Trade your study essentials with other FU students. From computers to school supplies, find what you need through simple and direct exchanges. </p>
-                                </div>
-                                <div class="col-sm-6">
-                                    <img src="~/image/sliden-laptop-exchange.png" class="girl img-responsive" alt="" />
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="col-sm-6">
-                                    <h1><span>F</span>-STEP</h1>
-                                    <h2>Free Ecommerce Template</h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
-                                </div>
-                                <div class="col-sm-6">
-                                    <img src="~/image/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="girl img-responsive" alt="" />
-                                </div>
-                            </div>
-                        </div>
+							<div class="carousel-inner">
+								<div class="carousel-item active bg-carousel-item">
+									<div class="row align-items-center">
+										<div class="col-sm-6 content-box">
+											<h1 class="f-step-title"><span>F</span>-STEP</h1>
+											<div class="f-step-content">
+												<h2>FU Student Item Exchange</h2>
+												<p>Easily swap items with other FU students. Whether it’s a laptop for a textbook or a mouse for a notebook, trade what you have for what you need.</p>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<img src="~/image/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="d-block w-100" alt="" />
+										</div>
+									</div>
+								</div>
+								<div class="carousel-item bg-carousel-item">
+									<div class="row align-items-center">
+										<div class="col-sm-6 content-box">
+											<h1 class="f-step-title"><span>F</span>-STEP</h1>
+											<div class="f-step-content">
+												<h2>FU Student Item Exchange</h2>
+												<p>Easily swap items with other FU students. Whether it’s a laptop for a textbook or a mouse for a notebook, trade what you have for what you need.</p>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<img src="~/image/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="d-block w-100" alt="" />
+										</div>
+									</div>
+								</div>
+								<div class="carousel-item bg-carousel-item">
+									<div class="row align-items-center">
+										<div class="col-sm-6 content-box">
+											<h1 class="f-step-title"><span>F</span>-STEP</h1>
+											<div class="f-step-content">
+												<h2>FU Student Item Exchange</h2>
+												<p>Easily swap items with other FU students. Whether it’s a laptop for a textbook or a mouse for a notebook, trade what you have for what you need.</p>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<img src="~/image/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="d-block w-100" alt="" />
+										</div>
+									</div>
+								</div>
+							</div>
 
-                        <a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
-                            <i class="fa fa-angle-left"></i>
-                        </a>
-                        <a href="#slider-carousel" class="right control-carousel hidden-xs" data-slide="next">
-                            <i class="fa fa-angle-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+							<button class="carousel-control-prev" type="button" data-bs-target="#slider-carousel" data-bs-slide="prev">
+								<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+								<span class="visually-hidden">Previous</span>
+							</button>
+							<button class="carousel-control-next" type="button" data-bs-target="#slider-carousel" data-bs-slide="next">
+								<span class="carousel-control-next-icon" aria-hidden="true"></span>
+								<span class="visually-hidden">Next</span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
     <!--/End slider-->
+
     <!-- Search Form and Heading Row -->
     <div class="container-fluid fruit py-5">
         <div class="container py-5">
@@ -67,12 +85,12 @@
                     <h1>Exchange: Suggestion today</h1>
                 </div>
                 <div class="col-md-6">
-                    <form asp-action="Sale" asp-controller="Home" class="d-flex justify-content-end">
-                        <input type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1" name="query">
-                        <button class="btn btn-primary ms-2" type="submit">
-                            <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
-                        </button>
-                    </form>
+					<form asp-action="Sale" asp-controller="Home" class="d-flex justify-content-end search-form">
+						<input type="search" class="form-control search-input" placeholder="keywords" name="query">
+						<button class="btn btn-primary search-button" type="submit">
+							<i class="fa fa-search search-icon"></i>
+						</button>
+					</form>
                 </div>
             </div>
             <div class="row g-4">

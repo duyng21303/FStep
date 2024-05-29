@@ -20,3 +20,171 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+
+/* ??nh d?ng cho thanh carosel*/
+.carousel {
+    padding-top: 20px;
+}
+.f-step-title {
+    font-family: 'Sedgwick Ave', cursive;
+    font-size: 2.5rem;
+    color: #ff9800; /* Màu cam cho ch? "F" */
+    margin-bottom: 20px;
+}
+
+
+.content-box {
+    padding: 20px;
+    text-align: center; /* C?n gi?a n?i dung */
+    margin: 0 auto; /* C?n l? ??u hai bên */
+}
+
+.f-step-content{
+        margin: 15px 0;
+        border-radius: 10px; /* Bo tròn h?p h2 và p */
+        padding: 10px;
+        background-color: #e9ecef; /* Màu n?n cho h2 và p */
+    }
+
+    .content-box h2 {
+        font-size: 1.75rem;
+    }
+
+    .content-box p {
+        font-size: 1rem;
+    }
+
+.bg-carousel-item {
+    background-color: #f8f9fa; /* Màu n?n cho các m?c b?ng chuy?n */
+    border-radius: 15px; /* Bo tròn góc cho các m?c b?ng chuy?n */
+    padding: 20px;
+}
+/* K?t thúc css cho thanh carosel*/
+
+/* ??nh d?ng cho nút search */
+.search-header {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.exchange-title {
+    font-size: 2rem; /* Adjust font size */
+    font-weight: bold; /* Make the font bold */
+    text-transform: uppercase; /* Uppercase text */
+    border-bottom: 2px solid #333; /* Add a bottom border */
+    padding-bottom: 10px; /* Space between text and border */
+    margin-bottom: 0; /* Remove bottom margin */
+}
+
+.search-form {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.search-input {
+    border-radius: 20px 0 0 20px; /* Rounded corners for the left side */
+    border-right: none; /* Remove the right border */
+    padding: 10px 15px; /* Padding for better spacing */
+    font-size: 1rem; /* Font size */
+    max-width: 300px; /* Maximum width of the input */
+}
+
+.search-button {
+    border-radius: 0 20px 20px 0; /* Rounded corners for the right side */
+    padding: 10px 15px; /* Padding for better spacing */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem; /* Ensure button font size matches */
+}
+
+.search-icon {
+    margin: 0; /* Remove margin to align properly */
+    font-size: 1.2rem; /* Icon size */
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .exchange-title {
+        font-size: 1.5rem; /* Adjust font size for smaller screens */
+    }
+
+    .search-input {
+        max-width: 200px; /* Adjust input width for smaller screens */
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .exchange-title {
+        font-size: 1.5rem; /* Adjust font size for smaller screens */
+    }
+
+    .search-input {
+        max-width: 200px; /* Adjust input width for smaller screens */
+    }
+}
+/*K?t thúc ??nh d?ng nút search*/
+/* ??nh d?ng css cho các nút chuy?n trang */
+.pagination {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+    .pagination li {
+        margin: 0 5px; /* Kho?ng cách gi?a các s? */
+    }
+
+        .pagination li a,
+        .pagination li span {
+            display: block;
+            padding: 10px 15px;
+            border-radius: 5px; /* Bo tròn các h?p s? */
+            background-color: #f8f9fa; /* Màu n?n m?c ??nh */
+            color: #007bff; /* Màu ch? m?c ??nh */
+            text-decoration: none;
+        }
+
+            .pagination li a:hover,
+            .pagination li span:hover {
+                background-color: #007bff; /* Màu n?n khi hover */
+                color: #fff; /* Màu ch? khi hover */
+            }
+
+    .pagination .active span {
+        background-color: #007bff; /* Màu n?n c?a s? trang hi?n t?i */
+        color: #fff; /* Màu ch? c?a s? trang hi?n t?i */
+        font-weight: bold;
+    }
+
+    .pagination .disabled span {
+        color: #6c757d; /* Màu ch? c?a nút b? vô hi?u hóa */
+        cursor: not-allowed;
+    }
+
+    .pagination li a {
+        color: #007bff;
+    }
+
+        .pagination li a:focus,
+        .pagination li a:active {
+            background-color: #0056b3; /* Màu n?n khi focus ho?c active */
+            color: #fff;
+            outline: none;
+            box-shadow: none;
+        }
+
+    /* Tùy ch?n màu cam thay vì màu xanh */
+    .pagination li a,
+    .pagination .active span {
+        background-color: #fd7e14; /* Màu n?n */
+        color: #fff; /* Màu ch? */
+    }
+
+        .pagination li a:hover,
+        .pagination li span:hover {
+            background-color: #e36200; /* Màu n?n khi hover */
+        }
+/* K?t thúc  css cho các nút chuy?n trang */
