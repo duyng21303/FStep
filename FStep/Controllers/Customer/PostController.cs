@@ -9,10 +9,10 @@ namespace FStep.Controllers.Customer
 {
 	public class PostController : Controller
 	{
-		private readonly Fstep1Context db;
+		private readonly FstepContext db;
 		private readonly IMapper _mapper;
 
-		public PostController(Fstep1Context context, IMapper mapper)
+		public PostController(FstepContext context, IMapper mapper)
 		{
 			db = context;
 			_mapper = mapper;

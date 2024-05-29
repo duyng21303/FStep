@@ -16,11 +16,11 @@ namespace FStep.Controllers.Auth
 		public const string USER_NAME = "USER_NAME";
 
 
-		private readonly Fstep1Context db;
+		private readonly FstepContext db;
 		private readonly SignInManager<IdentityUser> _signInManager;
 		private readonly UserManager<IdentityUser> _userManager;
 
-		public AccountController(Fstep1Context context)
+		public AccountController(FstepContext context)
 		{
 			db = context;
 		}
