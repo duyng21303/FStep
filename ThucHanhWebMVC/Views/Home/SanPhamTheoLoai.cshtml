@@ -1,0 +1,29 @@
+﻿@{
+	ViewData["Title"] = "SanPhamTheoLoai";
+	Layout = "~/Views/Shared/_LayoutOgani.cshtml";
+}
+
+@using X.PagedList.Mvc.Core;
+@model X.PagedList.IPagedList<TDanhMucSp>
+
+@foreach (var item in Model)
+{
+	<div class="featured__item">
+		<div class="featured__item__pic set-bg" data-setbg=@Url.Content("../ProductImages/Images/" + item.AnhDaiDien)
+			 style="background-image: url(&quot;img/featured/feature-1.jpg&quot;);">
+			<ul class="featured__item__pic__hover">
+				<li><a href="#"><i class="fa fa-heart"></i></a></li>
+				<li><a href="#"><i class="fa fa-retweet"></i></a></li>
+				<li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+			</ul>
+		</div>
+		<div class="featured__item__text">
+			<h6><a href="#">@item.TenSp</a></h6>
+			<h5>@item.GiaLonNhat</h5>
+		</div>
+	</div>
+}
+<div class="product__pagination">
+	@Html.PagedListPager(Model, page => Url.Action("Index", new { page = page, maloai = ViewBag.maloai }))
+</div>
+
