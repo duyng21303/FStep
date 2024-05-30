@@ -10,17 +10,20 @@ using Microsoft.EntityFrameworkCore;
 using FStep.Helpers;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using AutoMapper;
+using System.IO;
 
 namespace FStep.Controllers.Auth
 {
 	public class AccountController : Controller
 	{
 		private readonly Fstep1Context db;
+		private readonly IMapper _mapper;
 
-		public AccountController(Fstep1Context context)
+		public AccountController(Fstep1Context context, IMapper mapper)
 		{
 			db = context;
-
+			_mapper = mapper;
 		}
 		[HttpGet]
 		[AllowAnonymous]
@@ -56,16 +59,7 @@ namespace FStep.Controllers.Auth
 						}
 						else
 						{
-							var claims = new List<Claim>
-							{
-								 new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
-								 new Claim(ClaimTypes.Name, user.Name ?? string.Empty),
-								 new Claim("UskerID", user.IdUser ?? string.Empty),
-								 new Claim(ClaimTypes.Role, user.Role ?? string.Empty)
-							};
-							var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-							var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-							await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+							await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, Util.ClaimsHelper(user));
 							if (Url.IsLocalUrl(ReturnUrl))
 							{
 								return Redirect(ReturnUrl);
@@ -87,10 +81,45 @@ namespace FStep.Controllers.Auth
 			return Redirect("/");
 		}
 		[Authorize]
+		[HttpGet]
 		public IActionResult Profile()
 		{
+			string userID = User.FindFirstValue("UserID");
+            var user = db.Users.SingleOrDefault(user => user.IdUser == userID);
+			var profile = new ProfileVM()
+			{
+				IdUser = user.IdUser,
+				Address = user.Address,
+				AvatarImg = User.FindFirstValue("IMG"),
+				Email = user.Email,
+				Name = user.Name,
+				Rating = user.Rating,
+				StudentId = user.StudentId
+			};
+            return View(profile);
+		}
+		[HttpPost]
+		public async Task<IActionResult> ProfileImg(IFormFile img)
+		{
+			try
+			{
+				string userID = User.FindFirstValue("UserID");
+				var user = db.Users.SingleOrDefault(user => user.IdUser == userID);
+				if (img != null)
+				{
+					FileInfo fileInfo = new FileInfo("wwwroot/img/userAvar/" + user.AvatarImg);
+					if (fileInfo.Exists)
+					{
+						fileInfo.Delete();
+					}
+					user.AvatarImg = Util.UpLoadImg(img, "userAvar");
+				}
+				db.Update(user);
+				db.SaveChanges();
+				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, Util.ClaimsHelper(user));
+				return RedirectToAction("Profile");
+			}catch(Exception ex) { }
 			return View();
 		}
-
 	}
 }
