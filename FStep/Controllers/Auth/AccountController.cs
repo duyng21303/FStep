@@ -17,10 +17,14 @@ namespace FStep.Controllers.Auth
 {
 	public class AccountController : Controller
 	{
-		private readonly FstepContext db;
-		private readonly IMapper _mapper;
 
-		public AccountController(FstepContext context, IMapper mapper)
+		private readonly IMapper _mapper;
+		private readonly FstepDBContext db;
+		private readonly SignInManager<IdentityUser> _signInManager;
+		private readonly UserManager<IdentityUser> _userManager;
+
+		public AccountController(FstepDBContext context, IMapper mapper)
+
 		{
 			db = context;
 			_mapper = mapper;
@@ -98,6 +102,28 @@ namespace FStep.Controllers.Auth
 			};
             return View(profile);
 		}
+		[Authorize]
+		[HttpPost]
+		public async Task<IActionResult> Profile(ProfileVM model)
+		{
+			try
+			{
+				string userID = User.FindFirstValue("UserID");
+				var user = db.Users.SingleOrDefault(user => user.IdUser == userID);
+				user.Address = model.Address;
+				user.Email = model.Email;
+				user.Name = model.Name;
+				user.Rating = model.Rating;
+				user.StudentId = model.StudentId;
+				db.Update(user);
+				db.SaveChanges();
+				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, Util.ClaimsHelper(user)); ;
+				return RedirectToAction("Profile");
+			}
+			catch (Exception ex) { }
+			return View();
+		}
+		[Authorize]
 		[HttpPost]
 		public async Task<IActionResult> ProfileImg(IFormFile img)
 		{
@@ -121,5 +147,7 @@ namespace FStep.Controllers.Auth
 			}catch(Exception ex) { }
 			return View();
 		}
+
+
 	}
 }
