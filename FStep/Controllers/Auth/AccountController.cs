@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using FStep.Helpers;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using AutoMapper;
+using System.IO;
 
 using AutoMapper;
 using System.IO;
@@ -18,6 +20,7 @@ namespace FStep.Controllers.Auth
 {
 	public class AccountController : Controller
 	{
+
 		private readonly IMapper _mapper;
 		private readonly FstepDBContext db;
 		private readonly SignInManager<IdentityUser> _signInManager;
@@ -102,6 +105,52 @@ namespace FStep.Controllers.Auth
 				StudentId = user.StudentId
 			};
             return View(profile);
+		}
+		[Authorize]
+		[HttpPost]
+		public async Task<IActionResult> Profile(ProfileVM model)
+		{
+			try
+			{
+				string userID = User.FindFirstValue("UserID");
+				var user = db.Users.SingleOrDefault(user => user.IdUser == userID);
+				user.Address = model.Address;
+				user.Email = model.Email;
+				user.Name = model.Name;
+				user.Rating = model.Rating;
+				user.StudentId = model.StudentId;
+				db.Update(user);
+				db.SaveChanges();
+				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, Util.ClaimsHelper(user)); ;
+				return RedirectToAction("Profile");
+			}
+			catch (Exception ex) { }
+			return View();
+		}
+		[Authorize]
+		[HttpPost]
+		public async Task<IActionResult> ProfileImg(IFormFile img)
+		{
+			try
+			{
+				string userID = User.FindFirstValue("UserID");
+				var user = db.Users.SingleOrDefault(user => user.IdUser == userID);
+				if (img != null)
+				{
+					FileInfo fileInfo = new FileInfo("wwwroot/img/userAvar/" + user.AvatarImg);
+					if (fileInfo.Exists)
+					{
+						fileInfo.Delete();
+					}
+					user.AvatarImg = Util.UpLoadImg(img, "userAvar");
+				}
+				db.Update(user);
+				db.SaveChanges();
+				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, Util.ClaimsHelper(user));
+				return RedirectToAction("Profile");
+			}catch(Exception ex) { }
+			return View();
+		}
 		}
 
 		[HttpPost]
