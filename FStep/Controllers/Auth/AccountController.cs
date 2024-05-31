@@ -18,11 +18,13 @@ namespace FStep.Controllers.Auth
 {
 	public class AccountController : Controller
 	{
-		private readonly Fstep1Context db;
-
 		private readonly IMapper _mapper;
+		private readonly FstepDBContext db;
+		private readonly SignInManager<IdentityUser> _signInManager;
+		private readonly UserManager<IdentityUser> _userManager;
 
-		public AccountController(Fstep1Context context, IMapper mapper)
+		public AccountController(FstepDBContext context, IMapper mapper)
+
 		{
 			db = context;
 
