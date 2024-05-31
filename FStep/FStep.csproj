@@ -58,4 +58,5 @@
 	  <Folder Include="wwwroot\img\userAvar\" />
 	  <Folder Include="wwwroot\img\nullAvar\" />
   </ItemGroup>
+
 </Project>
