@@ -20,6 +20,9 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+
+
 header {
     /* Ensure it has some top padding to avoid overlapping with the carousel */
     padding-top: 60px; /* Adjust as needed based on your design */
@@ -264,3 +267,4 @@ body {
         top: 0;
         left: 0;
     }
+

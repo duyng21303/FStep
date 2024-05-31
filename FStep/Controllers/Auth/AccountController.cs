@@ -10,8 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using FStep.Helpers;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
-using AutoMapper;
-using System.IO;
 
 using AutoMapper;
 using System.IO;
@@ -20,7 +18,6 @@ namespace FStep.Controllers.Auth
 {
 	public class AccountController : Controller
 	{
-
 		private readonly IMapper _mapper;
 		private readonly FstepDBContext db;
 		private readonly SignInManager<IdentityUser> _signInManager;
@@ -151,7 +148,7 @@ namespace FStep.Controllers.Auth
 			}catch(Exception ex) { }
 			return View();
 		}
-		
+
 
 	}
 }
