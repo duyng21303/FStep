@@ -1,9 +1,4 @@
-﻿<meta charset="utf-8">
-<title>DASHMIN - Bootstrap Admin Template</title>
-<meta content="width=device-width, initial-scale=1.0" name="viewport">
-<meta content="" name="keywords">
-<meta content="" name="description">
-
+﻿
 <!-- Favicon -->
 <link href="img/favicon.ico" rel="icon">
 
@@ -96,7 +91,7 @@
 			</div>
 			<div class="nav-item dropdown">
 				<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-					<img class="rounded-circle me-lg-2" src="~/img/user.jpg" alt="" style="width: 40px; height: 40px;">
+					<img class="rounded-circle me-lg-2" src="~/img/@User.FindFirst("IMG")?.Value" alt="" style="width: 40px; height: 40px;">
 					<span class="d-none d-lg-inline-flex">
 						@if (!string.IsNullOrEmpty(User.Identity.Name))
 						{

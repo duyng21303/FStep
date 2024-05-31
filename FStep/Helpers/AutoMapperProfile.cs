@@ -13,7 +13,10 @@ namespace FStep.Helpers
                 //.ReverseMap()
             CreateMap<PostVM,Post>();
             CreateMap<PostVM,Product>();
+			CreateMap<ProfileVM, User>();
 
-        }
+		}
+
     }
+
 }
