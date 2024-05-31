@@ -151,30 +151,7 @@ namespace FStep.Controllers.Auth
 			}catch(Exception ex) { }
 			return View();
 		}
-		}
+		
 
-		[HttpPost]
-		public async Task<IActionResult> ProfileImg(IFormFile img)
-		{
-			try
-			{
-				string userID = User.FindFirstValue("UserID");
-				var user = db.Users.SingleOrDefault(user => user.IdUser == userID);
-				if (img != null)
-				{
-					FileInfo fileInfo = new FileInfo("wwwroot/img/userAvar/" + user.AvatarImg);
-					if (fileInfo.Exists)
-					{
-						fileInfo.Delete();
-					}
-					user.AvatarImg = Util.UpLoadImg(img, "userAvar");
-				}
-				db.Update(user);
-				db.SaveChanges();
-				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, Util.ClaimsHelper(user));
-				return RedirectToAction("Profile");
-			}catch(Exception ex) { }
-			return View();
-		}
 	}
 }
