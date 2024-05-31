@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using FStep.Helpers;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+
 using AutoMapper;
 using System.IO;
 
@@ -17,12 +18,16 @@ namespace FStep.Controllers.Auth
 {
 	public class AccountController : Controller
 	{
-		private readonly FstepContext db;
 		private readonly IMapper _mapper;
+		private readonly FstepDBContext db;
+		private readonly SignInManager<IdentityUser> _signInManager;
+		private readonly UserManager<IdentityUser> _userManager;
 
-		public AccountController(FstepContext context, IMapper mapper)
+		public AccountController(FstepDBContext context, IMapper mapper)
+
 		{
 			db = context;
+
 			_mapper = mapper;
 		}
 		[HttpGet]
@@ -98,6 +103,7 @@ namespace FStep.Controllers.Auth
 			};
             return View(profile);
 		}
+
 		[HttpPost]
 		public async Task<IActionResult> ProfileImg(IFormFile img)
 		{
