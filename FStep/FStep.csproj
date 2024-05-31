@@ -7,9 +7,26 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\car-repair-html-template\.vs\car-repair-html-template\v17\DocumentLayout.json" />
-    <Content Include="wwwroot\car-repair-html-template\.vs\ProjectSettings.json" />
-    <Content Include="wwwroot\car-repair-html-template\.vs\VSWorkspaceState.json" />
+    <Compile Remove="Controllers\Admin\**" />
+    <Compile Remove="Controllers\Customer\**" />
+    <Compile Remove="Controllers\Moder\**" />
+    <Compile Remove="ViewComponents\**" />
+    <Compile Remove="wwwroot\car-repair-html-template\**" />
+    <Content Remove="Controllers\Admin\**" />
+    <Content Remove="Controllers\Customer\**" />
+    <Content Remove="Controllers\Moder\**" />
+    <Content Remove="ViewComponents\**" />
+    <Content Remove="wwwroot\car-repair-html-template\**" />
+    <EmbeddedResource Remove="Controllers\Admin\**" />
+    <EmbeddedResource Remove="Controllers\Customer\**" />
+    <EmbeddedResource Remove="Controllers\Moder\**" />
+    <EmbeddedResource Remove="ViewComponents\**" />
+    <EmbeddedResource Remove="wwwroot\car-repair-html-template\**" />
+    <None Remove="Controllers\Admin\**" />
+    <None Remove="Controllers\Customer\**" />
+    <None Remove="Controllers\Moder\**" />
+    <None Remove="ViewComponents\**" />
+    <None Remove="wwwroot\car-repair-html-template\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,19 +49,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Admin\" />
-    <Folder Include="Controllers\Customer\" />
-    <Folder Include="Controllers\Moder\" />
-    <Folder Include="ViewComponents\" />
     <Folder Include="Views\Search\" />
     <Folder Include="Views\Shared\Components\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\car-repair-html-template\.vs\car-repair-html-template\config\applicationhost.config" />
-    <None Include="wwwroot\car-repair-html-template\.vs\car-repair-html-template\FileContentIndex\baa92682-50b1-4bd6-9a70-dc76ba9e70ea.vsidx" />
-    <None Include="wwwroot\car-repair-html-template\.vs\car-repair-html-template\FileContentIndex\d2fd0cec-63ba-431b-ae7d-983e2f8c0ec1.vsidx" />
-    <None Include="wwwroot\car-repair-html-template\.vs\slnx.sqlite" />
   </ItemGroup>
 
 </Project>

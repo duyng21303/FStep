@@ -15,132 +15,114 @@
 
 <!-- Icon Font Stylesheet -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-
-<!-- Libraries Stylesheet -->
-<link href="~/resource_dashmin/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-
-<link href="~/resource_dashmin/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
-
-<!-- Customized Bootstrap Stylesheet -->
-<link href="~/resource_dashmin/css/bootstrap.min.css" rel="stylesheet">
 
 
-<!-- Template Stylesheet -->
-<link href="~/css/style.css" rel="stylesheet">
-<link href="~/resource_forum19/build/css/style.css" rel="stylesheet">
-@* <link href="~/resource_dashmin/css/bootstrap.min.css" rel="stylesheet"> *@
-@* <link href="~/resource_dashmin/css/style.css" rel="stylesheet"> *@
 
 <!-- Navbar Start -->
-<nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
-	<a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
-		<h2 class="text-primary mb-0"><i class="fa fa-hashtag"></i></h2>
-	</a>
-	@if (User.Identity.IsAuthenticated)
-	{
-		<div class="navbar-nav align-items-center ms-auto">
-			<div class="nav-item dropdown">
-				<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-					<i class="fa fa-envelope me-lg-2"></i>
-					<span class="d-none d-lg-inline-flex">Message</span>
-				</a>
-				<div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-					<a href="#" class="dropdown-item">
-						<div class="d-flex align-items-center">
-							<img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-							<div class="ms-2">
-								<h6 class="fw-normal mb-0">John sent you a message</h6>
-								<small>15 minutes ago</small>
-							</div>
-						</div>
-					</a>
-					<hr class="dropdown-divider">
-					<a href="#" class="dropdown-item text-center">See all messages</a>
-				</div>
-			</div>
-			<div class="nav-item dropdown">
-				<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-					<i class="fa fa-bell me-lg-2"></i>
-					<span class="d-none d-lg-inline-flex">Notification</span>
-				</a>
-				<div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-					<a href="#" class="dropdown-item">
-						<h6 class="fw-normal mb-0">Profile updated</h6>
-						<small>15 minutes ago</small>
-					</a>
-					<hr class="dropdown-divider">
-					<a href="#" class="dropdown-item">
-						<h6 class="fw-normal mb-0">New user added</h6>
-						<small>15 minutes ago</small>
-					</a>
-					<hr class="dropdown-divider">
-					<a href="#" class="dropdown-item">
-						<h6 class="fw-normal mb-0">Password changed</h6>
-						<small>15 minutes ago</small>
-					</a>
-					<hr class="dropdown-divider">
-					<a href="#" class="dropdown-item text-center">See all notifications</a>
-				</div>
-			</div>
-			<div class="nav-item dropdown">
-				<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-					<img class="rounded-circle me-lg-2" src="~/img/user.jpg" alt="" style="width: 40px; height: 40px;">
-					<span class="d-none d-lg-inline-flex">
-						@if (!string.IsNullOrEmpty(User.Identity.Name))
-						{
-							@User.Identity.Name
-						}
-						else
-						{
-							@User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Email).Value.Split('@')[0];
-						}
-						</span>
-				</a>
-				<div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-					<a asp-action="Profile" asp-controller="Account" class="dropdown-item">Trang cá nhân</a>
-					<a href="#" class="dropdown-item">Settings</a>
-					<a asp-action="Logout" asp-controller="Account" class="dropdown-item">Đăng xuất</a>
-
-				</div>
-			</div>
-		</div>
-	}
-	else
-	{
-		<div class="ms-auto">
-			<a asp-controller="Account" asp-action="Login" type="hidden" class="border-danger" style="text-decoration: none;">
-				<button type="submit" class="btn btn-primary"> Login</button>
-			</a>
-			<a asp-action="Register" asp-controller="Registration" class="border-danger" style="text-decoration: none;">
-				<button type="button" class="btn btn-secondary">Sign Up</button>
-			</a>
-		</div>
-	}
-</nav>
+<div class="container-fluid fixed-top">
+    <nav class="navbar navbar-expand-lg bg-light navbar-light sticky-top px-4 py-0">
+        <a href="#" class="navbar-brand d-flex align-items-center">
+            <h2 class="text-primary mb-0"><i class="fa fa-car me-3"></i>FStep</h2>
+        </a>
+        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav">
+                <a class="nav-link text-dark" asp-area="" asp-controller="home" asp-action="index">Home</a>
+                <a class="nav-link text-dark" asp-area="" asp-controller="home" asp-action="sale">Sale</a>
+                <a href="service.html" class="nav-item nav-link">Services</a>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                    <div class="dropdown-menu m-0">
+                        <a href="booking.html" class="dropdown-item">Booking</a>
+                        <a href="team.html" class="dropdown-item">Technicians</a>
+                        <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                        <a href="404.html" class="dropdown-item">404 Page</a>
+                    </div>
+                </div>
+            </div>
+            <div class="navbar-nav ms-auto align-items-center">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fa fa-envelope me-lg-2"></i>
+                            <span class="d-none d-lg-inline-flex">Message</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">
+                                <div class="d-flex align-items-center">
+                                    <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                                    <div class="ms-2">
+                                        <h6 class="fw-normal mb-0">John sent you a message</h6>
+                                        <small>15 minutes ago</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item text-center">See all messages</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fa fa-bell me-lg-2"></i>
+                            <span class="d-none d-lg-inline-flex">Notification</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">
+                                <h6 class="fw-normal mb-0">Profile updated</h6>
+                                <small>15 minutes ago</small>
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item">
+                                <h6 class="fw-normal mb-0">New user added</h6>
+                                <small>15 minutes ago</small>
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item">
+                                <h6 class="fw-normal mb-0">Password changed</h6>
+                                <small>15 minutes ago</small>
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item text-center">See all notifications</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <img class="rounded-circle me-lg-2" src="~/img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                            <span class="d-none d-lg-inline-flex">
+                                @if (!string.IsNullOrEmpty(User.Identity.Name))
+                                {
+                                    @User.Identity.Name
+                                }
+                                else
+                                {
+                                    @User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Email).Value.Split('@')[0]
+                                    ;
+                                }
+                            </span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                            <a asp-action="Profile" asp-controller="Account" class="dropdown-item">Trang cá nhân</a>
+                            <a href="#" class="dropdown-item">Settings</a>
+                            <a asp-action="Logout" asp-controller="Account" class="dropdown-item">Đăng xuất</a>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="ms-auto">
+                        <a asp-controller="Account" asp-action="Login" type="hidden" class="border-danger" style="text-decoration: none;">
+                            <button type="submit" class="btn btn-primary"> Login</button>
+                        </a>
+                        <a asp-action="Register" asp-controller="Registration" class="border-danger" style="text-decoration: none;">
+                            <button type="button" class="btn btn-secondary">Sign Up</button>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </nav>
+</div>
 <!-- Navbar End -->
-
-	<nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
-		<div class="container-fluid">
-			<a href="index.html" class="navbar-brand d-flex align-items-center">
-				<h2 class="m-0 text-primary"><i class="fa fa-car me-3"></i>FStep</h2>
-			</a>
-			<button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
-				<div class="navbar-nav">
-					<a class="nav-link text-dark" asp-area="" asp-controller="home" asp-action="index">Home</a>
-					<a class="nav-link text-dark" asp-area="" asp-controller="home" asp-action="sale">Sale</a>
-					<a href="service.html" class="nav-item nav-link">Services</a>
-					<div class="nav-item dropdown">
-						<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
-						<div class="dropdown-menu fade-up m-0">
-							<a href="booking.html" class="dropdown-item">Booking</a>
-							<a href="team.html" class="dropdown-item">Technicians</a>
-							<a href="testimonial.html" class="dropdown-item">Testimonial</a>
-							<a href="404.html" class="dropdown-item">404 Page</a>
-						</div>
-					</div>
-				</div>
-	</nav>
