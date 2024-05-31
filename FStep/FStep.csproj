@@ -48,17 +48,15 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
     <PackageReference Include="X.PagedList" Version="9.1.2" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="9.1.2" />
-  </ItemGroup>
-
-    <Folder Include="Controllers\Admin\" />
-    <Folder Include="Controllers\Moder\" />
-    <Folder Include="Data\" />
-    <Folder Include="ViewComponents\" />
-    <Folder Include="Views\Shared\Components\" />
-    <Folder Include="wwwroot\img\postPic\" />
-    <Folder Include="wwwroot\img\pic\" />
-    <Folder Include="wwwroot\img\userAvar\" />
-    <Folder Include="wwwroot\img\nullAvar\" />
+	  <Folder Include="Controllers\Admin\" />
+	  <Folder Include="Controllers\Moder\" />
+	  <Folder Include="Data\" />
+	  <Folder Include="ViewComponents\" />
+	  <Folder Include="Views\Shared\Components\" />
+	  <Folder Include="wwwroot\img\postPic\" />
+	  <Folder Include="wwwroot\img\pic\" />
+	  <Folder Include="wwwroot\img\userAvar\" />
+	  <Folder Include="wwwroot\img\nullAvar\" />
   </ItemGroup>
 
 </Project>
