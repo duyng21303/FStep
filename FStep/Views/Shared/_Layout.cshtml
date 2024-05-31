@@ -30,7 +30,11 @@
             </div>
         </nav>
     </header>
+
     <div class="container">
+        @* Render section BreadCum nếu nó được định nghĩa *@
+        @RenderSection("BreadCum", required: false)
+
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

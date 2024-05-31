@@ -1,0 +1,14 @@
+﻿@model IEnumerable<FStep.ViewModels.ProductVM>
+
+@{
+    Layout = "_Layout";
+}
+
+@section BreadCum {
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+        <li class="breadcrumb-item active text-white">Shop</li>
+    </ol>
+}
+
+@await Html.PartialAsync("_ListProduct", Model)
