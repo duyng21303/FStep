@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+
 namespace FStep.ViewModels
 {
 	public class PostVM
@@ -9,8 +10,11 @@ namespace FStep.ViewModels
 		[MaxLength(250, ErrorMessage = "Maximun 250 characters")]
 		public string? Content { get; set; }
 
-		[Display(Name = "Picture")]
-		public string? Img { get; set; }
+		[Display(Name = "Upload Picture")]
+		[DataType(DataType.Upload)]
+		[FileExtensions(Extensions ="png,jgp,jpeg,gif")]
+		[Required(ErrorMessage = "*")]
+		public IFormFile Img { get; set; }
 
 		[Display(Name = "Detail")]
 		[MaxLength(250, ErrorMessage = "Maximun 250 characters")]
@@ -19,6 +23,7 @@ namespace FStep.ViewModels
 		[Required(ErrorMessage = "*")]
 		public string Type { get; set; } = string.Empty;
 		[Display(Name = "Name of product")]
+		
 		public string NameProduct { get; set; } = string.Empty;
 		[Display(Name = "Quantity")]
 		public int Quantity { get; set; }

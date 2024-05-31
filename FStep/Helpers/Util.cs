@@ -26,7 +26,7 @@ namespace FStep.Helpers
 			try
 			{
 				var fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", folder, img.FileName);
-				using (var myfile = new FileStream(fullPath, FileMode.CreateNew))
+				using (var myfile = new FileStream(fullPath, FileMode.CreateNew ))
 				{
 					img.CopyTo(myfile);
 				}

@@ -5,7 +5,7 @@
 <div class="container-fluid py-5">
 	<div class="container py-5">
 		<h1 class="mb-4">Create Post</h1>
-		<form asp-controller="Post" asp-action="CreateProduct">
+		<form asp-controller="Post" asp-action="CreateProduct" enctype="multipart/form-data">
 			<div class="row">
 				<div class="col-md-12 col-lg-6 col-xl-7">
 					<div class="row">
@@ -18,7 +18,7 @@
 						</div>
 						<div class="form-item">
 							<label asp-for="@Model.Img" class="form-label my-3"></label><sup>*</sup>
-							<input asp-for="@Model.Img" type="text" class="form-control">
+							<input asp-for="@Model.Img" type = "file" class="form-control"/>
 							<span asp-validation-for="@Model.Img" class="text-danger"></span>
 						</div>
 
