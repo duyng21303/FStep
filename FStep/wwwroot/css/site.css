@@ -22,6 +22,7 @@ body {
 }
 
 
+
 header {
     /* Ensure it has some top padding to avoid overlapping with the carousel */
     padding-top: 60px; /* Adjust as needed based on your design */
@@ -57,31 +58,31 @@ body {
 
 /* Carousel styles */
 .carousel {
-    background-color: #F7E7CE; /* Màu n?n phù h?p v?i web tr?ng */
+    background-color: #F7E7CE; /* Mï¿½u n?n phï¿½ h?p v?i web tr?ng */
 }
 
     .carousel .f-step-title {
-        color: orange; /* Màu cam cho tiêu ?? F-STEP */
+        color: orange; /* Mï¿½u cam cho tiï¿½u ?? F-STEP */
         font-family: 'Sedgwick Ave', cursive; /* Font ch? Sedgwick Ave */
         text-align: center; /* Canh gi?a */
     }
 
 .f-step-content {
-    background-color: #ffffff; /* Màu n?n tr?ng cho f-step-content */
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Hi?u ?ng bóng ?? */
+    background-color: #ffffff; /* Mï¿½u n?n tr?ng cho f-step-content */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Hi?u ?ng bï¿½ng ?? */
     text-align: center; /* Canh gi?a n?i dung */
     padding: 20px;
-    border-radius: 15px; /* Bo góc cho f-step-content */
+    border-radius: 15px; /* Bo gï¿½c cho f-step-content */
 }
 
     .f-step-content h2,
     .f-step-content p {
-        color: #73543C; /* Màu ch? phù h?p v?i màu n?n */
-        margin: 0; /* Lo?i b? kho?ng cách l? m?c ??nh */
+        color: #73543C; /* Mï¿½u ch? phï¿½ h?p v?i mï¿½u n?n */
+        margin: 0; /* Lo?i b? kho?ng cï¿½ch l? m?c ??nh */
     }
 
 .carousel .rounded-circle {
-    border-radius: 50%; /* Bo tròn hình ?nh */
+    border-radius: 50%; /* Bo trï¿½n hï¿½nh ?nh */
 }
 
 .search-header {
@@ -244,3 +245,27 @@ body {
         .pagination li span:hover {
             background-color: #e36200; /* Darker orange background on hover */
         }
+=======
+.card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-container {
+    width: 200px; 
+    height: 200px; 
+    overflow: hidden; 
+    position: relative; 
+}
+
+    .image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; 
+        position: absolute; 
+        top: 0;
+        left: 0;
+    }
+
