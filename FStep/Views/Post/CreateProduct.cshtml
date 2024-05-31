@@ -1,7 +1,8 @@
 ﻿@model FStep.ViewModels.PostVM
 @{
-	ViewData["Title"] = "CreatePost";
+    ViewData["Title"] = "CreateProduct";
 }
+
 <div class="container-fluid py-5">
 	<div class="container py-5">
 		<h1 class="mb-4">Create Post</h1>
@@ -30,7 +31,7 @@
 
 						<div class="form-item">
 							<label asp-for="@Model.Type" class="form-label my-3"></label><sup>*</sup>
-							<select class="form-control" name="Type" asp-for="@Model.Type">
+							<select class="form-control" asp-for="@Model.Type">
 								<option value="Exchange">Exchange</option>
 								<option value="Sale">Sale</option>
 							</select>
@@ -69,5 +70,4 @@
 		</form>
 	</div>
 </div>
-
 

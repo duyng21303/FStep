@@ -12,7 +12,8 @@ namespace FStep.Helpers
                 //.ForMember(kh => kh.HoTen, option => option.MapFrom(RegisterVM => RegisterVM.HoTen))
                 //.ReverseMap()
             CreateMap<PostVM,Post>();
-            CreateMap<ProductVM,Product>();
+            CreateMap<PostVM,Product>();
+
         }
     }
 }

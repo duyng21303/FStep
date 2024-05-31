@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using FStep.Data;
 using FStep.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using System.ComponentModel;
+using System.Security.Claims;
 
 namespace FStep.Controllers.Customer
 {
@@ -28,9 +30,43 @@ namespace FStep.Controllers.Customer
 		{
 			return View();
 		}
+		[HttpGet]
+		public IActionResult CreateProduct()
+		{
+			return View();
+		}
 
+		//Generate product before generate Post
+		[Authorize]
 		[HttpPost]
-		public IActionResult CreatePost(PostVM model, ProductVM product)
+		public IActionResult CreateProduct(PostVM model)
+		{
+			if (ModelState.IsValid)
+			{
+				try
+				{
+					var product = _mapper.Map<Product>(model);
+					product.Name = model.NameProduct;
+					product.Quantity = model.Quantity;
+					product.Price = model.Price;
+					product.Detail = model.DetailProduct;
+					db.Add(product);
+					db.SaveChanges();
+
+					return RedirectToAction("CreatePost", model); //return model for createPost action to create new post
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex);
+				}
+			}
+			return View();
+		}
+
+		//Create post
+		[Authorize]
+		[HttpPost]
+		public IActionResult CreatePost(PostVM model)
 		{
 			if (ModelState.IsValid)
 			{
@@ -39,19 +75,17 @@ namespace FStep.Controllers.Customer
 					var post = _mapper.Map<Post>(model);
 					post.Content = model.Content;
 					post.Date = DateTime.Now;
+					post.Img = "";//sửa sau
 					post.Status = true;
 					post.Type = model.Type;
 					post.Detail = model.Detail;
+					post.IdUser = User.FindFirst("UserID").Value;
 
-					var UserName = HttpContext.Session.GetString("USER_ID");
-					var userID = db.Users.Where(User => User.Name == UserName).Select(user => user.IdUser);
-
-					post.IdUser = userID.ToString();
-
+					//get IdProduct from database map to Post
+					post.IdProduct = 1; //sửa sau
 					db.Add(post);
 					db.SaveChanges();
-
-					return RedirectToAction("Index", "Home");
+					return Redirect("/");
 				}
 				catch (Exception ex)
 				{
@@ -61,5 +95,76 @@ namespace FStep.Controllers.Customer
 
 			return View();
 		}
+
+		
+
+		//[HttpPost]
+		//public IActionResult CreateExchangePost(ExchangePostVM model)
+		//{
+		//	if (ModelState.IsValid)
+		//	{
+		//		try
+		//		{
+		//			var post = _mapper.Map<Post>(model);
+		//			post.Content = model.Content;
+		//			post.Date = DateTime.Now;
+		//			post.Img = "";
+		//			post.Status = true;
+		//			post.Type = "Exchange";
+		//			post.Detail = model.Detail;
+		//			post.IdUser = User.FindFirst("UserID").Value;
+		//				/*User.FindFirst("UserID").ToString();*/
+
+		//			db.Add(post);
+		//			db.SaveChanges();
+		//			return Redirect("/"); 
+		//		}
+		//		catch (Exception ex)
+		//		{
+		//			Console.WriteLine(ex);
+		//		}
+		//	}
+
+		//	return View();
+		//}
+		//public IActionResult CreateSalePost(SalePostVM model)
+		//{
+		//	if (ModelState.IsValid)
+		//	{
+		//		try
+		//		{
+		//			var post = _mapper.Map<Post>(model);
+		//			post.Content = model.Content;
+		//			post.Date = DateTime.Now;
+		//			post.Img = "";
+		//			post.Status = true;
+		//			post.Type = "Exchange";
+		//			post.Detail = model.Detail;
+
+		//			var userid = User.FindFirst("UserID");
+		//			post.IdUser = userid.ToString();
+
+		//			var product = _mapper.Map<Product>(model);
+		//			product.Name = model.NameProduct;
+		//			product.Quantity = model.Quantity;
+		//			product.Price = model.Price;
+		//			product.Detail = model.DetailProduct;
+
+		//			db.Add(product);
+		//			//post.IdProduct = db.Products.Select(p =>  p.IdProduct).FirstOrDefault();
+		//			db.Add(post);
+		//			db.SaveChanges();
+
+		//			return Redirect("/"); 
+		//		}
+		//		catch (Exception ex)
+		//		{
+		//			Console.WriteLine(ex);
+		//		}
+		//	}
+
+		//	return View();
+		//}
+
 	}
 }

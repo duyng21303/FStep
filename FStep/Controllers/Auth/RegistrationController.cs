@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FStep.Helpers;
 using FStep.Data;
-using FStep.Helpers;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
