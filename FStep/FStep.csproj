@@ -8,22 +8,18 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\Admin\**" />
-    <Compile Remove="Controllers\Customer\**" />
     <Compile Remove="Controllers\Moder\**" />
     <Compile Remove="ViewComponents\**" />
     <Compile Remove="wwwroot\car-repair-html-template\**" />
     <Content Remove="Controllers\Admin\**" />
-    <Content Remove="Controllers\Customer\**" />
     <Content Remove="Controllers\Moder\**" />
     <Content Remove="ViewComponents\**" />
     <Content Remove="wwwroot\car-repair-html-template\**" />
     <EmbeddedResource Remove="Controllers\Admin\**" />
-    <EmbeddedResource Remove="Controllers\Customer\**" />
     <EmbeddedResource Remove="Controllers\Moder\**" />
     <EmbeddedResource Remove="ViewComponents\**" />
     <EmbeddedResource Remove="wwwroot\car-repair-html-template\**" />
     <None Remove="Controllers\Admin\**" />
-    <None Remove="Controllers\Customer\**" />
     <None Remove="Controllers\Moder\**" />
     <None Remove="ViewComponents\**" />
     <None Remove="wwwroot\car-repair-html-template\**" />
