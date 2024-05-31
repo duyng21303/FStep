@@ -20,6 +20,228 @@ html {
 body {
   margin-bottom: 60px;
 }
+header {
+    /* Ensure it has some top padding to avoid overlapping with the carousel */
+    padding-top: 60px; /* Adjust as needed based on your design */
+    z-index: 1000; /* Ensure header is above other elements */
+    position: relative; /* Ensure it's not overlapped by absolute positioned elements */
+    background-color: #fff; /* Adjust background color as per your design */
+}                                                                                                          /* STRART CSS HEADER*/
+.navbar-nav .dropdown-menu {
+    background-color: #f8f9fa; /* Light background for dropdown menu */
+}
+.navbar-nav .dropdown-item:hover {
+    background-color: #e9ecef; /* Slightly darker background on hover */
+}
+
+/* END CSS HEADER*/
+
+/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/*CSS BODY*/
+/* Reset and general settings */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #f2f2f2; /* Light gray background for the whole page */
+    padding-top: 60px; /* Space for the header if needed */
+    border: 1px solid #ddd; /* Lightest gray border around the page */
+    border-radius: 5px; /* Rounded corners for the page */
+}
+
+/* Carousel styles */
+.carousel {
+    background-color: #F7E7CE; /* M�u n?n ph� h?p v?i web tr?ng */
+}
+
+    .carousel .f-step-title {
+        color: orange; /* M�u cam cho ti�u ?? F-STEP */
+        font-family: 'Sedgwick Ave', cursive; /* Font ch? Sedgwick Ave */
+        text-align: center; /* Canh gi?a */
+    }
+
+.f-step-content {
+    background-color: #ffffff; /* M�u n?n tr?ng cho f-step-content */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Hi?u ?ng b�ng ?? */
+    text-align: center; /* Canh gi?a n?i dung */
+    padding: 20px;
+    border-radius: 15px; /* Bo g�c cho f-step-content */
+}
+
+    .f-step-content h2,
+    .f-step-content p {
+        color: #73543C; /* M�u ch? ph� h?p v?i m�u n?n */
+        margin: 0; /* Lo?i b? kho?ng c�ch l? m?c ??nh */
+    }
+
+.carousel .rounded-circle {
+    border-radius: 50%; /* Bo tr�n h�nh ?nh */
+}
+
+.search-header {
+    margin-bottom: 20px; /* Bottom margin for the search header */
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    margin-right: 10px; /* Right margin for the search input */
+}
+
+/* Styles for the F-STEP title */
+.f-step-title {
+    font-size: 2.5rem; /* Font size for the main title */
+    font-weight: bold;
+    color: #333; /* Dark color for the title */
+}
+
+    .f-step-title span {
+        color: #007bff; /* Accent color for the 'F' in F-STEP */
+    }
+
+/* Carousel control buttons */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for control icons */
+    border-radius: 50%; /* Rounded shape for control icons */
+}
+
+/* Title for the exchange section */
+.exchange-title {
+    font-size: 2rem; /* Font size for the exchange section title */
+    font-weight: bold;
+}
+
+/* Container for the body content */
+.container-contentboby {
+    background-color: #fff; /* White background for content boxes */
+    padding: 20px; /* Padding around content inside the boxes */
+    border-radius: 5px; /* Rounded corners for the content boxes */
+    margin-bottom: 20px; /* Bottom margin between boxes */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle depth effect */
+}
+
+/* Styles for individual fruit items/posts */
+.fruit-item {
+    background-color: #f9f9f9; /* Light gray background for each post */
+    border: 1px solid #ddd; /* Light gray border around each post */
+    border-radius: 8px; /* Rounded corners for each post */
+    overflow: hidden; /* Ensure content inside does not overflow */
+    transition: transform 0.2s ease-in-out; /* Smooth hover transition */
+    height: 100%; /* Ensure each post takes full height */
+}
+
+    .fruit-item:hover {
+        transform: translateY(-5px); /* Move up slightly on hover */
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1); /* Shadow effect on hover */
+    }
+
+.fruit-img img {
+    border-top-left-radius: 8px; /* Rounded corners for the top of the image */
+    border-top-right-radius: 8px;
+    object-fit: cover; /* Ensure the image covers the whole area */
+    width: 100%; /* Full width for responsiveness */
+    height: 200px; /* Fixed height for the image */
+}
+
+/* Padding for the content inside each post item */
+.fruit-item .p-4 {
+    padding: 1.5rem;
+}
+
+/* Title of each post */
+.fruit-item h4 {
+    font-size: 1.2rem; /* Font size for the post title */
+    color: #333; /* Dark color for the title */
+    margin-bottom: 0.5rem; /* Bottom margin for spacing */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Ellipsis for overflow text */
+    white-space: nowrap; /* Prevent wrapping */
+}
+
+/* Description of each post */
+.fruit-item .description {
+    font-size: 1rem; /* Font size for the description */
+    color: #666; /* Medium gray color for the description */
+    flex-grow: 1; /* Allow description to grow if too long */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Ellipsis for overflow text */
+}
+
+/* Date text at the end of each post */
+.fruit-item .text-end {
+    font-size: 0.9rem; /* Font size for the date */
+    color: #999; /* Light gray color for the date */
+}
+
+/* Pagination styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0; /* Padding above and below pagination */
+}
+
+    .pagination li {
+        margin: 0 5px; /* Margin between pagination items */
+    }
+
+        .pagination li a,
+        .pagination li span {
+            display: block;
+            padding: 10px 15px; /* Padding inside each pagination item */
+            border-radius: 5px; /* Rounded corners for pagination items */
+            background-color: #f8f9fa; /* Light gray background for pagination items */
+            color: #007bff; /* Default color for pagination items */
+            text-decoration: none; /* Remove underline from links */
+        }
+
+            .pagination li a:hover,
+            .pagination li span:hover {
+                background-color: #007bff; /* Darker background on hover */
+                color: #fff; /* White color on hover */
+            }
+
+    .pagination .active span {
+        background-color: #007bff; /* Background color for current page */
+        color: #fff; /* Text color for current page */
+        font-weight: bold; /* Bold font weight for current page */
+    }
+
+    .pagination .disabled span {
+        color: #6c757d; /* Gray color for disabled items */
+        cursor: not-allowed; /* Disabled cursor */
+    }
+
+    .pagination li a {
+        color: #007bff; /* Default color for pagination links */
+    }
+
+        .pagination li a:focus,
+        .pagination li a:active {
+            background-color: #0056b3; /* Darker background on focus/active */
+            color: #fff; /* White color on focus/active */
+            outline: none; /* Remove outline on focus */
+            box-shadow: none; /* Remove box shadow on focus */
+        }
+
+    /* Orange color option for pagination */
+    .pagination li a,
+    .pagination .active span {
+        background-color: #fd7e14; /* Orange background */
+        color: #fff; /* White text color */
+    }
+
+        .pagination li a:hover,
+        .pagination li span:hover {
+            background-color: #e36200; /* Darker orange background on hover */
+        }
 .card-body {
     display: flex;
     flex-direction: column;

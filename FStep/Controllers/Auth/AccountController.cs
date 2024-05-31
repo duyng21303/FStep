@@ -13,16 +13,24 @@ using System.Net.Http.Headers;
 using AutoMapper;
 using System.IO;
 
+using AutoMapper;
+using System.IO;
+
 namespace FStep.Controllers.Auth
 {
 	public class AccountController : Controller
 	{
-		private readonly Fstep1Context db;
-		private readonly IMapper _mapper;
 
-		public AccountController(Fstep1Context context, IMapper mapper)
+		private readonly IMapper _mapper;
+		private readonly FstepDBContext db;
+		private readonly SignInManager<IdentityUser> _signInManager;
+		private readonly UserManager<IdentityUser> _userManager;
+
+		public AccountController(FstepDBContext context, IMapper mapper)
+
 		{
 			db = context;
+
 			_mapper = mapper;
 		}
 		[HttpGet]
@@ -120,6 +128,31 @@ namespace FStep.Controllers.Auth
 			return View();
 		}
 		[Authorize]
+		[HttpPost]
+		public async Task<IActionResult> ProfileImg(IFormFile img)
+		{
+			try
+			{
+				string userID = User.FindFirstValue("UserID");
+				var user = db.Users.SingleOrDefault(user => user.IdUser == userID);
+				if (img != null)
+				{
+					FileInfo fileInfo = new FileInfo("wwwroot/img/userAvar/" + user.AvatarImg);
+					if (fileInfo.Exists)
+					{
+						fileInfo.Delete();
+					}
+					user.AvatarImg = Util.UpLoadImg(img, "userAvar");
+				}
+				db.Update(user);
+				db.SaveChanges();
+				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, Util.ClaimsHelper(user));
+				return RedirectToAction("Profile");
+			}catch(Exception ex) { }
+			return View();
+		}
+		}
+
 		[HttpPost]
 		public async Task<IActionResult> ProfileImg(IFormFile img)
 		{

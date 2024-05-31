@@ -16,6 +16,5 @@ namespace FStep.ViewModels
 		public string? StudentId { get; set; }
 		[Display(Name = "Điểm đánh giá")]
 		public int? Rating { get; set; }
-
     }
 }
