@@ -9,10 +9,10 @@ namespace FStep.Controllers.Auth
 {
 	public class RegistrationController : Controller
 	{
-		private readonly Fstep1Context db;
+		private readonly FstepDBContext db;
 		private readonly IMapper _mapper;
 
-		public RegistrationController(Fstep1Context context, IMapper mapper)
+		public RegistrationController(FstepDBContext context, IMapper mapper)
 		{
 			db = context;
 			_mapper = mapper;
