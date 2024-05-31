@@ -98,6 +98,28 @@ namespace FStep.Controllers.Auth
 			};
             return View(profile);
 		}
+		[Authorize]
+		[HttpPost]
+		public async Task<IActionResult> Profile(ProfileVM model)
+		{
+			try
+			{
+				string userID = User.FindFirstValue("UserID");
+				var user = db.Users.SingleOrDefault(user => user.IdUser == userID);
+				user.Address = model.Address;
+				user.Email = model.Email;
+				user.Name = model.Name;
+				user.Rating = model.Rating;
+				user.StudentId = model.StudentId;
+				db.Update(user);
+				db.SaveChanges();
+				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, Util.ClaimsHelper(user)); ;
+				return RedirectToAction("Profile");
+			}
+			catch (Exception ex) { }
+			return View();
+		}
+		[Authorize]
 		[HttpPost]
 		public async Task<IActionResult> ProfileImg(IFormFile img)
 		{
