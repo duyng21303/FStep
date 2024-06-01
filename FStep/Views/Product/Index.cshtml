@@ -1,0 +1,13 @@
+﻿@model IEnumerable<FStep.ViewModels.ProductVM>
+
+@{
+    Layout = "_Layout";
+}
+
+@section ProductDt {
+    <ol class="productdt">
+        <li class="productdt-item"><a href="#">Pages</a></li>
+    </ol>
+}
+
+@await Html.PartialAsync("_ListProduct", Model)

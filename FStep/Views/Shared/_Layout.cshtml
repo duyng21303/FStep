@@ -30,7 +30,10 @@
             </div>
         </nav>
     </header>
+
     <div class="container">
+        @RenderSection("ProductDt", required: false)
+
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

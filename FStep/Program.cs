@@ -19,15 +19,18 @@ namespace FStep
 				option.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
 			});
 			//builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-		//.AddEntityFrameworkStores<Fstep1Context>();
-		//.AddDefaultTokenProviders();
+			//.AddEntityFrameworkStores<Fstep1Context>();
+			//.AddDefaultTokenProviders();
 
+			builder.Services.AddDistributedMemoryCache();
 			builder.Services.AddSession(options =>
 			{
 				options.IdleTimeout = TimeSpan.FromSeconds(10);
 				options.Cookie.HttpOnly = true;
 				options.Cookie.IsEssential = true;
 			});
+			
+			
 			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options
 				=>
 			{
