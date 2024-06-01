@@ -43,8 +43,6 @@ namespace FStep.Controllers.Customer
 			{
 				var product = _mapper.Map<Product>(model);
 				product.Name = model.NameProduct;
-				product.Quantity = model.Quantity;
-				product.Price = model.Price;
 				product.Status = true;
 				product.Detail = model.DetailProduct;
 				db.Add(product);

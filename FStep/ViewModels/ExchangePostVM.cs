@@ -25,11 +25,6 @@ namespace FStep.ViewModels
 		[Display(Name = "Name of product")]
 		[Required(ErrorMessage = "This is required")]
 		public string NameProduct { get; set; } = string.Empty;
-		[Display(Name = "Quantity")]
-		public int? Quantity { get; set; }
-		[Display(Name = "Unit Price")]
-		[Required(ErrorMessage = "This is required")]
-		public float Price { get; set; }
 		[Display(Name = "Detail information of Product")]
 		public string? DetailProduct { get; set; }
 	}
