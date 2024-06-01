@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using AutoMapper;
 using System.IO;
+using Microsoft.AspNetCore.Authentication.Google;
 
 namespace FStep.Controllers.Auth
 {
@@ -78,7 +79,12 @@ namespace FStep.Controllers.Auth
 			}
 			return View();
 		}
-		[Authorize]
+        public IActionResult LoginGoogle(string returnUrl = "/")
+        {
+            var properties = new AuthenticationProperties { RedirectUri = returnUrl };
+            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+        }
+        [Authorize]
 		public async Task<IActionResult> Logout()
 		{
 			await HttpContext.SignOutAsync();
