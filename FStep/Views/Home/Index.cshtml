@@ -78,13 +78,19 @@
 				<div class="col-md-6">
 					<h1 class="exchange-title">Exchange: Suggestion Today</h1>
 				</div>
-				<div class="col-md-6">
+				<div class="col-md-5">
 					<form asp-action="Index" asp-controller="Home" class="d-flex justify-content-end search-form">
 						<input type="search" class="form-control search-input" placeholder="keywords" name="query">
 						<button class="btn btn-primary search-button" type="submit">
 							<i class="fa fa-search search-icon"></i>
 						</button>
 					</form>
+					
+				</div>
+				<div class="col-md-1">
+					<a href="/Post/CreateExchangePost">
+						<i class="fa fa-plus-square" style="font-size:45px;"></i>
+					</a>
 				</div>
 			</div>
 			<!-- End header body -->
