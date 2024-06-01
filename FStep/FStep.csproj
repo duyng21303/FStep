@@ -8,22 +8,18 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\Admin\**" />
-    <Compile Remove="Controllers\Customer\**" />
     <Compile Remove="Controllers\Moder\**" />
     <Compile Remove="ViewComponents\**" />
     <Compile Remove="wwwroot\car-repair-html-template\**" />
     <Content Remove="Controllers\Admin\**" />
-    <Content Remove="Controllers\Customer\**" />
     <Content Remove="Controllers\Moder\**" />
     <Content Remove="ViewComponents\**" />
     <Content Remove="wwwroot\car-repair-html-template\**" />
     <EmbeddedResource Remove="Controllers\Admin\**" />
-    <EmbeddedResource Remove="Controllers\Customer\**" />
     <EmbeddedResource Remove="Controllers\Moder\**" />
     <EmbeddedResource Remove="ViewComponents\**" />
     <EmbeddedResource Remove="wwwroot\car-repair-html-template\**" />
     <None Remove="Controllers\Admin\**" />
-    <None Remove="Controllers\Customer\**" />
     <None Remove="Controllers\Moder\**" />
     <None Remove="ViewComponents\**" />
     <None Remove="wwwroot\car-repair-html-template\**" />
@@ -33,6 +29,7 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.5">
       <PrivateAssets>all</PrivateAssets>
@@ -43,14 +40,19 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
     <PackageReference Include="X.PagedList" Version="9.1.2" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="9.1.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Views\Search\" />
-    <Folder Include="Views\Shared\Components\" />
+	  <Folder Include="Controllers\Admin\" />
+	  <Folder Include="Controllers\Moder\" />
+	  <Folder Include="Data\" />
+	  <Folder Include="ViewComponents\" />
+	  <Folder Include="Views\Shared\Components\" />
+	  <Folder Include="wwwroot\img\postPic\" />
+	  <Folder Include="wwwroot\img\pic\" />
+	  <Folder Include="wwwroot\img\userAvar\" />
+	  <Folder Include="wwwroot\img\nullAvar\" />
   </ItemGroup>
 
 </Project>

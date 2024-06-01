@@ -76,7 +76,9 @@
 			<!-- Title header body  -->
 			<div class="row align-items-center mb-4 search-header">
 				<div class="col-md-6">
-					<h1 class="exchange-title">Exchange: Suggestion Today</h1>
+                    <a asp-controller="Post" asp-action="CreatePost" type="hidden" class="border-danger" style="text-decoration: none;">
+                        <button type="submit" class="btn btn-primary"> + Tạo bài đăng mua bán</button>
+                    </a>
 				</div>
 				<div class="col-md-6">
 					<form asp-action="Index" asp-controller="Home" class="d-flex justify-content-end search-form">
@@ -99,7 +101,7 @@
 								<div class="col-md-6 col-lg-4 col-xl-3">
 									<div class="rounded position-relative fruit-item">
 										<div class="fruit-img">
-											<img src="@Url.Content("~/image/" + item.Image)" class="img-fluid w-100 rounded-top" alt="Laptop">
+											<img src="@Url.Content("~/img/postPic/" + item.Image)" class="img-fluid w-100 rounded-top" alt="Laptop">
 										</div>
 										<div class="p-4 border border-secondary border-top-0 rounded-bottom">
 											<h4 class="Title">@item.Title</h4>
