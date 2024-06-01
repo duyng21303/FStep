@@ -3,62 +3,49 @@
 	ViewData["Title"] = "Register";
 }
 <div class="container-xxl position-relative bg-white d-flex p-0">
-	<!-- Spinner Start -->
-	<div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-		<div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-			<span class="sr-only">Loading...</span>
-		</div>
-	</div>
-	<!-- Spinner End -->
-	<!-- Sign Up Start -->
-	<div class="container-fluid">
-		<div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
-			<div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
-				<div class="bg-light rounded p-4 p-sm-5 my-4 mx-3">
-					<div class="d-flex align-items-center justify-content-between mb-3">
-						<a href="index.html" class="">
-							<h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>FStep</h3>
-						</a>
-						<h3>Sign Up</h3>
-					</div>
-					<form asp-action="Register">
-						<div class="form-floating mb-3">
-							<input asp-for="@Model.username" type="text" class="form-control" id="floatingText" placeholder="jhondoe">
-							<label asp-for="@Model.username" for="floatingText"></label>
-							<span asp-validation-for="@Model.username" class="text-danger"></span>
-						</div>
-						<div class="form-floating mb-3">
-							<input asp-for="@Model.email" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-							<label asp-for="@Model.email" for="floatingInput"></label>
-							<span asp-validation-for="@Model.email" class="text-danger"></span>
-
-						</div>
-						<div class="form-floating mb-4">
-							<input asp-for="@Model.password" class="form-control" id="floatingPassword" placeholder="Password">
-							<label asp-for="@Model.password" for="floatingPassword"></label>
-							<span asp-validation-for="@Model.password" class="text-danger"></span>
-						</div>
-						<div class="text-danger">
-								@Html.ValidationMessage("Error")
-
-							</div>
-						<div class="d-flex align-items-center justify-content-between mb-4">
-							<div class="form-check">
-								<input type="checkbox" class="form-check-input" id="exampleCheck1">
-								<label class="form-check-label" for="exampleCheck1">Check me out</label>
-							</div>
-							<a href="">Forgot Password</a>
-						</div>
-						<button type="submit" class="btn btn-primary py-3 w-100 mb-4">
-							Sign Up
-						</button>
-					</form>
-					<p class="text-center mb-0">Already have an Account? <a href="">Sign In</a></p>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- Sign Up End -->
+    <!-- Sign Up Start -->
+    <div class="container-fluid">
+        <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
+            <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+                <div class="bg-light rounded p-4 p-sm-5 my-4 mx-3">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <a href="@Url.Action("Index", "Home")" class="">
+                            <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>FStep</h3>
+                        </a>
+                        <h3>Sign Up</h3>
+                    </div>
+                    <form asp-action="Register">
+                        <div class="form-floating mb-3">
+                            <input asp-for="username" type="text" class="form-control" id="floatingText">
+                            <label asp-for="username" for="floatingText"></label>
+                            <span asp-validation-for="username" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="email" type="email" class="form-control" id="floatingInput">
+                            <label asp-for="email" for="floatingInput"></label>
+                            <span asp-validation-for="email" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-4">
+                            <input asp-for="password" class="form-control" id="floatingPassword">
+                            <label asp-for="password" for="floatingPassword"></label>
+                            <span asp-validation-for="password" class="text-danger"></span>
+                        </div>
+                        <div class="text-danger">
+                            @Html.ValidationSummary()
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                            </div>
+                            <a href="@Url.Action("ForgotPassword", "Account")">Forgot Password</a>
+                        </div>
+                        <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Sign Up</button>
+                    </form>
+                    <p class="text-center mb-0">Already have an Account? <a href="@Url.Action("Login", "Account")">Sign In</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Sign Up End -->
 </div>
-
-

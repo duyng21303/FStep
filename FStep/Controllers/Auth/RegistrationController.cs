@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using FStep.Helpers;
 using FStep.Data;
 using FStep.Helpers;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-
 namespace FStep.Controllers.Auth
 {
 	public class RegistrationController : Controller
@@ -12,11 +10,11 @@ namespace FStep.Controllers.Auth
 		private readonly FstepDBContext db;
 		private readonly IMapper _mapper;
 
-		public RegistrationController(FstepDBContext context, IMapper mapper)
+        public RegistrationController(FstepDBContext context, IMapper mapper)
 		{
 			db = context;
 			_mapper = mapper;
-		}
+        }
 		[HttpGet]
 		public IActionResult Register()
 		{
@@ -29,29 +27,35 @@ namespace FStep.Controllers.Auth
 			{
 				try
 				{
-					if (db.Users.SingleOrDefault(user => user.IdUser == model.username) != null)
-					{
+                    //sử dụng Anyđể kiểm tra sự tồn tại.
+                    if (db.Users.Any(user => user.IdUser == model.username))
+                    {
 						ModelState.AddModelError("Error", "Tên đăng nhập đã tồn tại");
 					}
-					else
-					{
-						var user = _mapper.Map<User>(model);
+                    else if (db.Users.Any(user => user.Email == model.email))
+                    {
+                        ModelState.AddModelError("Error", "Địa chỉ email đã được sử dụng");
+                    }
+                    else
+                    {
+                        var user = _mapper.Map<User>(model);
 						user.IdUser = model.username;
 						user.HashKey = Util.GenerateRandomKey();
-						user.Password = model.password.ToMd5Hash(user.HashKey);
-						user.Email = model.email;
+						user.Password = model.password.ToMd5Hash(user.HashKey);   
 						user.Role = "Customer";
 						db.Add(user);
 						db.SaveChanges();
-						return Redirect("/");
+
+                        return RedirectToAction("Login", "Account");
 					}
 				}
-				catch (Exception ex)
-				{
-					Console.WriteLine(ex);
-				}
-			}
-			return View();
+                catch (Exception ex)
+                {
+                    // Log the exception (use a logging framework)
+                    ModelState.AddModelError("Error", "An error occurred while processing your request.");
+                }
+            }
+            return View(model); ;
 		}
 	}
 }

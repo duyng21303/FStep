@@ -23,3 +23,9 @@ const $dropdownToggle = $(".dropdown-toggle");
 const $dropdownMenu = $(".dropdown-menu");
 const showClass = "show";
 
+document.addEventListener("DOMContentLoaded", function () {
+    var spinner = document.getElementById('spinner');
+    if (spinner) {
+        spinner.style.display = 'none';
+    }
+});
