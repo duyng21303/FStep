@@ -10,8 +10,12 @@
                         <img src="~/image/@item.RecieveImg" class="img-fluid w-100 rounded-top" alt="@item.Name">
                     </a>
                 </div>
+                <div class="fruite-content">
+                    <a asp-action="Detail" asp-controller="Product" asp-route-id="@item.IdProduct">
+                        <h4>@item.Name</h4>
+                    </a>
+                </div>
             </div>
         </div>
     }
 </div>
-

@@ -351,5 +351,39 @@ body {
 .quantity input[type="text"] {
     width: 1cm; 
 }
+main {
+    background: url('@Url.Content("~/image/background.jpg")') no-repeat center center fixed;
+    background-size: cover;
+}
+.product-image {
+    width: 100%;
+    height: auto;
+}
+.my-header {
+    background-color: #FF6600; 
+    color: #FFFFFF; 
+    padding: 20px 0; 
+    height: 100px; 
+}
+.product-item {
+    border: 1px solid #333;
+    border-radius: 5px;
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+
+    .product-item:hover {
+        transform: scale(1.05);
+    }
+
+.product-img img {
+    border-bottom: 2px solid #333;
+}
+
+.product-content {
+    padding: 10px;
+    background-color: #333;
+    text-align: center;
+}
 
 
