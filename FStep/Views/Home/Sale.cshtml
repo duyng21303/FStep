@@ -107,8 +107,8 @@
 											<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded-top" alt="Laptop">
 										</div>
 										<div class="p-4 border border-secondary border-top-0 rounded-bottom">
-											<h4 class="Title">@item.Title</h4>
-											<p class="description">@item.Description</p>
+											<h4 class="Title">@Html.Raw(item.Title)</h4>
+											<p class="description">@Html.Raw(item.Description)</p>
 											<p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate.ToString("dd/MM/yyyy")</span></p>
 										</div>
 									</div>

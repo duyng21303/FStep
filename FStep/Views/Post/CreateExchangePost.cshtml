@@ -12,7 +12,7 @@
 						<div class="form-item">
 							<div class="form-item w-100">
 								<label asp-for="@Model.Title" class="form-label my-3"></label><sup>*</sup>
-								<input asp-for="@Model.Title" type="text" class="form-control">
+								<textarea asp-for="@Model.Title" type="text" class="form-control" id="summernoteTitle"></textarea>
 								<span asp-validation-for="@Model.Title" class="text-danger"></span>
 							</div>
 						</div>
@@ -22,22 +22,9 @@
 						</div>
 						<div class="form-item">
 							<label asp-for="@Model.Description" class="form-label my-3"></label><sup>*</sup>
-							<input asp-for="@Model.Description" type="text" class="form-control">
+							<textarea asp-for="@Model.Description" type="text" class="form-control" id="summernoteDescription"></textarea>
 							<span asp-validation-for="@Model.Description" class="text-danger"></span>
 						</div>
-
-						<div class="form-item">
-							<label asp-for="@Model.NameProduct" class="form-label my-3"></label><sup>*</sup>
-							<input asp-for="@Model.NameProduct" type="text" class="form-control">
-							<span asp-validation-for="@Model.NameProduct" class="text-danger"></span>
-						</div>
-
-						<div class="form-item">
-							<label asp-for="@Model.DetailProduct" class="form-label my-3"></label><sup>*</sup>
-							<input asp-for="@Model.DetailProduct" type="text" class="form-control">
-							<span asp-validation-for="@Model.DetailProduct" class="text-danger"></span>
-						</div>
-
 						<div style="background-color=gray">
 							<button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Post</button>
 						</div>

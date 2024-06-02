@@ -31,6 +31,7 @@ namespace FStep.ViewModels
 		public int Quantity { get; set; }
 
 		[Display(Name = "Unit Price")]
+		[DataType(DataType.Currency)]
 		[Required(ErrorMessage = "This is required")]
 		public float Price { get; set; }
 		[Display(Name = "Detail information of Product")]

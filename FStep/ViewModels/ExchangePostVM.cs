@@ -8,7 +8,7 @@ namespace FStep.ViewModels
 
 		[Display(Name = "Title")]
 		[Required(ErrorMessage = "This is required")]
-		[MaxLength(250, ErrorMessage = "Maximun 250 characters")]
+		[MaxLength(255, ErrorMessage = "Exceeds character limit")]
 		public string? Title { get; set; }
 		[Display(Name = "Upload picture")]
 		[DataType(DataType.Upload)]
@@ -17,7 +17,7 @@ namespace FStep.ViewModels
 
 		[Display(Name = "Description")]
 		[Required(ErrorMessage = "This is required")]
-		[MaxLength(250, ErrorMessage = "Maximun 250 characters")]
+		[MaxLength(255, ErrorMessage = "Exceeds character limit")]
 		public string? Description { get; set; }
 		public DateTime CreateDate { get; set; }
 		public string Type { get; set; } = "Exchange";
