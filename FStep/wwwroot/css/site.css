@@ -170,12 +170,19 @@ body {
 }
 
 /* Description of each post */
-.fruit-item .description {
+.fruit-item p.description {
     font-size: 1rem; /* Font size for the description */
     color: #666; /* Medium gray color for the description */
-    flex-grow: 1; /* Allow description to grow if too long */
+    flex-grow: 2; /* Allow description to grow if too long */
     overflow: hidden; /* Hide overflow text */
     text-overflow: ellipsis; /* Ellipsis for overflow text */
+    white-space: normal; /* Prevent wrapping */
+    line-height: 1.2em; /* Set the line height */
+    max-height: 2.4em; /* Limit to 2 lines (2 * line-height) */
+    display: -webkit-box; /* Required for webkit browsers */
+    -webkit-box-orient: vertical; /* Required for webkit browsers */
+    -webkit-line-clamp: 2; /* Limit the lines to 2 */
+    height: 2.4em;
 }
 
 /* Date text at the end of each post */

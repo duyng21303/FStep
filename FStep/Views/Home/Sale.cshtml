@@ -79,7 +79,7 @@
 					<h1 class="exchange-title">Exchange: Suggestion Today</h1>
 				</div>
 				<div class="col-md-6">
-					<form asp-action="Index" asp-controller="Home" class="d-flex justify-content-end search-form">
+					<form asp-action="Sale" asp-controller="Home" class="d-flex justify-content-end search-form">
 						<input type="search" class="form-control search-input" placeholder="keywords" name="query">
 						<button class="btn btn-primary search-button" type="submit">
 							<i class="fa fa-search search-icon"></i>
@@ -99,7 +99,7 @@
 								<div class="col-md-6 col-lg-4 col-xl-3">
 									<div class="rounded position-relative fruit-item">
 										<div class="fruit-img">
-											<img src="@Url.Content("~/image/" + item.Image)" class="img-fluid w-100 rounded-top" alt="Laptop">
+                                            <img src="~/img/PostSale/@item.Image" class="img-fluid w-100 rounded-top" alt="Laptop">
 										</div>
 										<div class="p-4 border border-secondary border-top-0 rounded-bottom">
 											<h4 class="Title">@item.Title</h4>

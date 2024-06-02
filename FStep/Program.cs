@@ -1,8 +1,11 @@
 ﻿using FStep.Data;
 using FStep.Helpers;
+using FStep.Repostory.Interface;
+using FStep.Repostory.Service;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace FStep
 {
@@ -18,11 +21,12 @@ namespace FStep
 			{
 				option.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
 			});
-			//builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-		//.AddEntityFrameworkStores<Fstep1Context>();
-		//.AddDefaultTokenProviders();
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
+            //builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+            //.AddEntityFrameworkStores<Fstep1Context>();
+            //.AddDefaultTokenProviders();
 
-			builder.Services.AddSession(options =>
+            builder.Services.AddSession(options =>
 			{
 				options.IdleTimeout = TimeSpan.FromSeconds(10);
 				options.Cookie.HttpOnly = true;
@@ -42,6 +46,10 @@ namespace FStep
 				googleOptions.ClientId = googleAuthNSection["ClientId"];
 				googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
 				// Cấu hình Url callback lại từ Google (không thiết lập thì mặc định là /signin-google)
+				googleOptions.ClaimActions.MapJsonKey("UserID", "sub", "string");
+				googleOptions.ClaimActions.MapJsonKey("IMG_RAW", "picture", "string");
+				googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Name, "name", "givenName");
+				googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Email, "email", "string");
 			});
 			builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 

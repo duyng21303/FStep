@@ -23,3 +23,14 @@ const $dropdownToggle = $(".dropdown-toggle");
 const $dropdownMenu = $(".dropdown-menu");
 const showClass = "show";
 
+document.getElementById('showPassword').addEventListener('change', function (e) {
+    var passwordInput = document.getElementById('password');
+    var confirmPasswordInput = document.getElementById('confirmPassword');
+    if (e.target.checked) {
+        passwordInput.type = 'text';
+        confirmPasswordInput.type = 'text';
+    } else {
+        passwordInput.type = 'password';
+        confirmPasswordInput.type = 'password';
+    }
+});

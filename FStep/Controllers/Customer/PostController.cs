@@ -27,12 +27,12 @@ namespace FStep.Controllers.Customer
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult CreatePost()
         {
             return View();
         }
         //Create post
-        [Authorize]
         [HttpPost]
         public IActionResult CreatePost(PostVM model, IFormFile img)
         {

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using FStep.Data;
 using FStep.Helpers;
+using FStep.Repostory.Interface;
+using FStep.Repostory.Service;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 namespace FStep.Controllers.Auth
@@ -9,11 +11,13 @@ namespace FStep.Controllers.Auth
     {
         private readonly FstepDBContext db;
         private readonly IMapper _mapper;
+        private readonly IEmailSender emailSender;
 
-        public RegistrationController(FstepDBContext context, IMapper mapper)
+        public RegistrationController(FstepDBContext context, IMapper mapper, IEmailSender emailSender)
         {
             db = context;
             _mapper = mapper;
+            this.emailSender = emailSender;
         }
         [HttpGet]
         public IActionResult Register()
@@ -21,7 +25,7 @@ namespace FStep.Controllers.Auth
             return View();
         }
         [HttpPost]
-        public IActionResult Register(RegisterVM model)
+        public async Task<IActionResult> Register(RegisterVM model)
         {
             if (ModelState.IsValid)
             {
@@ -38,20 +42,33 @@ namespace FStep.Controllers.Auth
                     }
                     else
                     {
-                        var user = _mapper.Map<User>(model);
-                        user.IdUser = model.username;
-                        user.HashKey = Util.GenerateRandomKey();
-                        user.Password = model.password.ToMd5Hash(user.HashKey);
-                        user.Role = "Customer";
-                        db.Add(user);
-                        db.SaveChanges();
+                       
 
-                        return RedirectToAction("Login", "Account");
+
+                        bool emailSent = await emailSender.EmailSendAsync(model.email, "Account Created", "Congratulations, Your account has been successfully created");
+                        if (!emailSent)
+                        {
+                            ModelState.AddModelError("Error", "There was an error sending the email.Please try again later.");
+
+                        }
+                        else
+                        {
+                            var user = _mapper.Map<User>(model);
+                            user.IdUser = model.username;
+                            user.HashKey = Util.GenerateRandomKey();
+                            user.Password = model.password.ToMd5Hash(user.HashKey);
+                            user.Role = "Customer";
+                            db.Add(user);
+                            db.SaveChanges();
+                            return RedirectToAction("Login", "Account");
+                        }
+                       
                     }
                 }
                 catch (Exception ex)
                 {
                     // Log the exception (use a logging framework)
+                    Console.WriteLine($"Error: {ex.Message}");
                     ModelState.AddModelError("Error", "An error occurred while processing your request.");
                 }
             }

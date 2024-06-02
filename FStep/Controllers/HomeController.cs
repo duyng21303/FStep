@@ -1,6 +1,7 @@
 ﻿using FStep.Data;
 using FStep.Models;
 using FStep.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using X.PagedList;
@@ -39,8 +40,6 @@ namespace FStep.Controllers
 			ViewBag.Query = query;
 			return View(pageList);
 		}
-
-
 		public IActionResult Sale(String? query, int? page)
 		{
 			int pageSize = 12; // số lượng sản phẩm mỗi trang 
