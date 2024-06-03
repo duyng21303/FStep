@@ -8,20 +8,19 @@
 <!-- Product Details Section Begin -->
 <section class="product-details spad">
 	<div class="container">
-		<div class="row">
+		<div class="row gx-4 gx-lg-5 align-items-center">
 			<div class="col-lg-6 col-md-6">
 				<div class="product__details__pic">
 					<div class="product__details__pic__item">
-						<img class="product__details__pic__item--large"
-							 src="@Url.Content("~/image/" + Model.RecieveImg)" alt="">
+						<div style="min-height:10px;"></div>
+						<img class="product__details__pic__item--large" src="@Url.Content("~/image/" + Model.RecieveImg)" alt="..." style="width: 600px; height: 700px;" />
 					</div>
 					<div class="product__details__pic__slider owl-carousel">
 						@if (ViewBag.RecieveImg != null)
 						{
 							@foreach (var image in ViewBag.RecieveImg)
 							{
-								<img data-imgbigurl="@Url.Content("~/image/" + image.FileImg)"
-									 src="@Url.Content("~/image/" + image.FileImg)" alt="">
+								<img data-imgbigurl="@Url.Content("~/image/" + image.FileImg)" src="@Url.Content("~/image/" + image.FileImg)" alt="..." style="width: 600px; height: 700px;" />
 							}
 						}
 					</div>
@@ -29,15 +28,14 @@
 			</div>
 			<div class="col-lg-6 col-md-6">
 				<div class="product__details__text" style="background-color: #CCCCCC; padding: 100px;">
-					<h3 style="color: #FF6600;">@Model.Name</h3>
-					<div class="product__details__price">Price: @Model.Price</div>
-					<p>
-						@Model.Detail
-					</p>
+					<h1 style="color: #FF6600;">@Model.Name</h1>
+					<div class="product__details__price">
+						<span class="text-decoration-line-through">$@Model.Price</span>
+						<span>$@Model.Price</span>
+					</div>
+					<p>@Model.Detail</p>
 					<ul>
-						<li><b>Quantity:</b>@Model.Quantity</li>
-						<li><b>Shipping:</b></li>
-						<li><b>Weight:</b></li>
+						<li><b>Quantity:</b> @Model.Quantity</li>
 					</ul>
 					<div style="min-height:10px;"></div>
 					<div class="product__details__quantity">
@@ -50,10 +48,12 @@
 						</div>
 					</div>
 					<div style="min-height:10px;"></div>
-					<a href="#" class="primary-btn">Buy Now</a>
+					<a href="#" class="btn btn-outline-dark flex-shrink-0">
+						<i class="bi-cart-fill me-1"></i>
+						Buy Now
+					</a>
 				</div>
 			</div>
-
 			<div class="col-lg-12">
 				<div class="product__details__tab">
 					<ul class="nav nav-tabs" role="tablist">
@@ -75,7 +75,6 @@
 					</ul>
 				</div>
 			</div>
-
 		</div>
 	</div>
 </section>
