@@ -17,7 +17,7 @@ namespace FStep.ViewModels
 
 		[Display(Name = "Description")]
 		[Required(ErrorMessage = "This is required")]
-		[MaxLength(255, ErrorMessage = "Exceeds character limit")]
+		//[MaxLength(255, ErrorMessage = "Exceeds character limit")]
 		public string? Description { get; set; }
 		public DateTime CreateDate { get; set; }
 		public string Type { get; set; } = "Exchange";

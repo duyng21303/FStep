@@ -26,29 +26,36 @@ namespace FStep.Helpers
 		{
 			try
 			{
-				var fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", folder, img.FileName);
-				bool isExisted = Path.Exists(fullPath);
-				if (isExisted)
+				if (img != null)
 				{
-					string strDate = DateTime.Now.ToString("MM_dd_yyyy_hh_mm_ss");
-					string fileExtension = Path.GetExtension(img.FileName).Replace(".", "");
-					string fileName = img.FileName.Substring(img.FileName.LastIndexOf("\\\\") + 1);
-					fileName = fileName.Substring(0, fileName.LastIndexOf(fileExtension)) + strDate + "." + fileExtension;
-
-					fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", folder, fileName);
-
-					using (var myfile = new FileStream(fullPath, FileMode.CreateNew))
+					var fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", folder, img.FileName);
+					bool isExisted = Path.Exists(fullPath);
+					if (isExisted)
 					{
-						img.CopyTo(myfile);
+						string strDate = DateTime.Now.ToString("MM_dd_yyyy_hh_mm_ss");
+						string fileExtension = Path.GetExtension(img.FileName).Replace(".", "");
+						string fileName = img.FileName.Substring(img.FileName.LastIndexOf("\\\\") + 1);
+						fileName = fileName.Substring(0, fileName.LastIndexOf(fileExtension)) + strDate + "." + fileExtension;
+
+						fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", folder, fileName);
+
+						using (var myfile = new FileStream(fullPath, FileMode.CreateNew))
+						{
+							img.CopyTo(myfile);
+						}
+						return fileName;
 					}
-					return fileName;
+					else
+					{
+						using (var myfile = new FileStream(fullPath, FileMode.CreateNew))
+						{
+							img.CopyTo(myfile);
+						}
+					}
 				}
 				else
 				{
-					using (var myfile = new FileStream(fullPath, FileMode.CreateNew))
-					{
-						img.CopyTo(myfile);
-					}
+					return "";
 				}
 			}
 			catch (Exception ex)
