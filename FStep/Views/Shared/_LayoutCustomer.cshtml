@@ -14,6 +14,7 @@
 	<header>
 		@await Html.PartialAsync("_Header")
 	</header>
+	
 
 	<div class="container">
 		<main role="main" class="pb-3">
@@ -43,11 +44,9 @@
 	</script> *@
 
 	@{
-		var summernoteTitle = new FStep.ViewModels.Summernote("#summernoteTitle");
-		var summernoteDescription = new FStep.ViewModels.Summernote("#summernoteDescription", false);
+		var summernoteDescription = new FStep.ViewModels.Summernote("#summernoteDescription");
 		//set false for loadLibrary to note load lib again
 	}
-	<partial name="_Summernote" model="summernoteTitle" />
 	<partial name="_Summernote" model="summernoteDescription" />
 </body>
 
