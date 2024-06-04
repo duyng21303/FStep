@@ -21,7 +21,8 @@
 											</div>
 										</div>
 										<div class="col-sm-6">
-											<img src="~/image/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="d-block w-100 rounded-circle" alt="" />
+
+											<img src="~/img/Sliden/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="d-block w-100 rounded-circle" alt="" />
 										</div>
 									</div>
 								</div>
@@ -35,7 +36,7 @@
 											</div>
 										</div>
 										<div class="col-sm-6">
-											<img src="~/image/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="d-block w-100 rounded-circle" alt="" />
+											<img src="~/img/Sliden/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="d-block w-100 rounded-circle" alt="" />
 										</div>
 									</div>
 								</div>
@@ -49,7 +50,7 @@
 											</div>
 										</div>
 										<div class="col-sm-6">
-											<img src="~/image/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="d-block w-100 rounded-circle" alt="" />
+											<img src="~/img/Sliden/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="d-block w-100 rounded-circle" alt="" />
 										</div>
 									</div>
 								</div>
@@ -77,10 +78,9 @@
 			<!-- Title header body  -->
 			<div class="row align-items-center mb-4 search-header">
 				<div class="col-md-6">
-                    <a asp-controller="Post" asp-action="CreatePost" type="hidden" class="border-danger" style="text-decoration: none;">                
-                    </a>
-					<button type="submit" class="btn btn-primary"> + Tạo bài đăng mua bán</button>
+					<h1 class="exchange-title">Sale: Suggestion Today</h1>
 				</div>
+			<div
 				<div class="col-md-5">
 					<form asp-action="Index" asp-controller="Home" class="d-flex justify-content-end search-form">
 						<input type="search" class="form-control search-input" placeholder="keywords" name="query">
@@ -90,13 +90,14 @@
 					</form>
 				</div>
 				<div class="col-md-1">
-					<button class="btn-search btn btn-md-square bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal">
-						<i class="fa fa-plus-square text-primary" style="font-size:45px;"></i>
-					</button>
+					<a asp-action="CreateExchangePost" asp-controller="Post">
+						<i class="fa fa-plus-square" style="font-size:45px;"></i>
+					</a>
 				</div>
 			</div>
 			<!-- End header body -->
 
+			@await Html.PartialAsync("_CreatePost")
 
 			<!-- Start Content Body-->
 			<div class="row g-4">
@@ -110,8 +111,8 @@
 									<div class="rounded position-relative fruit-item">
 										<div class="fruit-img">
 
-											<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded-top" alt="Laptop">											
-                                            <img src="~/image/laptop_lenovo_legion_s7_8.jpg" class="img-fluid w-100 rounded-top" alt="Laptop">
+
+											<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded-top" alt="Laptop">
 										</div>
 										<div class="p-4 border border-secondary border-top-0 rounded-bottom">
 											<h4 class="Title">@Html.Raw(item.Title)</h4>

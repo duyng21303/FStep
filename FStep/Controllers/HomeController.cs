@@ -30,7 +30,8 @@ namespace FStep.Controllers
 				Id = s.IdPost,
 				Title = s.Content,
 				Description = s.Detail,
-				Img = s.Img ?? "",
+
+				Img = s.Img,
 				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now
 			}).OrderByDescending(o => o.Id) ;
 
@@ -57,7 +58,7 @@ namespace FStep.Controllers
 			{
 				Id = s.IdPost,
 				Title = s.Content,
-				Image = s.Img,
+				Img = s.Img,
 				Description = s.Detail,
 				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now,
 				Price = s.IdProductNavigation.Price ?? 0

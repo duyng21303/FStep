@@ -21,7 +21,7 @@
 											</div>
 										</div>
 										<div class="col-sm-6">
-											<img src="~/image/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="d-block w-100 rounded-circle" alt="" />
+											<img src="~/img/Sliden/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="d-block w-100 rounded-circle" alt="" />
 										</div>
 									</div>
 								</div>
@@ -35,7 +35,7 @@
 											</div>
 										</div>
 										<div class="col-sm-6">
-											<img src="~/image/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="d-block w-100 rounded-circle" alt="" />
+											<img src="~/img/Sliden/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="d-block w-100 rounded-circle" alt="" />
 										</div>
 									</div>
 								</div>
@@ -49,7 +49,7 @@
 											</div>
 										</div>
 										<div class="col-sm-6">
-											<img src="~/image/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="d-block w-100 rounded-circle" alt="" />
+											<img src="~/img/Sliden/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="d-block w-100 rounded-circle" alt="" />
 										</div>
 									</div>
 								</div>
@@ -88,7 +88,7 @@
 					</form>
 				</div>
 				<div class="col-md-1">
-					<a href="/Post/CreateSalePost">
+					<a asp-action="CreateSalePost" asp-controller="Post">
 						<i class="fa fa-plus-square" style="font-size:45px;"></i>
 					</a>
 				</div>
@@ -105,7 +105,8 @@
 								<div class="col-md-6 col-lg-4 col-xl-3">
 									<div class="rounded position-relative fruit-item">
 										<div class="fruit-img">
-											<img src="@Url.Content("~/img/postPic/" + item.Image)" class="img-fluid w-100 rounded-top" alt="Laptop">
+
+											<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded-top" alt="Laptop">
 										</div>
 										<div class="p-4 border border-secondary border-top-0 rounded-bottom">
 											<h4 class="Title">@Html.Raw(item.Title)</h4>
