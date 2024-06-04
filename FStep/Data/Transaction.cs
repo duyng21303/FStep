@@ -25,6 +25,8 @@ public partial class Transaction
 
     public int? Type { get; set; }
 
+    public string? CodeTransaction { get; set; }
+
     public virtual Post IdPostNavigation { get; set; } = null!;
 
     public virtual User IdUserBuyerNavigation { get; set; } = null!;
