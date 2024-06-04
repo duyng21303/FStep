@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FStep.Data;
-using FStep.Helpers;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 namespace FStep.Controllers.Auth
