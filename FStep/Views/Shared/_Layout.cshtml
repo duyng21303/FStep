@@ -14,41 +14,21 @@
 
 </head>
 <body>
-    <header class ="my-header p-0">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">FStep</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
+    @{
+        Html.RenderPartial("~/Views/Shared/_Header.cshtml");
+    }
     <div style="min-height:20px;"></div>
-    <div class="container" style="background-color:#999999	">
+    <div class="container mb-3">
         @RenderSection("ProductDt", required: false)
         <main role="main" class="pb-3">
             @RenderBody()          
         </main>
-        <div style="min-height:450px;"></div>
+        <div style="min-height:100px;"></div>
     </div>
 
-    <footer class="border-top footer text-white bg-dark my-footer">
-        <div class="container text-center">
-            &copy; 2024 - FStep - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-white">Privacy</a>
-        </div>
-    </footer>
+    @{
+        Html.RenderPartial("~/Views/Shared/_Footer.cshtml");
+    }
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

@@ -27,10 +27,10 @@ namespace FStep.Controllers
 			}
             var result = ExchangePost.Select(s => new ExchangePostVM
 			{
+				IdProduct = s.IdProduct,
 				Id = s.IdPost,
 				Title = s.Content,
 				Description = s.Detail,
-
 				Img = s.Img,
 				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now
 			}).OrderByDescending(o => o.Id) ;
@@ -72,6 +72,12 @@ namespace FStep.Controllers
 		public IActionResult Detail(int id)
 		{
 			var data = db.Products.SingleOrDefault(p => p.IdProduct == id);
+
+			return View(data);
+		}
+		public IActionResult DetailPost(int id)
+		{
+			var data = db.Posts.SingleOrDefault(p => p.IdPost == id);
 
 			return View(data);
 		}
