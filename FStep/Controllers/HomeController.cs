@@ -68,6 +68,31 @@ namespace FStep.Controllers
             ViewBag.Query = query;
             return View(pageList);
         }
+		public IActionResult Product(int? type)
+		{
+			var product = db.Products.AsQueryable();
+
+			if (type.HasValue)
+			{
+				product = product.Where(p => p.IdProduct == type.Value);
+			}
+			var result = product.Select(p => new ExchangePostVM
+			{
+				IdProduct = p.IdProduct,
+				Name = p.Name,
+				Price = p.Price ?? 0,
+				Detail = p.Detail ?? "",
+				RecieveImg = p.RecieveImg ?? "",
+
+			});
+			return View(result);
+		}
+		public IActionResult Detail(int id)
+		{
+			var data = db.Products.SingleOrDefault(p => p.IdProduct == id);
+
+			return View(data);
+		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()

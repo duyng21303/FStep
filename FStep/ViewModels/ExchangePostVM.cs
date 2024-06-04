@@ -13,5 +13,19 @@
 		public String Image { get; set; }
 
 		public DateTime CreateDate { get; set; }
-	}
+
+        public int IdProduct { get; set; }
+
+        public string? Name { get; set; }
+
+        public int Quantity { get; set; }
+
+        public float Price { get; set; }
+
+        public bool Status { get; set; }
+
+        public string Detail { get; set; }
+
+        public string RecieveImg { get; set; }
+    }
 }
