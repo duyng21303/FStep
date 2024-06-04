@@ -10,24 +10,24 @@ using Microsoft.EntityFrameworkCore;
 using FStep.Helpers;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
-
 using AutoMapper;
 using System.IO;
+using Microsoft.AspNetCore.Authentication.Google;
 
 namespace FStep.Controllers.Auth
 {
 	public class AccountController : Controller
 	{
+
 		private readonly IMapper _mapper;
 		private readonly FstepDBContext db;
 		private readonly SignInManager<IdentityUser> _signInManager;
 		private readonly UserManager<IdentityUser> _userManager;
-
+		private const string PASSWORD_GOOGLE = "KJDHF";
 		public AccountController(FstepDBContext context, IMapper mapper)
 
 		{
 			db = context;
-
 			_mapper = mapper;
 		}
 		[HttpGet]
@@ -79,6 +79,59 @@ namespace FStep.Controllers.Auth
 			}
 			return View();
 		}
+		public IActionResult LoginGoogle()
+		{
+			var properties = new AuthenticationProperties { RedirectUri = Url.Action("GoogleResponse") };
+
+			return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+		}
+		public async Task<IActionResult> GoogleResponse()
+		{
+			var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+			if (!authenticateResult.Succeeded)
+			{
+				return BadRequest(); // Authentication failed
+			}
+			var state = HttpContext.Request.Query["state"].ToString();
+			
+			var claims = authenticateResult.Principal?.Identities.FirstOrDefault()?.Claims;
+			// Log claims for debugging
+			foreach (var claim in claims)
+			{
+				Console.WriteLine($"{claim.Type}: {claim.Value}");
+			}
+			var userID = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+			var name = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+			var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+			var img = claims.FirstOrDefault(c => c.Type == "IMG_RAW")?.Value;
+			string downloadedImgPath = await Util.DownloadImgGoogle(img, userID, "wwwroot/img/userAvar");
+			if (!db.Users.Any(user => user.IdUser == userID))
+			{
+				var haskKey = Util.GenerateRandomKey();
+				var user = new User()
+				{
+					IdUser = userID,
+					Name = name,
+					Email = email,
+					HashKey = haskKey,
+					Password = PASSWORD_GOOGLE.ToMd5Hash(haskKey),
+					AvatarImg = downloadedImgPath,
+					Role = "Customer"
+				};
+				db.Add(user);
+				db.SaveChanges();
+				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, Util.ClaimsHelper(user)); ;
+				return Redirect("/");
+			}
+			else
+			{
+				var user = db.Users.SingleOrDefault(user => user.IdUser == userID);
+				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, Util.ClaimsHelper(user)); ;
+			}
+			// Trả về thông tin người dùng hoặc xử lý theo nhu cầu
+			return Redirect("/");
+		}
 		[Authorize]
 		public async Task<IActionResult> Logout()
 		{
@@ -90,7 +143,7 @@ namespace FStep.Controllers.Auth
 		public IActionResult Profile()
 		{
 			string userID = User.FindFirstValue("UserID");
-            var user = db.Users.SingleOrDefault(user => user.IdUser == userID);
+			var user = db.Users.SingleOrDefault(user => user.IdUser == userID);
 			var profile = new ProfileVM()
 			{
 				IdUser = user.IdUser,
@@ -101,9 +154,30 @@ namespace FStep.Controllers.Auth
 				Rating = user.Rating,
 				StudentId = user.StudentId
 			};
-            return View(profile);
+			return View(profile);
 		}
-
+		[Authorize]
+		[HttpPost]
+		public async Task<IActionResult> Profile(ProfileVM model)
+		{
+			try
+			{
+				string userID = User.FindFirstValue("UserID");
+				var user = db.Users.SingleOrDefault(user => user.IdUser == userID);
+				user.Address = model.Address;
+				user.Email = model.Email;
+				user.Name = model.Name;
+				user.Rating = model.Rating;
+				user.StudentId = model.StudentId;
+				db.Update(user);
+				db.SaveChanges();
+				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, Util.ClaimsHelper(user)); ;
+				return RedirectToAction("Profile");
+			}
+			catch (Exception ex) { }
+			return View();
+		}
+		[Authorize]
 		[HttpPost]
 		public async Task<IActionResult> ProfileImg(IFormFile img)
 		{
@@ -124,8 +198,11 @@ namespace FStep.Controllers.Auth
 				db.SaveChanges();
 				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, Util.ClaimsHelper(user));
 				return RedirectToAction("Profile");
-			}catch(Exception ex) { }
+			}
+			catch (Exception ex) { }
 			return View();
 		}
+
+
 	}
 }

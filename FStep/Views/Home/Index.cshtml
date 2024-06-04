@@ -55,6 +55,7 @@
 								</div>
 							</div>
 
+
 							<button class="carousel-control-prev" type="button" data-bs-target="#slider-carousel" data-bs-slide="prev">
 								<span class="carousel-control-prev-icon" aria-hidden="true"></span>
 								<span class="visually-hidden">Previous</span>
@@ -76,7 +77,9 @@
 			<!-- Title header body  -->
 			<div class="row align-items-center mb-4 search-header">
 				<div class="col-md-6">
-					<h1 class="exchange-title">Exchange: Suggestion Today</h1>
+                    <a asp-controller="Post" asp-action="CreatePost" type="hidden" class="border-danger" style="text-decoration: none;">
+                        <button type="submit" class="btn btn-primary"> + Tạo bài đăng mua bán</button>
+                    </a>
 				</div>
 				<div class="col-md-5">
 					<form asp-action="Index" asp-controller="Home" class="d-flex justify-content-end search-form">
