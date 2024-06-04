@@ -31,6 +31,8 @@ public partial class User
 
     public string? HashKey { get; set; }
 
+    public string? Gender { get; set; }
+
     public virtual ICollection<Chat> Chats { get; set; } = new List<Chat>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
