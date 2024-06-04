@@ -27,12 +27,12 @@ namespace FStep.Controllers
 			}
             var result = ExchangePost.Select(s => new ExchangePostVM
 			{
-				idPost = s.IdPost,
+				Id = s.IdPost,
 				Title = s.Content,
 				Description = s.Detail,
-				Image = s.Img,
+				Img = s.Img ?? "",
 				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now
-			}).OrderByDescending(o => o.idPost) ;
+			}).OrderByDescending(o => o.Id) ;
 
 			var pageList = result.ToPagedList(pageNumber, pageSize);
 
@@ -55,38 +55,19 @@ namespace FStep.Controllers
 
             var result = SalePost.Select(s => new SalePostVM
 			{
-				idPost = s.IdPost,
+				Id = s.IdPost,
 				Title = s.Content,
 				Image = s.Img,
 				Description = s.Detail,
 				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now,
 				Price = s.IdProductNavigation.Price ?? 0
-			}).OrderByDescending(o => o.idPost);
+			}).OrderByDescending(o => o.Id);
 
             var pageList = result.ToPagedList(pageNumber, pageSize);
 
             ViewBag.Query = query;
             return View(pageList);
-        }
-		public IActionResult Product(int? type)
-		{
-			var product = db.Products.AsQueryable();
-
-			if (type.HasValue)
-			{
-				product = product.Where(p => p.IdProduct == type.Value);
-			}
-			var result = product.Select(p => new ExchangePostVM
-			{
-				IdProduct = p.IdProduct,
-				Name = p.Name,
-				Price = p.Price ?? 0,
-				Detail = p.Detail ?? "",
-				RecieveImg = p.RecieveImg ?? "",
-
-			});
-			return View(result);
-		}
+        }		
 		public IActionResult Detail(int id)
 		{
 			var data = db.Products.SingleOrDefault(p => p.IdProduct == id);

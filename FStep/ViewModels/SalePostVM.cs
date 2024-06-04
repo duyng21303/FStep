@@ -2,7 +2,7 @@
 {
 	public class SalePostVM
 	{
-		public int idPost { get; set; }
+		public int Id { get; set; }
 
 		public String Type { get; set; }
 
