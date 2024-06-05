@@ -273,12 +273,7 @@ body {
     display: inline-block;
     padding: 10px 20px;
     background-color: #00FF00;
-<<<<<<< HEAD
     color: darkred;
-=======
-<<<<<<< HEAD
-    color: darkred; 
->>>>>>> develop
     text-align: center;
     text-decoration: none;
     border-radius: 5px;
@@ -287,11 +282,6 @@ body {
 }
 
     .primary-btn:hover {
-<<<<<<< HEAD
-        background-color: #FFFF33;
-=======
-        background-color: #FFFF33; 
-=======
     color: darkred;
     text-align: center;
     text-decoration: none;
@@ -302,8 +292,6 @@ body {
 
     .primary-btn:hover {
         background-color: #FFFF33;
->>>>>>> be4e50a1e4e2e30543a88758aa5e86fe8f99828a
->>>>>>> develop
     }
 
 .pro-qty {
@@ -336,18 +324,8 @@ body {
     box-shadow: 0 0 10px 0 rgba(60, 64, 67, .1), 0 2px 6px 2px rgba(60, 64, 67, .15);
     min-width: 0 !important;
     padding-left: 85px;
-<<<<<<< HEAD
     width: 20cm;
     height: 5cm;
-=======
-<<<<<<< HEAD
-    width: 20cm; 
-    height: 5cm; 
-=======
-    width: 20cm;
-    height: 5cm;
->>>>>>> be4e50a1e4e2e30543a88758aa5e86fe8f99828a
->>>>>>> develop
     text-align: left;
 }
 
@@ -355,14 +333,9 @@ body {
     max-height: 40em;
     min-height: 8em;
 }
-<<<<<<< HEAD
 
-=======
-<<<<<<< HEAD
-=======
 
->>>>>>> be4e50a1e4e2e30543a88758aa5e86fe8f99828a
->>>>>>> develop
+
 .textarea {
     display: block;
     max-width: 100%;
@@ -370,44 +343,21 @@ body {
     padding: calc(.75em - 1px);
     resize: vertical;
 }
-<<<<<<< HEAD
+
 
 .comment-form-content {
     background-color: #f0f0f0;
-=======
-<<<<<<< HEAD
-.comment-form-content {
-    background-color: #f0f0f0;
-    border: 1px solid #ccc; 
-    border-radius: 5px; 
-    padding: 10px; 
-    margin-bottom: 20px; 
-=======
-
-.comment-form-content {
-    background-color: #f0f0f0;
->>>>>>> develop
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 10px;
     margin-bottom: 20px;
-<<<<<<< HEAD
-=======
->>>>>>> be4e50a1e4e2e30543a88758aa5e86fe8f99828a
->>>>>>> develop
 }
+
 
     .comment-form-content a {
         color: #333;
-<<<<<<< HEAD
         font-weight: bold;
-=======
-<<<<<<< HEAD
-        font-weight: bold; 
-=======
-        font-weight: bold;
->>>>>>> be4e50a1e4e2e30543a88758aa5e86fe8f99828a
->>>>>>> develop
+
     }
 
 .textarea-comment button {
@@ -418,11 +368,7 @@ body {
     gap: 5px;
     width: 70px;
 }
-<<<<<<< HEAD
 
-=======
-<<<<<<< HEAD
->>>>>>> develop
 .quantity input[type="text"] {
     width: 1cm;
 }
@@ -457,7 +403,7 @@ main {
     .product-item:hover {
         transform: scale(1.05);
     }
-<<<<<<< HEAD
+
 
 .product-img img {
     border-bottom: 2px solid #333;
@@ -468,11 +414,9 @@ main {
     background-color: #333;
     text-align: center;
 }
-=======
-=======
+
 
 .quantity input[type="text"] {
     width: 2cm;
 }
->>>>>>> be4e50a1e4e2e30543a88758aa5e86fe8f99828a
->>>>>>> develop
+
