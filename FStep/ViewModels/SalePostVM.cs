@@ -8,7 +8,7 @@ namespace FStep.ViewModels
 
 		[Display(Name = "Title")]
 		[Required(ErrorMessage = "This is required")]
-		[MaxLength(250, ErrorMessage = "Exceeds character limit")]
+		[MaxLength(250, ErrorMessage = "Maximun 250 characters")]
 		public string? Title { get; set; }
 		[Display(Name = "Upload Picture")]
 		[Required(ErrorMessage = "This is required")]

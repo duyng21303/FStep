@@ -1,9 +1,12 @@
 ﻿using FStep.Data;
 using FStep.Helpers;
+using Microsoft.AspNetCore.Authentication;
 using FStep.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System.Security.Claims;
 
 namespace FStep
 {
@@ -39,29 +42,30 @@ namespace FStep
                 // Đọc thông tin Authentication:Google từ appsettings.json
                 IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
 
-                // Thiết lập ClientID và ClientSecret để truy cập API google
-                googleOptions.ClientId = googleAuthNSection["ClientId"];
-                googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
-                // Cấu hình Url callback lại từ Google (không thiết lập thì mặc định là /signin-google)
-            });
-            builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+				// Thiết lập ClientID và ClientSecret để truy cập API google
+				googleOptions.ClientId = googleAuthNSection["ClientId"];
+				googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
+				// Cấu hình Url callback lại từ Google (không thiết lập thì mặc định là /signin-google)
+				googleOptions.ClaimActions.MapJsonKey("UserID", "sub", "string");
+				googleOptions.ClaimActions.MapJsonKey("IMG_RAW", "picture", "string");
+				googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Name, "name", "givenName");
+				googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Email, "email", "string");
+			});
+			builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
-            builder.Services.AddDistributedMemoryCache();
+			builder.Services.AddDistributedMemoryCache();
+
+			
 
 
-            builder.Services.AddSingleton<IVnPayService, VnPayService>();
-
-
-
-
-            var app = builder.Build();
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+			var app = builder.Build();
+			// Configure the HTTP request pipeline.
+			if (!app.Environment.IsDevelopment())
+			{
+				app.UseExceptionHandler("/Home/Error");
+				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+				app.UseHsts();
+			}
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

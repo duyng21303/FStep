@@ -1,6 +1,7 @@
 ﻿using FStep.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Mono.TextTemplating;
+using NuGet.DependencyResolver;
 using System.Security.Claims;
 using System.Text;
 
@@ -74,6 +75,40 @@ namespace FStep.Helpers
 				sb.Append(pattern[rd.Next(0, pattern.Length)]);
 			}
 			return sb.ToString();
+		}
+		public async static Task<string> DownloadImgGoogle(string imgURL, string userID, string downloadDirectory)
+		{ // Ensure the directory exists
+			if (!Directory.Exists(downloadDirectory))
+			{
+				Directory.CreateDirectory(downloadDirectory);
+			}
+
+			// Define the image filename based on the userID and the directory path
+			string imgFilename = $"{userID}.jpg";
+
+			using HttpClient client = new HttpClient();
+			try
+			{
+				// Send a GET request to the image URL
+				HttpResponseMessage response = await client.GetAsync(imgURL);
+				// Ensure the request was successful
+				response.EnsureSuccessStatusCode();
+
+				// Read the image bytes from the response
+				byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
+				// Save the image bytes to a local file
+				string filePath = Path.Combine(downloadDirectory, imgFilename);
+				await File.WriteAllBytesAsync(filePath, imageBytes);
+
+				// Return the filename of the saved image
+				return imgFilename;
+			}
+			catch (Exception ex)
+			{
+				// Log the exception (could also rethrow or handle accordingly)
+				Console.WriteLine($"Failed to download image: {ex.Message}");
+				return null; // Return null or throw an exception as needed
+			}
 		}
 	}
 }
