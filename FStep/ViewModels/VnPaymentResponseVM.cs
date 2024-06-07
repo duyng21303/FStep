@@ -15,12 +15,11 @@
     public class VnPaymentRequestModel
     {
         //public string ReceiveUseId { get; set; }
-        //public string ReceiveUseId { get; set; }
         //public string SendUseId { get; set; }
-        public int OrderId { get; set; }
+        public int TransactionId { get; set; }
         public string FullName { get; set; }
         public string Description { get; set; }
-        public double Amount { get; set; } 
+        public float Amount { get; set; } 
         public DateTime CreatedDate { get; set; }
     }
 }

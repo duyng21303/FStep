@@ -55,10 +55,10 @@ namespace FStep
 
 			builder.Services.AddDistributedMemoryCache();
 
-			
-
+			builder.Services.AddSingleton<IVnPayService, VnPayService>();
 
 			var app = builder.Build();
+
 			// Configure the HTTP request pipeline.
 			if (!app.Environment.IsDevelopment())
 			{
