@@ -9,19 +9,15 @@
   <ItemGroup>
     <Compile Remove="Controllers\Admin\**" />
     <Compile Remove="Controllers\Moder\**" />
-    <Compile Remove="ViewComponents\**" />
     <Compile Remove="wwwroot\car-repair-html-template\**" />
     <Content Remove="Controllers\Admin\**" />
     <Content Remove="Controllers\Moder\**" />
-    <Content Remove="ViewComponents\**" />
     <Content Remove="wwwroot\car-repair-html-template\**" />
     <EmbeddedResource Remove="Controllers\Admin\**" />
     <EmbeddedResource Remove="Controllers\Moder\**" />
-    <EmbeddedResource Remove="ViewComponents\**" />
     <EmbeddedResource Remove="wwwroot\car-repair-html-template\**" />
     <None Remove="Controllers\Admin\**" />
     <None Remove="Controllers\Moder\**" />
-    <None Remove="ViewComponents\**" />
     <None Remove="wwwroot\car-repair-html-template\**" />
   </ItemGroup>
 
@@ -47,7 +43,6 @@
     <PackageReference Include="X.PagedList.Mvc.Core" Version="9.1.2" />
 	  <Folder Include="Controllers\Admin\" />
 	  <Folder Include="Controllers\Moder\" />
-	  <Folder Include="ViewComponents\" />
 	  <Folder Include="Views\Shared\Components\" />
 	  <Folder Include="wwwroot\img\pic\" />
 	  <Folder Include="wwwroot\img\userAvar\" />

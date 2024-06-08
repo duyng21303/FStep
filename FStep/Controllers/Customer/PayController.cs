@@ -5,6 +5,9 @@ using FStep.Services;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Text;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 
 namespace FStep.Controllers.Customer
 {
@@ -21,20 +24,23 @@ namespace FStep.Controllers.Customer
 			_mapper = mapper;
 			_vnPayService = vnPayService;
 		}
-
 		public IActionResult Index()
 		{
 			return View();
 		}
-		[HttpGet]
-		public IActionResult Checkout()
-		{
-			return View();
-		}
 
-		[HttpPost]
+		[HttpGet]
+		public IActionResult CheckoutExchange(int id)
+		{
+			var exchange = db.Posts.SingleOrDefault(x => x.IdPost == id);
+			ViewData["Content"] = exchange.Content;
+			ViewData["Img"] = exchange.Img;
+			ViewData["Type"] = exchange.Type;
+			return View("Checkout");
+		}
 		[Authorize]
-		public IActionResult Checkout(CheckoutVM model, string paymentMethod = "COD")
+		[HttpPost]
+		public IActionResult CheckoutExchange(CheckoutVM model, string paymentMethod = "COD")
 		{
 			if (paymentMethod == "VnPay")
 			{
@@ -60,8 +66,48 @@ namespace FStep.Controllers.Customer
 				db.Add(transaction);
 				db.SaveChanges();
 			}
+			return RedirectToAction("Index");
+		}
+		[HttpGet]
+		public IActionResult CheckoutSale(int id)
+		{
+			var post = db.Posts.SingleOrDefault(x => x.IdPost == id);
+			ViewData["Content"] = post.Content;
+			ViewData["Img"] = post.Img;
+			ViewData["Price"] = db.Products.SingleOrDefault(p => p.IdProduct == id).Price;
+			ViewData["Quantity"] = db.Products.SingleOrDefault(p => p.IdProduct == id).Quantity;
+			ViewData["Amount"] = db.Products.SingleOrDefault(p => p.IdProduct == id).Price * db.Products.SingleOrDefault(p => p.IdProduct == id).Quantity;
+			ViewData["Type"] = post.Type;
+			return View("Checkout");
+		}
+		[Authorize]
+		[HttpPost]
+		public IActionResult CheckoutSale(CheckoutVM model, string paymentMethod = "COD")
+		{
+			if (paymentMethod == "VnPay")
+			{
+				var vnPayModel = new VnPaymentRequestModel
+				{
+					Amount = 1000000,
+					CreatedDate = DateTime.Now,
+					Description = "Thanh toan don hang",
+					FullName = User.FindFirst("UserID").Value,
+					TransactionId = new Random().Next(1000, 100000)
+				};
+				return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, vnPayModel));
+			}
 
-
+			if (ModelState.IsValid)
+			{
+				var transaction = _mapper.Map<Transaction>(model);
+				transaction.IdUserBuyer = User.FindFirst("UserID").Value;
+				transaction.IdUserSeller = "";
+				transaction.Amount = model.Amount;
+				transaction.Date = DateTime.Now;
+				transaction.IdPost = model.IdPost;
+				db.Add(transaction);
+				db.SaveChanges();
+			}
 			return RedirectToAction("Index");
 		}
 

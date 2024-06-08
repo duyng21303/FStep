@@ -5,97 +5,79 @@
 
 <!-- Checkout Page Start -->
 <div class="container-fluid py-5">
-	<div class="container py-5">
+	<div class="container-contentboby">
 		<h1 class="mb-4">Checkout</h1>
 		<form asp-action="Checkout" asp-controller="Pay">
 			<div class="row g-5">
-				<div class="col-md-12 col-lg-6 col-xl-7">
-					<div class="row">
-						<div class="col-md-12 col-lg-6">
-							<div class="form-item w-100">
-								<label class="form-label my-3">First Name<sup>*</sup></label>
-								<input type="text" class="form-control">
-							</div>
-						</div>
-						<div class="col-md-12 col-lg-6">
-							<div class="form-item w-100">
-								<label class="form-label my-3">Last Name<sup>*</sup></label>
-								<input type="text" class="form-control">
-							</div>
-						</div>
-					</div>
-					<div class="form-item">
-						<label class="form-label my-3">Address <sup>*</sup></label>
-						<input type="text" class="form-control" placeholder="House Number Street Name">
-					</div>
-					<div class="form-item">
-						<label class="form-label my-3">Town/City<sup>*</sup></label>
-						<input type="text" class="form-control">
-					</div>
-					<div class="form-item">
-						<label class="form-label my-3">Phone number<sup>*</sup></label>
-						<input type="tel" class="form-control">
-					</div>
-					<div class="form-item">
-						<label class="form-label my-3">Email Address<sup>*</sup></label>
-						<input type="email" class="form-control">
-					</div>
+				<div class="col-md-12 col-lg-6 col-xl-3">
 					<div class="form-item mt-3">
 						<textarea name="text" class="form-control" spellcheck="false" cols="30" rows="11" placeholder="Oreder Notes (Optional)"></textarea>
 					</div>
 				</div>
-				<div class="col-md-12 col-lg-6 col-xl-5">
-					<div class="table-responsive">
-						<table class="table">
-							<thead>
-								<tr>
-									<th scope="col">Products</th>
-									<th scope="col">Name</th>
-									<th scope="col">Price</th>
-									<th scope="col">Quantity</th>
-									<th scope="col">Total</th>
-								</tr>
-							</thead>
-							<tbody>
-								@* <tr>
-									<th scope="row">
-										<div class="d-flex align-items-center mt-2">
-											<img src="@Url.Content("~/img/postPic/" + Model.Img)" class="img-fluid rounded-circle" style="width: 90px; height: 90px;" alt="@Model.Img">
-										</div>
-									</th>
-									<td class="py-5">@Model.Title</td>
-									<td class="py-5">@Model.UnitPrice VND</td>
-									<td class="py-5">@Model.Quantity</td>
-									<td class="py-5">@Model.Amount VND</td>
-								</tr> *@
-								<tr>
-									<th scope="row">
-									</th>
-									<td class="py-5">
-										<p class="mb-0 text-dark text-uppercase py-3">TOTAL</p>
-									</td>
-									<td class="py-5"></td>
-									<td class="py-5"></td>
-									<td class="py-5">
-										<div class="py-3 border-bottom border-top">
-											@* <p class="mb-0 text-dark">@Model.Amount VND</p> *@
-										</div>
-									</td>
-								</tr>
-							</tbody>
-						</table>
+				@if (ViewData["Type"].Equals("Sale"))
+				{
+					<div class="col-md-12 col-lg-6 col-xl-9">
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+									<tr>
+										<th scope="col">Products</th>
+										<th scope="col">Name</th>
+										<th scope="col">Price</th>
+										<th scope="col">Quantity</th>
+										<th scope="col">Total</th>
+									</tr>
+								</thead>
+								<tbody>
+
+									<tr>
+										<th scope="row">
+											<div class="d-flex align-items-center mt-2">
+												<img src="@Url.Content("~/img/postPic/" + ViewData["Img"])" class="img-fluid rounded-square" style="width: 90px; height: 90px;" alt="@ViewData[" Img"]">
+											</div>
+										</th>
+										<td class="py-5">@ViewData["Content"]</td>
+										<td class="py-5">@ViewData["Price"] VND</td>
+										<td class="py-5">@ViewData["Quantity"]</td>
+										<td class="py-5">@ViewData["Amount"] VND</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="row g-4 text-center align-items-center justify-content-center pt-4">
+							<input type="submit" name="paymentMethod" value="VnPay" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary"></input>
+						</div>
 					</div>
-					<div class="row g-4 text-center align-items-center justify-content-center pt-4">
-						<input type="submit" name="paymentMethod" value="COD" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary"></input>
+				}
+				else
+				{
+					<div class="col-md-12 col-lg-6 col-xl-9">
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+									<tr>
+										<th scope="col">Products</th>
+										<th scope="col">Name</th>
+									</tr>
+								</thead>
+								<tbody>
+
+									<tr>
+										<th scope="row">
+											<div class="d-flex align-items-center mt-2">
+												<img src="@Url.Content("~/img/postPic/" + ViewData["Img"])" class="img-fluid rounded-square" style="width: 90px; height: 90px;" alt="@ViewData["Img"]">
+											</div>
+										</th>
+										<td class="py-5">@ViewData["Content"]</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="row g-4 text-center align-items-center justify-content-center pt-4">
+							<input type="submit" name="paymentMethod" value="VnPay" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary"></input>
+						</div>
 					</div>
-					<div class="row g-4 text-center align-items-center justify-content-center pt-4">
-						<input type="submit" name="paymentMethod" value="VnPay" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary"></input>
-					</div>
-					<div class="row g-4 text-center align-items-center justify-content-center pt-4">
-						<input type="submit" name="paymentMethod" value="Momo" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary"></input>
-					</div>
-					
-				</div>
+				}
 			</div>
 		</form>
 	</div>

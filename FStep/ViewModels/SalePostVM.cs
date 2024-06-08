@@ -4,7 +4,7 @@ namespace FStep.ViewModels
 {
 	public class SalePostVM
 	{
-		public int Id { get; set; }
+		public int IdPost { get; set; }
 
 		[Display(Name = "Title")]
 		[Required(ErrorMessage = "This is required")]

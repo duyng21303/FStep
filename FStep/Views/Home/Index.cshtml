@@ -77,9 +77,9 @@
 			<!-- Title header body  -->
 			<div class="row align-items-center mb-4 search-header">
 				<div class="col-md-6">
-					<h1 class="exchange-title">Sale: Suggestion Today</h1>
+					<h1 class="exchange-title">Exchange: Suggestion Today</h1>
 				</div>
-			<div
+				<div
 				<div class="col-md-5">
 					<form asp-action="Index" asp-controller="Home" class="d-flex justify-content-end search-form">
 						<input type="search" class="form-control search-input" placeholder="keywords" name="query">
@@ -94,37 +94,40 @@
 					</a>
 				</div>
 			</div>
-			<!-- End header body -->
-			<!-- Start Content Body-->
-			<div class="row g-4">
-				<div class="col-lg-12">
-					<div class="container-contentboby">
-						<div class="row g-4">
-							<!-- Start of post item column -->
-							@foreach (var item in Model)
-							{
-								<div class="col-md-6 col-lg-4 col-xl-3">
-									<div class="rounded position-relative fruit-item">
-										<div class="fruit-img">
-											<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded-top" alt="Laptop">
-										</div>
-										<div class="p-4 border border-secondary border-top-0 rounded-bottom">
-											<h4 class="Title">@Html.Raw(item.Title)</h4>
-											<p class="description">@Html.Raw(item.Description)</p>
-											<p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate.ToString("dd/MM/yyyy")</span></p>
+				<!-- End header body -->
+				<!-- Start Content Body-->
+				<div class="row g-4">
+					<div class="col-lg-12">
+						<div class="container-contentboby">
+							<div class="row g-4">
+								<!-- Start of post item column -->
+								@foreach (var item in Model)
+								{
+									<div class="col-md-6 col-lg-6 col-xl-3">
+										<div class="rounded position-relative fruit-item">
+											<div class="fruit-img">
+												<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded-top" alt="Laptop">
+											</div>
+											<div class="p-4 border border-secondary border-top-0 rounded-bottom">
+												<h4 class="Title">@Html.Raw(item.Title)</h4>
+												<p class="description">@Html.Raw(item.Description)</p>
+												<div class="d-flex justify-content-between flex-lg-wrap">
+													<p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate.ToString("dd/MM/yyyy")</span></p>
+													<a asp-action="CheckoutExchange" asp-controller="Pay" asp-route-id="@item.IdPost" class="btn border border-secondary rounded-pill text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i>Buy now</a>
+												</div>
+											</div>
 										</div>
 									</div>
-								</div>
-							}
+								}
+							</div>
 						</div>
+						<!-- Start Content Body-->
+						<!-- Create relationship between page and page -->
+						@Html.PagedListPager(Model, page => Url.Action("Index", new { query = ViewBag.Query, page = page }))
+						<!-- End create -->
 					</div>
-					<!-- Start Content Body-->
-					<!-- Create relationship between page and page -->
-					@Html.PagedListPager(Model, page => Url.Action("Index", new { query = ViewBag.Query, page = page }))
-					<!-- End create -->
 				</div>
+				<!-- End Show -->
 			</div>
-			<!-- End Show -->
 		</div>
 	</div>
-</div>
