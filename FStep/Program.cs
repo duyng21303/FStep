@@ -1,8 +1,12 @@
 ﻿using FStep.Data;
 using FStep.Helpers;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System.Security.Claims;
 
 namespace FStep
 {
@@ -22,7 +26,7 @@ namespace FStep
 			//.AddEntityFrameworkStores<Fstep1Context>();
 			//.AddDefaultTokenProviders();
 
-			builder.Services.AddDistributedMemoryCache();
+			builder.Services.AddSignalR();
 			builder.Services.AddSession(options =>
 			{
 				options.IdleTimeout = TimeSpan.FromSeconds(10);
@@ -45,6 +49,10 @@ namespace FStep
 				googleOptions.ClientId = googleAuthNSection["ClientId"];
 				googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
 				// Cấu hình Url callback lại từ Google (không thiết lập thì mặc định là /signin-google)
+				googleOptions.ClaimActions.MapJsonKey("UserID", "sub", "string");
+				googleOptions.ClaimActions.MapJsonKey("IMG_RAW", "picture", "string");
+				googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Name, "name", "givenName");
+				googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Email, "email", "string");
 			});
 			builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
@@ -71,12 +79,16 @@ namespace FStep
 
 			app.UseAuthentication();
 			app.UseAuthorization();
-
+			app.UseEndpoints(endpoints =>
+			{
+				endpoints.MapHub<ChatHub>("chatHub");
+			});
 			app.MapControllerRoute(
 				name: "default",
 				pattern: "{controller=Home}/{action=Index}/{id?}");
 
 			app.Run();
+			
 		}
 	}
 }

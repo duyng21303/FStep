@@ -1,35 +1,38 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
+
 header {
     /* Ensure it has some top padding to avoid overlapping with the carousel */
     padding-top: 60px; /* Adjust as needed based on your design */
     z-index: 1000; /* Ensure header is above other elements */
     position: relative; /* Ensure it's not overlapped by absolute positioned elements */
     background-color: #fff; /* Adjust background color as per your design */
-}                                                                                                          /* STRART CSS HEADER*/
+}
+/* STRART CSS HEADER*/
 .navbar-nav .dropdown-menu {
     background-color: #f8f9fa; /* Light background for dropdown menu */
 }
+
 .navbar-nav .dropdown-item:hover {
     background-color: #e9ecef; /* Slightly darker background on hover */
 }
@@ -242,6 +245,7 @@ body {
         .pagination li span:hover {
             background-color: #e36200; /* Darker orange background on hover */
         }
+
 .card-body {
     display: flex;
     flex-direction: column;
@@ -250,17 +254,17 @@ body {
 }
 
 .image-container {
-    width: 200px; 
-    height: 200px; 
-    overflow: hidden; 
-    position: relative; 
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    position: relative;
 }
 
     .image-container img {
         width: 100%;
         height: 100%;
-        object-fit: cover; 
-        position: absolute; 
+        object-fit: cover;
+        position: absolute;
         top: 0;
         left: 0;
     }
@@ -269,6 +273,7 @@ body {
     display: inline-block;
     padding: 10px 20px;
     background-color: #00FF00;
+<<<<<<< HEAD
     color: darkred; 
     text-align: center;
     text-decoration: none;
@@ -279,6 +284,18 @@ body {
 
     .primary-btn:hover {
         background-color: #FFFF33; 
+=======
+    color: darkred;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+    .primary-btn:hover {
+        background-color: #FFFF33;
+>>>>>>> develop
     }
 
 .pro-qty {
@@ -311,8 +328,13 @@ body {
     box-shadow: 0 0 10px 0 rgba(60, 64, 67, .1), 0 2px 6px 2px rgba(60, 64, 67, .15);
     min-width: 0 !important;
     padding-left: 85px;
+<<<<<<< HEAD
     width: 20cm; 
     height: 5cm; 
+=======
+    width: 20cm;
+    height: 5cm;
+>>>>>>> develop
     text-align: left;
 }
 
@@ -320,6 +342,10 @@ body {
     max-height: 40em;
     min-height: 8em;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
 .textarea {
     display: block;
     max-width: 100%;
@@ -327,17 +353,31 @@ body {
     padding: calc(.75em - 1px);
     resize: vertical;
 }
+<<<<<<< HEAD
 .comment-form-content {
     background-color: #f0f0f0;
     border: 1px solid #ccc; 
     border-radius: 5px; 
     padding: 10px; 
     margin-bottom: 20px; 
+=======
+
+.comment-form-content {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+>>>>>>> develop
 }
 
     .comment-form-content a {
         color: #333;
+<<<<<<< HEAD
         font-weight: bold; 
+=======
+        font-weight: bold;
+>>>>>>> develop
     }
 
 .textarea-comment button {
@@ -348,6 +388,7 @@ body {
     gap: 5px;
     width: 70px;
 }
+<<<<<<< HEAD
 .quantity input[type="text"] {
     width: 1cm; 
 }
@@ -387,3 +428,9 @@ main {
 }
 
 
+=======
+
+.quantity input[type="text"] {
+    width: 2cm;
+}
+>>>>>>> develop
