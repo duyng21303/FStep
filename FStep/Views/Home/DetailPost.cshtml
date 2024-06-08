@@ -88,7 +88,6 @@
 		margin-top: 30px; 
 		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
 	}
-
 		.comment-section .comment-heading {
 			font-size: 20px; /
 			font-weight: bold; 
@@ -139,17 +138,13 @@
 						<div class="inner-column wow fadeInRight card" style="padding : 5px 5px 5px 5px;box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);">
 							<h3>Thông tin</h3>
 							<ul class="info-list">
-								<li><strong>Mô tả sản phẩm :</strong> @Html.Raw(Model.Detail)</li>
-								<li><strong>Kiểu:</strong> @Model.Type</li>
-								<li><strong>Tên người đăng :</strong> @Model.IdUserNavigation.Name</li>
+								<li>Mô tả sản phẩm : @Html.Raw(Model.Detail)</li>
+								<li>Kiểu: @Model.Type</li>
+								<li>Tên người đăng : @Model.IdUserNavigation.Name</li>
 							</ul>
-
 							<!--Help Box-->
-
 						</div>
 					</div>
-
-
 				</div>
 			</div>
 			<div style="background-color=gray;text-align:center" class="mt-2 btn border-secondary text-uppercase  text-primary">
