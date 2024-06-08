@@ -242,7 +242,6 @@ public partial class FstepDBContext : DbContext
 
         modelBuilder.Entity<Report>(entity =>
         {
-
             entity.HasKey(e => e.IdReport).HasName("PK__Report__D8639F52E2F68037");
 
             entity.ToTable("Report");

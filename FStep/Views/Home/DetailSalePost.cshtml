@@ -106,7 +106,7 @@
                 </div>
                 <div class="content-column col-lg-6 col-md-6 col-sm-6 mt-5">
                     <div class="inner-column card" style="padding : 5px 5px 5px 5px;box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);">
-                        <h2>@Model.Title</h2>
+                        <h1>@Model.Title</h1>
                         @* <p>@Html.Raw(Model.Title)</p> *@
                         <h2>Số lượng</h2>
                         <p>@Model.Quantity</p>
@@ -135,7 +135,7 @@
                     <div class="info-column col-lg-12 col-md-12 col-sm-12 ">
                         <div class="inner-column wow fadeInRight card" style="padding : 5px 5px 5px 5px;box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);">
                             <h3>Thông tin bài đăng</h3>
-                            <ul class="info-list">
+                            <ul style="list-style-type: none;">
                                 <li><strong>Mô tả sản phẩm :</strong> @Html.Raw(Model.Description)</li>
                                 <li><strong>Giá :</strong> @Model.Price VND</li>
                             </ul>

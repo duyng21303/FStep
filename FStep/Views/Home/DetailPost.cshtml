@@ -119,10 +119,10 @@
 				</div>
 				<div class="content-column col-lg-6 col-md-6 col-sm-6 mt-5">
 					<div class="inner-column card" style="padding : 5px 5px 5px 5px;box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);">
-						<h2>@Model.Content</h2>
+						<h1>@Model.Content</h1>
 						@* <p>@Html.Raw(Model.Content)</p> *@
 						<div style="min-height:30px;"></div>
-						<h4>Date Create</h4>
+						<h4>Ngày tạo</h4>
 						<p>@Model.Date</p>
 					</div>
 				</div>
@@ -137,10 +137,10 @@
 					<div class="info-column col-lg-12 col-md-12 col-sm-12 ">
 						<div class="inner-column wow fadeInRight card" style="padding : 5px 5px 5px 5px;box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);">
 							<h3>Thông tin</h3>
-							<ul class="info-list">
-								<li>Mô tả sản phẩm : @Html.Raw(Model.Detail)</li>
-								<li>Kiểu: @Model.Type</li>
-								<li>Tên người đăng : @Model.IdUserNavigation.Name</li>
+							<ul style="list-style-type: none;">
+								<li><strong>Mô tả sản phẩm : @Html.Raw(Model.Detail)</li>
+								<li><strong>Kiểu:</strong> @Model.Type</li>
+								<li><strong>Tên người đăng :</strong> @Model.IdUserNavigation.Name</li>
 							</ul>
 							<!--Help Box-->
 						</div>
