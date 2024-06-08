@@ -23,8 +23,8 @@ namespace FStep
 				option.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
 			});
 			//builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-		//.AddEntityFrameworkStores<Fstep1Context>();
-		//.AddDefaultTokenProviders();
+			//.AddEntityFrameworkStores<Fstep1Context>();
+			//.AddDefaultTokenProviders();
 			builder.Services.AddSignalR();
 			builder.Services.AddSession(options =>
 			{
