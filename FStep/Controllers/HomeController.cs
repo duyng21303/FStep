@@ -2,6 +2,7 @@
 using FStep.Models;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using X.PagedList;
 
@@ -69,17 +70,31 @@ namespace FStep.Controllers
             ViewBag.Query = query;
             return View(pageList);
         }		
-		public IActionResult Detail(int id)
+	
+		public IActionResult DetailPost(int id)
 		{
-			var data = db.Products.SingleOrDefault(p => p.IdProduct == id);
+			var data = db.Posts.Include(x => x.IdProductNavigation).Include(x => x.IdUserNavigation).SingleOrDefault(p => p.IdPost == id);
 
 			return View(data);
 		}
-		public IActionResult DetailPost(int id)
+		public IActionResult DetailSalePost(int id)
 		{
-			var data = db.Posts.SingleOrDefault(p => p.IdPost == id);
+            var SalePost = db.Posts.Include(x => x.IdProductNavigation).AsQueryable();
+            SalePost = SalePost.Where(p => p.IdPost == id);
+            var result = SalePost.Select(s => new SalePostVM
+            {
+                Id = s.IdPost,
+                Title = s.Content,
+				Quantity =(int)s.IdProductNavigation.Quantity,
+                Img = s.Img,
+                Description = s.Detail,
+				NameProduct = s.IdProductNavigation.Name,
+				DetailProduct = s.IdProductNavigation.Detail,
+                CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now,
+                Price = s.IdProductNavigation.Price ?? 0
+            }).SingleOrDefault();
 
-			return View(data);
+            return View(result);
 		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

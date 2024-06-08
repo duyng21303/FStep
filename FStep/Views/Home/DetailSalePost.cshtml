@@ -1,0 +1,195 @@
+﻿
+<style>
+    body {
+        background-color: #f0f0f0; 
+    }
+
+    .project-details-section .project-detail .auto-container {
+        background-color: #f0f0f0; 
+    }
+
+    .card {
+        border: none
+    }
+
+    .product {
+        background-color: #eee
+    }
+
+    .brand {
+        font-size: 13px
+    }
+
+    .act-price {
+        color: red;
+        font-weight: 700
+    }
+
+    .dis-price {
+        text-decoration: line-through
+    }
+
+    .about {
+        font-size: 14px
+    }
+
+    .color {
+        margin-bottom: 10px
+    }
+
+    label.radio {
+        cursor: pointer
+    }
+
+        label.radio input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            visibility: hidden;
+            pointer-events: none
+        }
+
+        label.radio span {
+            padding: 2px 9px;
+            border: 2px solid #ff0000;
+            display: inline-block;
+            color: #ff0000;
+            border-radius: 3px;
+            text-transform: uppercase
+        }
+
+        label.radio input:checked + span {
+            border-color: #ff0000;
+            background-color: #ff0000;
+            color: #fff
+        }
+
+    .btn-danger {
+        background-color: #ff0000 !important;
+        border-color: #ff0000 !important
+    }
+
+        .btn-danger:hover {
+            background-color: #da0606 !important;
+            border-color: #da0606 !important
+        }
+
+        .btn-danger:focus {
+            box-shadow: none
+        }
+
+    .cart i {
+        margin-right: 10px
+    }
+
+</style>
+
+@model FStep.ViewModels.SalePostVM
+<section class="project-details-section">
+    <div class="project-detail">
+        <div class="auto-container">
+            <!-- Upper Box -->
+            <div class="upper-box row">
+                <!--Project Tabs-->
+                <div class="project-tabs tabs-box clearfix col-6">
+                    <!--Tab Btns-->
+                    <!--Tabs Container-->
+                    <div class="tabs-content">
+                        <!--Tab / Active Tab-->
+                        <div class="tab active-tab" id="tab-1">
+                            <figure class="image">
+                                <img style="border-radius: 25px; width: 650px; height: 500px;" src="@Url.Content("~/image/" + Model.Img)" alt="">
+                            </figure>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="content-column col-lg-6 col-md-6 col-sm-6 mt-5">
+                    <div class="inner-column card" style="padding : 5px 5px 5px 5px;box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);">
+                        <h2>@Model.Title</h2>
+                        @* <p>@Html.Raw(Model.Title)</p> *@
+                        <h2>Số lượng</h2>
+                        <p>@Model.Quantity</p>
+                        <h4>Ngày tạo</h4>
+                        <p>@Model.CreateDate</p>
+                    </div>
+                    <div style="min-height:10px;"></div>
+                    <div class="d-flex mt-1">
+                        <button class="btn btn-outline-secondary" type="button" id="decrease">-</button>
+                        <input class="form-control text-center" id="inputQuantity"   placeholder="1" min="1" max="@Model.Quantity" style="max-width: 7.5rem;" />
+                        <button class="btn btn-outline-secondary" type="button" id="increase">+</button>                       
+                    </div>
+                    <div style="min-height:10px;"></div>
+                    <button class="btn btn-danger text-uppercase" style="margin-left: 42px;">Buy Now</button>
+                </div>
+            </div>
+            
+            <div style="min-height:10px;"></div>
+            <!--Lower Content-->
+            <div class="lower-content">
+                <div class="row clearfix">
+                    <!--Content Column-->
+                    
+
+                    <!--Info Column-->
+                    <div class="info-column col-lg-12 col-md-12 col-sm-12 ">
+                        <div class="inner-column wow fadeInRight card" style="padding : 5px 5px 5px 5px;box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);">
+                            <h3>Thông tin bài đăng</h3>
+                            <ul class="info-list">
+                                <li><strong>Mô tả sản phẩm :</strong> @Html.Raw(Model.Description)</li>
+                                <li><strong>Giá :</strong> @Model.Price VND</li>
+                            </ul>
+
+                            <!--Help Box-->
+
+                        </div>
+                    </div>
+                   
+                    
+                </div>
+            </div>
+            <div class="col-lg-12 mt-3">
+                <div class="inner-column wow fadeInRight card" style="padding : 5px 5px 5px 5px;box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);">
+                    <span class="lead">Add your comment</span>
+                    <div>
+                        <textarea class="form-control" style="height:400px;"></textarea>
+                    </div>
+                    <div style="min-height:10px;"></div>
+                    <div>
+                        <button class="btn btn-danger">Comment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.getElementById('increase').addEventListener('click', function () {
+        var input = document.getElementById('inputQuantity');
+        var currentValue = parseInt(input.value) || 0; // Sử dụng 0 nếu giá trị không hợp lệ
+        var maxValue = 10; // Thay bằng giá trị tối đa của bạn
+        if (currentValue < maxValue) {
+            input.value = currentValue + 1;
+        }
+    });
+
+    document.getElementById('decrease').addEventListener('click', function () {
+        var input = document.getElementById('inputQuantity');
+        var currentValue = parseInt(input.value) || 0; // Sử dụng 0 nếu giá trị không hợp lệ
+        var minValue = 1; // Thay bằng giá trị tối thiểu của bạn
+        if (currentValue > minValue) {
+            input.value = currentValue - 1;
+        }
+    });
+
+    document.getElementById('inputQuantity').addEventListener('input', function () {
+        var input = document.getElementById('inputQuantity');
+        var currentValue = input.value;
+        // Kiểm tra nếu giá trị không phải là số hoặc ngoài phạm vi, đặt lại về giá trị hợp lệ
+        if (isNaN(currentValue) || currentValue < 1 || currentValue > 10) {
+            input.value = 1; // Hoặc giá trị mặc định hợp lệ khác
+        }
+    });
+
+</script>

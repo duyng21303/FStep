@@ -117,7 +117,9 @@
 											
 										</div>
 										<div class="p-4 border border-secondary border-top-0 rounded-bottom">
+											<a asp-action="DetailPost" asp-controller="Home" asp-route-id="@item.Id">
 											<h4 class="Title">@Html.Raw(item.Title)</h4>
+												</a>
 											<p class="description">@Html.Raw(item.Description)</p>
 											<p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate.ToString("dd/MM/yyyy")</span></p>
 										</div>
