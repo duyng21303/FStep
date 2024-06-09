@@ -5,6 +5,7 @@ using FStep.Repostory.Service;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
@@ -29,6 +30,11 @@ namespace FStep
             //.AddDefaultTokenProviders();
 
             builder.Services.AddSession(options =>
+			//builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+			//.AddEntityFrameworkStores<Fstep1Context>();
+			//.AddDefaultTokenProviders();
+			builder.Services.AddSignalR();
+			builder.Services.AddSession(options =>
 			{
 				options.IdleTimeout = TimeSpan.FromSeconds(10);
 				options.Cookie.HttpOnly = true;
@@ -78,12 +84,16 @@ namespace FStep
 
 			app.UseAuthentication();
 			app.UseAuthorization();
-
+			app.UseEndpoints(endpoints =>
+			{
+				endpoints.MapHub<ChatHub>("chatHub");
+			});
 			app.MapControllerRoute(
 				name: "default",
 				pattern: "{controller=Home}/{action=Index}/{id?}");
 
 			app.Run();
+			
 		}
 	}
 }

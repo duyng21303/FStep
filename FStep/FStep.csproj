@@ -26,6 +26,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="ViewComponents\ChatHistoryViewComponent.cs" />
+    <Compile Include="ViewComponents\ChatViewComponent.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.5" />
@@ -45,6 +50,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
     <PackageReference Include="X.PagedList" Version="9.1.2" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="9.1.2" />
+
+	  <Folder Include="Controllers\Admin\" />
+	  <Folder Include="Controllers\Moder\" />
 	  <Folder Include="wwwroot\img\pic\" />
 	  <Folder Include="wwwroot\img\userAvar\" />
 	  <Folder Include="wwwroot\img\nullAvar\" />
