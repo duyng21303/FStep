@@ -35,8 +35,6 @@ public partial class User
 
     public string? ResetToken { get; set; }
 
-    public DateTime? ResetTokenExpires { get; set; }
-
     public virtual ICollection<Chat> Chats { get; set; } = new List<Chat>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();

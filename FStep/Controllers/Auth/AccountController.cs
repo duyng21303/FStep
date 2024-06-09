@@ -220,7 +220,6 @@ namespace FStep.Controllers.Auth
                
                 var code = GenerateToken();
                 user.ResetToken = code;
-                user.ResetTokenExpires = DateTime.UtcNow.AddMinutes(1); // token expires in 1 hour
 
                 db.Users.Update(user);
                 await db.SaveChangesAsync();
@@ -268,7 +267,6 @@ namespace FStep.Controllers.Auth
             //Update the password
             user.Password = forget.Password.ToMd5Hash(user.HashKey);
             user.ResetToken = null;
-            user.ResetTokenExpires = null;
 
             db.Users.Update(user);
             await db.SaveChangesAsync();
