@@ -91,7 +91,7 @@ namespace FStep.Controllers.Customer
 				post.Date = DateTime.Now;
 				//Helpers.Util.UpLoadImg(model.Img, "")
 				post.Img = Util.UpLoadImg(img, "postPic");
-				post.Status = true;
+				post.Status = false;
 				post.Type = model.Type;
 				post.Detail = model.Description;
 				post.IdUser = User.FindFirst("UserID").Value;

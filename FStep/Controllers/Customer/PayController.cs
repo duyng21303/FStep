@@ -40,21 +40,8 @@ namespace FStep.Controllers.Customer
 		}
 		[Authorize]
 		[HttpPost]
-		public IActionResult CheckoutExchange(CheckoutVM model, string paymentMethod = "COD")
+		public IActionResult CheckoutExchange(CheckoutVM model)
 		{
-			if (paymentMethod == "VnPay")
-			{
-				var vnPayModel = new VnPaymentRequestModel
-				{
-					Amount = 1000000,
-					CreatedDate = DateTime.Now,
-					Description = "Thanh toan don hang",
-					FullName = User.FindFirst("UserID").Value,
-					TransactionId = new Random().Next(1000, 100000)
-				};
-				return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, vnPayModel));
-			}
-
 			if (ModelState.IsValid)
 			{
 				var transaction = _mapper.Map<Transaction>(model);

@@ -7,15 +7,15 @@
 <div class="container-fluid py-5">
 	<div class="container-contentboby">
 		<h1 class="mb-4">Checkout</h1>
-		<form asp-action="Checkout" asp-controller="Pay">
-			<div class="row g-5">
-				<div class="col-md-12 col-lg-6 col-xl-3">
-					<div class="form-item mt-3">
-						<textarea name="text" class="form-control" spellcheck="false" cols="30" rows="11" placeholder="Oreder Notes (Optional)"></textarea>
+		@if (ViewData["Type"].Equals("Sale"))
+		{
+			<form asp-action="CheckoutSale" asp-controller="Pay">
+				<div class="row g-5">
+					<div class="col-md-12 col-lg-6 col-xl-3">
+						<div class="form-item mt-3">
+							<textarea name="text" class="form-control" spellcheck="false" cols="30" rows="11" placeholder="Oreder Notes (Optional)"></textarea>
+						</div>
 					</div>
-				</div>
-				@if (ViewData["Type"].Equals("Sale"))
-				{
 					<div class="col-md-12 col-lg-6 col-xl-9">
 						<div class="table-responsive">
 							<table class="table">
@@ -29,7 +29,6 @@
 									</tr>
 								</thead>
 								<tbody>
-
 									<tr>
 										<th scope="row">
 											<div class="d-flex align-items-center mt-2">
@@ -48,9 +47,19 @@
 							<input type="submit" name="paymentMethod" value="VnPay" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary"></input>
 						</div>
 					</div>
-				}
-				else
-				{
+				</div>
+			</form>
+		}
+		else
+		{
+			<form asp-action="CheckoutExchange" asp-controller="Pay">
+				<div class="row g-5">
+					<div class="col-md-12 col-lg-6 col-xl-3">
+						<div class="form-item mt-3">
+							<textarea name="text" class="form-control" spellcheck="false" cols="30" rows="11" placeholder="Oreder Notes (Optional)"></textarea>
+						</div>
+					</div>
+
 					<div class="col-md-12 col-lg-6 col-xl-9">
 						<div class="table-responsive">
 							<table class="table">
@@ -61,7 +70,6 @@
 									</tr>
 								</thead>
 								<tbody>
-
 									<tr>
 										<th scope="row">
 											<div class="d-flex align-items-center mt-2">
@@ -74,12 +82,12 @@
 							</table>
 						</div>
 						<div class="row g-4 text-center align-items-center justify-content-center pt-4">
-							<input type="submit" name="paymentMethod" value="VnPay" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary"></input>
+							<button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Request</button>
 						</div>
 					</div>
-				}
-			</div>
-		</form>
+				</div>
+			</form>
+		}
 	</div>
 </div>
 <!-- Checkout Page End -->
