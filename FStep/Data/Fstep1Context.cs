@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FStep.Data;
 
-public partial class FstepDBContext : DbContext
+public partial class Fstep1Context : DbContext
 {
-    public FstepDBContext()
+    public Fstep1Context()
     {
     }
 
-    public FstepDBContext(DbContextOptions<FstepDBContext> options)
+    public Fstep1Context(DbContextOptions<Fstep1Context> options)
         : base(options)
     {
     }
@@ -36,11 +36,7 @@ public partial class FstepDBContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<UserNotification> UserNotifications { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=Nguyenduy;Initial Catalog=FStep_1;User ID=sa;Password=12345;Encrypt=True;Trust Server Certificate=True");
-
+   
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Chat>(entity =>
