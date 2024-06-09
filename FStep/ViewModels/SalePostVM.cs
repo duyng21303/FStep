@@ -24,6 +24,7 @@ namespace FStep.ViewModels
 		public string Type { get; set; } = "Sale";
 		[Display(Name = "Name of product")]
 		[Required(ErrorMessage = "This is required")]
+
 		public string NameProduct { get; set; } = string.Empty;
 
 		[Display(Name = "Quantity")]

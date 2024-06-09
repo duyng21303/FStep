@@ -173,15 +173,26 @@ body {
 .fruit-item .description {
     font-size: 1rem; /* Font size for the description */
     color: #666; /* Medium gray color for the description */
-    flex-grow: 1; /* Allow description to grow if too long */
+    flex-grow: 2; /* Allow description to grow if too long */
     overflow: hidden; /* Hide overflow text */
     text-overflow: ellipsis; /* Ellipsis for overflow text */
+    white-space: normal; /* Prevent wrapping */
+    line-height: 1.2em; /* Set the line height */
+    max-height: 2.4em; /* Limit to 2 lines (2 * line-height) */
+    display: -webkit-box; /* Required for webkit browsers */
+    -webkit-box-orient: vertical; /* Required for webkit browsers */
+    -webkit-line-clamp: 2; /* Limit the lines to 2 */
+    height: 2.4em;
 }
-
-/* Date text at the end of each post */
+    .fruit-item .price {
+    color: red; /* Màu đỏ cho giá */
+    font-weight: bold; /* Chữ đậm cho giá */
+}
+    /* Date text at the end of each post */
 .fruit-item .text-end {
     font-size: 0.9rem; /* Font size for the date */
     color: #999; /* Light gray color for the date */
+    font-style: italic; /* Italic font style for the span */
 }
 
 /* Pagination styles */
@@ -268,93 +279,39 @@ body {
         top: 0;
         left: 0;
     }
-/*Hung's css*/
-.primary-btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #00FF00;
-    color: darkred;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-
-    .primary-btn:hover {
-        background-color: #FFFF33;
-    }
-
-.pro-qty {
+   
+/*Css cho Payment layout*/
+.payment-container {
     display: flex;
-    align-items: center;
+    gap: 20px; /* Khoảng cách giữa các phần tử con */
+    padding: 20px; /* Khoảng cách lề cho payment-container */
+    background-color: #f5f5f5; /* Màu nền của payment-container */
+    border: 1px solid #ddd; /* Đường viền */
+    border-radius: 5px; /* Bo góc */
 }
 
-.qty-btn {
-    background-color: #f1f1f1;
-    border: 1px solid #ccc;
-    width: 30px;
-    height: 30px;
+.payment-details-img {
+    flex: 0 0 auto; /* Đảm bảo chiều rộng của phần tử này không thay đổi */
+    width: 150px; /* Kích thước của hình ảnh */
+}
+.payment-details-info {
     display: flex;
-    justify-content: center;
+    flex-direction: column; /* Hiển thị dạng cột */
+}
+
+.info-row,
+.info-row-value {
+    display: flex;
+    justify-content: space-between; /* Căn đều các phần tử trong hàng */
     align-items: center;
-    cursor: pointer;
+    padding: 5px 0;
 }
 
-.qty-input {
-    width: 50px;
-    text-align: center;
-    border: 1px solid #ccc;
-    height: 30px;
-    margin: 0 5px;
+.info-title,
+.info-value {
+    flex: 1; /* Độ rộng tự động theo nội dung */
+    font-weight: bold;
+    text-align: center; /* Căn giữa tiêu đề */
+    margin-right: 200px; /* Khoảng cách bên phải giữa các tiêu đề */
 }
 
-.textarea-comment .textarea {
-    border: 0;
-    border-radius: 10px;
-    box-shadow: 0 0 10px 0 rgba(60, 64, 67, .1), 0 2px 6px 2px rgba(60, 64, 67, .15);
-    min-width: 0 !important;
-    padding-left: 85px;
-    width: 20cm;
-    height: 5cm;
-    text-align: left;
-}
-
-.textarea:not([rows]) {
-    max-height: 40em;
-    min-height: 8em;
-}
-
-.textarea {
-    display: block;
-    max-width: 100%;
-    min-width: 100%;
-    padding: calc(.75em - 1px);
-    resize: vertical;
-}
-
-.comment-form-content {
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 20px;
-}
-
-    .comment-form-content a {
-        color: #333;
-        font-weight: bold;
-    }
-
-.textarea-comment button {
-    background-color: #d7000e;
-    border: 0;
-    border-radius: 8px;
-    color: #fff;
-    gap: 5px;
-    width: 70px;
-}
-
-.quantity input[type="text"] {
-    width: 2cm;
-}

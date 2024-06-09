@@ -1,0 +1,57 @@
+﻿@model FStep.ViewModels.TransactionVM
+@{
+    ViewData["Title"] = "Payment";
+}
+<div class="container">
+    <div class="payment-container">
+        <!-- Box bao bọc cho hình ảnh -->
+        <div class="payment-details-img">
+            <img src="@Url.Content("~/img/postPic/" + Model.Image)" alt="Product Image" class="img-thumbnail">
+        </div>
+
+        <!-- Box bao bọc cho thông tin sản phẩm và phương thức thanh toán -->
+        <div class="payment-details">
+            <div class="payment-details-info">
+                <div class="info-row">
+                    <div class="info-title">Name</div>
+                    <div class="info-title">Price</div>
+                    <div class="info-title">Quantity</div>
+                    <div class="info-title">Total</div>
+                </div>
+                <div class="info-row-value">
+                    <div class="info-value">@Model.NameProduct</div>
+                    <div class="info-value">@Model.Price (VND)</div>
+                    <div class="info-value">@Model.Quantity</div>
+                    <div class="info-value"><span class="text-danger">@Model.Amount (VND)</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+            <div class="payment-methods">
+                <h4>Choose Payment Method:</h4>
+                <form asp-action="ConfirmPayment" method="post">
+                    <div class="form-group">
+                        <label>
+                            <input type="radio" name="paymentMethod" value="CreditCard" required>
+                            Credit Card
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="radio" name="paymentMethod" value="PayPal" required>
+                            PayPal
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="radio" name="paymentMethod" value="CashOnDelivery" required>
+                            Cash on Delivery
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Ok</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>>

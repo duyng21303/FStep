@@ -110,7 +110,17 @@
 										<div class="p-4 border border-secondary border-top-0 rounded-bottom">
 											<h4 class="Title">@Html.Raw(item.Title)</h4>
 											<p class="description">@Html.Raw(item.Description)</p>
-											<p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate.ToString("dd/MM/yyyy")</span></p>
+											<p class="price">Price: @Html.Raw(item.Price) (VND)</p>
+											<p class="quantity">Quantity: @Html.Raw(item.Quantity)</p>
+											<form asp-controller="BuyNow" asp-action="BuyNow" method="get">
+												<input type="hidden" name="id" value="@item.Id" />
+												<div class="form-group">
+													<label for="Quantity">Quantity:</label>
+													<input type="number" name="Quantity" class="form-control" />
+												</div>
+												<button type="submit" class="btn btn-primary">Buy Now</button>
+											</form>
+											<p class="text-end mb-0 mt-2">CreateDate <span>@item.CreateDate.ToString("dd/MM/yyyy")</span></p>
 										</div>
 									</div>
 								</div>
