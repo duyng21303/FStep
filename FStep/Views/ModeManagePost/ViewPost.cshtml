@@ -1,5 +1,6 @@
-﻿@model X.PagedList.IPagedList<FStep.ViewModels.ExchangePostVM>
+﻿@model X.PagedList.IPagedList<FStep.ViewModels.ListPostVM>
 @using X.PagedList.Mvc.Core;
+
 
 <div>
 	<!--/slider-->
@@ -77,57 +78,87 @@
 			<!-- Title header body  -->
 			<div class="row align-items-center mb-4 search-header">
 				<div class="col-md-6">
-					<h1 class="exchange-title">Exchange: Suggestion Today</h1>
+					<h1 class="exchange-title">ListPost</h1>
 				</div>
-			<div
-				<div class="col-md-5">
-					<form asp-action="Index" asp-controller="Home" class="d-flex justify-content-end search-form">
-						<input type="search" class="form-control search-input" placeholder="Enter name product" name="query">
-						<button class="btn btn-primary search-button" type="submit">
-							<i class="fa fa-search search-icon"></i>
-						</button>
-					</form>
+				<div>
+					<div class="col-md-5">
+						<form asp-action="ViewPost" asp-controller="ModeManagePost" class="d-flex justify-content-end search-form">
+							<input type="search" class="form-control search-input" placeholder="Enter student_id" name="@ViewBag.query">
+							<button class="btn btn-primary search-button" type="submit">
+								<i class="fa fa-search search-icon"></i>
+							</button>
+						</form>
+					</div>
 				</div>
-				<div class="col-md-1">
-					<a asp-action="CreateExchangePost" asp-controller="Post">
-						<i class="fa fa-plus-square" style="font-size:45px;"></i>
-					</a>
-				</div>
-			</div>
-			<!-- End header body -->
-
-			@await Html.PartialAsync("_CreatePost")
-
-			<!-- Start Content Body-->
-			<div class="row g-4">
-				<div class="col-lg-12">
-					<div class="container-contentboby">
+				<!-- End header body -->
+				<!-- Start Content Body-->
+				<div class="row g-4">
+					<div class="col-lg-12">
+						<div class="container-contentboby">
 							<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
-							<!-- Start of post item column -->
-							@foreach (var item in Model)
-							{
+								<!-- Start of post item column -->
+								@foreach (var item in Model)
+								{
 									<div class="col">
 										<div class="rounded position-relative fruit-item">
 											<div class="fruit-img">
-												<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded-top" alt="Laptop">
+												<img src="@Url.Content("~/img/postPic/" + item.Image)" class="img-fluid w-100 rounded-top" alt="Laptop">
 											</div>
 											<div class="p-4 border border-secondary border-top-0 rounded-bottom">
-												<h4 class="Title mb-3">@Html.Raw(item.Title)</h4>
-												<p class="description mb-4">@Html.Raw(item.Description)</p>
+												<p class="studentId mb-4"> StudentId: @Html.Raw(item.StudentId)</p>
+												<div class="row">
+													<div class="col-md-6">
+														<p class="small-text">Type: @Html.Raw(item.Type)</p>
+													</div>
+													<div class="col-md-6">
+														<p class="small-text">Status: @Html.Raw(item.Status)</p>
+													</div>
+												</div>
+												<h4 class="Title">@Html.Raw(item.PostTitle)</h4>
+												<p class="description">@Html.Raw(item.PostBody)</p>
+												<p>Quantity: @Html.Raw(item.Quantity)</p>
+												<p>Price: @Html.Raw(item.Price)</p>
+												<!-- Update Status Form -->
+												<form asp-action="UpdateStatus" asp-controller="ModeManagePost" method="post" class="mt-3">
+													<input type="hidden" name="PostId" value="@item.PostId" />
+
+													<div class="row align-items-center">
+														<div class="col-md-6">
+															<div class="form-check">
+																<input class="form-check-input" type="radio" name="Status" value="true" id="statusTrue_@item.PostId" @(item.Status ? "checked" : "") />
+																<label class="form-check-label" for="statusTrue_@item.PostId">
+																	True
+																</label>
+															</div>
+														</div>
+														<div class="col-md-6">
+															<div class="form-check">
+																<input class="form-check-input" type="radio" name="Status" value="false" id="statusFalse_@item.PostId" @(!item.Status ? "checked" : "") />
+																<label class="form-check-label" for="statusFalse_@item.PostId">
+																	False
+																</label>
+															</div>
+														</div>
+													</div>
+
+													<button type="submit" class="btn btn-primary mt-2">Update Status</button>
+												</form>
+												<!-- End Update Status Form -->
 												<p class="text-end mb-0 mt-2">CreateDate: <span>@item.CreateDate.ToString("dd/MM/yyyy")</span></p>
 											</div>
 										</div>
 									</div>
-							}
+								}
+							</div>
 						</div>
+						<!-- Start Content Body-->
+						<!-- Create relationship between page and page -->
+						@Html.PagedListPager(Model, page => Url.Action("ViewPost", new { query = ViewBag.Query, page = page }))
+						<!-- End create -->
 					</div>
-					<!-- Start Content Body-->
-					<!-- Create relationship between page and page -->
-					@Html.PagedListPager(Model, page => Url.Action("Index", new { query = ViewBag.Query, page = page }))
-					<!-- End create -->
 				</div>
+				<!-- End Show -->
 			</div>
-			<!-- End Show -->
 		</div>
 	</div>
 </div>

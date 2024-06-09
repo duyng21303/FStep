@@ -249,7 +249,7 @@ namespace FStep.Controllers.Auth
             {
                 Token = Token,
                 UserId = userId,
-                ResetTokenExpires = user.ResetTokenExpires.GetValueOrDefault()
+               
             };
             return View();
         }
@@ -259,7 +259,7 @@ namespace FStep.Controllers.Auth
             ModelState.Remove("Email");
             
             var user = await db.Users.FirstOrDefaultAsync(user => user.IdUser == forget.UserId);
-            if (user == null || forget.Token != user.ResetToken || user.ResetTokenExpires < DateTime.UtcNow)
+            if (user == null || forget.Token != user.ResetToken)
             {
                 ModelState.AddModelError("Error", "Invalid token or token has expired!");
                 return View(forget);

@@ -127,7 +127,7 @@ body {
     background-color: #fff; /* White background for content boxes */
     padding: 20px; /* Padding around content inside the boxes */
     border-radius: 5px; /* Rounded corners for the content boxes */
-    margin-bottom: 20px; /* Bottom margin between boxes */
+    margin-bottom: 0px; /* Bottom margin between boxes */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle depth effect */
 }
 
@@ -140,6 +140,11 @@ body {
     transition: transform 0.2s ease-in-out; /* Smooth hover transition */
     height: 100%; /* Ensure each post takes full height */
 }
+    .fruit-item p,
+    .fruit-item h4,
+    .fruit-item form {
+        margin-bottom: 0 !important;
+    }
 
     .fruit-item:hover {
         transform: translateY(-5px); /* Move up slightly on hover */
@@ -155,15 +160,17 @@ body {
 }
 
 /* Padding for the content inside each post item */
-.fruit-item .p-4 {
-    padding: 1.5rem;
+.studentId {
+    color: red; /* Màu đỏ */
+    font-weight: bold; /* Chữ đậm */
 }
-
+.small-text {
+    font-size: 0.75rem; /* 75% of the default font size */
+}
 /* Title of each post */
 .fruit-item h4 {
     font-size: 1.2rem; /* Font size for the post title */
     color: #333; /* Dark color for the title */
-    margin-bottom: 0.5rem; /* Bottom margin for spacing */
     overflow: hidden; /* Hide overflow text */
     text-overflow: ellipsis; /* Ellipsis for overflow text */
     white-space: nowrap; /* Prevent wrapping */
@@ -315,3 +322,30 @@ body {
     margin-right: 200px; /* Khoảng cách bên phải giữa các tiêu đề */
 }
 
+.container.create-post-success {
+    margin: 20px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+}
+
+.title {
+    color: red;
+    font-size: 28px;
+}
+
+.success-message, .instruction, .address, .note {
+    font-weight: bold; /* Đặt font-weight là bold cho toàn bộ các phần tử trong container */
+}
+
+.instruction {
+    font-style: normal; /* Loại bỏ font-style là italic cho phần hướng dẫn */
+}
+
+.address {
+    color: #000; /* Đặt màu chữ thành màu đen (#000) cho địa chỉ */
+}
+
+.note {
+    color: #666; /* Đặt màu chữ cho thông báo là màu xám (#666) */
+}
