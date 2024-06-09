@@ -29,7 +29,6 @@ namespace FStep
             //.AddEntityFrameworkStores<Fstep1Context>();
             //.AddDefaultTokenProviders();
 
-            builder.Services.AddSession(options =>
 			//builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 			//.AddEntityFrameworkStores<Fstep1Context>();
 			//.AddDefaultTokenProviders();

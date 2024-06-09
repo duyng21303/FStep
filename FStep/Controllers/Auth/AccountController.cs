@@ -220,7 +220,6 @@ namespace FStep.Controllers.Auth
                
                 var code = GenerateToken();
                 user.ResetToken = code;
-                user.ResetTokenExpires = DateTime.UtcNow.AddMinutes(1); // token expires in 1 hour
 
                 db.Users.Update(user);
                 await db.SaveChangesAsync();
@@ -249,7 +248,6 @@ namespace FStep.Controllers.Auth
             {
                 Token = Token,
                 UserId = userId,
-                ResetTokenExpires = user.ResetTokenExpires.GetValueOrDefault()
             };
             return View();
         }
@@ -259,7 +257,7 @@ namespace FStep.Controllers.Auth
             ModelState.Remove("Email");
             
             var user = await db.Users.FirstOrDefaultAsync(user => user.IdUser == forget.UserId);
-            if (user == null || forget.Token != user.ResetToken || user.ResetTokenExpires < DateTime.UtcNow)
+            if (user == null || forget.Token != user.ResetToken)
             {
                 ModelState.AddModelError("Error", "Invalid token or token has expired!");
                 return View(forget);
@@ -268,7 +266,6 @@ namespace FStep.Controllers.Auth
             //Update the password
             user.Password = forget.Password.ToMd5Hash(user.HashKey);
             user.ResetToken = null;
-            user.ResetTokenExpires = null;
 
             db.Users.Update(user);
             await db.SaveChangesAsync();
