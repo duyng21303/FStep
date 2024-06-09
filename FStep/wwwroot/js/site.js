@@ -2,7 +2,6 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
-<<<<<<< HEAD
 // Lấy tất cả các nút cộng và trừ
 const minusBtn = document.querySelector(".qty-btn.minus");
 const plusBtn = document.querySelector(".qty-btn.plus");
@@ -41,7 +40,6 @@ document.querySelector('.button__cmt-send').addEventListener('click', function (
             
         });
 });
-=======
 function openForm() {
     document.getElementById("myForm").style.display = "block";
 }
@@ -168,4 +166,3 @@ connection.start().catch(function (err) {
     return console.error(err.toString());
 });
 
->>>>>>> develop

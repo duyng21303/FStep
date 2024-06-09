@@ -68,6 +68,7 @@
     <None Include="wwwroot\assets\webfonts\fa-regular-400.woff2" />
     <None Include="wwwroot\assets\webfonts\fa-solid-900.woff2" />
     <None Include="wwwroot\assets\webfonts\fa-v4compatibility.woff2" />
+    <None Include="wwwroot\detail\js\scripts.js" />
     <None Include="wwwroot\vendor\bootstrap\js\bootstrap.min.js" />
     <None Include="wwwroot\vendor\jquery\jquery.js" />
     <None Include="wwwroot\vendor\jquery\jquery.min.js" />

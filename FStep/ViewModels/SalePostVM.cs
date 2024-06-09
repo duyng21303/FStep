@@ -36,5 +36,8 @@ namespace FStep.ViewModels
 		public float Price { get; set; }
 		[Display(Name = "Detail information of Product")]
 		public string? DetailProduct { get; set; }
+
+
+
 	}
 }

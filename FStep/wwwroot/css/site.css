@@ -274,17 +274,24 @@ body {
     padding: 10px 20px;
     background-color: #00FF00;
 <<<<<<< HEAD
+<<<<<<< HEAD
     color: darkred; 
+=======
+    color: darkred;
+>>>>>>> ca92c58773138d7920896cd4b469c1ca0c39989f
     text-align: center;
     text-decoration: none;
-    border-radius: 5px; 
+    border-radius: 5px;
     font-size: 16px;
-    transition: background-color 0.3s ease; 
+    transition: background-color 0.3s ease;
 }
 
     .primary-btn:hover {
+<<<<<<< HEAD
         background-color: #FFFF33; 
 =======
+=======
+>>>>>>> ca92c58773138d7920896cd4b469c1ca0c39989f
     color: darkred;
     text-align: center;
     text-decoration: none;
@@ -295,7 +302,10 @@ body {
 
     .primary-btn:hover {
         background-color: #FFFF33;
+<<<<<<< HEAD
 >>>>>>> develop
+=======
+>>>>>>> ca92c58773138d7920896cd4b469c1ca0c39989f
     }
 
 .pro-qty {
@@ -329,12 +339,17 @@ body {
     min-width: 0 !important;
     padding-left: 85px;
 <<<<<<< HEAD
+<<<<<<< HEAD
     width: 20cm; 
     height: 5cm; 
 =======
     width: 20cm;
     height: 5cm;
 >>>>>>> develop
+=======
+    width: 20cm;
+    height: 5cm;
+>>>>>>> ca92c58773138d7920896cd4b469c1ca0c39989f
     text-align: left;
 }
 
@@ -343,9 +358,15 @@ body {
     min-height: 8em;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> develop
+=======
+
+
+
+>>>>>>> ca92c58773138d7920896cd4b469c1ca0c39989f
 .textarea {
     display: block;
     max-width: 100%;
@@ -354,6 +375,7 @@ body {
     resize: vertical;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 .comment-form-content {
     background-color: #f0f0f0;
     border: 1px solid #ccc; 
@@ -361,6 +383,9 @@ body {
     padding: 10px; 
     margin-bottom: 20px; 
 =======
+=======
+
+>>>>>>> ca92c58773138d7920896cd4b469c1ca0c39989f
 
 .comment-form-content {
     background-color: #f0f0f0;
@@ -368,16 +393,25 @@ body {
     border-radius: 5px;
     padding: 10px;
     margin-bottom: 20px;
+<<<<<<< HEAD
 >>>>>>> develop
+=======
+>>>>>>> ca92c58773138d7920896cd4b469c1ca0c39989f
 }
+
 
     .comment-form-content a {
         color: #333;
+<<<<<<< HEAD
 <<<<<<< HEAD
         font-weight: bold; 
 =======
         font-weight: bold;
 >>>>>>> develop
+=======
+        font-weight: bold;
+
+>>>>>>> ca92c58773138d7920896cd4b469c1ca0c39989f
     }
 
 .textarea-comment button {
@@ -389,23 +423,34 @@ body {
     width: 70px;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> ca92c58773138d7920896cd4b469c1ca0c39989f
 .quantity input[type="text"] {
-    width: 1cm; 
+    width: 1cm;
 }
+
 main {
     background: url('@Url.Content("~/image/background.jpg")') no-repeat center center fixed;
     background-size: cover;
 }
+
 .product-image {
     width: 100%;
     height: auto;
 }
+
 .my-header {
-    background-color: #FF6600; 
-    color: #FFFFFF; 
-    padding: 20px 0; 
-    height: 100px; 
+    background-color: #FF6600;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000; 
+    margin-top: 0;
+    min-width: 1200px;
 }
+
 .product-item {
     border: 1px solid #333;
     border-radius: 5px;
@@ -416,6 +461,7 @@ main {
     .product-item:hover {
         transform: scale(1.05);
     }
+
 
 .product-img img {
     border-bottom: 2px solid #333;
@@ -428,9 +474,16 @@ main {
 }
 
 
+<<<<<<< HEAD
 =======
 
 .quantity input[type="text"] {
     width: 2cm;
 }
 >>>>>>> develop
+=======
+.quantity input[type="text"] {
+    width: 2cm;
+}
+
+>>>>>>> ca92c58773138d7920896cd4b469c1ca0c39989f

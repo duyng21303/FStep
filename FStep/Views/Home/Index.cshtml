@@ -22,6 +22,7 @@
 											</div>
 										</div>
 										<div class="col-sm-6">
+
 											<img src="~/img/Sliden/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="d-block w-100 rounded-circle" alt="" />
 										</div>
 									</div>
@@ -111,10 +112,14 @@
 									<div class="rounded position-relative fruit-item">
 										<div class="fruit-img">
 
-											<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded-top" alt="Laptop">
+												<a asp-action="DetailPost" asp-controller="Home" asp-route-id="@item.Id">
+													<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded-top" alt="Laptop">
+												</a>
 										</div>
 										<div class="p-4 border border-secondary border-top-0 rounded-bottom">
+											<a asp-action="DetailPost" asp-controller="Home" asp-route-id="@item.Id">
 											<h4 class="Title">@Html.Raw(item.Title)</h4>
+												</a>
 											<p class="description">@Html.Raw(item.Description)</p>
 											<p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate.ToString("dd/MM/yyyy")</span></p>
 										</div>

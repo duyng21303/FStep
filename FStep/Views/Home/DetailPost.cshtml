@@ -1,0 +1,178 @@
+﻿@model FStep.Data.Post
+
+<style>
+	html, body {
+		height: 100%;
+		width: 100%;
+		margin: 0;
+		font-family: 'Roboto', sans-serif;
+	}
+
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 15px;
+		display: flex;
+	}
+
+	/* Columns */
+	.left-column {
+		width: 65%;
+		position: relative;
+		overflow: auto;
+		max-height: 500px;
+	}
+
+	.right-column {
+		width: 35%;
+		margin-top: 60px;
+	}
+
+	/* Left Column */
+	.left-column img {
+		width: 100%;
+		height: auto;
+		border-radius: 25px;
+	}
+
+	/* Product Description */
+	.product-description {
+		border-bottom: 1px solid #E1E8EE;
+		margin-bottom: 20px;
+	}
+
+	.product-description span {
+		font-size: 12px;
+		color: #358ED7;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		text-decoration: none;
+	}
+
+	.product-description h1 {
+		font-weight: 300;
+		font-size: 52px;
+		color: #43484D;
+		letter-spacing: -2px;
+	}
+
+	.product-description p {
+		font-size: 16px;
+		font-weight: 300;
+		color: #86939E;
+		line-height: 24px;
+	}
+
+	/* Product Price */
+	.product-price {
+		display: flex;
+		align-items: center;
+	}
+
+	.product-price span {
+		font-size: 26px;
+		font-weight: 300;
+		color: #43474D;
+		margin-right: 20px;
+	}
+
+	.cart-btn {
+		display: inline-block;
+		background-color: #7DC855;
+		border-radius: 6px;
+		font-size: 16px;
+		color: #FFFFFF;
+		text-decoration: none;
+		padding: 12px 30px;
+		transition: all .5s;
+	}
+
+	.cart-btn:hover {
+		background-color: #64af3d;
+	}
+
+	.mt-2 {
+		margin-top: 20px;
+	}
+
+	.col-lg-12 {
+		width: 100%;
+	}
+
+	.inner-column {
+		padding: 20px;
+		box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+		background-color: #fff;
+		border-radius: 10px;
+	}
+
+	.lead {
+		font-size: 20px;
+		font-weight: bold;
+	}
+
+	textarea.form-control {
+		width: 100%;
+		padding: 10px;
+		border-radius: 6px;
+		border: 1px solid #ccc;
+	}
+
+	.btn-danger {
+		background-color: #ff0000;
+		border: none;
+		padding: 10px 20px;
+		color: #fff;
+		border-radius: 6px;
+		cursor: pointer;
+	}
+
+	.btn-danger:hover {
+		background-color: #da0606;
+	}
+</style>
+
+
+<body>
+	<div class="container">
+		<!-- Left Column / Image -->
+		<div class="left-column">
+			<img src="~/img/postPic/@Model.Img" alt="Project Image">
+		</div>
+
+		<!-- Right Column -->
+		<div class="right-column">
+			<!-- Product Description -->
+			<div class="product-description">
+				<span>@Model.Type</span>
+				<h1>@Model.Content</h1>
+				<p>@Html.Raw(Model.Detail)</p>
+			</div>
+
+			<!-- Product Pricing -->
+			<div class="product-price">
+				<span>148$</span>
+				<a href="#" class="cart-btn">Add to cart</a>
+			</div>
+		</div>
+	</div>
+
+	<!-- Chat Button -->
+	<div class="mt-2 btn border-secondary text-uppercase text-primary" style="background-color: gray; text-align: center;">
+		Chat
+	</div>
+
+	<!-- Comment Section -->
+	<div class="col-lg-12 mt-3">
+		<div class="inner-column wow fadeInRight card">
+			<span class="lead">Add your comment</span>
+			<div>
+				<textarea class="form-control" style="height: 400px;"></textarea>
+			</div>
+			<div style="min-height: 10px;"></div>
+			<div>
+				<button class="btn btn-danger">Comment</button>
+			</div>
+		</div>
+	</div>
+</body>
