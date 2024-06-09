@@ -14,7 +14,7 @@
 	<header>
 		@await Html.PartialAsync("_Header")
 	</header>
-	
+
 
 	<div class="container">
 		<main role="main" class="pb-3">
@@ -49,10 +49,6 @@
 	}
 	<partial name="_Summernote" model="summernoteDescription" />
 
-	@if (IsSectionDefined("Scripts"))
-	{
-		@await RenderSectionAsync("Scripts", required: false)
-	}
 </body>
 
 </html>

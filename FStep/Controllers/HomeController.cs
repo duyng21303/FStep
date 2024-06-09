@@ -10,9 +10,9 @@ namespace FStep.Controllers
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
-		private readonly FstepDBContext db;
+		private readonly FstepDbContext db;
 
-		public HomeController(FstepDBContext context) => db = context;
+		public HomeController(FstepDbContext context) => db = context;
 
 		public IActionResult Index(String? query, int? page)
 		{ 
@@ -59,6 +59,7 @@ namespace FStep.Controllers
 				Title = s.Content,
 				Img = s.Img,
 				Description = s.Detail,
+				Quantity = (int)s.IdProductNavigation.Quantity,
 				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now,
 				Price = s.IdProductNavigation.Price ?? 0
 			}).OrderByDescending(o => o.Id);
