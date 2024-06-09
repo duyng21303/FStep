@@ -1,4 +1,5 @@
-﻿
+﻿@using FStep.ViewModels
+
 <style>
     body {
         background-color: #f0f0f0; 
@@ -82,9 +83,21 @@
         margin-right: 10px
     }
 
+    .product-rating__author-name,
+    .product-rating__time {
+        font-size: .75rem;
+    }
+
+    .product-rating {
+        background-color: var(--bs-body-bg);
+    }
+
 </style>
 
 @model FStep.ViewModels.SalePostVM
+@{
+    var comments = ViewData["comments"] as List<CommentDTO> ?? new List<CommentDTO>();
+}
 <section class="project-details-section">
     <div class="project-detail">
         <div class="auto-container">
@@ -149,15 +162,33 @@
                 </div>
             </div>
             <div class="col-lg-12 mt-3">
+                @* TODO: Hiển thị danh sách comment ở đây  *@
+                @foreach (var comment in comments)
+                {
+                    <div class="product-rating d-flex gap-2 mb-2 p-2">
+                        <div class="product-rating__avatar">
+                            <img class="rounded-circle me-lg-2 product-rating__avatar-img" src="~/img/@User.FindFirst("IMG")?.Value" alt="" style="width: 40px; height: 40px;">
+                        </div>
+                        <div class="product-rating-main">
+                            <div class="product-rating__author-name">@comment.Name</div>
+                            <div class="product-rating__time">@comment.Date?.ToString("dd-MM-yyyy hh:mm:ss")</div>
+                            <div class="product-rating__content">@comment.Content</div>
+                        </div>
+                    </div>
+                }
                 <div class="inner-column wow fadeInRight card" style="padding : 5px 5px 5px 5px;box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);">
                     <span class="lead">Add your comment</span>
-                    <div>
-                        <textarea class="form-control" style="height:400px;"></textarea>
-                    </div>
-                    <div style="min-height:10px;"></div>
-                    <div>
-                        <button class="btn btn-danger">Comment</button>
-                    </div>
+                    <form method="post" asp-action="PostComment" asp-asp-controller="Home">
+                        <div>
+                            <input name="IdPost" value="@Model.Id" type="hidden" />
+                            <input name="RedirectUrl" value="DetailSalePost" type="hidden" />
+                            <textarea rows="3" class="form-control" name="Content"></textarea>
+                        </div>
+                        <div style="min-height:10px;"></div>
+                        <div>
+                            <button class="btn btn-danger" name="btn-comment">Comment</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
