@@ -33,7 +33,7 @@ namespace FStep.ViewComponents
 				SenderUser = db.Users.SingleOrDefault(user => user.IdUser.Equals(p.SenderUserId)),
 				RecieverUser = db.Users.SingleOrDefault(user => user.IdUser.Equals(p.RecieverUserId)),
 				ChatMsg = p.ChatMsg,
-				IdPost = p.IdPost
+				IdPost = p.IdPost 
 			}).OrderBy(p => p.ChatDate);
 			return View(result);
 		}

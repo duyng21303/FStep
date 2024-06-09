@@ -1,5 +1,7 @@
 ﻿using FStep.Data;
 using FStep.Helpers;
+using FStep.Repostory.Interface;
+using FStep.Repostory.Service;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
@@ -18,10 +20,16 @@ namespace FStep
 
 			// Add services to the container.
 			builder.Services.AddControllersWithViews();
-			builder.Services.AddDbContext<FstepDBContext>(option =>
+			builder.Services.AddDbContext<FstepDbContext>(option =>
 			{
 				option.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
 			});
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
+            //builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+            //.AddEntityFrameworkStores<Fstep1Context>();
+            //.AddDefaultTokenProviders();
+
+            builder.Services.AddSession(options =>
 			//builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 			//.AddEntityFrameworkStores<Fstep1Context>();
 			//.AddDefaultTokenProviders();
