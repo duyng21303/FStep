@@ -32,6 +32,7 @@ namespace FStep
 			//builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 			//.AddEntityFrameworkStores<Fstep1Context>();
 			//.AddDefaultTokenProviders();
+
 			builder.Services.AddSignalR();
 			builder.Services.AddSession(options =>
 			{
@@ -39,6 +40,8 @@ namespace FStep
 				options.Cookie.HttpOnly = true;
 				options.Cookie.IsEssential = true;
 			});
+			
+			
 			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options
 				=>
 			{

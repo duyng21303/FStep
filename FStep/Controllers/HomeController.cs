@@ -2,6 +2,7 @@
 using FStep.Models;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using X.PagedList;
 
@@ -27,6 +28,7 @@ namespace FStep.Controllers
 			}
             var result = ExchangePost.Select(s => new ExchangePostVM
 			{
+				IdProduct = s.IdProduct,
 				Id = s.IdPost,
 				Title = s.Content,
 				Description = s.Detail,
@@ -68,7 +70,35 @@ namespace FStep.Controllers
 
             ViewBag.Query = query;
             return View(pageList);
-        }
+        }		
+	
+		public IActionResult DetailPost(int id)
+		{
+			var data = db.Posts.Include(x => x.IdProductNavigation).Include(x => x.IdUserNavigation).SingleOrDefault(p => p.IdPost == id);
+
+			return View(data);
+		}
+		public IActionResult DetailSalePost(int id)
+		{
+			var post = db.Posts.SingleOrDefault(post => post.IdPost == id);
+
+			var product = db.Products.SingleOrDefault(product => product.IdProduct == post.IdProduct);
+
+			var result = new SalePostVM()
+            {
+                Id = post.IdPost,
+                Title = post.Content,
+				Quantity = product.Quantity,
+                Img = post.Img,
+                Description = post.Detail,
+				NameProduct = product.Name,
+				DetailProduct = product.Detail,
+                CreateDate = post.Date,
+                Price = product.Price ?? 0
+            };
+
+            return View(result);
+		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
