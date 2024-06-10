@@ -7,9 +7,9 @@ namespace FStep.Controllers.Customer
 {
     public class ChatController : Controller
     {
-        private readonly FstepDBContext db;
+        private readonly FstepDbContext db;
 
-        public ChatController(FstepDBContext context) 
+        public ChatController(FstepDbContext context) 
         {
             db = context;
         }

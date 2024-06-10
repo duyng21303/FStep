@@ -5,9 +5,9 @@ namespace FStep.ViewComponents
 {
 	public class ChatHistoryViewComponent : ViewComponent
 	{
-		private readonly FstepDBContext db;
+		private readonly FstepDbContext db;
 
-		public ChatHistoryViewComponent(FstepDBContext context)
+		public ChatHistoryViewComponent(FstepDbContext context)
 		{
 			db = context;
 		}
