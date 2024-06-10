@@ -2,6 +2,7 @@
 using FStep.Models;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using X.PagedList;
 
@@ -10,9 +11,9 @@ namespace FStep.Controllers
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
-		private readonly FstepDBContext db;
+		private readonly FstepDbContext db;
 
-		public HomeController(FstepDBContext context) => db = context;
+		public HomeController(FstepDbContext context) => db = context;
 
 		public IActionResult Index(String? query, int? page)
 		{ 
@@ -27,12 +28,13 @@ namespace FStep.Controllers
 			}
             var result = ExchangePost.Select(s => new ExchangePostVM
 			{
-				IdPost = s.IdPost,
+				IdProduct = s.IdProduct,
+				Id = s.IdPost,
 				Title = s.Content,
 				Description = s.Detail,
 				Img = s.Img,
 				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now
-			}).OrderByDescending(o => o.IdPost) ;
+			}).OrderByDescending(o => o.Id) ;
 
 			var pageList = result.ToPagedList(pageNumber, pageSize);
 
@@ -55,19 +57,48 @@ namespace FStep.Controllers
 
             var result = SalePost.Select(s => new SalePostVM
 			{
-				IdPost = s.IdPost,
+				Id = s.IdPost,
 				Title = s.Content,
 				Img = s.Img,
 				Description = s.Detail,
+				Quantity = (int)s.IdProductNavigation.Quantity,
 				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now,
 				Price = s.IdProductNavigation.Price ?? 0
-			}).OrderByDescending(o => o.IdPost);
+			}).OrderByDescending(o => o.Id);
 
             var pageList = result.ToPagedList(pageNumber, pageSize);
 
             ViewBag.Query = query;
             return View(pageList);
-        }
+        }		
+	
+		public IActionResult DetailPost(int id)
+		{
+			var data = db.Posts.Include(x => x.IdProductNavigation).Include(x => x.IdUserNavigation).SingleOrDefault(p => p.IdPost == id);
+
+			return View(data);
+		}
+		public IActionResult DetailSalePost(int id)
+		{
+			var post = db.Posts.SingleOrDefault(post => post.IdPost == id);
+
+			var product = db.Products.SingleOrDefault(product => product.IdProduct == post.IdProduct);
+
+			var result = new SalePostVM()
+            {
+                Id = post.IdPost,
+                Title = post.Content,
+				Quantity = product.Quantity,
+                Img = post.Img,
+                Description = post.Detail,
+				NameProduct = product.Name,
+				DetailProduct = product.Detail,
+                CreateDate = post.Date,
+                Price = product.Price ?? 0
+            };
+
+            return View(result);
+		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()

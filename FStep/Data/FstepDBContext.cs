@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FStep.Data;
 
-public partial class FstepDBContext : DbContext
+public partial class FstepDbContext : DbContext
 {
-    public FstepDBContext()
+    public FstepDbContext()
     {
     }
 
-    public FstepDBContext(DbContextOptions<FstepDBContext> options)
+    public FstepDbContext(DbContextOptions<FstepDbContext> options)
         : base(options)
     {
     }
@@ -37,11 +37,17 @@ public partial class FstepDBContext : DbContext
 
     public virtual DbSet<UserNotification> UserNotifications { get; set; }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+
+        => optionsBuilder.UseSqlServer("Data Source=Nguyenduy;Initial Catalog=FStep_1;User ID=sa;Password=12345;Encrypt=True;Trust Server Certificate=True");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Chat>(entity =>
         {
-            entity.HasKey(e => e.IdChat).HasName("PK__Chat__68D484D1E7178673");
+
+            entity.HasKey(e => e.IdChat).HasName("PK__Chat__68D484D14DBF1A13");
 
             entity.ToTable("Chat");
 
@@ -54,7 +60,7 @@ public partial class FstepDBContext : DbContext
                 .HasColumnName("chat_msg");
             entity.Property(e => e.IdPost).HasColumnName("id_post");
             entity.Property(e => e.RecieverUserId)
-                .HasMaxLength(7)
+                .HasMaxLength(50)
                 .HasColumnName("reciever_user_id");
             entity.Property(e => e.SenderUserId)
                 .HasMaxLength(50)
@@ -62,7 +68,6 @@ public partial class FstepDBContext : DbContext
 
             entity.HasOne(d => d.IdPostNavigation).WithMany(p => p.Chats)
                 .HasForeignKey(d => d.IdPost)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FKChat970520");
 
             entity.HasOne(d => d.SenderUser).WithMany(p => p.Chats)
@@ -74,13 +79,13 @@ public partial class FstepDBContext : DbContext
         modelBuilder.Entity<Comment>(entity =>
         {
 
-            entity.HasKey(e => e.IdComment).HasName("PK__Comment__7E14AC85E5DEC614");
+            entity.HasKey(e => e.IdComment).HasName("PK__Comment__7E14AC852FCA4193");
 
             entity.ToTable("Comment");
 
             entity.Property(e => e.IdComment).HasColumnName("id_comment");
             entity.Property(e => e.Content)
-                .HasMaxLength(255)
+                .HasColumnType("text")
                 .HasColumnName("content");
             entity.Property(e => e.Date)
                 .HasColumnType("datetime")
@@ -104,7 +109,7 @@ public partial class FstepDBContext : DbContext
         modelBuilder.Entity<Feedback>(entity =>
         {
 
-            entity.HasKey(e => e.IdFeedback).HasName("PK__Feedback__36BC8630C17ABAA9");
+            entity.HasKey(e => e.IdFeedback).HasName("PK__Feedback__36BC8630CD9181B9");
 
             entity.ToTable("Feedback");
 
@@ -132,7 +137,7 @@ public partial class FstepDBContext : DbContext
         modelBuilder.Entity<Notification>(entity =>
         {
 
-            entity.HasKey(e => e.IdNotification).HasName("PK__Notifica__925C842F00987C50");
+            entity.HasKey(e => e.IdNotification).HasName("PK__Notifica__925C842F0AE68E84");
 
             entity.ToTable("Notification");
 
@@ -151,7 +156,7 @@ public partial class FstepDBContext : DbContext
         modelBuilder.Entity<Payment>(entity =>
         {
 
-            entity.HasKey(e => e.IdPayment).HasName("PK__Payment__862FEFE02D1CC689");
+            entity.HasKey(e => e.IdPayment).HasName("PK__Payment__862FEFE04F679DE9");
 
             entity.ToTable("Payment");
 
@@ -164,6 +169,9 @@ public partial class FstepDBContext : DbContext
             entity.Property(e => e.PayTime)
                 .HasColumnType("datetime")
                 .HasColumnName("pay_time");
+            entity.Property(e => e.Type)
+                .HasMaxLength(255)
+                .HasColumnName("type");
 
             entity.HasOne(d => d.IdTransactionNavigation).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.IdTransaction)
@@ -174,7 +182,7 @@ public partial class FstepDBContext : DbContext
         modelBuilder.Entity<Post>(entity =>
         {
 
-            entity.HasKey(e => e.IdPost).HasName("PK__Post__3840C79D6828FCB7");
+            entity.HasKey(e => e.IdPost).HasName("PK__Post__3840C79D262F4CDA");
 
             entity.ToTable("Post");
 
@@ -212,7 +220,8 @@ public partial class FstepDBContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.IdProduct).HasName("PK__Product__BA39E84F0AAC63BF");
+
+            entity.HasKey(e => e.IdProduct).HasName("PK__Product__BA39E84FF2FC07E0");
 
             entity.ToTable("Product");
 
@@ -220,6 +229,9 @@ public partial class FstepDBContext : DbContext
             entity.Property(e => e.Detail)
                 .HasColumnType("ntext")
                 .HasColumnName("detail");
+            entity.Property(e => e.ItemLocation)
+                .HasMaxLength(255)
+                .HasColumnName("item_location");
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
@@ -243,7 +255,7 @@ public partial class FstepDBContext : DbContext
         modelBuilder.Entity<Report>(entity =>
         {
 
-            entity.HasKey(e => e.IdReport).HasName("PK__Report__D8639F52E2F68037");
+            entity.HasKey(e => e.IdReport).HasName("PK__Report__D8639F52D9247517");
 
             entity.ToTable("Report");
 
@@ -269,7 +281,7 @@ public partial class FstepDBContext : DbContext
         modelBuilder.Entity<Transaction>(entity =>
         {
 
-            entity.HasKey(e => e.IdTransaction).HasName("PK__Transact__E8E1732DE6B5FB2E");
+            entity.HasKey(e => e.IdTransaction).HasName("PK__Transact__E8E1732D1A676F9E");
 
             entity.ToTable("Transaction");
 
@@ -286,14 +298,18 @@ public partial class FstepDBContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("id_user_buyer");
             entity.Property(e => e.IdUserSeller)
-                .HasMaxLength(7)
+                .HasMaxLength(50)
                 .HasColumnName("id_user_seller");
             entity.Property(e => e.Note)
                 .HasMaxLength(255)
                 .HasColumnName("note");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
-            entity.Property(e => e.Status).HasColumnName("status");
-            entity.Property(e => e.Type).HasColumnName("type");
+            entity.Property(e => e.Status)
+                .HasMaxLength(255)
+                .HasColumnName("status");
+            entity.Property(e => e.Type)
+                .HasMaxLength(255)
+                .HasColumnName("type");
 
             entity.HasOne(d => d.IdPostNavigation).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.IdPost)
@@ -309,7 +325,7 @@ public partial class FstepDBContext : DbContext
         modelBuilder.Entity<User>(entity =>
         {
 
-            entity.HasKey(e => e.IdUser).HasName("PK__User__D2D14637B40D9670");
+            entity.HasKey(e => e.IdUser).HasName("PK__User__D2D14637F21F42B3");
 
             entity.ToTable("User");
 
@@ -341,6 +357,10 @@ public partial class FstepDBContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("password");
             entity.Property(e => e.Rating).HasColumnName("rating");
+
+            entity.Property(e => e.ResetToken)
+                .HasMaxLength(255)
+                .HasColumnName("reset_token");
             entity.Property(e => e.Role)
                 .HasMaxLength(30)
                 .HasColumnName("role");
@@ -356,7 +376,7 @@ public partial class FstepDBContext : DbContext
         modelBuilder.Entity<UserNotification>(entity =>
         {
 
-            entity.HasKey(e => new { e.IdUser, e.IdNotification }).HasName("PK__User_Not__3BF48E75DACF3F6B");
+            entity.HasKey(e => new { e.IdUser, e.IdNotification }).HasName("PK__User_Not__3BF48E75BE66C183");
 
             entity.ToTable("User_Notification");
 

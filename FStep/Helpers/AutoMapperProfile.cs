@@ -19,6 +19,9 @@ namespace FStep.Helpers
 			CreateMap<CheckoutVM, Payment>();
 			CreateMap<CheckoutVM, Transaction>();
 
+            CreateMap<TransactionVM, Transaction>();
+
+
 		}
 
     }

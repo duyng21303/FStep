@@ -1,9 +1,11 @@
 ﻿using FStep.Data;
 using FStep.Helpers;
+using FStep.Repostory.Interface;
+using FStep.Repostory.Service;
 using Microsoft.AspNetCore.Authentication;
-using FStep.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
@@ -16,31 +18,39 @@ namespace FStep
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
-            builder.Services.AddDbContext<FstepDBContext>(option =>
-            {
-                option.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
-            });
+			// Add services to the container.
+			builder.Services.AddControllersWithViews();
+			builder.Services.AddDbContext<FstepDbContext>(option =>
+			{
+				option.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
+			});
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
             //builder.Services.AddIdentity<IdentityUser, IdentityRole>()
             //.AddEntityFrameworkStores<Fstep1Context>();
             //.AddDefaultTokenProviders();
 
-            builder.Services.AddSession(options =>
-            {
-                options.IdleTimeout = TimeSpan.FromSeconds(10);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-            });
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options
-                =>
-            {
-                options.LoginPath = "/Account/Login";
-                options.AccessDeniedPath = "/AccessDenied";
-            }).AddGoogle(googleOptions =>
-            {
-                // Đọc thông tin Authentication:Google từ appsettings.json
-                IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
+			//builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+			//.AddEntityFrameworkStores<Fstep1Context>();
+			//.AddDefaultTokenProviders();
+
+			builder.Services.AddSignalR();
+			builder.Services.AddSession(options =>
+			{
+				options.IdleTimeout = TimeSpan.FromSeconds(10);
+				options.Cookie.HttpOnly = true;
+				options.Cookie.IsEssential = true;
+			});
+			
+			
+			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options
+				=>
+			{
+				options.LoginPath = "/Account/Login";
+				options.AccessDeniedPath = "/AccessDenied";
+			}).AddGoogle(googleOptions =>
+			{
+				// Đọc thông tin Authentication:Google từ appsettings.json
+				IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
 
 				// Thiết lập ClientID và ClientSecret để truy cập API google
 				googleOptions.ClientId = googleAuthNSection["ClientId"];
@@ -55,7 +65,8 @@ namespace FStep
 
 			builder.Services.AddDistributedMemoryCache();
 
-			builder.Services.AddSingleton<IVnPayService, VnPayService>();
+			
+
 
 			var app = builder.Build();
 
@@ -74,14 +85,18 @@ namespace FStep
 
             app.UseSession();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+			app.UseAuthentication();
+			app.UseAuthorization();
+			app.UseEndpoints(endpoints =>
+			{
+				endpoints.MapHub<ChatHub>("chatHub");
+			});
+			app.MapControllerRoute(
+				name: "default",
+				pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
-
-            app.Run();
-        }
-    }
+			app.Run();
+			
+		}
+	}
 }

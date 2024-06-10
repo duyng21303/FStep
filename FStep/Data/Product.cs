@@ -25,5 +25,7 @@ public partial class Product
 
     public string? SentImg { get; set; }
 
+    public string? ItemLocation { get; set; }
+
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 }

@@ -9,7 +9,7 @@ public partial class Transaction
 
     public DateTime? Date { get; set; }
 
-    public bool? Status { get; set; }
+    public string? Status { get; set; }
 
     public int? Quantity { get; set; }
 
@@ -23,7 +23,9 @@ public partial class Transaction
 
     public string IdUserSeller { get; set; } = null!;
 
-    public int? Type { get; set; }
+    public string? Type { get; set; }
+
+    public string? CodeTransaction { get; set; }
 
     public string? CodeTransaction { get; set; }
 
