@@ -15,9 +15,9 @@ public partial class Chat
 
     public string SenderUserId { get; set; } = null!;
 
-    public int IdPost { get; set; }
+    public int? IdPost { get; set; }
 
-    public virtual Post IdPostNavigation { get; set; } = null!;
+    public virtual Post? IdPostNavigation { get; set; }
 
     public virtual User SenderUser { get; set; } = null!;
 }

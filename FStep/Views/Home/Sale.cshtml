@@ -114,8 +114,8 @@
 											<a asp-action="DetailSalePost" asp-controller="Home" asp-route-id="@item.Id">
 											<h4 class="Title">@Html.Raw(item.Title)</h4>
 											</a>
-											<p class="description">@Html.Raw(item.Description)</p>
-											<p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate.ToString("dd/MM/yyyy")</span></p>
+											<div class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Description)</div>
+											<p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate?.ToString("dd/MM/yyyy")</span></p>
 										</div>
 									</div>
 								</div>

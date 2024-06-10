@@ -12,6 +12,6 @@ namespace FStep.ViewModels
 
         public User? SenderUser { get; set; } = null!;
 
-        public int IdPost { get; set; }
+        public int? IdPost { get; set; }
     }
 }

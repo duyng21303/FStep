@@ -79,20 +79,22 @@ namespace FStep.Controllers
 		}
 		public IActionResult DetailSalePost(int id)
 		{
-            var SalePost = db.Posts.Include(x => x.IdProductNavigation).AsQueryable();
-            SalePost = SalePost.Where(p => p.IdPost == id);
-            var result = SalePost.Select(s => new SalePostVM
+			var post = db.Posts.SingleOrDefault(post => post.IdPost == id);
+
+			var product = db.Products.SingleOrDefault(product => product.IdProduct == post.IdProduct);
+
+			var result = new SalePostVM()
             {
-                Id = s.IdPost,
-                Title = s.Content,
-				Quantity =(int)s.IdProductNavigation.Quantity,
-                Img = s.Img,
-                Description = s.Detail,
-				NameProduct = s.IdProductNavigation.Name,
-				DetailProduct = s.IdProductNavigation.Detail,
-                CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now,
-                Price = s.IdProductNavigation.Price ?? 0
-            }).SingleOrDefault();
+                Id = post.IdPost,
+                Title = post.Content,
+				Quantity = product.Quantity,
+                Img = post.Img,
+                Description = post.Detail,
+				NameProduct = product.Name,
+				DetailProduct = product.Detail,
+                CreateDate = post.Date,
+                Price = product.Price ?? 0
+            };
 
             return View(result);
 		}
