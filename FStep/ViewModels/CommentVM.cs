@@ -2,7 +2,7 @@
 
 namespace FStep.ViewModels
 {
-	public class CommentDTO
+	public class CommentVM
 	{
 		public int IdComment { get; set; }
 

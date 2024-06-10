@@ -92,7 +92,7 @@
 
 		.comment-section .comment-heading {
 			font-size: 20px;
-			/ font-weight: bold;
+			font-weight: bold;
 			margin-bottom: 20px;
 			color: #ff0000;
 		}
@@ -109,7 +109,7 @@
 </style>
 @model FStep.Data.Post
 @{
-	var comments = ViewData["comments"] as List<CommentDTO> ?? new List<CommentDTO>();
+	var comments = ViewData["comments"] as List<CommentVM> ?? new List<CommentVM>();
 }
 <section class="project-details-section">
 	<div class="project-detail">
@@ -165,7 +165,7 @@
 			</div>
 			<div class="col-lg-12 mt-3">
 				@* TODO: Hiển thị danh sách comment ở đây  *@
-				@foreach (var comment in comments)
+				@foreach (var comment in comments.OrderByDescending(c => c.Date))
 				{
 					<div class="product-rating d-flex gap-2 mb-2 p-2">
 						<div class="product-rating__avatar">
@@ -173,7 +173,7 @@
 						</div>
 						<div class="product-rating-main">
 							<div class="product-rating__author-name">@comment.Name</div>
-							<div class="product-rating__time">@comment.Date?.ToString("dd-MM-yyyy hh:mm:ss")</div>
+							<div class="product-rating__time">@comment.Date?.ToString("dd-MM-yyyy HH:mm:ss")</div>
 							<div class="product-rating__content">@comment.Content</div>
 						</div>
 					</div>

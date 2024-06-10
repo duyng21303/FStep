@@ -83,7 +83,7 @@ namespace FStep.Controllers
 			var data = db.Posts.Include(x => x.IdProductNavigation).Include(x => x.IdUserNavigation).SingleOrDefault(p => p.IdPost == id);
 
 			// lấy thêm comment sản phẩm
-			var comments = db.Comments.Where(x => x.IdPost == id).Include(x => x.IdUserNavigation).Select(x => new CommentDTO
+			var comments = db.Comments.Where(x => x.IdPost == id).Include(x => x.IdUserNavigation).Select(x => new CommentVM
 			{
 				IdPost = id,
 				IdUser = x.IdUser,
@@ -99,7 +99,7 @@ namespace FStep.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult PostComment([FromForm] CommentDTO comment)
+		public IActionResult PostComment([FromForm] CommentVM comment)
 		{
 			string refererUrl = Request.Headers["Referer"].ToString();
 			try
@@ -146,7 +146,7 @@ namespace FStep.Controllers
 			}).SingleOrDefault();
 
 			// lấy thêm comment sản phẩm
-			var comments = db.Comments.Where(x => x.IdPost == id).Include(x => x.IdUserNavigation).Select(x => new CommentDTO
+			var comments = db.Comments.Where(x => x.IdPost == id).Include(x => x.IdUserNavigation).Select(x => new CommentVM
 			{
 				IdPost = id,
 				IdUser = x.IdUser,

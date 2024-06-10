@@ -16,7 +16,7 @@ namespace FStep.Helpers
             CreateMap<SalePostVM,Post>();
             CreateMap<SalePostVM,Product>();
 			CreateMap<ProfileVM, User>();
-			CreateMap<CommentDTO, Comment>().ReverseMap();
+			CreateMap<CommentVM, Comment>().ReverseMap();
 
 		}
 
