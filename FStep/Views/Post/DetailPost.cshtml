@@ -1,5 +1,7 @@
 ﻿@model FStep.Data.Post
-
+@{
+	var user = ViewData["USER_CREATE"] as FStep.Data.User;
+}
 <style>
 	html, body {
 		height: 100%;
@@ -378,31 +380,31 @@
 				<div class="media card-body">
 					<div class="media-left pr-12">
 						<div class="img">
-							<img class="avatar avatar-xl no-radius" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="...">
+							<img class="avatar avatar-xl no-radius" src="~/img/userAvar/@user.AvatarImg" alt="...">
 						</div>
 						<div class="name">
 							<div class="mb-2">
-								<span class="fs-20 pr-16">Hossein Shams</span>
+								<span class="fs-20 pr-16">@user.Name</span>
 							</div>
-							<small class="fs-16 fw-300 ls-1">Front-end developer</small>
+							<button type="button" class="btn btn-sm btn-primary"><span>Chat ngay</span></button>
 						</div>
 					</div>
 
 					<div class="media-right text-right d-none d-md-block">
-						<p class="fs-14 text-fade mb-12"><i class="fa fa-map-marker pr-1"></i> Menlo Park, CA</p>
-						<span class="text-fade"><i class="fa fa-money pr-1"></i> $60 per hour</span>
+						<p class="fs-14 text-fade mb-12">Đánh giá: @user.Rating</p>
+						<span class="text-fade"><i class="fa fa-money pr-1"></i>@Model.Date</span>
 					</div>
 				</div>
 				@* <footer class="card-footer flexbox align-items-center">
-					<div>
-						<strong>Applied on:</strong>
-						<span>21 Jan, 2017</span>
-					</div>
-					<div class="card-hover-show">
-						<a class="btn btn-xs fs-10 btn-bold btn-info" href="#">Download CV</a>
-						<a class="btn btn-xs fs-10 btn-bold btn-primary" href="#" data-toggle="modal" data-target="#modal-contact">Contact</a>
-						<a class="btn btn-xs fs-10 btn-bold btn-warning" href="#">Delete</a>
-					</div>
+				<div>
+				<strong>Applied on:</strong>
+				<span>21 Jan, 2017</span>
+				</div>
+				<div class="card-hover-show">
+				<a class="btn btn-xs fs-10 btn-bold btn-info" href="#">Download CV</a>
+				<a class="btn btn-xs fs-10 btn-bold btn-primary" href="#" data-toggle="modal" data-target="#modal-contact">Contact</a>
+				<a class="btn btn-xs fs-10 btn-bold btn-warning" href="#">Delete</a>
+				</div>
 				</footer> *@
 			</div>
 		</div>

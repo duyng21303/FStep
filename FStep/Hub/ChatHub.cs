@@ -12,9 +12,9 @@ namespace FStep
 {
 	public class ChatHub : Hub
 	{
-		private readonly FstepDbContext _context;
+		private readonly FstepDBContext _context;
 
-		public ChatHub(FstepDbContext context)
+		public ChatHub(FstepDBContext context)
 		{
 			_context = context;
 		}

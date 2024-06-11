@@ -10,7 +10,7 @@
 
 		public int Quantity { get; set; }
 
-		public bool Status { get; set; }
+		public string? Status { get; set; }
 
 		public float Price { get; set; }
 

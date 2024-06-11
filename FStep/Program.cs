@@ -20,7 +20,7 @@ namespace FStep
 
 			// Add services to the container.
 			builder.Services.AddControllersWithViews();
-			builder.Services.AddDbContext<FstepDbContext>(option =>
+			builder.Services.AddDbContext<FstepDBContext>(option =>
 			{
 				option.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
 			});

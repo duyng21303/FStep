@@ -105,12 +105,12 @@
 								<div class="col-md-6 col-lg-4 col-xl-3">
 									<div class="rounded position-relative fruit-item">
 										<div class="fruit-img">
-											<a asp-action="DetailSalePost" asp-controller="Home" asp-route-id="@item.Id">
+											<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@item.Id">
 												<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded-top" alt="Laptop">
 											</a>
 										</div>
 										<div class="p-4 border border-secondary border-top-0 rounded-bottom">
-											<a asp-action="DetailSalePost" asp-controller="Home" asp-route-id="@item.Id">@Html.Raw(item.Title)</a>
+											<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@item.Id">@Html.Raw(item.Title)</a>
 											<p class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Description)</p>
 											<p class="price">Price: @Html.Raw(item.Price) (VND)</p>
 											<p class="quantity">Quantity: @Html.Raw(item.Quantity)</p>

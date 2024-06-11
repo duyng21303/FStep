@@ -9,16 +9,16 @@ namespace FStep.Controllers.ManagePost
 {
 	public class ModeManagePostController : Controller
 	{
-		private readonly FstepDbContext db;
+		private readonly FstepDBContext db;
 
-		public ModeManagePostController(FstepDbContext context ) => db = context;
+		public ModeManagePostController(FstepDBContext context ) => db = context;
 		public IActionResult ViewPost()
 		{
 
 		 // số lượng sản phẩm mỗi trang 
 			  // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
 			var ListPost = db.Posts.AsQueryable();
-			ListPost = ListPost.Where(p => p.Status == false);    //check exchangePost là những post thuộc type "exhcange" và có status = 1
+			ListPost = ListPost.Where(p => p.Status == "false");    //check exchangePost là những post thuộc type "exhcange" và có status = 1
 			var result = ListPost.Select(s => new ListPostVM
 			{
 				PostId = s.IdPost,
@@ -29,7 +29,7 @@ namespace FStep.Controllers.ManagePost
 				Price = s.IdProductNavigation.Price ?? 0,
 				Image = s.Img,
 				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now,
-				Status = (bool)s.Status
+				Status = s.Status
 			}).OrderByDescending(o => o.PostId);
 
 			

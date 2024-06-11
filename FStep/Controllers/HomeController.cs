@@ -11,16 +11,16 @@ namespace FStep.Controllers
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
-		private readonly FstepDbContext db;
+		private readonly FstepDBContext db;
 
-		public HomeController(FstepDbContext context) => db = context;
+		public HomeController(FstepDBContext context) => db = context;
 
 		public IActionResult Index(String? query, int? page)
 		{ 
 			int pageSize = 12; // số lượng sản phẩm mỗi trang 
             int pageNumber = (page ?? 1);   // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
             var ExchangePost = db.Posts.AsQueryable();
-			ExchangePost = ExchangePost.Where(p => p.Type == "Exchange" && !(p.Status == false));    //check exchangePost là những post thuộc type "exhcange" và có status = 1
+			ExchangePost = ExchangePost.Where(p => p.Type == "Exchange" && !(p.Status == "false"));    //check exchangePost là những post thuộc type "exhcange" và có status = 1
 
 			if (!string.IsNullOrEmpty(query))
 			{
@@ -48,7 +48,7 @@ namespace FStep.Controllers
 			int pageSize = 12; // số lượng sản phẩm mỗi trang 
             int pageNumber = (page ?? 1);  // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
             var SalePost = db.Posts.AsQueryable();
-			SalePost = SalePost.Where(p => p.Type == "Sale" && !(p.Status == false));
+			SalePost = SalePost.Where(p => p.Type == "Sale" && !(p.Status == "false"));
 
             if (!string.IsNullOrEmpty(query))
             {
@@ -72,33 +72,6 @@ namespace FStep.Controllers
             return View(pageList);
         }		
 	
-		public IActionResult DetailPost(int id)
-		{
-			var data = db.Posts.Include(x => x.IdProductNavigation).Include(x => x.IdUserNavigation).SingleOrDefault(p => p.IdPost == id);
-
-			return View(data);
-		}
-		public IActionResult DetailSalePost(int id)
-		{
-			var post = db.Posts.SingleOrDefault(post => post.IdPost == id);
-
-			var product = db.Products.SingleOrDefault(product => product.IdProduct == post.IdProduct);
-
-			var result = new SalePostVM()
-            {
-                Id = post.IdPost,
-                Title = post.Content,
-				Quantity = product.Quantity,
-                Img = post.Img,
-                Description = post.Detail,
-				NameProduct = product.Name,
-				DetailProduct = product.Detail,
-                CreateDate = post.Date,
-                Price = product.Price ?? 0
-            };
-
-            return View(result);
-		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
