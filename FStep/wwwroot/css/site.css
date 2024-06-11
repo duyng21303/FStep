@@ -52,7 +52,6 @@ header {
 body {
     background-color: #f2f2f2; /* Light gray background for the whole page */
     padding-top: 60px; /* Space for the header if needed */
-    border: 1px solid #ddd; /* Lightest gray border around the page */
     border-radius: 5px; /* Rounded corners for the page */
 }
 
@@ -173,15 +172,26 @@ body {
 .fruit-item .description {
     font-size: 1rem; /* Font size for the description */
     color: #666; /* Medium gray color for the description */
-    flex-grow: 1; /* Allow description to grow if too long */
+    flex-grow: 2; /* Allow description to grow if too long */
     overflow: hidden; /* Hide overflow text */
     text-overflow: ellipsis; /* Ellipsis for overflow text */
+    white-space: normal; /* Prevent wrapping */
+    line-height: 1.2em; /* Set the line height */
+    max-height: 2.4em; /* Limit to 2 lines (2 * line-height) */
+    display: -webkit-box; /* Required for webkit browsers */
+    -webkit-box-orient: vertical; /* Required for webkit browsers */
+    -webkit-line-clamp: 2; /* Limit the lines to 2 */
+    height: 2.4em;
 }
-
-/* Date text at the end of each post */
+    .fruit-item .price {
+    color: red; /* Màu đỏ cho giá */
+    font-weight: bold; /* Chữ đậm cho giá */
+}
+    /* Date text at the end of each post */
 .fruit-item .text-end {
     font-size: 0.9rem; /* Font size for the date */
     color: #999; /* Light gray color for the date */
+    font-style: italic; /* Italic font style for the span */
 }
 
 /* Pagination styles */
@@ -273,18 +283,6 @@ body {
     display: inline-block;
     padding: 10px 20px;
     background-color: #00FF00;
-<<<<<<< HEAD
-    color: darkred; 
-    text-align: center;
-    text-decoration: none;
-    border-radius: 5px; 
-    font-size: 16px;
-    transition: background-color 0.3s ease; 
-}
-
-    .primary-btn:hover {
-        background-color: #FFFF33; 
-=======
     color: darkred;
     text-align: center;
     text-decoration: none;
@@ -295,7 +293,6 @@ body {
 
     .primary-btn:hover {
         background-color: #FFFF33;
->>>>>>> be4e50a1e4e2e30543a88758aa5e86fe8f99828a
     }
 
 .pro-qty {
@@ -328,13 +325,8 @@ body {
     box-shadow: 0 0 10px 0 rgba(60, 64, 67, .1), 0 2px 6px 2px rgba(60, 64, 67, .15);
     min-width: 0 !important;
     padding-left: 85px;
-<<<<<<< HEAD
-    width: 20cm; 
-    height: 5cm; 
-=======
     width: 20cm;
     height: 5cm;
->>>>>>> be4e50a1e4e2e30543a88758aa5e86fe8f99828a
     text-align: left;
 }
 
@@ -342,10 +334,7 @@ body {
     max-height: 40em;
     min-height: 8em;
 }
-<<<<<<< HEAD
-=======
 
->>>>>>> be4e50a1e4e2e30543a88758aa5e86fe8f99828a
 .textarea {
     display: block;
     max-width: 100%;
@@ -353,14 +342,6 @@ body {
     padding: calc(.75em - 1px);
     resize: vertical;
 }
-<<<<<<< HEAD
-.comment-form-content {
-    background-color: #f0f0f0;
-    border: 1px solid #ccc; 
-    border-radius: 5px; 
-    padding: 10px; 
-    margin-bottom: 20px; 
-=======
 
 .comment-form-content {
     background-color: #f0f0f0;
@@ -368,16 +349,12 @@ body {
     border-radius: 5px;
     padding: 10px;
     margin-bottom: 20px;
->>>>>>> be4e50a1e4e2e30543a88758aa5e86fe8f99828a
 }
+
 
     .comment-form-content a {
         color: #333;
-<<<<<<< HEAD
-        font-weight: bold; 
-=======
         font-weight: bold;
->>>>>>> be4e50a1e4e2e30543a88758aa5e86fe8f99828a
     }
 
 .textarea-comment button {
@@ -388,104 +365,7 @@ body {
     gap: 5px;
     width: 70px;
 }
-<<<<<<< HEAD
-.quantity input[type="text"] {
-    width: 1cm; 
-}
-
-element.style {
-    margin-top: 90px;
-}
-
-.pb-5, .py-5 {
-    padding-bottom: 3rem !important;
-}
-
-.pt-5, .py-5 {
-    padding-top: 3rem !important;
-}
-
-.bg-light {
-    background-color: #FFFFFF !important;
-}
-
-.container, .container-fluid, .container-sm, .container-md, .container-lg, .container-xl {
-    width: 100%;
-    padding-right: 15px;
-    padding-left: 15px;
-    margin-right: auto;
-    margin-left: auto;
-}
-
-*, *::before, *::after {
-    box-sizing: border-box;
-}
-
-user agent stylesheet
-div {
-    display: block;
-    unicode-bidi: isolate;
-}
-
-body {
-    margin: 0;
-    font-family: "Poppins", sans-serif;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #555555;
-    text-align: left;
-    background-color: #F3F6FF;
-}
-
-:root {
-    --blue: #007bff;
-    --indigo: #6610f2;
-    --purple: #6f42c1;
-    --pink: #e83e8c;
-    --red: #dc3545;
-    --orange: #fd7e14;
-    --yellow: #ffc107;
-    --green: #28a745;
-    --teal: #20c997;
-    --cyan: #17a2b8;
-    --white: #fff;
-    --gray: #6c757d;
-    --gray-dark: #343a40;
-    --primary: #F195B2;
-    --secondary: #62C3E7;
-    --success: #28a745;
-    --info: #17a2b8;
-    --warning: #ffc107;
-    --danger: #dc3545;
-    --light: #FFFFFF;
-    --dark: #333333;
-    --breakpoint-xs: 0;
-    --breakpoint-sm: 576px;
-    --breakpoint-md: 768px;
-    --breakpoint-lg: 992px;
-    --breakpoint-xl: 1200px;
-    --font-family-sans-serif: "Poppins", sans-serif;
-    --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-}
-
-html {
-    font-family: sans-serif;
-    line-height: 1.15;
-    -webkit-text-size-adjust: 100%;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-
-*, *::before, *::after {
-    box-sizing: border-box;
-}
-
-    *, *::before, *::after {
-        box-sizing: border-box;
-    }
-=======
 
 .quantity input[type="text"] {
     width: 2cm;
 }
->>>>>>> be4e50a1e4e2e30543a88758aa5e86fe8f99828a

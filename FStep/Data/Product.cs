@@ -17,13 +17,15 @@ public partial class Product
 
     public DateTime? SentBuyerDate { get; set; }
 
-    public bool? Status { get; set; }
+    public string? Status { get; set; }
 
     public string? Detail { get; set; }
 
     public string? RecieveImg { get; set; }
 
     public string? SentImg { get; set; }
+
+    public string? ItemLocation { get; set; }
 
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 }

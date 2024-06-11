@@ -8,21 +8,29 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\Admin\**" />
-    <Compile Remove="Controllers\Moder\**" />
     <Compile Remove="ViewComponents\**" />
+    <Compile Remove="Views\Shared\Components\**" />
     <Compile Remove="wwwroot\car-repair-html-template\**" />
     <Content Remove="Controllers\Admin\**" />
-    <Content Remove="Controllers\Moder\**" />
     <Content Remove="ViewComponents\**" />
+    <Content Remove="Views\Shared\Components\**" />
     <Content Remove="wwwroot\car-repair-html-template\**" />
     <EmbeddedResource Remove="Controllers\Admin\**" />
-    <EmbeddedResource Remove="Controllers\Moder\**" />
     <EmbeddedResource Remove="ViewComponents\**" />
+    <EmbeddedResource Remove="Views\Shared\Components\**" />
     <EmbeddedResource Remove="wwwroot\car-repair-html-template\**" />
     <None Remove="Controllers\Admin\**" />
-    <None Remove="Controllers\Moder\**" />
     <None Remove="ViewComponents\**" />
+    <None Remove="Views\Shared\Components\**" />
     <None Remove="wwwroot\car-repair-html-template\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="ViewComponents\ChatViewComponent.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Views\Shared\Components\Chat\Default.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,13 +53,37 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
     <PackageReference Include="X.PagedList" Version="9.1.2" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="9.1.2" />
+
 	  <Folder Include="Controllers\Admin\" />
 	  <Folder Include="Controllers\Moder\" />
-	  <Folder Include="ViewComponents\" />
-	  <Folder Include="Views\Shared\Components\" />
 	  <Folder Include="wwwroot\img\pic\" />
 	  <Folder Include="wwwroot\img\userAvar\" />
 	  <Folder Include="wwwroot\img\nullAvar\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\assets\js\custom.js" />
+    <None Include="wwwroot\assets\js\isotope.js" />
+    <None Include="wwwroot\assets\js\isotope.min.js" />
+    <None Include="wwwroot\assets\js\owl-carousel.js" />
+    <None Include="wwwroot\assets\js\popup.js" />
+    <None Include="wwwroot\assets\js\tabs.js" />
+    <None Include="wwwroot\assets\webfonts\fa-brands-400.woff2" />
+    <None Include="wwwroot\assets\webfonts\fa-regular-400.woff2" />
+    <None Include="wwwroot\assets\webfonts\fa-solid-900.woff2" />
+    <None Include="wwwroot\assets\webfonts\fa-v4compatibility.woff2" />
+    <None Include="wwwroot\detail\js\scripts.js" />
+    <None Include="wwwroot\vendor\bootstrap\js\bootstrap.min.js" />
+    <None Include="wwwroot\vendor\jquery\jquery.js" />
+    <None Include="wwwroot\vendor\jquery\jquery.min.js" />
+    <None Include="wwwroot\vendor\jquery\jquery.min.map" />
+    <None Include="wwwroot\vendor\jquery\jquery.slim.js" />
+    <None Include="wwwroot\vendor\jquery\jquery.slim.min.js" />
+    <None Include="wwwroot\vendor\jquery\jquery.slim.min.map" />
+    <None Include="wwwroot\webfonts\fa-brands-400.woff2" />
+    <None Include="wwwroot\webfonts\fa-regular-400.woff2" />
+    <None Include="wwwroot\webfonts\fa-solid-900.woff2" />
+    <None Include="wwwroot\webfonts\fa-v4compatibility.woff2" />
   </ItemGroup>
 
 </Project>

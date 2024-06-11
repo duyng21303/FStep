@@ -1,0 +1,453 @@
+﻿@model FStep.Data.Post
+@{
+	var user = ViewData["USER_CREATE"] as FStep.Data.User;
+}
+<style>
+	html, body {
+		height: 100%;
+		width: 100%;
+		margin: 0;
+		font-family: 'Roboto', sans-serif;
+	}
+
+	.container-detail {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 15px;
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	/* Columns */
+	.left-column {
+		width: 65%;
+		position: relative;
+		overflow: auto; /* Thêm overflow để có thanh cuộn */
+		height: 400px; /* Chiều cao cố định */
+		max-width: 400px; /* Chiều rộng cố định */
+		text-align: left; /* Đưa thanh cuộn sang trái */
+		white-space: nowrap;
+	}
+
+	.right-column {
+		width: 35%;
+		margin-top: 60px;
+		margin-left: 120px;
+	}
+
+	.left-column img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover; /* Bao phủ vùng chứa mà không bị méo */
+		border-radius: 25px;
+	}
+
+	/* Product Description */
+	.product-description {
+		border-bottom: 1px solid #E1E8EE;
+		margin-bottom: 20px;
+	}
+
+		.product-description span {
+			font-size: 12px;
+			color: #358ED7;
+			letter-spacing: 1px;
+			text-transform: uppercase;
+			text-decoration: none;
+		}
+
+		.product-description h1 {
+			font-weight: 300;
+			font-size: 52px;
+			color: #43484D;
+			letter-spacing: -2px;
+		}
+
+		.product-description p {
+			font-size: 16px;
+			font-weight: 300;
+			color: #86939E;
+			line-height: 24px;
+		}
+
+	/* Product Price */
+	.product-price {
+		display: flex;
+		align-items: center;
+	}
+
+		.product-price span {
+			font-size: 26px;
+			font-weight: 300;
+			color: #43474D;
+			margin-right: 20px;
+		}
+
+	.cart-btn {
+		display: inline-block;
+		background-color: #7DC855;
+		border-radius: 6px;
+		font-size: 16px;
+		color: #FFFFFF;
+		text-decoration: none;
+		padding: 12px 30px;
+		transition: all .5s;
+	}
+
+		.cart-btn:hover {
+			background-color: #64af3d;
+		}
+
+	.mt-2 {
+		margin-top: 20px;
+	}
+
+	.col-lg-12 {
+		width: 100%;
+	}
+
+	.inner-column {
+		padding: 20px;
+		box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+		background-color: #fff;
+		border-radius: 10px;
+	}
+
+	.lead {
+		font-size: 20px;
+		font-weight: bold;
+	}
+
+	textarea.form-control {
+		width: 100%;
+		padding: 10px;
+		border-radius: 6px;
+		border: 1px solid #ccc;
+	}
+
+	.btn-danger {
+		background-color: #ff0000;
+		border: none;
+		padding: 10px 20px;
+		color: #fff;
+		border-radius: 6px;
+		cursor: pointer;
+	}
+
+		.btn-danger:hover {
+			background-color: #da0606;
+		}
+
+	.text {
+		max-height: 100px; /* Hoặc bất kỳ giới hạn chiều cao nào bạn muốn hiển thị ban đầu */
+		overflow: hidden;
+		transition: max-height 0.5s ease; /* Để tạo hiệu ứng mượt mà */
+	}
+
+
+	.product-description .read-more,
+	.product-description .shrink-btn {
+		display: none; /* Ẩn liên kết "Xem thêm" và "Thu gọn" ban đầu */
+		text-decoration: none;
+	}
+
+	body {
+		background: #FCFCFC;
+	}
+
+	.pr-12 {
+		padding-right: 12px !important;
+	}
+
+	.mb-20 {
+		margin-bottom: 20px !important;
+	}
+
+	.b-1 {
+		border: 1px solid #ebebeb !important;
+	}
+
+	.card {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+		word-wrap: break-word;
+		background-color: #fff;
+		background-clip: border-box;
+		border: 1px solid rgba(0,0,0,.125);
+		border-radius: .25rem;
+		border: 0;
+		margin-bottom: 30px;
+		transition: .5s;
+		width: 100% !important; /* Ensure full width */
+	}
+
+	.media {
+		padding: 16px 12px;
+		-webkit-transition: background-color .2s linear;
+		transition: background-color .2s linear;
+	}
+
+	.media {
+		display: -ms-flexbox;
+		display: flex;
+		-ms-flex-align: start;
+		align-items: center;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+
+	.card-body {
+		-ms-flex: 1 1 auto;
+		flex: 1 1 auto;
+		padding: 1.25rem;
+	}
+
+	.media .avatar {
+		flex-shrink: 0;
+		width: 70px;
+		height: 70px;
+	}
+
+	.no-radius {
+		border-radius: 0 !important;
+	}
+
+	.avatar-xl {
+		width: 64px;
+		height: 64px;
+		line-height: 64px;
+		font-size: 1.25rem;
+	}
+
+	.avatar {
+		position: relative;
+		display: inline-block;
+		width: 36px;
+		height: 36px;
+		line-height: 36px;
+		text-align: center;
+		border-radius: 100%;
+		background-color: #f5f6f7;
+		color: #8b95a5;
+		text-transform: uppercase;
+	}
+
+	img {
+		max-width: 100%;
+	}
+
+	img {
+		vertical-align: middle;
+		border-style: none;
+	}
+
+	.mb-2 {
+		margin-bottom: .5rem !important;
+	}
+
+	.fs-20 {
+		font-size: 20px !important;
+	}
+
+	.pr-16 {
+		padding-right: 16px !important;
+	}
+
+	.ls-1 {
+		letter-spacing: 1px !important;
+	}
+
+	.fw-300 {
+		font-weight: 300 !important;
+	}
+
+	.fs-16 {
+		font-size: 16px !important;
+	}
+
+	.media-body > * {
+		margin-bottom: 0;
+	}
+
+	small, time, .small {
+		font-family: Roboto,sans-serif;
+		font-weight: 400;
+		font-size: 11px;
+		color: #8b95a5;
+	}
+
+	.fs-14 {
+		font-size: 14px !important;
+	}
+
+	.mb-12 {
+		margin-bottom: 12px !important;
+	}
+
+	.text-fade {
+		color: rgba(77,82,89,0.7) !important;
+	}
+
+	.card-footer:last-child {
+		border-radius: 0 0 calc(.25rem - 1px) calc(.25rem - 1px);
+	}
+
+	.card-footer {
+		background-color: #fcfdfe;
+		border-top: 1px solid rgba(77,82,89,0.07);
+		color: #8b95a5;
+		padding: 10px 20px;
+	}
+
+	.flexbox {
+		display: -webkit-box;
+		display: flex;
+		-webkit-box-pack: justify;
+		justify-content: space-between;
+	}
+
+	.align-items-center {
+		-ms-flex-align: center !important;
+		align-items: center !important;
+	}
+
+	.card-footer {
+		padding: .75rem 1.25rem;
+		background-color: rgba(0,0,0,.03);
+		border-top: 1px solid rgba(0,0,0,.125);
+	}
+
+
+	.card-footer {
+		background-color: #fcfdfe;
+		border-top: 1px solid rgba(77, 82, 89, 0.07);
+		color: #8b95a5;
+		padding: 10px 20px
+	}
+
+		.card-footer > *:last-child {
+			margin-bottom: 0
+		}
+
+	.hover-shadow {
+		-webkit-box-shadow: 0 0 35px rgba(0, 0, 0, 0.11);
+		box-shadow: 0 0 35px rgba(0, 0, 0, 0.11)
+	}
+
+	.fs-10 {
+		font-size: 10px !important;
+	}
+
+	.media-left {
+		display: flex;
+	}
+
+		.media-left .img {
+		}
+
+		.media-left .name {
+			margin-left: 12px;
+		}
+
+</style>
+
+<body>
+	<div class="container-detail">
+		<!-- Left Column / Image -->
+		<div class="left-column">
+			<img src="~/img/postPic/@Model.Img" alt="Project Image">
+		</div>
+
+		<!-- Right Column -->
+		<div class="right-column">
+			<!-- Product Description -->
+			<div class="product-description">
+				<span>@Model.Type</span>
+				<h1>@Model.Content</h1>
+				<div class="text">@Html.Raw(Model.Detail)</div>
+				<a class="read-more" href="javascript:void(0)">Xem thêm</a>
+				<a class="shrink-btn" href="javascript:void(0)">Thu gọn</a>
+			</div>
+
+			<!-- Product Pricing -->
+		</div>
+	</div>
+	<div class="container">
+		<div class="col-md-12">
+			<div class="card b-1 hover-shadow mb-20 full-width">
+				<div class="media card-body">
+					<div class="media-left pr-12">
+						<div class="img">
+							<img class="avatar avatar-xl no-radius" src="~/img/userAvar/@user.AvatarImg" alt="...">
+						</div>
+						<div class="name">
+							<div class="mb-2">
+								<span class="fs-20 pr-16">@user.Name</span>
+							</div>
+							<button type="button" class="btn btn-sm btn-primary"><span>Chat ngay</span></button>
+						</div>
+					</div>
+
+					<div class="media-right text-right d-none d-md-block">
+						<p class="fs-14 text-fade mb-12">Đánh giá: @user.Rating</p>
+						<span class="text-fade"><i class="fa fa-money pr-1"></i>@Model.Date</span>
+					</div>
+				</div>
+				@* <footer class="card-footer flexbox align-items-center">
+				<div>
+				<strong>Applied on:</strong>
+				<span>21 Jan, 2017</span>
+				</div>
+				<div class="card-hover-show">
+				<a class="btn btn-xs fs-10 btn-bold btn-info" href="#">Download CV</a>
+				<a class="btn btn-xs fs-10 btn-bold btn-primary" href="#" data-toggle="modal" data-target="#modal-contact">Contact</a>
+				<a class="btn btn-xs fs-10 btn-bold btn-warning" href="#">Delete</a>
+				</div>
+				</footer> *@
+			</div>
+		</div>
+	</div>	<!-- Chat Button -->
+	<div class="mt-2 btn border-secondary text-uppercase text-primary" style="background-color: gray; text-align: center;">
+		Chat
+	</div>
+
+	<!-- Comment Section -->
+	<div class="col-lg-12 mt-3">
+		<div class="inner-column wow fadeInRight comment">
+			<span class="lead">Add your comment</span>
+			<div>
+				<textarea class="form-control" style="height: 150px;"></textarea>
+			</div>
+			<div style="min-height: 10px;"></div>
+			<div>
+				<button class="btn btn-danger">Comment</button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			var productDescription = document.querySelector('.product-description');
+			var textContainer = productDescription.querySelector('.text');
+			var readMoreLink = productDescription.querySelector('.read-more');
+			var shrinkButton = productDescription.querySelector('.shrink-btn');
+
+			if (textContainer.scrollHeight > textContainer.clientHeight) {
+				readMoreLink.style.display = 'inline-block'; // Hiển thị liên kết "Xem thêm" nếu nội dung vượt quá chiều rộng
+
+				readMoreLink.addEventListener('click', function () {
+					if (textContainer.style.maxHeight === 'none') {
+						textContainer.style.maxHeight = '200px'; // Thu gọn nội dung lại về giới hạn chiều cao ban đầu
+						readMoreLink.innerText = 'Xem thêm'; // Đổi văn bản liên kết thành "Xem thêm"
+					} else {
+						textContainer.style.maxHeight = 'none'; // Mở rộng nội dung
+						readMoreLink.innerText = 'Thu gọn'; // Đổi văn bản liên kết thành "Thu gọn"
+					}
+				});
+			}
+		});
+
+	</script>
+</body>

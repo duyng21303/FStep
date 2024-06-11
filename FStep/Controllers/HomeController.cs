@@ -2,6 +2,7 @@
 using FStep.Models;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using X.PagedList;
 
@@ -19,7 +20,7 @@ namespace FStep.Controllers
 			int pageSize = 12; // số lượng sản phẩm mỗi trang 
             int pageNumber = (page ?? 1);   // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
             var ExchangePost = db.Posts.AsQueryable();
-			ExchangePost = ExchangePost.Where(p => p.Type == "Exchange" && !(p.Status == false));    //check exchangePost là những post thuộc type "exhcange" và có status = 1
+			ExchangePost = ExchangePost.Where(p => p.Type == "Exchange" && !(p.Status == "false"));    //check exchangePost là những post thuộc type "exhcange" và có status = 1
 
 			if (!string.IsNullOrEmpty(query))
 			{
@@ -27,6 +28,7 @@ namespace FStep.Controllers
 			}
             var result = ExchangePost.Select(s => new ExchangePostVM
 			{
+				IdProduct = s.IdProduct,
 				Id = s.IdPost,
 				Title = s.Content,
 				Description = s.Detail,
@@ -46,7 +48,7 @@ namespace FStep.Controllers
 			int pageSize = 12; // số lượng sản phẩm mỗi trang 
             int pageNumber = (page ?? 1);  // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
             var SalePost = db.Posts.AsQueryable();
-			SalePost = SalePost.Where(p => p.Type == "Sale" && !(p.Status == false));
+			SalePost = SalePost.Where(p => p.Type == "Sale" && !(p.Status == "false"));
 
             if (!string.IsNullOrEmpty(query))
             {
@@ -59,6 +61,7 @@ namespace FStep.Controllers
 				Title = s.Content,
 				Img = s.Img,
 				Description = s.Detail,
+				Quantity = (int)s.IdProductNavigation.Quantity,
 				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now,
 				Price = s.IdProductNavigation.Price ?? 0
 			}).OrderByDescending(o => o.Id);
@@ -67,7 +70,8 @@ namespace FStep.Controllers
 
             ViewBag.Query = query;
             return View(pageList);
-        }
+        }		
+	
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()

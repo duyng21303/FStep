@@ -17,6 +17,9 @@ namespace FStep.Helpers
             CreateMap<SalePostVM,Product>();
 			CreateMap<ProfileVM, User>();
 
+            CreateMap<TransactionVM, Transaction>();
+
+
 		}
 
     }

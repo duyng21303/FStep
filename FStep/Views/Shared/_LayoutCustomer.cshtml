@@ -19,6 +19,10 @@
 	<div class="container">
 		<main role="main" class="pb-3">
 			@RenderBody()
+			@if (User.Identity.IsAuthenticated)
+			{
+				@await Component.InvokeAsync("Chat")
+			}
 		</main>
 	</div>
 
@@ -48,6 +52,11 @@
 		//set false for loadLibrary to note load lib again
 	}
 	<partial name="_Summernote" model="summernoteDescription" />
+
+	@if (IsSectionDefined("Scripts"))
+	{
+		@await RenderSectionAsync("Scripts", required: false)
+	}
 </body>
 
 </html>

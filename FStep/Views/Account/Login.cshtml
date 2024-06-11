@@ -31,17 +31,22 @@
                                 <label asp-for="@Model.userName" for="floatingInput"></label>
                                 <span asp-validation-for="@Model.userName" class="text-danger"></span>
                             </div>
+
                             <div class="form-floating mb-4">
                                 <input asp-for="@Model.password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
                                 <label asp-for="@Model.password" for="floatingPassword"></label>
                                 <span asp-validation-for="@Model.password" class="text-danger"></span>
                             </div>
+
                             <div class="text-danger mb-3">
                                 @Html.ValidationMessage("Error")
                             </div>
+
+                           
                             <div class="d-flex align-items-center justify-content-between mb-4">
-                                <a href="#">Forgot Password</a>
+                                <a asp-action="ForgetPassword" asp-controller="Account">Forgot Password</a>
                             </div>
+
                             <button type="submit" class="btn btn-primary py-3 w-100 mb-4">
                                 Sign In
                             </button>
@@ -59,6 +64,9 @@
 	</div>
 	<!-- Sign In End -->
 	</div>
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }
 </body>
 
 </html>
