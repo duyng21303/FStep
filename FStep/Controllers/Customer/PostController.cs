@@ -115,6 +115,20 @@ namespace FStep.Controllers.Customer
 			var data = db.Posts.Include(x => x.IdProductNavigation).Include(x => x.IdUserNavigation).SingleOrDefault(p => p.IdPost == id);
 			var user = db.Users.SingleOrDefault(user => user.IdUser == data.IdUser);
 			ViewData["USER_CREATE"] = user;
+
+			// lấy thêm comment sản phẩm
+			var comments = db.Comments.Where(x => x.IdPost == id).Include(x => x.IdUserNavigation).Select(x => new CommentVM
+			{
+				IdPost = id,
+				IdUser = x.IdUser,
+				Content = x.Content,
+				Date = x.Date,
+				IdComment = x.IdComment,
+				Name = x.IdUserNavigation.Name
+			}).ToList();
+
+			ViewData["comments"] = comments;
+
 			return View(data);
 		}
 		public IActionResult DetailSalePost(int id)
@@ -124,6 +138,20 @@ namespace FStep.Controllers.Customer
 			var product = db.Products.SingleOrDefault(product => product.IdProduct == post.IdProduct);
 			var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
 			ViewData["USER_CREATE"] = user;
+
+			// lấy thêm comment sản phẩm
+			var comments = db.Comments.Where(x => x.IdPost == id).Include(x => x.IdUserNavigation).Select(x => new CommentVM
+			{
+				IdPost = id,
+				IdUser = x.IdUser,
+				Content = x.Content,
+				Date = x.Date,
+				IdComment = x.IdComment,
+				Name = x.IdUserNavigation.Name
+			}).ToList();
+
+			ViewData["comments"] = comments;
+
 			var result = new SalePostVM()
 			{
 				Id = post.IdPost,
@@ -138,6 +166,35 @@ namespace FStep.Controllers.Customer
 			};
 
 			return View(result);
+		}
+
+		[HttpPost]
+		public IActionResult PostComment([FromForm] CommentVM comment)
+		{
+			string refererUrl = Request.Headers["Referer"].ToString();
+			try
+			{
+				var isAuthenticated = User?.Identity?.IsAuthenticated;
+				if (isAuthenticated == true)
+				{
+					comment.IdUser = User.FindFirst("UserID")?.Value;
+					comment.Date = DateTime.Now;
+					var saveComment = _mapper.Map<Comment>(comment);
+					saveComment.Reports = null;
+					saveComment.UserNotifications = null;
+					db.Comments.Add(saveComment);
+					db.SaveChanges();
+				}
+			}
+			catch (Exception ex)
+			{
+				var exc = ex;
+			}
+			if (!string.IsNullOrEmpty(refererUrl))
+			{
+				return Redirect(refererUrl);
+			}
+			return RedirectToAction("DetailPost", "Post", new { id = comment.IdPost });
 		}
 	}
 }
