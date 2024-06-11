@@ -52,7 +52,6 @@ header {
 body {
     background-color: #f2f2f2; /* Light gray background for the whole page */
     padding-top: 60px; /* Space for the header if needed */
-    border: 1px solid #ddd; /* Lightest gray border around the page */
     border-radius: 5px; /* Rounded corners for the page */
 }
 
@@ -173,15 +172,26 @@ body {
 .fruit-item .description {
     font-size: 1rem; /* Font size for the description */
     color: #666; /* Medium gray color for the description */
-    flex-grow: 1; /* Allow description to grow if too long */
+    flex-grow: 2; /* Allow description to grow if too long */
     overflow: hidden; /* Hide overflow text */
     text-overflow: ellipsis; /* Ellipsis for overflow text */
+    white-space: normal; /* Prevent wrapping */
+    line-height: 1.2em; /* Set the line height */
+    max-height: 2.4em; /* Limit to 2 lines (2 * line-height) */
+    display: -webkit-box; /* Required for webkit browsers */
+    -webkit-box-orient: vertical; /* Required for webkit browsers */
+    -webkit-line-clamp: 2; /* Limit the lines to 2 */
+    height: 2.4em;
 }
-
-/* Date text at the end of each post */
+    .fruit-item .price {
+    color: red; /* Màu đỏ cho giá */
+    font-weight: bold; /* Chữ đậm cho giá */
+}
+    /* Date text at the end of each post */
 .fruit-item .text-end {
     font-size: 0.9rem; /* Font size for the date */
     color: #999; /* Light gray color for the date */
+    font-style: italic; /* Italic font style for the span */
 }
 
 /* Pagination styles */
@@ -282,15 +292,6 @@ body {
 }
 
     .primary-btn:hover {
-    color: darkred;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-
-    .primary-btn:hover {
         background-color: #FFFF33;
     }
 
@@ -334,8 +335,6 @@ body {
     min-height: 8em;
 }
 
-
-
 .textarea {
     display: block;
     max-width: 100%;
@@ -343,7 +342,6 @@ body {
     padding: calc(.75em - 1px);
     resize: vertical;
 }
-
 
 .comment-form-content {
     background-color: #f0f0f0;
@@ -357,7 +355,6 @@ body {
     .comment-form-content a {
         color: #333;
         font-weight: bold;
-
     }
 
 .textarea-comment button {
@@ -370,53 +367,5 @@ body {
 }
 
 .quantity input[type="text"] {
-    width: 1cm;
-}
-
-main {
-    background: url('@Url.Content("~/image/background.jpg")') no-repeat center center fixed;
-    background-size: cover;
-}
-
-.product-image {
-    width: 100%;
-    height: auto;
-}
-
-.my-header {
-    background-color: #FF6600;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 1000; 
-    margin-top: 0;
-    min-width: 1200px;
-}
-
-.product-item {
-    border: 1px solid #333;
-    border-radius: 5px;
-    overflow: hidden;
-    transition: transform 0.2s;
-}
-
-    .product-item:hover {
-        transform: scale(1.05);
-    }
-
-
-.product-img img {
-    border-bottom: 2px solid #333;
-}
-
-.product-content {
-    padding: 10px;
-    background-color: #333;
-    text-align: center;
-}
-
-
-.quantity input[type="text"] {
     width: 2cm;
 }
-

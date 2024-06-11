@@ -1,8 +1,11 @@
 ﻿using FStep.Data;
 using FStep.Helpers;
+using FStep.Repostory.Interface;
+using FStep.Repostory.Service;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
@@ -21,11 +24,16 @@ namespace FStep
 			{
 				option.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
 			});
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
+            //builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+            //.AddEntityFrameworkStores<Fstep1Context>();
+            //.AddDefaultTokenProviders();
+
 			//builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 			//.AddEntityFrameworkStores<Fstep1Context>();
 			//.AddDefaultTokenProviders();
 
-			builder.Services.AddDistributedMemoryCache();
+			builder.Services.AddSignalR();
 			builder.Services.AddSession(options =>
 			{
 				options.IdleTimeout = TimeSpan.FromSeconds(10);
@@ -78,12 +86,16 @@ namespace FStep
 
 			app.UseAuthentication();
 			app.UseAuthorization();
-
+			app.UseEndpoints(endpoints =>
+			{
+				endpoints.MapHub<ChatHub>("chatHub");
+			});
 			app.MapControllerRoute(
 				name: "default",
 				pattern: "{controller=Home}/{action=Index}/{id?}");
 
 			app.Run();
+			
 		}
 	}
 }

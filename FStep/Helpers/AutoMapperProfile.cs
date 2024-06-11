@@ -18,6 +18,9 @@ namespace FStep.Helpers
 			CreateMap<ProfileVM, User>();
 			CreateMap<CommentVM, Comment>().ReverseMap();
 
+            CreateMap<TransactionVM, Transaction>();
+
+
 		}
 
     }
