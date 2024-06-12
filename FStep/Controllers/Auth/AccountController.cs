@@ -28,6 +28,7 @@ namespace FStep.Controllers.Auth
         private readonly IEmailSender emailSender;
         public AccountController(FstepDbContext context, IMapper mapper, IEmailSender emailSender)
 
+
         {
             db = context;
             _mapper = mapper;
@@ -248,7 +249,7 @@ namespace FStep.Controllers.Auth
             {
                 Token = Token,
                 UserId = userId,
-               
+
             };
             return View();
         }

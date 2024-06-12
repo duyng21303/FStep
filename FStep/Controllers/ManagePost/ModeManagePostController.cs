@@ -58,6 +58,7 @@ namespace FStep.Controllers.ManagePost
 			}
 			// Redirect back to the ViewPost action
 			return RedirectToAction("ViewPost");
+
 		}
 	}
 }

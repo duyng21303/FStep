@@ -52,7 +52,6 @@ header {
 body {
     background-color: #f2f2f2; /* Light gray background for the whole page */
     padding-top: 60px; /* Space for the header if needed */
-    border: 1px solid #ddd; /* Lightest gray border around the page */
     border-radius: 5px; /* Rounded corners for the page */
 }
 
@@ -344,6 +343,19 @@ body {
 
 .address {
     color: #000; /* Đặt màu chữ thành màu đen (#000) cho địa chỉ */
+
+    .comment-form-content a {
+        color: #333;
+        font-weight: bold;
+    }
+
+.textarea-comment button {
+    background-color: #d7000e;
+    border: 0;
+    border-radius: 8px;
+    color: #fff;
+    gap: 5px;
+    width: 70px;
 }
 
 .note {
