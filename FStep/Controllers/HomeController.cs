@@ -1,4 +1,5 @@
-﻿using FStep.Data;
+﻿using AutoMapper;
+using FStep.Data;
 using FStep.Models;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +13,16 @@ namespace FStep.Controllers
 	{
 		private readonly ILogger<HomeController> _logger;
 		private readonly FstepDBContext db;
+		private readonly IMapper _mapper;
 
-		public HomeController(FstepDBContext context) => db = context;
+		public HomeController(FstepDBContext context, IMapper mapper)
+		{
+			db = context;
+			_mapper = mapper;
+		}
 
 		public IActionResult Index(String? query, int? page)
-		{ 
+		{
 			int pageSize = 12; // số lượng sản phẩm mỗi trang 
             int pageNumber = (page ?? 1);   // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
             var ExchangePost = db.Posts.AsQueryable();
@@ -26,7 +32,7 @@ namespace FStep.Controllers
 			{
 				ExchangePost = ExchangePost.Where(p => p.Content.Contains(query));
 			}
-            var result = ExchangePost.Select(s => new ExchangePostVM
+			var result = ExchangePost.Select(s => new ExchangePostVM
 			{
 				IdProduct = s.IdProduct,
 				Id = s.IdPost,
@@ -34,14 +40,13 @@ namespace FStep.Controllers
 				Description = s.Detail,
 				Img = s.Img,
 				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now
-			}).OrderByDescending(o => o.Id) ;
+			}).OrderByDescending(o => o.Id);
 
 			var pageList = result.ToPagedList(pageNumber, pageSize);
 
 			ViewBag.Query = query;
 			return View(pageList);
 		}
-
 
 		public IActionResult Sale(String? query, int? page)
 		{
@@ -50,12 +55,12 @@ namespace FStep.Controllers
             var SalePost = db.Posts.AsQueryable();
 			SalePost = SalePost.Where(p => p.Type == "Sale" && !(p.Status == "false"));
 
-            if (!string.IsNullOrEmpty(query))
-            {
-                SalePost = SalePost.Where(p => p.Content.Contains(query));
-            }
+			if (!string.IsNullOrEmpty(query))
+			{
+				SalePost = SalePost.Where(p => p.Content.Contains(query));
+			}
 
-            var result = SalePost.Select(s => new SalePostVM
+			var result = SalePost.Select(s => new SalePostVM
 			{
 				Id = s.IdPost,
 				Title = s.Content,
@@ -66,12 +71,11 @@ namespace FStep.Controllers
 				Price = s.IdProductNavigation.Price ?? 0
 			}).OrderByDescending(o => o.Id);
 
-            var pageList = result.ToPagedList(pageNumber, pageSize);
+			var pageList = result.ToPagedList(pageNumber, pageSize);
 
-            ViewBag.Query = query;
-            return View(pageList);
-        }		
-	
+			ViewBag.Query = query;
+			return View(pageList);
+		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
