@@ -1,5 +1,6 @@
-﻿@model X.PagedList.IPagedList<FStep.ViewModels.SalePostVM>
+﻿@model X.PagedList.IPagedList<FStep.ViewModels.ListPostVM>
 @using X.PagedList.Mvc.Core;
+
 
 <div>
 	<!--/slider-->
@@ -77,68 +78,87 @@
 			<!-- Title header body  -->
 			<div class="row align-items-center mb-4 search-header">
 				<div class="col-md-6">
-					<h1 class="exchange-title">Sale: Suggestion Today</h1>
+					<h1 class="exchange-title">ListPost</h1>
 				</div>
-				<div class="col-md-5">
-					<form asp-action="Index" asp-controller="Home" class="d-flex justify-content-end search-form">
-						<input type="search" class="form-control search-input" placeholder="Enter name product" name="query">
-						<button class="btn btn-primary search-button" type="submit">
-							<i class="fa fa-search search-icon"></i>
-						</button>
-					</form>
+				<div>
+					<div class="col-md-5">
+						<form asp-action="ViewPost" asp-controller="ModeManagePost" class="d-flex justify-content-end search-form">
+							<input type="search" class="form-control search-input" placeholder="Enter student_id" name="@ViewBag.query">
+							<button class="btn btn-primary search-button" type="submit">
+								<i class="fa fa-search search-icon"></i>
+							</button>
+						</form>
+					</div>
 				</div>
-				<div class="col-md-1">
-					<a asp-action="CreateSalePost" asp-controller="Post">
-						<i class="fa fa-plus-square" style="font-size:45px;"></i>
-					</a>
-				</div>
-			</div>
-			<!-- End header body -->
-			<!-- Start Content Body-->
-			<div class="row g-4">
-				<div class="col-lg-12">
-					<div class="container-contentboby">
-						<div class="row g-4">
-							<!-- Start of post item column -->
-							@foreach (var item in Model)
-							{
-								<div class="col-md-6 col-lg-4 col-xl-3">
-									<div class="rounded position-relative fruit-item">
-										<div class="fruit-img">
-											<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@item.Id">
-												<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded-top" alt="Laptop">
-											</a>
-										</div>
-										<div class="p-4 border border-secondary border-top-0 rounded-bottom">
-
-											<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@item.Id">@Html.Raw(item.Title)</a>
-											<p class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Description)</p>
-											<p class="price">Price: @Html.Raw(item.Price) (VND)</p>
-											<p class="quantity">Quantity: @Html.Raw(item.Quantity)</p>
-											<form asp-controller="BuyNow" asp-action="BuyNow" method="get">
-												<input type="hidden" name="id" value="@item.Id" />
-												<div class="form-group">
-													<label for="Quantity">Quantity:</label>
-													<input type="number" name="Quantity" class="form-control" />
+				<!-- End header body -->
+				<!-- Start Content Body-->
+				<div class="row g-4">
+					<div class="col-lg-12">
+						<div class="container-contentboby">
+							<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+								<!-- Start of post item column -->
+								@foreach (var item in Model)
+								{
+									<div class="col">
+										<div class="rounded position-relative fruit-item">
+											<div class="fruit-img">
+												<img src="@Url.Content("~/img/postPic/" + item.Image)" class="img-fluid w-100 rounded-top" alt="Laptop">
+											</div>
+											<div class="p-4 border border-secondary border-top-0 rounded-bottom">
+												<p class="studentId mb-4"> StudentId: @Html.Raw(item.StudentId)</p>
+												<div class="row">
+													<div class="col-md-6">
+														<p class="small-text">Type: @Html.Raw(item.Type)</p>
+													</div>
+													<div class="col-md-6">
+														<p class="small-text">Status: @Html.Raw(item.Status)</p>
+													</div>
 												</div>
-												<button type="submit" class="btn btn-primary">Buy Now</button>
-											</form>
+												<h4 class="Title">@Html.Raw(item.PostTitle)</h4>
+												<p class="description">@Html.Raw(item.PostBody)</p>
+												<p>Quantity: @Html.Raw(item.Quantity)</p>
+												<p>Price: @Html.Raw(item.Price)</p>
+												<!-- Update Status Form -->
+												<form asp-action="UpdateStatus" asp-controller="ModeManagePost" method="post" class="mt-3">
+													<input type="hidden" name="PostId" value="@item.PostId" />
 
-											<p class="text-end mb-0 mt-2">CreateDate <span>@item.CreateDate?.ToString("dd/MM/yyyy")</span></p>
+													<div class="row align-items-center">
+														<div class="col-md-6">
+															<div class="form-check">
+																<input class="form-check-input" type="radio" name="Status" value="true" id="statusTrue_@item.PostId" @(item.Status ? "checked" : "") />
+																<label class="form-check-label" for="statusTrue_@item.PostId">
+																	True
+																</label>
+															</div>
+														</div>
+														<div class="col-md-6">
+															<div class="form-check">
+																<input class="form-check-input" type="radio" name="Status" value="false" id="statusFalse_@item.PostId" @(!item.Status ? "checked" : "") />
+																<label class="form-check-label" for="statusFalse_@item.PostId">
+																	False
+																</label>
+															</div>
+														</div>
+													</div>
+
+													<button type="submit" class="btn btn-primary mt-2">Update Status</button>
+												</form>
+												<!-- End Update Status Form -->
+												<p class="text-end mb-0 mt-2">CreateDate: <span>@item.CreateDate.ToString("dd/MM/yyyy")</span></p>
+											</div>
 										</div>
 									</div>
-								</div>
-							}
-
+								}
+							</div>
 						</div>
+						<!-- Start Content Body-->
+						<!-- Create relationship between page and page -->
+						@Html.PagedListPager(Model, page => Url.Action("ViewPost", new { query = ViewBag.Query, page = page }))
+						<!-- End create -->
 					</div>
-					<!-- Start Content Body-->
-					<!-- Create relationship between page and page -->
-					@Html.PagedListPager(Model, page => Url.Action("Sale", new { query = ViewBag.Query, page = page }))
-					<!-- End create -->
 				</div>
+				<!-- End Show -->
 			</div>
-			<!-- End Show -->
 		</div>
 	</div>
 </div>

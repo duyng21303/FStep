@@ -54,6 +54,7 @@
     <PackageReference Include="X.PagedList" Version="9.1.2" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="9.1.2" />
 
+
 	  <Folder Include="Controllers\Admin\" />
 	  <Folder Include="Controllers\Moder\" />
 	  <Folder Include="wwwroot\img\pic\" />
