@@ -17,7 +17,7 @@ namespace FStep.Controllers.Customer
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> BuyNow(int id, int Quantity) 
+        public async Task<IActionResult> BuyNow(int id, int Quantity)
         {
             var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
 			if (post == null)

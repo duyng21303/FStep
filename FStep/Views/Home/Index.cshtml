@@ -106,12 +106,12 @@
 									<div class="col-md-6 col-lg-6 col-xl-3">
 										<div class="rounded position-relative fruit-item">
 											<div class="fruit-img">
-												<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.Id">
+												<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost">
 													<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded-top" alt="Laptop">
 												</a>
 											</div>
 											<div class="p-4 border border-secondary border-top-0 rounded-bottom">
-												<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.Id">
+												<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost">
 													<h4 class="Title">@Html.Raw(item.Title)</h4>
 												</a>
 												<div class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Description)</div>
