@@ -2,6 +2,7 @@
 using FStep.Helpers;
 using FStep.Repostory.Interface;
 using FStep.Repostory.Service;
+using FStep.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
@@ -65,7 +66,7 @@ namespace FStep
 
 			builder.Services.AddDistributedMemoryCache();
 
-			
+			builder.Services.AddSingleton<IVnPayService, VnPayService>();
 
 
 			var app = builder.Build();

@@ -29,12 +29,12 @@ namespace FStep.Controllers
             var result = ExchangePost.Select(s => new ExchangePostVM
 			{
 				IdProduct = s.IdProduct,
-				Id = s.IdPost,
+				IdPost = s.IdPost,
 				Title = s.Content,
 				Description = s.Detail,
 				Img = s.Img,
 				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now
-			}).OrderByDescending(o => o.Id) ;
+			}).OrderByDescending(o => o.IdPost) ;
 
 			var pageList = result.ToPagedList(pageNumber, pageSize);
 
@@ -57,14 +57,14 @@ namespace FStep.Controllers
 
             var result = SalePost.Select(s => new SalePostVM
 			{
-				Id = s.IdPost,
+				IdPost = s.IdPost,
 				Title = s.Content,
 				Img = s.Img,
 				Description = s.Detail,
 				Quantity = (int)s.IdProductNavigation.Quantity,
 				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now,
 				Price = s.IdProductNavigation.Price ?? 0
-			}).OrderByDescending(o => o.Id);
+			}).OrderByDescending(o => o.IdPost);
 
             var pageList = result.ToPagedList(pageNumber, pageSize);
 
@@ -86,7 +86,7 @@ namespace FStep.Controllers
 
 			var result = new SalePostVM()
             {
-                Id = post.IdPost,
+                IdPost = post.IdPost,
                 Title = post.Content,
 				Quantity = product.Quantity,
                 Img = post.Img,

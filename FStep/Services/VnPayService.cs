@@ -54,6 +54,8 @@ namespace FStep.Services
             var vnp_SecureHash = collection.FirstOrDefault(p => p.Key == "vnp_SecureHash").Value;
             var vnp_ResponseCode = vnpay.GetResponseData("vnp_ResponseCode");
             var vnp_OrderInfo = vnpay.GetResponseData("vnp_OrderInfo");
+            //var vnp_IdUser = vnpay.GetResponseData("vnp_IdUser");
+            var vnp_Amount = float.Parse(vnpay.GetResponseData("vnp_Amount"));
 
             bool checkSignature = vnpay.ValidateSignature(vnp_SecureHash, _config["VnPay:HashSecret"]);
 
@@ -66,7 +68,9 @@ namespace FStep.Services
             }
             return new VnPaymentResponseModel
             {
+                //IdUser = vnp_IdUser,
                 Success = true,
+                Amount = vnp_Amount,
                 PaymentMethod = "VnPay",
                 OrderDescription = vnp_OrderInfo,
                 OrderId = vnp_OrderId.ToString(),

@@ -1,6 +1,7 @@
 ﻿@model FStep.ViewModels.CheckoutVM
 @{
 	ViewData["Title"] = "Checkout";
+	var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
 
 <!-- Checkout Page Start -->
@@ -9,7 +10,7 @@
 		<h1 class="mb-4">Checkout</h1>
 		@if (ViewData["Type"].Equals("Sale"))
 		{
-			<form asp-action="CheckoutSale" asp-controller="Pay">
+			<form asp-action="CheckoutSale" asp-controller="Pay" asp-route-amount="@ViewData["Amount"]">
 				<div class="row g-5">
 					<div class="col-md-12 col-lg-6 col-xl-3">
 						<div class="form-item mt-3">
@@ -36,15 +37,15 @@
 											</div>
 										</th>
 										<td class="py-5">@ViewData["Content"]</td>
-										<td class="py-5">@ViewData["Price"] VND</td>
+										<td class="py-5">@String.Format(format, "{0:0,0 VND}", @ViewData["Price"])</td>
 										<td class="py-5">@ViewData["Quantity"]</td>
-										<td class="py-5">@ViewData["Amount"] VND</td>
+										<td class="py-5">@String.Format(format, "{0:0,0 VND}", ViewData["Amount"])</td>
 									</tr>
 								</tbody>
 							</table>
 						</div>
 						<div class="row g-4 text-center align-items-center justify-content-center pt-4">
-							<input type="submit" name="paymentMethod" value="VnPay" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary"></input>
+							<button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">VnPay</button>
 						</div>
 					</div>
 				</div>

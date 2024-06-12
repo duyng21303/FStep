@@ -4,6 +4,7 @@ using FStep.Helpers;
 using FStep.Services;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.EntityFrameworkCore;
@@ -14,11 +15,11 @@ namespace FStep.Controllers.Customer
 	public class PayController : Controller
 	{
 
-		private readonly FstepDBContext db;
+		private readonly FstepDbContext db;
 		private readonly IMapper _mapper;
 		private readonly IVnPayService _vnPayService;
 
-		public PayController(FstepDBContext context, IMapper mapper, IVnPayService vnPayService)
+		public PayController(FstepDbContext context, IMapper mapper, IVnPayService vnPayService)
 		{
 			db = context;
 			_mapper = mapper;
@@ -59,6 +60,7 @@ namespace FStep.Controllers.Customer
 		public IActionResult CheckoutSale(int id)
 		{
 			var post = db.Posts.SingleOrDefault(x => x.IdPost == id);
+			ViewData["IdPost"] = id;
 			ViewData["Content"] = post.Content;
 			ViewData["Img"] = post.Img;
 			ViewData["Price"] = db.Products.SingleOrDefault(p => p.IdProduct == id).Price;
@@ -69,33 +71,18 @@ namespace FStep.Controllers.Customer
 		}
 		[Authorize]
 		[HttpPost]
-		public IActionResult CheckoutSale(CheckoutVM model, string paymentMethod = "COD")
+		public IActionResult CheckoutSale(CheckoutVM model, float amount)
 		{
-			if (paymentMethod == "VnPay")
+			var vnPayModel = new VnPaymentRequestModel
 			{
-				var vnPayModel = new VnPaymentRequestModel
-				{
-					Amount = 1000000,
-					CreatedDate = DateTime.Now,
-					Description = "Thanh toan don hang",
-					FullName = User.FindFirst("UserID").Value,
-					TransactionId = new Random().Next(1000, 100000)
-				};
-				return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, vnPayModel));
-			}
-
-			if (ModelState.IsValid)
-			{
-				var transaction = _mapper.Map<Transaction>(model);
-				transaction.IdUserBuyer = User.FindFirst("UserID").Value;
-				transaction.IdUserSeller = "";
-				transaction.Amount = model.Amount;
-				transaction.Date = DateTime.Now;
-				transaction.IdPost = model.IdPost;
-				db.Add(transaction);
-				db.SaveChanges();
-			}
-			return RedirectToAction("Index");
+				IdUser = "",
+				Amount = amount,
+				CreatedDate = DateTime.Now,
+				Description = "Thanh toan don hang",
+				FullName = User.FindFirst("UserID").Value,
+				TransactionId = new Random().Next(1000, 100000)
+			};
+			return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, vnPayModel));
 		}
 
 		[Authorize]
@@ -120,10 +107,15 @@ namespace FStep.Controllers.Customer
 				TempData["Message"] = $"VnPay fail: {response.VnPayResponseCode}";
 				return RedirectToAction("PaymentFail");
 			}
-
+			var transaction = new Transaction();
+			transaction.IdUserBuyer = User.FindFirst("UserID").Value;
+			transaction.IdUserSeller = response.IdUser;
+			transaction.Amount = response.Amount;
+			transaction.Date = DateTime.Now;
+			db.Add(transaction);
+			db.SaveChanges();
 			TempData["Message"] = $"VnPay success";
 			return RedirectToAction("PaymentSuccess");
-
 		}
 
 		public IActionResult Refund()
