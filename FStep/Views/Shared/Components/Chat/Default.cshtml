@@ -341,18 +341,20 @@
 						<div class="input-group">
 							<!-- Các phần tử trong people-list -->
 						</div>
-						<ul class="list-unstyled chat-list mt-2 mb-0">
+						<ul class="list-unstyled chat-list mt-2 mb-0 group-list">
 							@{
 								var usersProcessed = new HashSet<string>();
 								var userId = User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
 							}
 							<input type="hidden" id="sendUserID" value="@userId" /> <!-- Giá trị của sendUserID -->
+							@* <li class="clearfix" data-userid="">
+							</li> *@
 							@foreach (var user in Model)
 							{
 								var userId_Send = user.SenderUser.IdUser;
 								var userId_Recieve = user.RecieverUser.IdUser;
 								// Kiểm tra xem userId của người dùng đã được xử lý trước đó hay chưa
-								if (!usersProcessed.Contains(userId_Send) && !usersProcessed.Contains(userId_Recieve))
+								@if (!usersProcessed.Contains(userId_Send) && !usersProcessed.Contains(userId_Recieve))
 								{
 									// Thêm userId vào danh sách đã xử lý
 
@@ -384,6 +386,7 @@
 										usersProcessed.Add(userId_Recieve);
 									}
 								}
+								<input type="hidden" id="list-already" value='' />
 							}
 						</ul>
 					</div>

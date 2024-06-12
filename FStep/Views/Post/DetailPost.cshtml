@@ -386,7 +386,16 @@
 							<div class="mb-2">
 								<span class="fs-20 pr-16">@user.Name</span>
 							</div>
-							<button type="button" class="btn btn-sm btn-primary"><span>Chat ngay</span></button>
+							<button type="button" class="btn btn-sm btn-primary load-chat" data-userid="@Model.IdUser">
+								<span>Chat ngay</span>
+
+							</button>
+							<div id="chatContainerRaw" style="display: block; z-index: 1;">
+								@await Component.InvokeAsync("Chat")
+							</div>
+							<div id="chatContainer" style="display: none; z-index: 2;">
+								@await Component.InvokeAsync("Chat", @Model.IdUser)
+							</div>
 						</div>
 					</div>
 

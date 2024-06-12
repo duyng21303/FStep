@@ -26,7 +26,7 @@ namespace FStep
 				ChatDate = DateTime.Now,	
 				RecieverUserId = toUser,
 				SenderUserId = fromUser,
-				IdPost = 1
+				IdPost = null
 			};
 			await _context.Chats.AddAsync(chat);
 			await _context.SaveChangesAsync();
@@ -44,7 +44,8 @@ namespace FStep
 							.Where(u => u.IdUser == userId)
 							.Select(u => new { u.IdUser, u.AvatarImg, u.Name })
 							.FirstOrDefaultAsync();
-			await Clients.Caller.SendAsync("LoadMessages", messages, currentUser, recieverUser);
+			await Clients.Caller.SendAsync("LoadMessages", messages, currentUser, recieverUser, null);
 		}
+		
 	}
 }

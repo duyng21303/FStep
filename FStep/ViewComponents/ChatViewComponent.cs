@@ -2,6 +2,7 @@
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Immutable;
 using System.Security.Claims;
 
 namespace FStep.ViewComponents
@@ -16,7 +17,7 @@ namespace FStep.ViewComponents
 		}
 		[HttpGet]
 		[Authorize]
-		public IViewComponentResult Invoke()
+		public IViewComponentResult Invoke(string? userid)
 		{
 			var chat = db.Chats.AsQueryable();
 			var userIdString = HttpContext.User.FindFirstValue("UserID");
@@ -34,7 +35,20 @@ namespace FStep.ViewComponents
 				RecieverUser = db.Users.SingleOrDefault(user => user.IdUser.Equals(p.RecieverUserId)),
 				ChatMsg = p.ChatMsg,
 				IdPost = p.IdPost 
-			}).OrderBy(p => p.ChatDate);
+			}).OrderBy(p => p.ChatDate).ToList();
+			if(userid != null)
+			{
+				var newUser = db.Users.SingleOrDefault(user => user.IdUser.Equals(userid));
+				result.Add(new ChatVM()
+				{
+					ChatDate = DateTime.Now,
+					SenderUser = db.Users.SingleOrDefault(user => user.IdUser.Equals(userIdString)),
+					RecieverUser = db.Users.SingleOrDefault(user => user.IdUser.Equals(userid)),
+					ChatMsg = null,
+					IdPost = null
+				});
+			}
+			result = result.OrderBy(p => p.ChatDate).Reverse().ToList();
 			return View(result);
 		}
 	}

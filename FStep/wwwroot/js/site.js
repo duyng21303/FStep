@@ -14,7 +14,25 @@ function closeForm() {
 
 $(document).ready(function () {
     $('li').click(function () {
-        var userId = $(this).data('userid');
+        var userId = $(this).data('userid').toString();
+        connection.invoke("LoadMessages", userId).catch(function (err) {
+            return console.error(err.toString());
+        });
+        openForm();
+    });
+    $(".load-chat").click(function () {
+        var userId = $(this).data("userid").toString();
+        console.log(userId);
+
+        // Hiển thị chatContainer
+        const chatContainer = document.getElementById('chatContainer');
+        const chatContainerRaw = document.getElementById('chatContainerRaw');
+        chatContainer.style.display = 'block';
+        chatContainerRaw.innerHTML = '';
+        //chatContainerRaw.style.zIndex = '1';
+        // Thiết lập z-index cho chatContainer thấp hơn
+        //chatContainer.style.zIndex = '2';
+        // Gọi các hàm khác cần thiết (ví dụ: gọi connection.invoke và openForm)
         connection.invoke("LoadMessages", userId).catch(function (err) {
             return console.error(err.toString());
         });
@@ -28,6 +46,11 @@ connection.on("ReceiveMessage", function (recieveUser, user, message, img, date)
     var currentUser = document.getElementById('sendUserID').value; // hoặc truyền từ server
     const li = document.createElement('li');
     li.classList.add('clearfix');
+    if (img != null) {
+        img = "userAvar/" + img;
+    } else {
+        img = "nullAvar/149071.png";
+    }
     console.log("check", user); // Log messages to console
     if (recieveUser === currentUser || user === currentUser) {
         if (user === currentUser) {
@@ -41,7 +64,7 @@ connection.on("ReceiveMessage", function (recieveUser, user, message, img, date)
         } else {
             li.innerHTML = `
 					<div class="message-data">
-						<img src="/img/userAvar/${img}" alt="avatar">
+						<img src="/img/${img}" alt="avatar">
 						<span class="message-data-time">${date}</span>
 					</div>
 					<div class="message my-message">${message}</div>
@@ -53,7 +76,7 @@ connection.on("ReceiveMessage", function (recieveUser, user, message, img, date)
     chatHistory.scrollTop = chatHistory.scrollHeight;
 });
 
-connection.on("LoadMessages", function (messages, currentUser, recieverUser) {
+connection.on("LoadMessages", function (messages, currentUser, recieverUser, post) {
     const chatMessagesContainer = document.getElementById('chatMessages');
     const chatMessagesSubmit = document.getElementById('submit-chat');
     const chatHistory = document.getElementById('chat-history');
@@ -129,5 +152,4 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser) {
 connection.start().catch(function (err) {
     return console.error(err.toString());
 });
-
 
