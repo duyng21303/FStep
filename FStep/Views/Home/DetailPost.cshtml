@@ -1,451 +1,198 @@
-﻿@model FStep.Data.Post
-
+﻿@using FStep.ViewModels
 <style>
-	html, body {
-		height: 100%;
-		width: 100%;
-		margin: 0;
-		font-family: 'Roboto', sans-serif;
-	}
-
-	.container-detail {
-		max-width: 1200px;
-		margin: 0 auto;
-		padding: 15px;
-		display: flex;
-		flex-wrap: wrap;
-	}
-
-	/* Columns */
-	.left-column {
-		width: 65%;
-		position: relative;
-		overflow: auto; /* Thêm overflow để có thanh cuộn */
-		height: 400px; /* Chiều cao cố định */
-		max-width: 400px; /* Chiều rộng cố định */
-		text-align: left; /* Đưa thanh cuộn sang trái */
-		white-space: nowrap;
-	}
-
-	.right-column {
-		width: 35%;
-		margin-top: 60px;
-		margin-left: 120px;
-	}
-
-	.left-column img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover; /* Bao phủ vùng chứa mà không bị méo */
-		border-radius: 25px;
-	}
-
-	/* Product Description */
-	.product-description {
-		border-bottom: 1px solid #E1E8EE;
-		margin-bottom: 20px;
-	}
-
-		.product-description span {
-			font-size: 12px;
-			color: #358ED7;
-			letter-spacing: 1px;
-			text-transform: uppercase;
-			text-decoration: none;
-		}
-
-		.product-description h1 {
-			font-weight: 300;
-			font-size: 52px;
-			color: #43484D;
-			letter-spacing: -2px;
-		}
-
-		.product-description p {
-			font-size: 16px;
-			font-weight: 300;
-			color: #86939E;
-			line-height: 24px;
-		}
-
-	/* Product Price */
-	.product-price {
-		display: flex;
-		align-items: center;
-	}
-
-		.product-price span {
-			font-size: 26px;
-			font-weight: 300;
-			color: #43474D;
-			margin-right: 20px;
-		}
-
-	.cart-btn {
-		display: inline-block;
-		background-color: #7DC855;
-		border-radius: 6px;
-		font-size: 16px;
-		color: #FFFFFF;
-		text-decoration: none;
-		padding: 12px 30px;
-		transition: all .5s;
-	}
-
-		.cart-btn:hover {
-			background-color: #64af3d;
-		}
-
-	.mt-2 {
-		margin-top: 20px;
-	}
-
-	.col-lg-12 {
-		width: 100%;
-	}
-
-	.inner-column {
-		padding: 20px;
-		box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-		background-color: #fff;
-		border-radius: 10px;
-	}
-
-	.lead {
-		font-size: 20px;
-		font-weight: bold;
-	}
-
-	textarea.form-control {
-		width: 100%;
-		padding: 10px;
-		border-radius: 6px;
-		border: 1px solid #ccc;
-	}
-
-	.btn-danger {
-		background-color: #ff0000;
-		border: none;
-		padding: 10px 20px;
-		color: #fff;
-		border-radius: 6px;
-		cursor: pointer;
-	}
-
-		.btn-danger:hover {
-			background-color: #da0606;
-		}
-
-	.text {
-		max-height: 100px; /* Hoặc bất kỳ giới hạn chiều cao nào bạn muốn hiển thị ban đầu */
-		overflow: hidden;
-		transition: max-height 0.5s ease; /* Để tạo hiệu ứng mượt mà */
-	}
-
-
-	.product-description .read-more,
-	.product-description .shrink-btn {
-		display: none; /* Ẩn liên kết "Xem thêm" và "Thu gọn" ban đầu */
-		text-decoration: none;
-	}
-
 	body {
-		background: #FCFCFC;
+		background-color: #f0f0f0; /* Màu xám nhạt */
 	}
 
-	.pr-12 {
-		padding-right: 12px !important;
-	}
-
-	.mb-20 {
-		margin-bottom: 20px !important;
-	}
-
-	.b-1 {
-		border: 1px solid #ebebeb !important;
+	.project-details-section .project-detail .auto-container {
+		background-color: #f0f0f0; /* Màu xám nhạt cho container chính */
 	}
 
 	.card {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		min-width: 0;
-		word-wrap: break-word;
-		background-color: #fff;
-		background-clip: border-box;
-		border: 1px solid rgba(0,0,0,.125);
-		border-radius: .25rem;
-		border: 0;
-		margin-bottom: 30px;
-		transition: .5s;
-		width: 100% !important; /* Ensure full width */
+		border: none
 	}
 
-	.media {
-		padding: 16px 12px;
-		-webkit-transition: background-color .2s linear;
-		transition: background-color .2s linear;
+	.product {
+		background-color: #eee
 	}
 
-	.media {
-		display: -ms-flexbox;
-		display: flex;
-		-ms-flex-align: start;
-		align-items: center;
-		flex-direction: row;
-		justify-content: space-between;
+	.brand {
+		font-size: 13px
 	}
 
-	.card-body {
-		-ms-flex: 1 1 auto;
-		flex: 1 1 auto;
-		padding: 1.25rem;
+	.act-price {
+		color: red;
+		font-weight: 700
 	}
 
-	.media .avatar {
-		flex-shrink: 0;
-		width: 70px;
-		height: 70px;
+	.dis-price {
+		text-decoration: line-through
 	}
 
-	.no-radius {
-		border-radius: 0 !important;
+	.about {
+		font-size: 14px
 	}
 
-	.avatar-xl {
-		width: 64px;
-		height: 64px;
-		line-height: 64px;
-		font-size: 1.25rem;
+	.color {
+		margin-bottom: 10px
 	}
 
-	.avatar {
-		position: relative;
-		display: inline-block;
-		width: 36px;
-		height: 36px;
-		line-height: 36px;
-		text-align: center;
-		border-radius: 100%;
-		background-color: #f5f6f7;
-		color: #8b95a5;
-		text-transform: uppercase;
+	label.radio {
+		cursor: pointer
 	}
 
-	img {
-		max-width: 100%;
-	}
-
-	img {
-		vertical-align: middle;
-		border-style: none;
-	}
-
-	.mb-2 {
-		margin-bottom: .5rem !important;
-	}
-
-	.fs-20 {
-		font-size: 20px !important;
-	}
-
-	.pr-16 {
-		padding-right: 16px !important;
-	}
-
-	.ls-1 {
-		letter-spacing: 1px !important;
-	}
-
-	.fw-300 {
-		font-weight: 300 !important;
-	}
-
-	.fs-16 {
-		font-size: 16px !important;
-	}
-
-	.media-body > * {
-		margin-bottom: 0;
-	}
-
-	small, time, .small {
-		font-family: Roboto,sans-serif;
-		font-weight: 400;
-		font-size: 11px;
-		color: #8b95a5;
-	}
-
-	.fs-14 {
-		font-size: 14px !important;
-	}
-
-	.mb-12 {
-		margin-bottom: 12px !important;
-	}
-
-	.text-fade {
-		color: rgba(77,82,89,0.7) !important;
-	}
-
-	.card-footer:last-child {
-		border-radius: 0 0 calc(.25rem - 1px) calc(.25rem - 1px);
-	}
-
-	.card-footer {
-		background-color: #fcfdfe;
-		border-top: 1px solid rgba(77,82,89,0.07);
-		color: #8b95a5;
-		padding: 10px 20px;
-	}
-
-	.flexbox {
-		display: -webkit-box;
-		display: flex;
-		-webkit-box-pack: justify;
-		justify-content: space-between;
-	}
-
-	.align-items-center {
-		-ms-flex-align: center !important;
-		align-items: center !important;
-	}
-
-	.card-footer {
-		padding: .75rem 1.25rem;
-		background-color: rgba(0,0,0,.03);
-		border-top: 1px solid rgba(0,0,0,.125);
-	}
-
-
-	.card-footer {
-		background-color: #fcfdfe;
-		border-top: 1px solid rgba(77, 82, 89, 0.07);
-		color: #8b95a5;
-		padding: 10px 20px
-	}
-
-		.card-footer > *:last-child {
-			margin-bottom: 0
+		label.radio input {
+			position: absolute;
+			top: 0;
+			left: 0;
+			visibility: hidden;
+			pointer-events: none
 		}
 
-	.hover-shadow {
-		-webkit-box-shadow: 0 0 35px rgba(0, 0, 0, 0.11);
-		box-shadow: 0 0 35px rgba(0, 0, 0, 0.11)
-	}
-
-	.fs-10 {
-		font-size: 10px !important;
-	}
-
-	.media-left {
-		display: flex;
-	}
-
-		.media-left .img {
+		label.radio span {
+			padding: 2px 9px;
+			border: 2px solid #ff0000;
+			display: inline-block;
+			color: #ff0000;
+			border-radius: 3px;
+			text-transform: uppercase
 		}
 
-		.media-left .name {
-			margin-left: 12px;
+		label.radio input:checked + span {
+			border-color: #ff0000;
+			background-color: #ff0000;
+			color: #fff
 		}
+
+	.btn-danger {
+		background-color: #ff0000 !important;
+		border-color: #ff0000 !important
+	}
+
+		.btn-danger:hover {
+			background-color: #da0606 !important;
+			border-color: #da0606 !important
+		}
+
+		.btn-danger:focus {
+			box-shadow: none
+		}
+
+	.cart i {
+		margin-right: 10px
+	}
+
+	.comment-section {
+		background-color: #f9f9f9;
+		border-radius: 10px;
+		padding: 20px;
+		margin-top: 30px;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	}
+
+		.comment-section .comment-heading {
+			font-size: 20px;
+			font-weight: bold;
+			margin-bottom: 20px;
+			color: #ff0000;
+		}
+
+	.product-rating__author-name,
+	.product-rating__time {
+		font-size: .75rem;
+	}
+
+	.product-rating {
+		background-color: var(--bs-body-bg);
+	}
 
 </style>
-
-<body>
-	<div class="container-detail">
-		<!-- Left Column / Image -->
-		<div class="left-column">
-			<img src="~/img/postPic/@Model.Img" alt="Project Image">
-		</div>
-
-		<!-- Right Column -->
-		<div class="right-column">
-			<!-- Product Description -->
-			<div class="product-description">
-				<span>@Model.Type</span>
-				<h1>@Model.Content</h1>
-				<div class="text">@Html.Raw(Model.Detail)</div>
-				<a class="read-more" href="javascript:void(0)">Xem thêm</a>
-				<a class="shrink-btn" href="javascript:void(0)">Thu gọn</a>
-			</div>
-
-			<!-- Product Pricing -->
-		</div>
-	</div>
-	<div class="container">
-		<div class="col-md-12">
-			<div class="card b-1 hover-shadow mb-20 full-width">
-				<div class="media card-body">
-					<div class="media-left pr-12">
-						<div class="img">
-							<img class="avatar avatar-xl no-radius" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="...">
+@model FStep.Data.Post
+@{
+	var comments = ViewData["comments"] as List<CommentVM> ?? new List<CommentVM>();
+}
+<section class="project-details-section">
+	<div class="project-detail">
+		<div class="auto-container">
+			<!-- Upper Box -->
+			<div class="upper-box row">
+				<!--Project Tabs-->
+				<div class="project-tabs tabs-box clearfix col-6">
+					<!--Tab Btns-->
+					<!--Tabs Container-->
+					<div class="tabs-content">
+						<!--Tab / Active Tab-->
+						<div class="tab active-tab" id="tab-1">
+							<figure class="image">
+								<img style="border-radius: 25px; width: 650px; height: 500px;" src="@Url.Content("~/img/postPic/" + Model.Img)">
+							</figure>
 						</div>
-						<div class="name">
-							<div class="mb-2">
-								<span class="fs-20 pr-16">Hossein Shams</span>
-							</div>
-							<small class="fs-16 fw-300 ls-1">Front-end developer</small>
-						</div>
-					</div>
 
-					<div class="media-right text-right d-none d-md-block">
-						<p class="fs-14 text-fade mb-12"><i class="fa fa-map-marker pr-1"></i> Menlo Park, CA</p>
-						<span class="text-fade"><i class="fa fa-money pr-1"></i> $60 per hour</span>
 					</div>
 				</div>
-				@* <footer class="card-footer flexbox align-items-center">
-					<div>
-						<strong>Applied on:</strong>
-						<span>21 Jan, 2017</span>
+				<div class="content-column col-lg-6 col-md-6 col-sm-6 mt-5">
+					<div class="inner-column card" style="padding : 5px 5px 5px 5px;box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);">
+						<h1>@Model.Content</h1>
+						@* <p>@Html.Raw(Model.Content)</p> *@
+						<div style="min-height:30px;"></div>
+						<h4>Ngày tạo</h4>
+						<p>@Model.Date</p>
 					</div>
-					<div class="card-hover-show">
-						<a class="btn btn-xs fs-10 btn-bold btn-info" href="#">Download CV</a>
-						<a class="btn btn-xs fs-10 btn-bold btn-primary" href="#" data-toggle="modal" data-target="#modal-contact">Contact</a>
-						<a class="btn btn-xs fs-10 btn-bold btn-warning" href="#">Delete</a>
+				</div>
+			</div>
+
+			<div style="min-height:10px;"></div>
+			<!--Lower Content-->
+			<div class="lower-content">
+				<div class="row clearfix">
+					<!--Content Column-->
+					<!--Info Column-->
+					<div class="info-column col-lg-12 col-md-12 col-sm-12 ">
+						<div class="inner-column wow fadeInRight card" style="padding : 5px 5px 5px 5px;box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);">
+							<h3>Thông tin</h3>
+							<ul style="list-style-type: none;">
+								<li><strong>Mô tả sản phẩm : @Html.Raw(Model.Detail)</li>
+								<li><strong>Kiểu:</strong> @Model.Type</li>
+								<li><strong>Tên người đăng :</strong> @Model.IdUserNavigation.Name</li>
+							</ul>
+							<!--Help Box-->
+						</div>
 					</div>
-				</footer> *@
+				</div>
+			</div>
+			<div style="background-color=gray;text-align:center" class="mt-2 btn border-secondary text-uppercase  text-primary">
+				Chat
+			</div>
+			<div class="col-lg-12 mt-3">
+				@* TODO: Hiển thị danh sách comment ở đây  *@
+				@foreach (var comment in comments.OrderByDescending(c => c.Date))
+				{
+					<div class="product-rating d-flex gap-2 mb-2 p-2">
+						<div class="product-rating__avatar">
+							<img class="rounded-circle me-lg-2 product-rating__avatar-img" src="~/img/@User.FindFirst("IMG")?.Value" alt="" style="width: 40px; height: 40px;">
+						</div>
+						<div class="product-rating-main">
+							<div class="product-rating__author-name">@comment.Name</div>
+							<div class="product-rating__time">@comment.Date?.ToString("dd-MM-yyyy HH:mm:ss")</div>
+							<div class="product-rating__content">@comment.Content</div>
+						</div>
+					</div>
+				}
+				<div class="inner-column wow fadeInRight card" style="padding : 5px 5px 5px 5px;box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);">
+					<span class="lead">Add your comment</span>
+					<form method="post" asp-action="PostComment" asp-asp-controller="Home">
+						<div>
+							<input name="IdPost" value="@Model.IdPost" type="hidden" />
+							<input name="RedirectUrl" value="DetailPost" type="hidden" />
+							<textarea rows="3" class="form-control" name="Content"></textarea>
+						</div>
+						<div style="min-height:10px;"></div>
+						<div>
+							<button class="btn btn-danger" name="btn-comment">Comment</button>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
-	</div>	<!-- Chat Button -->
-	<div class="mt-2 btn border-secondary text-uppercase text-primary" style="background-color: gray; text-align: center;">
-		Chat
 	</div>
-
-	<!-- Comment Section -->
-	<div class="col-lg-12 mt-3">
-		<div class="inner-column wow fadeInRight comment">
-			<span class="lead">Add your comment</span>
-			<div>
-				<textarea class="form-control" style="height: 150px;"></textarea>
-			</div>
-			<div style="min-height: 10px;"></div>
-			<div>
-				<button class="btn btn-danger">Comment</button>
-			</div>
-		</div>
-	</div>
-
-	<script>
-		document.addEventListener('DOMContentLoaded', function () {
-			var productDescription = document.querySelector('.product-description');
-			var textContainer = productDescription.querySelector('.text');
-			var readMoreLink = productDescription.querySelector('.read-more');
-			var shrinkButton = productDescription.querySelector('.shrink-btn');
-
-			if (textContainer.scrollHeight > textContainer.clientHeight) {
-				readMoreLink.style.display = 'inline-block'; // Hiển thị liên kết "Xem thêm" nếu nội dung vượt quá chiều rộng
-
-				readMoreLink.addEventListener('click', function () {
-					if (textContainer.style.maxHeight === 'none') {
-						textContainer.style.maxHeight = '200px'; // Thu gọn nội dung lại về giới hạn chiều cao ban đầu
-						readMoreLink.innerText = 'Xem thêm'; // Đổi văn bản liên kết thành "Xem thêm"
-					} else {
-						textContainer.style.maxHeight = 'none'; // Mở rộng nội dung
-						readMoreLink.innerText = 'Thu gọn'; // Đổi văn bản liên kết thành "Thu gọn"
-					}
-				});
-			}
-		});
-
-	</script>
-</body>
+</section>

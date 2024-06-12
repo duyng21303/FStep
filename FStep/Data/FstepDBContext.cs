@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FStep.Data;
 
-public partial class FstepDbContext : DbContext
+public partial class FstepDBContext : DbContext
 {
-    public FstepDbContext()
+    public FstepDBContext()
     {
     }
 
-    public FstepDbContext(DbContextOptions<FstepDbContext> options)
+    public FstepDBContext(DbContextOptions<FstepDBContext> options)
         : base(options)
     {
     }
@@ -18,6 +18,8 @@ public partial class FstepDbContext : DbContext
     public virtual DbSet<Chat> Chats { get; set; }
 
     public virtual DbSet<Comment> Comments { get; set; }
+
+    public virtual DbSet<Confirm> Confirms { get; set; }
 
     public virtual DbSet<Feedback> Feedbacks { get; set; }
 
@@ -41,8 +43,7 @@ public partial class FstepDbContext : DbContext
     {
         modelBuilder.Entity<Chat>(entity =>
         {
-
-            entity.HasKey(e => e.IdChat).HasName("PK__Chat__68D484D14DBF1A13");
+            entity.HasKey(e => e.IdChat).HasName("PK__Chat__68D484D1EA225257");
 
             entity.ToTable("Chat");
 
@@ -73,14 +74,13 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<Comment>(entity =>
         {
-
-            entity.HasKey(e => e.IdComment).HasName("PK__Comment__7E14AC852FCA4193");
+            entity.HasKey(e => e.IdComment).HasName("PK__Comment__7E14AC8582DD8D90");
 
             entity.ToTable("Comment");
 
             entity.Property(e => e.IdComment).HasColumnName("id_comment");
             entity.Property(e => e.Content)
-                .HasColumnType("text")
+                .HasColumnType("ntext")
                 .HasColumnName("content");
             entity.Property(e => e.Date)
                 .HasColumnType("datetime")
@@ -101,10 +101,25 @@ public partial class FstepDbContext : DbContext
                 .HasConstraintName("FKComment441956");
         });
 
+        modelBuilder.Entity<Confirm>(entity =>
+        {
+            entity.HasKey(e => e.IdConfirm).HasName("PK__Confirm__DAF2DF8FFE513592");
+
+            entity.ToTable("Confirm");
+
+            entity.Property(e => e.IdConfirm).HasColumnName("id_confirm");
+            entity.Property(e => e.Confirm1).HasColumnName("confirm");
+            entity.Property(e => e.IdPost).HasColumnName("id_post");
+            entity.Property(e => e.IdUser).HasColumnName("id_user");
+
+            entity.HasOne(d => d.IdPostNavigation).WithMany(p => p.Confirms)
+                .HasForeignKey(d => d.IdPost)
+                .HasConstraintName("FKConfirm703812");
+        });
+
         modelBuilder.Entity<Feedback>(entity =>
         {
-
-            entity.HasKey(e => e.IdFeedback).HasName("PK__Feedback__36BC8630CD9181B9");
+            entity.HasKey(e => e.IdFeedback).HasName("PK__Feedback__36BC8630FBED3587");
 
             entity.ToTable("Feedback");
 
@@ -131,8 +146,7 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<Notification>(entity =>
         {
-
-            entity.HasKey(e => e.IdNotification).HasName("PK__Notifica__925C842F0AE68E84");
+            entity.HasKey(e => e.IdNotification).HasName("PK__Notifica__925C842F437C768A");
 
             entity.ToTable("Notification");
 
@@ -150,8 +164,7 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-
-            entity.HasKey(e => e.IdPayment).HasName("PK__Payment__862FEFE04F679DE9");
+            entity.HasKey(e => e.IdPayment).HasName("PK__Payment__862FEFE0F8ED82A1");
 
             entity.ToTable("Payment");
 
@@ -176,8 +189,7 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<Post>(entity =>
         {
-
-            entity.HasKey(e => e.IdPost).HasName("PK__Post__3840C79D262F4CDA");
+            entity.HasKey(e => e.IdPost).HasName("PK__Post__3840C79D545774A7");
 
             entity.ToTable("Post");
 
@@ -198,7 +210,9 @@ public partial class FstepDbContext : DbContext
             entity.Property(e => e.Img)
                 .HasMaxLength(255)
                 .HasColumnName("img");
-            entity.Property(e => e.Status).HasColumnName("status");
+            entity.Property(e => e.Status)
+                .HasMaxLength(255)
+                .HasColumnName("status");
             entity.Property(e => e.Type)
                 .HasMaxLength(20)
                 .HasColumnName("type");
@@ -215,8 +229,7 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-
-            entity.HasKey(e => e.IdProduct).HasName("PK__Product__BA39E84FF2FC07E0");
+            entity.HasKey(e => e.IdProduct).HasName("PK__Product__BA39E84F699991CA");
 
             entity.ToTable("Product");
 
@@ -244,13 +257,14 @@ public partial class FstepDbContext : DbContext
             entity.Property(e => e.SentImg)
                 .HasMaxLength(255)
                 .HasColumnName("sent_img");
-            entity.Property(e => e.Status).HasColumnName("status");
+            entity.Property(e => e.Status)
+                .HasMaxLength(255)
+                .HasColumnName("status");
         });
 
         modelBuilder.Entity<Report>(entity =>
         {
-
-            entity.HasKey(e => e.IdReport).HasName("PK__Report__D8639F52D9247517");
+            entity.HasKey(e => e.IdReport).HasName("PK__Report__D8639F52F3675F67");
 
             entity.ToTable("Report");
 
@@ -275,8 +289,7 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<Transaction>(entity =>
         {
-
-            entity.HasKey(e => e.IdTransaction).HasName("PK__Transact__E8E1732D1A676F9E");
+            entity.HasKey(e => e.IdTransaction).HasName("PK__Transact__E8E1732D11191348");
 
             entity.ToTable("Transaction");
 
@@ -319,8 +332,7 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-
-            entity.HasKey(e => e.IdUser).HasName("PK__User__D2D14637F21F42B3");
+            entity.HasKey(e => e.IdUser).HasName("PK__User__D2D14637B581A5C3");
 
             entity.ToTable("User");
 
@@ -352,7 +364,6 @@ public partial class FstepDbContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("password");
             entity.Property(e => e.Rating).HasColumnName("rating");
-
             entity.Property(e => e.ResetToken)
                 .HasMaxLength(255)
                 .HasColumnName("reset_token");
@@ -370,8 +381,7 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<UserNotification>(entity =>
         {
-
-            entity.HasKey(e => new { e.IdUser, e.IdNotification }).HasName("PK__User_Not__3BF48E75BE66C183");
+            entity.HasKey(e => new { e.IdUser, e.IdNotification }).HasName("PK__User_Not__3BF48E755DED0007");
 
             entity.ToTable("User_Notification");
 

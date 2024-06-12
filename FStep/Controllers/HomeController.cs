@@ -1,4 +1,5 @@
-﻿using FStep.Data;
+﻿using AutoMapper;
+using FStep.Data;
 using FStep.Models;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -11,22 +12,27 @@ namespace FStep.Controllers
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
-		private readonly FstepDbContext db;
+		private readonly FstepDBContext db;
+		private readonly IMapper _mapper;
 
-		public HomeController(FstepDbContext context) => db = context;
+		public HomeController(FstepDBContext context, IMapper mapper)
+		{
+			db = context;
+			_mapper = mapper;
+		}
 
 		public IActionResult Index(String? query, int? page)
-		{ 
+		{
 			int pageSize = 12; // số lượng sản phẩm mỗi trang 
             int pageNumber = (page ?? 1);   // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
             var ExchangePost = db.Posts.AsQueryable();
-			ExchangePost = ExchangePost.Where(p => p.Type == "Exchange" && !(p.Status == false));    //check exchangePost là những post thuộc type "exhcange" và có status = 1
+			ExchangePost = ExchangePost.Where(p => p.Type == "Exchange" && !(p.Status == "false"));    //check exchangePost là những post thuộc type "exhcange" và có status = 1
 
 			if (!string.IsNullOrEmpty(query))
 			{
 				ExchangePost = ExchangePost.Where(p => p.Content.Contains(query));
 			}
-            var result = ExchangePost.Select(s => new ExchangePostVM
+			var result = ExchangePost.Select(s => new ExchangePostVM
 			{
 				IdProduct = s.IdProduct,
 				IdPost = s.IdPost,
@@ -42,20 +48,19 @@ namespace FStep.Controllers
 			return View(pageList);
 		}
 
-
 		public IActionResult Sale(String? query, int? page)
 		{
 			int pageSize = 12; // số lượng sản phẩm mỗi trang 
             int pageNumber = (page ?? 1);  // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
             var SalePost = db.Posts.AsQueryable();
-			SalePost = SalePost.Where(p => p.Type == "Sale" && !(p.Status == false));
+			SalePost = SalePost.Where(p => p.Type == "Sale" && !(p.Status == "false"));
 
-            if (!string.IsNullOrEmpty(query))
-            {
-                SalePost = SalePost.Where(p => p.Content.Contains(query));
-            }
+			if (!string.IsNullOrEmpty(query))
+			{
+				SalePost = SalePost.Where(p => p.Content.Contains(query));
+			}
 
-            var result = SalePost.Select(s => new SalePostVM
+			var result = SalePost.Select(s => new SalePostVM
 			{
 				IdPost = s.IdPost,
 				Title = s.Content,
@@ -66,7 +71,7 @@ namespace FStep.Controllers
 				Price = s.IdProductNavigation.Price ?? 0
 			}).OrderByDescending(o => o.IdPost);
 
-            var pageList = result.ToPagedList(pageNumber, pageSize);
+			var pageList = result.ToPagedList(pageNumber, pageSize);
 
             ViewBag.Query = query;
             return View(pageList);

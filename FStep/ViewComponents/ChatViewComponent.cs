@@ -8,9 +8,9 @@ namespace FStep.ViewComponents
 {
 	public class ChatViewComponent : ViewComponent
 	{
-		private readonly FstepDbContext db;
+		private readonly FstepDBContext db;
 
-		public ChatViewComponent(FstepDbContext context)
+		public ChatViewComponent(FstepDBContext context)
 		{
 			db = context;
 		}
@@ -37,6 +37,5 @@ namespace FStep.ViewComponents
 			}).OrderBy(p => p.ChatDate);
 			return View(result);
 		}
-
 	}
 }

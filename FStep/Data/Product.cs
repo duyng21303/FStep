@@ -17,7 +17,7 @@ public partial class Product
 
     public DateTime? SentBuyerDate { get; set; }
 
-    public bool? Status { get; set; }
+    public string? Status { get; set; }
 
     public string? Detail { get; set; }
 
