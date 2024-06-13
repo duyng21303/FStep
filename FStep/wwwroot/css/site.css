@@ -183,11 +183,12 @@ body {
     -webkit-line-clamp: 2; /* Limit the lines to 2 */
     height: 2.4em;
 }
-    .fruit-item .price {
+
+.fruit-item .price {
     color: red; /* Màu đỏ cho giá */
     font-weight: bold; /* Chữ đậm cho giá */
 }
-    /* Date text at the end of each post */
+/* Date text at the end of each post */
 .fruit-item .text-end {
     font-size: 0.9rem; /* Font size for the date */
     color: #999; /* Light gray color for the date */

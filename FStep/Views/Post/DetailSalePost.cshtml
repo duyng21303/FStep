@@ -1,7 +1,8 @@
 ﻿@using FStep.ViewModels
-@model FStep.ViewModels.SalePostVM
+@model FStep.ViewModels.PostVM
 @{
 	var comments = ViewData["comments"] as List<CommentVM> ?? new List<CommentVM>();
+	var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
 <style>
 	html, body {
@@ -382,8 +383,9 @@
 
 			<!-- Product Pricing -->
 			<div class="product-price">
-				<span>@Model.Price</span>
-				<a href="#" class="cart-btn">Mua ngay</a>
+				<span>@String.Format(format, "{0:0,0 VND}", Model.Price)</span>
+				@* <a href="#" class="cart-btn">Mua ngay</a> *@
+				<a asp-action="CheckoutSale" asp-controller="Pay" asp-route-id="@Model.IdPost" class="btn border border-secondary rounded-pill text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i>Buy now</a>
 			</div>
 		</div>
 	</div>

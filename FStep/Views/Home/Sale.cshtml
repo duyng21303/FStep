@@ -1,6 +1,9 @@
-﻿@model X.PagedList.IPagedList<FStep.ViewModels.SalePostVM>
+﻿@model X.PagedList.IPagedList<FStep.ViewModels.PostVM>
 @using X.PagedList.Mvc.Core;
-
+@{
+	ViewData["Title"] = "Sale Posts";
+	var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+}
 <div>
 	<!--/slider-->
 	<div class="carousel rounded">
@@ -88,9 +91,10 @@
 					</form>
 				</div>
 				<div class="col-md-1">
-					<a asp-action="CreateSalePost" asp-controller="Post">
+					<i class="fa fa-plus-square" data-bs-toggle="modal" data-bs-target="#exampleModal" style="font-size:45px;"></i>
+					@* <a asp-action="CreatePost" asp-controller="Post">
 						<i class="fa fa-plus-square" style="font-size:45px;"></i>
-					</a>
+					</a> *@
 				</div>
 			</div>
 			<!-- End header body -->
@@ -112,11 +116,10 @@
 										<div class="p-4 border border-secondary border-top-0 rounded-bottom">
 											<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@item.IdPost">@Html.Raw(item.Title)</a>
 											<p class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Description)</p>
-											<p class="price">Price: @Html.Raw(item.Price) (VND)</p>
+											<p class="price">Price: @String.Format(format, "{0:0,0 VND}", item.Price)</p>
 											<p class="quantity">Quantity: @Html.Raw(item.Quantity)</p>
-											
 											<p class="text-end mb-0 mt-2">CreateDate <span>@item.CreateDate?.ToString("dd/MM/yyyy")</span></p>
-											<a asp-action="CheckoutSale" asp-controller="Pay" asp-route-id="@item.IdPost" class="btn border border-secondary rounded-pill text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i>Buy now</a>
+											
 										</div>
 									</div>
 								</div>
@@ -131,6 +134,28 @@
 				</div>
 			</div>
 			<!-- End Show -->
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+
+				@await Html.PartialAsync("Create", new PostVM())
+
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary">Save changes</button>
+			</div>
 		</div>
 	</div>
 </div>

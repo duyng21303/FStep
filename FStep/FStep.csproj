@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <Compile Include="ViewComponents\ChatViewComponent.cs" />
+    <Compile Include="ViewComponents\CreatePostViewComponent.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -11,10 +11,8 @@ namespace FStep.Helpers
             CreateMap<RegisterVM, User>();
                 //.ForMember(kh => kh.HoTen, option => option.MapFrom(RegisterVM => RegisterVM.HoTen))
                 //.ReverseMap()
-            CreateMap<ExchangePostVM,Post>();
-            CreateMap<ExchangePostVM,Product>();
-            CreateMap<SalePostVM,Post>();
-            CreateMap<SalePostVM,Product>();
+            CreateMap<PostVM,Post>();
+            CreateMap<PostVM,Product>();
 			CreateMap<ProfileVM, User>();
 			CreateMap<CommentVM, Comment>().ReverseMap();
 			CreateMap<CheckoutVM, Payment>();

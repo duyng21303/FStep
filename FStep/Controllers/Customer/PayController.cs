@@ -30,32 +30,33 @@ namespace FStep.Controllers.Customer
 			return View();
 		}
 
-		[HttpGet]
-		public IActionResult CheckoutExchange(int id)
-		{
-			var exchange = db.Posts.SingleOrDefault(x => x.IdPost == id);
-			ViewData["Content"] = exchange.Content;
-			ViewData["Img"] = exchange.Img;
-			ViewData["Type"] = exchange.Type;
-			return View("Checkout");
-		}
-		[Authorize]
-		[HttpPost]
-		public IActionResult CheckoutExchange(CheckoutVM model)
-		{
-			if (ModelState.IsValid)
-			{
-				var transaction = _mapper.Map<Transaction>(model);
-				transaction.IdUserBuyer = User.FindFirst("UserID").Value;
-				transaction.IdUserSeller = "";
-				transaction.Amount = model.Amount;
-				transaction.Date = DateTime.Now;
-				transaction.IdPost = model.IdPost;
-				db.Add(transaction);
-				db.SaveChanges();
-			}
-			return RedirectToAction("Index");
-		}
+		//[HttpGet]
+		//public IActionResult CheckoutExchange(int id)
+		//{
+		//	var exchange = db.Posts.SingleOrDefault(x => x.IdPost == id);
+		//	ViewData["Content"] = exchange.Content;
+		//	ViewData["Img"] = exchange.Img;
+		//	ViewData["Type"] = exchange.Type;
+		//	return View("Checkout");
+		//}
+		//[Authorize]
+		//[HttpPost]
+		//public IActionResult CheckoutExchange(CheckoutVM model)
+		//{
+		//	if (ModelState.IsValid)
+		//	{
+		//		var transaction = _mapper.Map<Transaction>(model);
+		//		transaction.IdUserBuyer = User.FindFirst("UserID").Value;
+		//		transaction.IdUserSeller = "";
+		//		transaction.Amount = model.Amount;
+		//		transaction.Date = DateTime.Now;
+		//		transaction.IdPost = model.IdPost;
+		//		db.Add(transaction);
+		//		db.SaveChanges();
+		//	}
+		//	return RedirectToAction("Index");
+		//}
+
 		[HttpGet]
 		public IActionResult CheckoutSale(int id)
 		{
@@ -63,9 +64,9 @@ namespace FStep.Controllers.Customer
 			ViewData["IdPost"] = id;
 			ViewData["Content"] = post.Content;
 			ViewData["Img"] = post.Img;
-			ViewData["Price"] = db.Products.SingleOrDefault(p => p.IdProduct == id).Price;
-			ViewData["Quantity"] = db.Products.SingleOrDefault(p => p.IdProduct == id).Quantity;
-			ViewData["Amount"] = db.Products.SingleOrDefault(p => p.IdProduct == id).Price * db.Products.SingleOrDefault(p => p.IdProduct == id).Quantity;
+			ViewData["Price"] = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).Price;
+			ViewData["Quantity"] = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).Quantity;
+			ViewData["Amount"] = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).Price * db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).Quantity;
 			ViewData["Type"] = post.Type;
 			return View("Checkout");
 		}
@@ -75,7 +76,6 @@ namespace FStep.Controllers.Customer
 		{
 			var vnPayModel = new VnPaymentRequestModel
 			{
-				IdUser = "",
 				Amount = amount,
 				CreatedDate = DateTime.Now,
 				Description = "Thanh toan don hang",

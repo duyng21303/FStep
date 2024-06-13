@@ -14,7 +14,7 @@
 				<div class="row g-5">
 					<div class="col-md-12 col-lg-6 col-xl-3">
 						<div class="form-item mt-3">
-							<textarea name="text" class="form-control" spellcheck="false" cols="30" rows="11" placeholder="Oreder Notes (Optional)"></textarea>
+							<textarea asp-for="@Model.Note" name="text" class="form-control" spellcheck="false" cols="30" rows="11" placeholder="Oreder Notes (Optional)"></textarea>
 						</div>
 					</div>
 					<div class="col-md-12 col-lg-6 col-xl-9">
@@ -37,7 +37,7 @@
 											</div>
 										</th>
 										<td class="py-5">@ViewData["Content"]</td>
-										<td class="py-5">@String.Format(format, "{0:0,0 VND}", @ViewData["Price"])</td>
+										<td class="py-5">@String.Format(format, "{0:0,0 VND}", ViewData["Price"])</td>
 										<td class="py-5">@ViewData["Quantity"]</td>
 										<td class="py-5">@String.Format(format, "{0:0,0 VND}", ViewData["Amount"])</td>
 									</tr>
