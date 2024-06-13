@@ -15,6 +15,8 @@ public partial class Comment
 
     public string IdUser { get; set; } = null!;
 
+    public virtual ICollection<Confirm> Confirms { get; set; } = new List<Confirm>();
+
     public virtual Post IdPostNavigation { get; set; } = null!;
 
     public virtual User IdUserNavigation { get; set; } = null!;

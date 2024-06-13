@@ -30,7 +30,27 @@ namespace FStep
 			};
 			await _context.Chats.AddAsync(chat);
 			await _context.SaveChangesAsync();
-			await Clients.All.SendAsync("ReceiveMessage", toUser, fromUser, massage, img, DateTime.Now.ToString("HH:mm"));
+			await Clients.All.SendAsync("ReceiveMessage", toUser, fromUser, massage, img, DateTime.Now);
+		}
+		public async Task LoadMessagesDetail(string userId, string? content, string? detail, string? img, string id, string type)
+		{
+			var currentUser = Context.User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
+			var messages = await _context.Chats
+				.Where(m => (m.SenderUserId == currentUser && m.RecieverUserId == userId) ||
+							(m.SenderUserId == userId && m.RecieverUserId == currentUser))
+				.OrderBy(m => m.ChatDate)
+				.ToListAsync();
+			var post = new PostVM()
+			{
+				Content = content,
+				Detail = detail,
+				Img = img,
+			};
+			var recieverUser = await _context.Users
+							.Where(u => u.IdUser == userId)
+							.Select(u => new { u.IdUser, u.AvatarImg, u.Name })
+							.FirstOrDefaultAsync();
+			await Clients.Caller.SendAsync("LoadMessages", messages, currentUser, recieverUser, post);
 		}
 		public async Task LoadMessages(string userId)
 		{
@@ -46,6 +66,16 @@ namespace FStep
 							.FirstOrDefaultAsync();
 			await Clients.Caller.SendAsync("LoadMessages", messages, currentUser, recieverUser, null);
 		}
-		
+		public async Task HandleAccept(string message)
+		{
+			// Xử lý logic khi người dùng nhấp vào "Đồng ý"
+			await Clients.Caller.SendAsync("ReceiveNotification", message);
+		}
+
+		public async Task HandleDecline(string message)
+		{
+			// Xử lý logic khi người dùng nhấp vào "Không đồng ý"
+			await Clients.Caller.SendAsync("ReceiveNotification", message);
+		}
 	}
 }

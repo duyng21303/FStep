@@ -39,11 +39,12 @@ public partial class FstepDBContext : DbContext
 
     public virtual DbSet<UserNotification> UserNotifications { get; set; }
 
+   
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Chat>(entity =>
         {
-            entity.HasKey(e => e.IdChat).HasName("PK__Chat__68D484D1EA225257");
+            entity.HasKey(e => e.IdChat).HasName("PK__Chat__68D484D13FD9CEB5");
 
             entity.ToTable("Chat");
 
@@ -74,7 +75,7 @@ public partial class FstepDBContext : DbContext
 
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.HasKey(e => e.IdComment).HasName("PK__Comment__7E14AC8582DD8D90");
+            entity.HasKey(e => e.IdComment).HasName("PK__Comment__7E14AC852396EE08");
 
             entity.ToTable("Comment");
 
@@ -103,14 +104,24 @@ public partial class FstepDBContext : DbContext
 
         modelBuilder.Entity<Confirm>(entity =>
         {
-            entity.HasKey(e => e.IdConfirm).HasName("PK__Confirm__DAF2DF8FFE513592");
+            entity.HasKey(e => e.IdConfirm).HasName("PK__Confirm__DAF2DF8F5F858AFE");
 
             entity.ToTable("Confirm");
 
             entity.Property(e => e.IdConfirm).HasColumnName("id_confirm");
             entity.Property(e => e.Confirm1).HasColumnName("confirm");
+            entity.Property(e => e.IdComment).HasColumnName("id_comment");
             entity.Property(e => e.IdPost).HasColumnName("id_post");
-            entity.Property(e => e.IdUser).HasColumnName("id_user");
+            entity.Property(e => e.IdUserConfirm)
+                .HasMaxLength(50)
+                .HasColumnName("id_user_confirm");
+            entity.Property(e => e.IdUserConnect)
+                .HasMaxLength(50)
+                .HasColumnName("id_user_connect");
+
+            entity.HasOne(d => d.IdCommentNavigation).WithMany(p => p.Confirms)
+                .HasForeignKey(d => d.IdComment)
+                .HasConstraintName("FKConfirm635887");
 
             entity.HasOne(d => d.IdPostNavigation).WithMany(p => p.Confirms)
                 .HasForeignKey(d => d.IdPost)
@@ -119,7 +130,7 @@ public partial class FstepDBContext : DbContext
 
         modelBuilder.Entity<Feedback>(entity =>
         {
-            entity.HasKey(e => e.IdFeedback).HasName("PK__Feedback__36BC8630FBED3587");
+            entity.HasKey(e => e.IdFeedback).HasName("PK__Feedback__36BC8630F7BE2687");
 
             entity.ToTable("Feedback");
 
@@ -146,7 +157,7 @@ public partial class FstepDBContext : DbContext
 
         modelBuilder.Entity<Notification>(entity =>
         {
-            entity.HasKey(e => e.IdNotification).HasName("PK__Notifica__925C842F437C768A");
+            entity.HasKey(e => e.IdNotification).HasName("PK__Notifica__925C842F638BCFAF");
 
             entity.ToTable("Notification");
 
@@ -164,7 +175,7 @@ public partial class FstepDBContext : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.IdPayment).HasName("PK__Payment__862FEFE0F8ED82A1");
+            entity.HasKey(e => e.IdPayment).HasName("PK__Payment__862FEFE013769F22");
 
             entity.ToTable("Payment");
 
@@ -189,7 +200,7 @@ public partial class FstepDBContext : DbContext
 
         modelBuilder.Entity<Post>(entity =>
         {
-            entity.HasKey(e => e.IdPost).HasName("PK__Post__3840C79D545774A7");
+            entity.HasKey(e => e.IdPost).HasName("PK__Post__3840C79DCDEC14D0");
 
             entity.ToTable("Post");
 
@@ -229,7 +240,7 @@ public partial class FstepDBContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.IdProduct).HasName("PK__Product__BA39E84F699991CA");
+            entity.HasKey(e => e.IdProduct).HasName("PK__Product__BA39E84FC0B3414B");
 
             entity.ToTable("Product");
 
@@ -264,7 +275,7 @@ public partial class FstepDBContext : DbContext
 
         modelBuilder.Entity<Report>(entity =>
         {
-            entity.HasKey(e => e.IdReport).HasName("PK__Report__D8639F52F3675F67");
+            entity.HasKey(e => e.IdReport).HasName("PK__Report__D8639F521FC6F956");
 
             entity.ToTable("Report");
 
@@ -289,7 +300,7 @@ public partial class FstepDBContext : DbContext
 
         modelBuilder.Entity<Transaction>(entity =>
         {
-            entity.HasKey(e => e.IdTransaction).HasName("PK__Transact__E8E1732D11191348");
+            entity.HasKey(e => e.IdTransaction).HasName("PK__Transact__E8E1732DEE4BCEEA");
 
             entity.ToTable("Transaction");
 
@@ -332,7 +343,7 @@ public partial class FstepDBContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.IdUser).HasName("PK__User__D2D14637B581A5C3");
+            entity.HasKey(e => e.IdUser).HasName("PK__User__D2D146372F1045B8");
 
             entity.ToTable("User");
 
@@ -381,7 +392,7 @@ public partial class FstepDBContext : DbContext
 
         modelBuilder.Entity<UserNotification>(entity =>
         {
-            entity.HasKey(e => new { e.IdUser, e.IdNotification }).HasName("PK__User_Not__3BF48E755DED0007");
+            entity.HasKey(e => new { e.IdUser, e.IdNotification }).HasName("PK__User_Not__3BF48E7564002DD0");
 
             entity.ToTable("User_Notification");
 

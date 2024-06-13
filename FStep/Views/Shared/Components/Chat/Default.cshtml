@@ -357,12 +357,20 @@
 								@if (!usersProcessed.Contains(userId_Send) && !usersProcessed.Contains(userId_Recieve))
 								{
 									// Thêm userId vào danh sách đã xử lý
-
 									@if (user.SenderUser.IdUser != User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value)
 									{
+										var img = "";
+										@if (@user.SenderUser.AvatarImg != null)
+										{
+											img = "userAvar/" + @user.SenderUser.AvatarImg;
+										}
+										else
+										{
+											img = "nullAvar/149071.png";
+										}
 										@* <a asp-action="Chat" asp-controller="Chat" asp-route-idUser="@user.SenderUser.IdUser"> *@
 										<li class="clearfix" data-userid="@user.SenderUser.IdUser">
-											<img src="~/img/userAvar/@user.SenderUser.AvatarImg" alt="avatar">
+											<img src="~/img/@img" alt="avatar">
 											<div class="about">
 												<div class="name">@(@user.SenderUser.Name.Length > 16 ? @user.SenderUser.Name.Substring(0, 16) + "..." : @user.SenderUser.Name)</div>
 												<div class="status"> <i class="fa fa-circle online"></i> online </div>
@@ -373,9 +381,18 @@
 									}
 									else
 									{
+										var img = "";
+										@if (@user.RecieverUser.AvatarImg != null)
+										{
+											img = "userAvar/" + @user.RecieverUser.AvatarImg;
+										}
+										else
+										{
+											img = "nullAvar/149071.png";
+										}
 										@* <a asp-action="Chat" asp-controller="Chat" asp-route-idUser="@user.RecieverUser.IdUser"> *@
 										<li class="clearfix" data-userid="@user.RecieverUser.IdUser">
-											<img src="~/img/userAvar/@user.RecieverUser.AvatarImg" alt="avatar">
+											<img src="~/img/@img" alt="avatar">
 											<div class="about">
 												<div class="name">@(@user.RecieverUser.Name.Length > 16 ? @user.RecieverUser.Name.Substring(0, 16) + "..." : @user.RecieverUser.Name)</div>
 												<div class="status"> <i class="fa fa-circle online"></i> online </div>
@@ -402,6 +419,10 @@
 								</div>
 							</div>
 						</div>
+						<div class="confirm-exchange clearfix" style="border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9; width: 400px;">
+							
+						</div>
+
 						<div class="chat-history" style="height: 400px; width: 400px;" id="chat-history">
 							<ul class="list-unstyled m-b-0" id="chatMessages">
 								<!-- Các tin nhắn sẽ được hiển thị ở đây -->

@@ -72,7 +72,7 @@ namespace FStep.Controllers.Customer
 
 			return View();
 		}
-		
+
 		[Authorize]
 		[HttpPost]
 		public IActionResult CreateSalePost(SalePostVM model, IFormFile img)
@@ -114,6 +114,7 @@ namespace FStep.Controllers.Customer
 		{
 			var data = db.Posts.Include(x => x.IdProductNavigation).Include(x => x.IdUserNavigation).SingleOrDefault(p => p.IdPost == id);
 			var user = db.Users.SingleOrDefault(user => user.IdUser == data.IdUser);
+
 			ViewData["USER_CREATE"] = user;
 
 			// lấy thêm comment sản phẩm
@@ -124,7 +125,8 @@ namespace FStep.Controllers.Customer
 				Content = x.Content,
 				Date = x.Date,
 				IdComment = x.IdComment,
-				Name = x.IdUserNavigation.Name
+				Name = x.IdUserNavigation.Name,
+				avarImg = x.IdUserNavigation.AvatarImg // Adjust this property name to match your actual property name for the user's image
 			}).ToList();
 
 			ViewData["comments"] = comments;
@@ -147,7 +149,8 @@ namespace FStep.Controllers.Customer
 				Content = x.Content,
 				Date = x.Date,
 				IdComment = x.IdComment,
-				Name = x.IdUserNavigation.Name
+				Name = x.IdUserNavigation.Name,
+				avarImg = x.IdUserNavigation.AvatarImg // Adjust this property name to match your actual property name for the user's image
 			}).ToList();
 
 			ViewData["comments"] = comments;
