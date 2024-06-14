@@ -12,7 +12,7 @@ namespace FStep.Services
         {
             _config = config;
         }
-        public string CreatePaymentUrl(HttpContext context, VnPaymentRequestModel model)
+        public string CreatePaymentUrl(HttpContext context, VnPayRequestModel model)
         {
             var tick = DateTime.Now.Ticks.ToString();
 
@@ -28,7 +28,7 @@ namespace FStep.Services
             vnpay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress(context));
             vnpay.AddRequestData("vnp_Locale", _config["VnPay:Locale"]);
 
-            vnpay.AddRequestData("vnp_OrderInfo", "Thanh toan don hang:" + model.TransactionId);
+            vnpay.AddRequestData("vnp_OrderInfo", "Thanh toan don hang:" + model.TransactionCode + " note: " + model.Note);
             vnpay.AddRequestData("vnp_OrderType", "order"); //default value: other
             vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:PaymentBackReturnUrl"]);
             vnpay.AddRequestData("vnp_TxnRef", tick);// mã tham chiếu của giao dịch
@@ -38,7 +38,7 @@ namespace FStep.Services
             return paymentUrl;
         }
 
-        public VnPaymentResponseModel PaymentExecute(IQueryCollection collection)
+        public VnPayResponseModel PaymentExecute(IQueryCollection collection)
         {
             var vnpay = new VnPayLibrary();
             foreach (var (key, value) in collection)
@@ -54,27 +54,25 @@ namespace FStep.Services
             var vnp_SecureHash = collection.FirstOrDefault(p => p.Key == "vnp_SecureHash").Value;
             var vnp_ResponseCode = vnpay.GetResponseData("vnp_ResponseCode");
             var vnp_OrderInfo = vnpay.GetResponseData("vnp_OrderInfo");
-            //var vnp_IdUser = vnpay.GetResponseData("vnp_IdUser");
             var vnp_Amount = float.Parse(vnpay.GetResponseData("vnp_Amount"));
 
             bool checkSignature = vnpay.ValidateSignature(vnp_SecureHash, _config["VnPay:HashSecret"]);
 
             if (!checkSignature)
             {
-                return new VnPaymentResponseModel
+                return new VnPayResponseModel
                 {
                     Success = false
                 };
             }
-            return new VnPaymentResponseModel
+            return new VnPayResponseModel
             {
-                //IdUser = vnp_IdUser,
                 Success = true,
                 Amount = vnp_Amount,
                 PaymentMethod = "VnPay",
                 OrderDescription = vnp_OrderInfo,
                 OrderId = vnp_OrderId.ToString(),
-                TransactionId = vnp_TransactionId.ToString(),
+                TransactionCode = vnp_TransactionId.ToString(),
                 Token = vnp_SecureHash,
                 VnPayResponseCode = vnp_ResponseCode,
             };

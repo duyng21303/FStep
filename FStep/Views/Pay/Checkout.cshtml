@@ -8,89 +8,90 @@
 <div class="container-fluid py-5">
 	<div class="container-contentboby">
 		<h1 class="mb-4">Checkout</h1>
-		@if (ViewData["Type"].Equals("Sale"))
-		{
-			<form asp-action="CheckoutSale" asp-controller="Pay" asp-route-amount="@ViewData["Amount"]">
-				<div class="row g-5">
-					<div class="col-md-12 col-lg-6 col-xl-3">
-						<div class="form-item mt-3">
-							<textarea asp-for="@Model.Note" name="text" class="form-control" spellcheck="false" cols="30" rows="11" placeholder="Oreder Notes (Optional)"></textarea>
-						</div>
-					</div>
-					<div class="col-md-12 col-lg-6 col-xl-9">
-						<div class="table-responsive">
-							<table class="table">
-								<thead>
-									<tr>
-										<th scope="col">Products</th>
-										<th scope="col">Name</th>
-										<th scope="col">Price</th>
-										<th scope="col">Quantity</th>
-										<th scope="col">Total</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<th scope="row">
-											<div class="d-flex align-items-center mt-2">
-												<img src="@Url.Content("~/img/postPic/" + ViewData["Img"])" class="img-fluid rounded-square" style="width: 90px; height: 90px;" alt="@ViewData[" Img"]">
-											</div>
-										</th>
-										<td class="py-5">@ViewData["Content"]</td>
-										<td class="py-5">@String.Format(format, "{0:0,0 VND}", ViewData["Price"])</td>
-										<td class="py-5">@ViewData["Quantity"]</td>
-										<td class="py-5">@String.Format(format, "{0:0,0 VND}", ViewData["Amount"])</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-						<div class="row g-4 text-center align-items-center justify-content-center pt-4">
-							<button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">VnPay</button>
-						</div>
+		@* @if ()
+		{ *@
+		<form asp-action="CheckoutSale" asp-controller="Pay" asp-route-amount="@Model.Amount">
+			<div class="row g-5">
+				<div class="col-md-12 col-lg-6 col-xl-3">
+					<div class="form-item mt-3">
+						<textarea asp-for="@Model.Note" type="text" class="form-control" spellcheck="false" cols="30" rows="11" placeholder="Oreder Notes (Optional)"></textarea>
+						<span asp-validation-for="@Model.Title" class="text-danger"></span>
 					</div>
 				</div>
-			</form>
+				<div class="col-md-12 col-lg-6 col-xl-9">
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
+								<tr>
+									<th scope="col">Products</th>
+									<th scope="col">Name</th>
+									<th scope="col">Price</th>
+									<th scope="col">Quantity</th>
+									<th scope="col">Total</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th scope="row">
+										<div class="d-flex align-items-center mt-2">
+											<img src="@Url.Content("~/img/postPic/" + Model.Img)" class="img-fluid rounded-square" style="width: 90px; height: 90px;" alt="@Model.Img">
+										</div>
+									</th>
+									<td class="py-5">@Model.Title</td>
+									<td class="py-5">@String.Format(format, "{0:0,0 VND}", Model.UnitPrice)</td>
+									<td class="py-5">@Model.Quantity</td>
+									<td class="py-5">@String.Format(format, "{0:0,0 VND}", Model.Amount)</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="row g-4 text-center align-items-center justify-content-center pt-4">
+						<button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">VnPay</button>
+					</div>
+				</div>
+			</div>
+		</form>
 
-		}
+		@* }
 		else
 		{
-			<form asp-action="CheckoutExchange" asp-controller="Pay">
-				<div class="row g-5">
-					<div class="col-md-12 col-lg-6 col-xl-3">
-						<div class="form-item mt-3">
-							<textarea name="text" class="form-control" spellcheck="false" cols="30" rows="11" placeholder="Oreder Notes (Optional)"></textarea>
-						</div>
-					</div>
+		<form asp-action="CheckoutExchange" asp-controller="Pay">
+		<div class="row g-5">
+		<div class="col-md-12 col-lg-6 col-xl-3">
+		<div class="form-item mt-3">
+		<textarea name="text" class="form-control" spellcheck="false" cols="30" rows="11" placeholder="Oreder Notes (Optional)"></textarea>
+		</div>
+		</div>
 
-					<div class="col-md-12 col-lg-6 col-xl-9">
-						<div class="table-responsive">
-							<table class="table">
-								<thead>
-									<tr>
-										<th scope="col">Products</th>
-										<th scope="col">Name</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<th scope="row">
-											<div class="d-flex align-items-center mt-2">
-												<img src="@Url.Content("~/img/postPic/" + ViewData["Img"])" class="img-fluid rounded-square" style="width: 90px; height: 90px;" alt="@ViewData["Img"]">
-											</div>
-										</th>
-										<td class="py-5">@ViewData["Content"]</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-						<div class="row g-4 text-center align-items-center justify-content-center pt-4">
-							<button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Request</button>
-						</div>
-					</div>
-				</div>
-			</form>
+		<div class="col-md-12 col-lg-6 col-xl-9">
+		<div class="table-responsive">
+		<table class="table">
+		<thead>
+		<tr>
+		<th scope="col">Products</th>
+		<th scope="col">Name</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+		<th scope="row">
+		<div class="d-flex align-items-center mt-2">
+		<img src="@Url.Content("~/img/postPic/" + ViewData["Img"])" class="img-fluid rounded-square" style="width: 90px; height: 90px;" alt="@ViewData["Img"]">
+		</div>
+		</th>
+		<td class="py-5">@ViewData["Content"]</td>
+		</tr>
+		</tbody>
+		</table>
+		</div>
+		<div class="row g-4 text-center align-items-center justify-content-center pt-4">
+		<button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Request</button>
+		</div>
+		</div>
+		</div>
+		</form>
 
-		}
+		} *@
 	</div>
 </div>
 

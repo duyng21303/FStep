@@ -61,26 +61,33 @@ namespace FStep.Controllers.Customer
 		public IActionResult CheckoutSale(int id)
 		{
 			var post = db.Posts.SingleOrDefault(x => x.IdPost == id);
-			ViewData["IdPost"] = id;
-			ViewData["Content"] = post.Content;
-			ViewData["Img"] = post.Img;
-			ViewData["Price"] = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).Price;
-			ViewData["Quantity"] = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).Quantity;
-			ViewData["Amount"] = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).Price * db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).Quantity;
-			ViewData["Type"] = post.Type;
-			return View("Checkout");
+			var checkout = new CheckoutVM();
+			checkout.IdPost = id;
+			checkout.Title = post.Content;
+			checkout.Img = post.Img;
+			checkout.IdUserBuyer = User.FindFirst("UserID").Value;
+			checkout.IdUserSeller = db.Posts.SingleOrDefault(p => p.IdPost == id).IdUser;
+			checkout.ProductId = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).IdProduct;
+			checkout.UnitPrice = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).Price;
+			checkout.Quantity = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).Quantity;
+			checkout.Amount = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).Price * db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).Quantity;
+			checkout.Type = post.Type;
+
+			HttpContext.Session.Set<CheckoutVM>("CHECKOUT_INFO", checkout);
+			return View("Checkout", checkout);
 		}
 		[Authorize]
 		[HttpPost]
-		public IActionResult CheckoutSale(CheckoutVM model, float amount)
+		public IActionResult CheckoutSale(CheckoutVM model)
 		{
-			var vnPayModel = new VnPaymentRequestModel
+			var vnPayModel = new VnPayRequestModel
 			{
-				Amount = amount,
+				Amount = model.Amount,
 				CreatedDate = DateTime.Now,
 				Description = "Thanh toan don hang",
 				FullName = User.FindFirst("UserID").Value,
-				TransactionId = new Random().Next(1000, 100000)
+				TransactionCode = new Random().Next(1000, 10000),
+				Note = model.Note
 			};
 			return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, vnPayModel));
 		}
@@ -107,20 +114,30 @@ namespace FStep.Controllers.Customer
 				TempData["Message"] = $"VnPay fail: {response.VnPayResponseCode}";
 				return RedirectToAction("PaymentFail");
 			}
+			CheckoutVM info = HttpContext.Session.Get<CheckoutVM>("CHECKOUT_INFO");
+
+			
 			var transaction = new Transaction();
-			transaction.IdUserBuyer = User.FindFirst("UserID").Value;
-			transaction.IdUserSeller = response.IdUser;
-			transaction.Amount = response.Amount;
+			transaction.CodeTransaction = response.TransactionCode;
+			transaction.Status = "Processing";
+			transaction.IdUserBuyer = info.IdUserBuyer;
+			transaction.IdUserSeller = info.IdUserSeller;
+			transaction.Amount = float.Parse(response.Amount.ToString())/100;
 			transaction.Date = DateTime.Now;
+			transaction.IdPost = info.IdPost;
+			transaction.Type = info.Type;
 			db.Add(transaction);
+			db.SaveChanges();
+
+			var payment = new Payment();
+			payment.PayTime = transaction.Date; 
+			payment.Amount = transaction.Amount;
+			payment.IdTransaction = db.Transactions.SingleOrDefault(p => p.CodeTransaction == transaction.CodeTransaction).IdTransaction;
+			payment.Type = "buyer";
+			db.Add(payment);
 			db.SaveChanges();
 			TempData["Message"] = $"VnPay success";
 			return RedirectToAction("PaymentSuccess");
-		}
-
-		public IActionResult Refund()
-		{
-			return View();
 		}
 	}
 }
