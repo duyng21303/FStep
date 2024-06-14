@@ -93,7 +93,7 @@
 				<div class="col-md-1">
 					<i class="fa fa-plus-square" data-bs-toggle="modal" data-bs-target="#exampleModal" style="font-size:45px;"></i>
 					@* <a asp-action="CreatePost" asp-controller="Post">
-						<i class="fa fa-plus-square" style="font-size:45px;"></i>
+					<i class="fa fa-plus-square" style="font-size:45px;"></i>
 					</a> *@
 				</div>
 			</div>
@@ -119,7 +119,7 @@
 											<p class="price">Price: @String.Format(format, "{0:0,0 VND}", item.Price)</p>
 											<p class="quantity">Quantity: @Html.Raw(item.Quantity)</p>
 											<p class="text-end mb-0 mt-2">CreateDate <span>@item.CreateDate?.ToString("dd/MM/yyyy")</span></p>
-											
+
 										</div>
 									</div>
 								</div>

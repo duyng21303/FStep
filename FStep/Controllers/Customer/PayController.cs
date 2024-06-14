@@ -15,11 +15,11 @@ namespace FStep.Controllers.Customer
 	public class PayController : Controller
 	{
 
-		private readonly FstepDBContext db;
+		private readonly FstepDbContext db;
 		private readonly IMapper _mapper;
 		private readonly IVnPayService _vnPayService;
 
-		public PayController(FstepDBContext context, IMapper mapper, IVnPayService vnPayService)
+		public PayController(FstepDbContext context, IMapper mapper, IVnPayService vnPayService)
 		{
 			db = context;
 			_mapper = mapper;

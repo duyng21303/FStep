@@ -14,6 +14,7 @@ namespace FStep.Helpers
             CreateMap<PostVM,Post>();
             CreateMap<PostVM,Product>();
 			CreateMap<ProfileVM, User>();
+
 			CreateMap<CommentVM, Comment>().ReverseMap();
 			CreateMap<CheckoutVM, Payment>();
 			CreateMap<CheckoutVM, Transaction>();
