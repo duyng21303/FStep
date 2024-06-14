@@ -410,17 +410,19 @@
 							{
 								@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser))
 								{
-									<button type="button" class="btn btn-sm btn-primary load-chat" data-userid="@Model.IdUser" data-content="@Model.Content" data-detail="@Model.Detail" data-img="@Model.Img" data-id="@Model.IdPost" data-type="post">
+									<button type="button" class="btn btn-sm btn-primary load-chat" data-userid="@Model.IdUser" data-post="@Model.IdPost" >
 										<span>Chat ngay</span>
 
 									</button>
-									<div id="chatContainerRaw" style="display: block; z-index: 1;">
-										@await Component.InvokeAsync("Chat")
-									</div>
-									<div id="chatContainer" style="display: none; z-index: 2;">
-										@await Component.InvokeAsync("Chat", Model.IdUser)
-									</div>
+									
 								}
+								<div id="chatContainerRaw" style="display: block;">
+									@await Component.InvokeAsync("Chat")
+								</div>
+								<div id="chatContainer" style="display: none;">
+									@await Component.InvokeAsync("Chat", Model.IdUser)
+								</div>
+								
 							}
 						</div>
 					</div>
@@ -484,13 +486,14 @@
 					{
 						@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(comment.IdUser))
 						{
-							<button type="button" class="btn btn-sm btn-primary load-chat-comment" data-userid="@comment.IdUser" data-content="" data-detail="@comment.Content" data-img="" data-id="@comment.IdComment" data-type="comment">
+							<button type="button" class="btn btn-sm btn-primary load-chat-comment" data-userid="@comment.IdUser" data-post="@comment.IdPost" data-comment="@comment.IdComment">
 								<span>Chat ngay</span>
 							</button>
-							<div id="chatContainerComment" style="display: none; z-index: 2;">
-								@await Component.InvokeAsync("Chat", @comment.IdUser)
-							</div>
+							
 						}
+						<div id="chatContainerComment" style="display: none;">
+							@await Component.InvokeAsync("Chat", @comment.IdUser)
+						</div>
 					}
 				</div>
 			</div>

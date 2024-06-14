@@ -12,6 +12,7 @@ function closeForm() {
     document.getElementById("myForm").style.display = "none";
 }
 
+
 $(document).ready(function () {
     $('li').click(function () {
         var userId = $(this).data('userid').toString();
@@ -26,13 +27,7 @@ $(document).ready(function () {
     });
     $(".load-chat").click(function () {
         var userId = $(this).data("userid").toString();
-        var content = $(this).data("content").toString();
-        var detail = $(this).data("detail").toString();
-        var img = $(this).data("img").toString();
-        var id = $(this).data("id").toString();
-        var type = $(this).data("type").toString();
-
-        console.log(userId, content, detail, img);
+        var post = $(this).data("post").toString();
 
         // Hiển thị chatContainer
         const chatContainer = document.getElementById('chatContainer');
@@ -46,20 +41,15 @@ $(document).ready(function () {
         // Thiết lập z-index cho chatContainer thấp hơn
         //chatContainer.style.zIndex = '2';
         // Gọi các hàm khác cần thiết (ví dụ: gọi connection.invoke và openForm)
-        connection.invoke("LoadMessagesDetail", userId, content, detail, img, id, type).catch(function (err) {
+        connection.invoke("LoadMessagesDetail", userId, post, "").catch(function (err) {
             return console.error(err.toString());
         });
         openForm();
     });
     $(".load-chat-comment").click(function () {
         var userId = $(this).data("userid").toString();
-        var content = $(this).data("content").toString();
-        var detail = $(this).data("detail").toString();
-        var img = $(this).data("img").toString();
-        var id = $(this).data("id").toString();
-        var type = $(this).data("type").toString();
-
-        console.log(userId, content, detail, img);
+        var post = $(this).data("post").toString();
+        var comment = $(this).data("comment").toString();
 
         // Hiển thị chatContainer
         const chatContainer = document.getElementById('chatContainerComment');
@@ -70,12 +60,12 @@ $(document).ready(function () {
         // Thiết lập z-index cho chatContainer thấp hơn
         //chatContainer.style.zIndex = '2';
         // Gọi các hàm khác cần thiết (ví dụ: gọi connection.invoke và openForm)
-        connection.invoke("LoadMessagesDetail", userId, content, detail, img, id, type).catch(function (err) {
+        connection.invoke("LoadMessagesDetail", userId, post, comment).catch(function (err) {
             return console.error(err.toString());
         });
         openForm();
     });
-    
+
 });
 
 const connection = new signalR.HubConnectionBuilder().withUrl("/chathub").build();
@@ -89,6 +79,7 @@ connection.on("ReceiveMessage", function (recieveUser, user, message, img, date)
     } else {
         img = "nullAvar/149071.png";
     }
+    console.log(confirm);
     const formattedTime = new Date(date).toLocaleTimeString('en-US', {
         day: '2-digit',
         month: '2-digit',
@@ -121,13 +112,12 @@ connection.on("ReceiveMessage", function (recieveUser, user, message, img, date)
     chatHistory.scrollTop = chatHistory.scrollHeight;
 });
 
-connection.on("LoadMessages", function (messages, currentUser, recieverUser, post) {
+connection.on("LoadMessages", function (messages, currentUser, recieverUser, confirm) {
     const chatMessagesContainer = document.getElementById('chatMessages');
     const chatMessagesSubmit = document.getElementById('submit-chat');
     const chatHistory = document.getElementById('chat-history');
     const confirmExchange = document.querySelector('.confirm-exchange');
     chatMessagesContainer.innerHTML = ''; // Xóa các tin nhắn hiện tại
-    console.log("Received messages:", post); // Log messages to console
     const chatHeader = document.querySelector('.header-message');
     var img;
     if (recieverUser.avatarImg != null) {
@@ -143,35 +133,86 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, pos
             <h7 class="m-b-0">${recieverUser.name}</h7><br>
         </div>
     `;
+    if (confirm) {
+        var comment = confirm.comment != null ? confirm.comment.idComment : "";
+        console.log(comment)
+        var accept = "";
+        if (!confirm.checkConfirm) {
+            accept = `
+                <div class="col-6 text-end px-0">
+                <button id="acceptButton" class="btn btn-success btn-sm equal-width"
+                    style="font-size: 12px; padding: 3px 6px; margin: 0 0 4px; outline: none; box-shadow: none;"
+                    onclick="accept()" data-userid="${recieverUser.idUser}" 
+                    data-idpost="${confirm.post.idPost}" data-idcomment="${comment}">
+                    Đồng ý
+                </button>
+                </div>
+                <div class="col-6 text-begin px-1">
+                <button id="declineButton" class="btn btn-danger btn-sm mb-1 equal-width" 
+                    style="font-size: 12px; padding: 3px 6px; outline: none; box-shadow: none; background-color: grey; color: white;" 
+                    onclick="decline()" data-userid="${recieverUser.idUser}" 
+                    data-idpost="${confirm.post.idPost}" data-idcomment="${comment}" disabled>
+                    Không đồng ý
+                </button>
+                </div>
+                `;
 
-    if (post && post.detail) {
+        } else {
+            accept = `
+                <div class="col-6 text-end px-0">
+                <button id="acceptButton" class="btn btn-success btn-sm mb-1 equal-width" 
+                    style="font-size: 12px; padding: 3px 6px; outline: none; box-shadow: none; background-color: grey; color: white;" 
+                    onclick="accept()" data-userid="${recieverUser.idUser}" 
+                    data-idpost="${confirm.post.idPost}" data-idcomment="${comment}" disabled>
+                    Đồng ý
+                </button>
+                </div>
+                <div class="col-6 text-begin px-1">
+                <button id="declineButton" class="btn btn-danger btn-sm equal-width" 
+                    style="font-size: 12px; padding: 3px 6px; margin: 0 0 4px; outline: none; box-shadow: none;" 
+                    onclick="decline()" data-userid="${recieverUser.idUser}" 
+                    data-idpost="${confirm.post.idPost}" data-idcomment="${comment}">
+                    Không đồng ý
+                </button>
+                </div>
+                `;
+        }
         confirmExchange.innerHTML = `
+<div class="row">
+        <!-- Phần chính chiếm 8 phần -->
+        <div class="col-md-8">
             <div class="d-flex align-items-center">
                 <div class="col-2 text-center p-0">
                     <!-- Hình ảnh sản phẩm nhỏ hơn -->
-                    <img src="https://www.bootdey.com/image/60x60/FF0000/000000" alt="Product Image" class="img-thumbnail" style="width: 50px; height: 50px;">
+                    <img src="/img/postPic/${confirm.post.img}" alt="Product Image" class="img-thumbnail" style="width: 50px; height: 50px;">
                 </div>
                 <div class="col text-left p-2">
                     <!-- Tên sản phẩm và chi tiết, giảm kích thước chữ -->
-                    <h6 class="product-name m-0">Tên sản phẩm</h6>
-                    <p class="product-detail m-0" style="font-size: 12px;">Chi tiết sản phẩm...</p>
+                    <h6 class="product-name m-0" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px;"">${confirm.post.content}</h6>
+                    <p class="product-detail m-0" style="font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px;">
+                    ${confirm.post.content}
+                    </p>
                 </div>
                 <div class="col-2 text-center p-0">
                     <!-- Đặt chỗ trống để căn giữa nút đồng ý và không đồng ý -->
                 </div>
             </div>
-            <div class="row justify-content-center mt-2">
-                <div class="col-6 text-center">
+             <div class="row justify-content-around mt-2">
                     <!-- Nút đồng ý và không đồng ý, giảm kích thước -->
-                    <button id="acceptButton" class="btn btn-success btn-sm mb-1 equal-width" style="font-size: 12px; padding: 3px 6px;  outline: none; box-shadow: none;" onclick="accept()"  data-userid="${currentUser}">Đồng ý</button>
-                    <button id="declineButton" class="btn btn-danger btn-sm equal-width" style="font-size: 12px; padding: 3px 6px; margin:0px 0px 4px;  outline: none; box-shadow: none;" onclick="decline()">Không đồng ý</button>
-                </div>
-            </div>`;
+                    ${accept}
+            </div>
+        </div>
+        <!-- Phần hehe chiếm 4 phần -->
+        <div class="col-md-4" style="border-left: 1px solid #ccc;">
+           
+        </div>
+    </div>
+            `;
     } else {
         confirmExchange.innerHTML = '';
     }
 
-    console.log(post ? post.content : "Post content is null or undefined");
+    console.log(confirm ? confirm : "Post content is null or undefined");
 
     messages.forEach(message => {
         const li = document.createElement('li');
@@ -234,22 +275,34 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, pos
     });
 });
 
+// Hàm để kiểm tra trạng thái kết nối và thực hiện gọi invoke
+async function safeInvoke(methodName, ...args) {
+    if (connection.state === signalR.HubConnectionState.Connected) {
+        try {
+            await connection.invoke(methodName, ...args);
+        } catch (err) {
+            console.error(err.toString());
+        }
+    } else {
+        console.error("Cannot send data if the connection is not in the 'Connected' State.");
+    }
+}
 function accept() {
     const acceptButton = document.getElementById('acceptButton');
     const declineButton = document.getElementById('declineButton');
-
     // Chuyển nút "Đồng ý" sang trạng thái bấm không được và màu xám
     acceptButton.disabled = true;
     acceptButton.style.backgroundColor = 'grey';
     acceptButton.style.color = 'white';
-
     // Chuyển nút "Không đồng ý" sang trạng thái bấm được và màu gốc
     declineButton.disabled = false;
     declineButton.style.backgroundColor = '';
     declineButton.style.color = '';
-
+    const userId = acceptButton.dataset.userid;
+    const postId = acceptButton.dataset.idpost;
+    const commentId = acceptButton.dataset.idcomment;
     const message = "Người dùng đã chấp nhận";
-    connection.invoke("HandleAccept", message)
+    connection.invoke("HandleAccept", message, userId, postId, commentId)
         .catch(function (err) {
             return console.error(err.toString());
         });
@@ -260,7 +313,6 @@ function accept() {
 function decline() {
     const acceptButton = document.getElementById('acceptButton');
     const declineButton = document.getElementById('declineButton');
-
     // Chuyển nút "Không đồng ý" sang trạng thái bấm không được và màu xám
     declineButton.disabled = true;
     declineButton.style.backgroundColor = 'grey';
@@ -270,9 +322,11 @@ function decline() {
     acceptButton.disabled = false;
     acceptButton.style.backgroundColor = '';
     acceptButton.style.color = '';
-
+    const userId = acceptButton.dataset.userid;
+    const postId = acceptButton.dataset.idpost;
+    const commentId = acceptButton.dataset.idcomment;
     const message = "Người dùng đã từ chối";
-    connection.invoke("HandleDecline", message)
+    connection.invoke("HandleDecline", message, userId, postId, commentId)
         .catch(function (err) {
             return console.error(err.toString());
         });
