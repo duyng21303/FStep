@@ -11,7 +11,6 @@
         public string TransactionCode { get; set; }
         public string Token { get; set; }
         public string VnPayResponseCode { get; set; }
-        public string? Note { get; set; }
     }
 
     public class VnPayRequestModel
@@ -21,6 +20,5 @@
         public string Description { get; set; }
         public float? Amount { get; set; } 
         public DateTime CreatedDate { get; set; }
-        public string? Note { get; set; }   
     }
 }

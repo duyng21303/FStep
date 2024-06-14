@@ -28,7 +28,7 @@ namespace FStep.Services
             vnpay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress(context));
             vnpay.AddRequestData("vnp_Locale", _config["VnPay:Locale"]);
 
-            vnpay.AddRequestData("vnp_OrderInfo", "Thanh toan don hang:" + model.TransactionCode + " note: " + model.Note);
+            vnpay.AddRequestData("vnp_OrderInfo", "Thanh toan san pham: " + model.TransactionCode);
             vnpay.AddRequestData("vnp_OrderType", "order"); //default value: other
             vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:PaymentBackReturnUrl"]);
             vnpay.AddRequestData("vnp_TxnRef", tick);// mã tham chiếu của giao dịch

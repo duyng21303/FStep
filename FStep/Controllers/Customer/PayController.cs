@@ -80,15 +80,18 @@ namespace FStep.Controllers.Customer
 		[HttpPost]
 		public IActionResult CheckoutSale(CheckoutVM model)
 		{
+			CheckoutVM info = HttpContext.Session.Get<CheckoutVM>("CHECKOUT_INFO");
 			var vnPayModel = new VnPayRequestModel
 			{
 				Amount = model.Amount,
 				CreatedDate = DateTime.Now,
 				Description = "Thanh toan don hang",
 				FullName = User.FindFirst("UserID").Value,
-				TransactionCode = new Random().Next(1000, 10000),
-				Note = model.Note
-			};
+				TransactionCode = info.ProductId,
+			}; 
+			
+			info.Note = model.Note;
+			HttpContext.Session.Set<CheckoutVM>("CHECKOUT_INFO", info);
 			return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, vnPayModel));
 		}
 
@@ -118,22 +121,23 @@ namespace FStep.Controllers.Customer
 
 			
 			var transaction = new Transaction();
-			transaction.CodeTransaction = response.TransactionCode;
+			transaction.Date = DateTime.Now;
 			transaction.Status = "Processing";
+			transaction.Amount = float.Parse(response.Amount.ToString()) / 100;
+			transaction.Note = info.Note;
+			transaction.IdPost = info.IdPost;
 			transaction.IdUserBuyer = info.IdUserBuyer;
 			transaction.IdUserSeller = info.IdUserSeller;
-			transaction.Amount = float.Parse(response.Amount.ToString())/100;
-			transaction.Date = DateTime.Now;
-			transaction.IdPost = info.IdPost;
 			transaction.Type = info.Type;
+			transaction.CodeTransaction = response.TransactionCode;
 			db.Add(transaction);
 			db.SaveChanges();
 
 			var payment = new Payment();
-			payment.PayTime = transaction.Date; 
+			payment.PayTime = transaction.Date;
 			payment.Amount = transaction.Amount;
-			payment.IdTransaction = db.Transactions.SingleOrDefault(p => p.CodeTransaction == transaction.CodeTransaction).IdTransaction;
 			payment.Type = "buyer";
+			payment.IdTransaction = db.Transactions.SingleOrDefault(p => p.CodeTransaction == transaction.CodeTransaction).IdTransaction;
 			db.Add(payment);
 			db.SaveChanges();
 			TempData["Message"] = $"VnPay success";
