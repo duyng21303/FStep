@@ -13,8 +13,6 @@ using Microsoft.AspNetCore.Authentication.Google;
 using FStep.ViewModels.Email;
 using FStep.Repostory.Interface;
 using System.Text;
-using NuGet.Versioning;
-using Microsoft.SqlServer.Server;
 
 
 namespace FStep.Controllers.Auth

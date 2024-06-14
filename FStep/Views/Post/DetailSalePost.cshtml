@@ -1,7 +1,8 @@
-﻿@using FStep.ViewModels
-@model FStep.ViewModels.SalePostVM
+﻿@using FStep.Data
+@using FStep.ViewModels
 @{
 	var comments = ViewData["comments"] as List<CommentVM> ?? new List<CommentVM>();
+	var recommendedSales = ViewData["recommendedSales"] as List<Post> ?? new List<Post>();
 }
 <style>
 	html, body {
@@ -427,14 +428,53 @@
 		Chat
 	</div>
 
+	<!-- Recommended Posts -->
+	@if (recommendedSales.Count > 0)
+	{
+		<div class="col-lg-12 mt-3">
+			<h3 class="page-header">Recommended Sales</h3>
+			<div class="row">
+				@foreach (var post in recommendedSales)
+				{
+					<div class="col-lg-4 col-md-6 col-sm-12">
+						<div class="card b-1 hover-shadow">
+							<div class="media card-body">
+								<div class="media-left pr-12">
+									<div class="img">
+										<img class="avatar avatar-xl no-radius" src="~/img/postPic/@post.Img" alt="...">
+									</div>
+								</div>
+								<div class="media-body">
+                                    <div>
+										<span class="fs-20 pr-16">@post.Content</span>
+									</div>
+									<div class="fs-14 text-fade">
+										<span>Post Date: @post.Date</span>
+									</div>
+									<div class="fs-14 text-fade">
+										<span>Type: @post.Type</span>
+									</div>
+									<div class="fs-14 text-fade">
+										<span>Rating: @post.IdUserNavigation.Rating</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	}
+
 	<!-- Comment Section -->
 	<div class="col-lg-12 mt-3">
+		<h3 class="page-header">Comments</h3>
 		@* TODO: Hiển thị danh sách comment ở đây  *@
 		@foreach (var comment in comments.OrderByDescending(c => c.Date))
 		{
 			<div class="product-rating d-flex gap-2 mb-2 p-2">
 				<div class="product-rating__avatar">
-					<img class="rounded-circle me-lg-2 product-rating__avatar-img" src="~/img/@User.FindFirst("IMG")?.Value" alt="" style="width: 40px; height: 40px;">
+					<img class="rounded-circle me-lg-2 product-rating__avatar-img" src="~/img/userAvar/@comment.AvatarImg" alt="" style="width: 40px; height: 40px;">
 				</div>
 				<div class="product-rating-main">
 					<div class="product-rating__author-name">@comment.Name</div>

@@ -72,7 +72,7 @@ namespace FStep.Controllers.Customer
 
 			return View();
 		}
-		
+
 		[Authorize]
 		[HttpPost]
 		public IActionResult CreateSalePost(SalePostVM model, IFormFile img)
@@ -112,32 +112,68 @@ namespace FStep.Controllers.Customer
 		}
 		public IActionResult DetailPost(int id)
 		{
-			var data = db.Posts.Include(x => x.IdProductNavigation).Include(x => x.IdUserNavigation).SingleOrDefault(p => p.IdPost == id);
-			var user = db.Users.SingleOrDefault(user => user.IdUser == data.IdUser);
-			ViewData["USER_CREATE"] = user;
+			// Lấy thông tin bài đăng
+			var data = db.Posts
+						 .Include(x => x.IdProductNavigation)
+						 .Include(x => x.IdUserNavigation)
+						 .SingleOrDefault(p => p.IdPost == id);
 
-			// lấy thêm comment sản phẩm
-			var comments = db.Comments.Where(x => x.IdPost == id).Include(x => x.IdUserNavigation).Select(x => new CommentVM
+			if (data == null)
 			{
-				IdPost = id,
-				IdUser = x.IdUser,
-				Content = x.Content,
-				Date = x.Date,
-				IdComment = x.IdComment,
-				Name = x.IdUserNavigation.Name
-			}).ToList();
+				return NotFound();
+			}
+
+			// Thông tin người dùng tạo bài đăng
+			ViewData["USER_CREATE"] = data.IdUserNavigation;
+
+
+			// Lấy các bình luận cho bài đăng
+			var comments = db.Comments
+							 .Where(x => x.IdPost == id)
+							 .Include(x => x.IdUserNavigation)
+							 .Select(x => new CommentVM
+							 {
+								 IdPost = id,
+								 IdUser = x.IdUser,
+								 Content = x.Content,
+								 Date = x.Date,
+								 IdComment = x.IdComment,
+								 Name = x.IdUserNavigation.Name,
+								 AvatarImg = x.IdUserNavigation.AvatarImg
+							 }).ToList();
 
 			ViewData["comments"] = comments;
+
+			// Lấy giá của sản phẩm hiện tại
+			var currentProductPrice = data.IdProductNavigation?.Price;
+
+			// Truy vấn các bài đăng chứa sản phẩm đề xuất trong khoảng giá ±1 triệu đồng
+			var recommendedPosts = db.Posts
+									 .Include(p => p.IdProductNavigation)
+									 .Include(p => p.IdUserNavigation)
+									 .Where(p => p.IdProductNavigation.Price >= currentProductPrice - 1000000
+												 && p.IdProductNavigation.Price <= currentProductPrice + 1000000
+												 && p.Type == "Exchange"
+												 && p.IdPost != id)
+									 .ToList();
+
+			ViewData["recommendedPosts"] = recommendedPosts;
 
 			return View(data);
 		}
 		public IActionResult DetailSalePost(int id)
 		{
-			var post = db.Posts.SingleOrDefault(post => post.IdPost == id);
+			var data = db.Posts
+						 .Include(x => x.IdProductNavigation)
+						 .Include(x => x.IdUserNavigation)
+						 .SingleOrDefault(p => p.IdPost == id);
 
-			var product = db.Products.SingleOrDefault(product => product.IdProduct == post.IdProduct);
-			var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
-			ViewData["USER_CREATE"] = user;
+			if (data == null)
+			{
+				return NotFound();
+			}
+
+			ViewData["USER_CREATE"] = data.IdUserNavigation;
 
 			// lấy thêm comment sản phẩm
 			var comments = db.Comments.Where(x => x.IdPost == id).Include(x => x.IdUserNavigation).Select(x => new CommentVM
@@ -147,23 +183,39 @@ namespace FStep.Controllers.Customer
 				Content = x.Content,
 				Date = x.Date,
 				IdComment = x.IdComment,
-				Name = x.IdUserNavigation.Name
+				Name = x.IdUserNavigation.Name,
+				AvatarImg = x.IdUserNavigation.AvatarImg
 			}).ToList();
 
 			ViewData["comments"] = comments;
 
 			var result = new SalePostVM()
 			{
-				Id = post.IdPost,
-				Title = post.Content,
-				Quantity = product.Quantity,
-				Img = post.Img,
-				Description = post.Detail,
-				NameProduct = product.Name,
-				DetailProduct = product.Detail,
-				CreateDate = post.Date,
-				Price = product.Price ?? 0
+				Id = data.IdPost,
+				Title = data.Content,
+				Quantity = data.IdProductNavigation.Quantity,
+				Img = data.Img,
+				Description = data.Detail,
+				NameProduct = data.IdProductNavigation.Name,
+				DetailProduct = data.IdProductNavigation.Detail,
+				CreateDate = data.Date,
+				Price = data.IdProductNavigation.Price ?? 0
 			};
+
+			// Lấy giá của sản phẩm hiện tại
+			var currentProductPrice = data.IdProductNavigation?.Price;
+
+			// Truy vấn các bài đăng chứa sản phẩm đề xuất trong khoảng giá ±1 triệu đồng
+			var recommendedSales = db.Posts
+									 .Include(p => p.IdProductNavigation)
+									 .Include(p => p.IdUserNavigation)
+									 .Where(p => p.IdProductNavigation.Price >= currentProductPrice - 1000000
+												 && p.IdProductNavigation.Price <= currentProductPrice + 1000000
+												 && p.Type == "Sale"
+												 && p.IdPost != id)
+									 .ToList();
+
+			ViewData["recommendedSales"] = recommendedSales;
 
 			return View(result);
 		}
