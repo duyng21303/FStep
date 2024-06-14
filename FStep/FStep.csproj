@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <Compile Include="ViewComponents\ChatViewComponent.cs" />
+    <Compile Include="ViewComponents\CreatePostViewComponent.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -58,6 +59,7 @@
 	  <Folder Include="Controllers\Admin\" />
 	  <Folder Include="Controllers\Moder\" />
 	  <Folder Include="wwwroot\img\pic\" />
+	  <Folder Include="wwwroot\img\postPic\" />
 	  <Folder Include="wwwroot\img\userAvar\" />
 	  <Folder Include="wwwroot\img\nullAvar\" />
   </ItemGroup>

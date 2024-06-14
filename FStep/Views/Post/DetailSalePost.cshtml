@@ -1,7 +1,8 @@
 ﻿@using FStep.ViewModels
-@model FStep.ViewModels.SalePostVM
+@model FStep.ViewModels.PostVM
 @{
 	var comments = ViewData["comments"] as List<CommentVM> ?? new List<CommentVM>();
+	var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
 <style>
 	html, body {
@@ -382,8 +383,9 @@
 
 			<!-- Product Pricing -->
 			<div class="product-price">
-				<span>@Model.Price</span>
-				<a href="#" class="cart-btn">Mua ngay</a>
+				<span>@String.Format(format, "{0:0,0 VND}", Model.Price)</span>
+				@* <a href="#" class="cart-btn">Mua ngay</a> *@
+				<a asp-action="CheckoutSale" asp-controller="Pay" asp-route-id="@Model.IdPost" class="btn border border-secondary rounded-pill text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i>Buy now</a>
 			</div>
 		</div>
 	</div>
@@ -434,7 +436,7 @@
 		{
 			<div class="product-rating d-flex gap-2 mb-2 p-2">
 				<div class="product-rating__avatar">
-					<img class="rounded-circle me-lg-2 product-rating__avatar-img" src="~/img/@User.FindFirst("IMG")?.Value" alt="" style="width: 40px; height: 40px;">
+						<img class="rounded-circle me-lg-2 product-rating__avatar-img" src="~/img/@User.FindFirst("IMG")?.Value" alt="" style="width: 40px; height: 40px;">
 				</div>
 				<div class="product-rating-main">
 					<div class="product-rating__author-name">@comment.Name</div>
@@ -447,7 +449,7 @@
 			<span class="lead">Add your comment</span>
 			<form method="post" asp-action="PostComment" asp-asp-controller="Post">
 				<div>
-					<input name="IdPost" value="@Model.Id" type="hidden" />
+					<input name="IdPost" value="@Model.IdPost" type="hidden" />
 					<input name="RedirectUrl" value="DetailPost" type="hidden" />
 					<textarea rows="3" class="form-control" name="Content"></textarea>
 				</div>

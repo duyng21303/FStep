@@ -1,6 +1,9 @@
-﻿@model X.PagedList.IPagedList<FStep.ViewModels.SalePostVM>
+﻿@model X.PagedList.IPagedList<FStep.ViewModels.PostVM>
 @using X.PagedList.Mvc.Core;
-
+@{
+	ViewData["Title"] = "Sale Posts";
+	var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+}
 <div>
 	<!--/slider-->
 	<div class="carousel rounded">
@@ -81,16 +84,17 @@
 				</div>
 				<div class="col-md-5">
 					<form asp-action="Index" asp-controller="Home" class="d-flex justify-content-end search-form">
-						<input type="search" class="form-control search-input" placeholder="Enter name product" name="query">
+						<input type="search" class="form-control search-input" placeholder="keywords" name="query">
 						<button class="btn btn-primary search-button" type="submit">
 							<i class="fa fa-search search-icon"></i>
 						</button>
 					</form>
 				</div>
 				<div class="col-md-1">
-					<a asp-action="CreateSalePost" asp-controller="Post">
-						<i class="fa fa-plus-square" style="font-size:45px;"></i>
-					</a>
+					<i class="fa fa-plus-square" data-bs-toggle="modal" data-bs-target="#exampleModal" style="font-size:45px;"></i>
+					@* <a asp-action="CreatePost" asp-controller="Post">
+					<i class="fa fa-plus-square" style="font-size:45px;"></i>
+					</a> *@
 				</div>
 			</div>
 			<!-- End header body -->
@@ -105,26 +109,17 @@
 								<div class="col-md-6 col-lg-4 col-xl-3">
 									<div class="rounded position-relative fruit-item">
 										<div class="fruit-img">
-											<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@item.Id">
+											<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@item.IdPost">
 												<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded-top" alt="Laptop">
 											</a>
 										</div>
 										<div class="p-4 border border-secondary border-top-0 rounded-bottom">
-
-											<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@item.Id">@Html.Raw(item.Title)</a>
+											<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@item.IdPost">@Html.Raw(item.Title)</a>
 											<p class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Description)</p>
-											<p class="price">Price: @Html.Raw(item.Price) (VND)</p>
+											<p class="price">Price: @String.Format(format, "{0:0,0 VND}", item.Price)</p>
 											<p class="quantity">Quantity: @Html.Raw(item.Quantity)</p>
-											<form asp-controller="BuyNow" asp-action="BuyNow" method="get">
-												<input type="hidden" name="id" value="@item.Id" />
-												<div class="form-group">
-													<label for="Quantity">Quantity:</label>
-													<input type="number" name="Quantity" class="form-control" />
-												</div>
-												<button type="submit" class="btn btn-primary">Buy Now</button>
-											</form>
-
 											<p class="text-end mb-0 mt-2">CreateDate <span>@item.CreateDate?.ToString("dd/MM/yyyy")</span></p>
+
 										</div>
 									</div>
 								</div>
@@ -139,6 +134,28 @@
 				</div>
 			</div>
 			<!-- End Show -->
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+
+				@await Html.PartialAsync("Create", new PostVM())
+
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary">Save changes</button>
+			</div>
 		</div>
 	</div>
 </div>

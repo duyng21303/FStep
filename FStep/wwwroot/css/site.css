@@ -190,11 +190,12 @@ body {
     -webkit-line-clamp: 2; /* Limit the lines to 2 */
     height: 2.4em;
 }
-    .fruit-item .price {
+
+.fruit-item .price {
     color: red; /* Màu đỏ cho giá */
     font-weight: bold; /* Chữ đậm cho giá */
 }
-    /* Date text at the end of each post */
+/* Date text at the end of each post */
 .fruit-item .text-end {
     font-size: 0.9rem; /* Font size for the date */
     color: #999; /* Light gray color for the date */
@@ -285,6 +286,8 @@ body {
         top: 0;
         left: 0;
     }
+<<<<<<< HEAD
+=======
    
 /*Css cho Payment layout*/
 .payment-container {
@@ -361,3 +364,4 @@ body {
 .note {
     color: #666; /* Đặt màu chữ cho thông báo là màu xám (#666) */
 }
+>>>>>>> 06d8e33ad4806eea4d3b5ec76a0b1908613d0dce

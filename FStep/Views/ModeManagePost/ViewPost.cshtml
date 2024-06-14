@@ -1,164 +1,59 @@
 ﻿@model X.PagedList.IPagedList<FStep.ViewModels.ListPostVM>
 @using X.PagedList.Mvc.Core;
 
+<div class="container-fluid fruit py-5">
+	<div class="container py-5">
+		<!-- Title header body  -->
+		<div class="row align-items-center mb-4 search-header">
+			<div class="col-md-6">
+				<h1 class="exchange-title">List Post</h1>
+			</div>
 
-<div>
-	<!--/slider-->
-	<div class="carousel rounded">
-		<section id="slider">
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-12">
-						<div id="slider-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+			<div class="col-md-5">
+				<form asp-action="ViewPost" asp-controller="ManagePost" class="d-flex justify-content-end search-form">
+					<input type="search" class="form-control search-input" placeholder="keywords" name="query">
+					<button class="btn btn-primary search-button" type="submit">
+						<i class="fa fa-search search-icon"></i>
+					</button>
+				</form>
+			</div>
+			<!-- End header body -->
+			<!-- Start Content Body-->
+			<div class="row g-4">
+				<div class="col-lg-12">
+					<div class="container-contentboby">
+						<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
 
-							<div class="carousel-inner">
-								<div class="carousel-item active bg-carousel-item">
-									<div class="row align-items-center">
-										<div class="col-sm-6 content-box">
-											<h1 class="f-step-title"><span>F</span>-STEP</h1>
-											<div class="f-step-content border p-3">
-												<h2>FU Student Item Exchange</h2>
-												<p>Easily swap items with other FU students. Whether it’s a laptop for a textbook or a mouse for a notebook, trade what you have for what you need.</p>
-											</div>
+
+							<!-- Start of post item column -->
+							@foreach (var item in Model)
+							{
+								<div class="col">
+									<div class="rounded position-relative fruit-item">
+										<div class="fruit-img">
+											<img src="@Url.Content("~/img/postPic/" + item.Image)" class="img-fluid w-100 rounded-top" alt="Laptop">
 										</div>
-										<div class="col-sm-6">
-											<img src="~/img/Sliden/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="d-block w-100 rounded-circle" alt="" />
+										<div class="p-4 border border-secondary border-top-0 rounded-bottom">
+											<h4 class="Title mb-3">@Html.Raw(item.PostTitle)</h4>
+											<p class="description mb-4">@Html.Raw(item.PostBody)</p>
+											<p class="description mb-4">@Html.Raw(item.Quantity)</p>
+											<p class="description mb-4">@Html.Raw(item.Price)</p>
+											<p class="description mb-4">@Html.Raw(item.Type)</p>
+											<p class="description mb-4">@Html.Raw(item.StudentId)</p>
+											<p class="text-end mb-0 mt-2">CreateDate: <span>@item.CreateDate.ToString("dd/MM/yyyy")</span></p>
 										</div>
 									</div>
 								</div>
-								<div class="carousel-item bg-carousel-item">
-									<div class="row align-items-center">
-										<div class="col-sm-6 content-box">
-											<h1 class="f-step-title"><span>F</span>-STEP</h1>
-											<div class="f-step-content border p-3">
-												<h2>FU Student Item Exchange</h2>
-												<p>Easily swap items with other FU students. Whether it’s a laptop for a textbook or a mouse for a notebook, trade what you have for what you need.</p>
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<img src="~/img/Sliden/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="d-block w-100 rounded-circle" alt="" />
-										</div>
-									</div>
-								</div>
-								<div class="carousel-item bg-carousel-item">
-									<div class="row align-items-center">
-										<div class="col-sm-6 content-box">
-											<h1 class="f-step-title"><span>F</span>-STEP</h1>
-											<div class="f-step-content border p-3">
-												<h2>FU Student Item Exchange</h2>
-												<p>Easily swap items with other FU students. Whether it’s a laptop for a textbook or a mouse for a notebook, trade what you have for what you need.</p>
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<img src="~/img/Sliden/1694076724_395_Truong-Dai-hoc-FPT-dao-tao-nganh-vi-mach-ban.jpg" class="d-block w-100 rounded-circle" alt="" />
-										</div>
-									</div>
-								</div>
-							</div>
-
-
-							<button class="carousel-control-prev" type="button" data-bs-target="#slider-carousel" data-bs-slide="prev">
-								<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-								<span class="visually-hidden">Previous</span>
-							</button>
-							<button class="carousel-control-next" type="button" data-bs-target="#slider-carousel" data-bs-slide="next">
-								<span class="carousel-control-next-icon" aria-hidden="true"></span>
-								<span class="visually-hidden">Next</span>
-							</button>
+							}
 						</div>
 					</div>
+					<!-- Start Content Body-->
+					<!-- Create relationship between page and page -->
+					@Html.PagedListPager(Model, page => Url.Action("ViewPost", new { query = ViewBag.Query, page = page }))
+					<!-- End create -->
 				</div>
 			</div>
-		</section>
-	</div>
-	<!--/End slider-->
-	<!-- Header body  -->
-	<div class="container-fluid fruit py-5">
-		<div class="container py-5">
-			<!-- Title header body  -->
-			<div class="row align-items-center mb-4 search-header">
-				<div class="col-md-6">
-					<h1 class="exchange-title">ListPost</h1>
-				</div>
-				<div>
-					<div class="col-md-5">
-						<form asp-action="ViewPost" asp-controller="ModeManagePost" class="d-flex justify-content-end search-form">
-							<input type="search" class="form-control search-input" placeholder="Enter student_id" name="@ViewBag.query">
-							<button class="btn btn-primary search-button" type="submit">
-								<i class="fa fa-search search-icon"></i>
-							</button>
-						</form>
-					</div>
-				</div>
-				<!-- End header body -->
-				<!-- Start Content Body-->
-				<div class="row g-4">
-					<div class="col-lg-12">
-						<div class="container-contentboby">
-							<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
-								<!-- Start of post item column -->
-								@foreach (var item in Model)
-								{
-									<div class="col">
-										<div class="rounded position-relative fruit-item">
-											<div class="fruit-img">
-												<img src="@Url.Content("~/img/postPic/" + item.Image)" class="img-fluid w-100 rounded-top" alt="Laptop">
-											</div>
-											<div class="p-4 border border-secondary border-top-0 rounded-bottom">
-												<p class="studentId mb-4"> StudentId: @Html.Raw(item.StudentId)</p>
-												<div class="row">
-													<div class="col-md-6">
-														<p class="small-text">Type: @Html.Raw(item.Type)</p>
-													</div>
-													<div class="col-md-6">
-														<p class="small-text">Status: @Html.Raw(item.Status)</p>
-													</div>
-												</div>
-												<h4 class="Title">@Html.Raw(item.PostTitle)</h4>
-												<p class="description">@Html.Raw(item.PostBody)</p>
-												<p>Quantity: @Html.Raw(item.Quantity)</p>
-												<p>Price: @Html.Raw(item.Price)</p>
-												<!-- Update Status Form -->
-												<form asp-action="UpdateStatus" asp-controller="ModeManagePost" method="post" class="mt-3">
-													<input type="hidden" name="PostId" value="@item.PostId" />
-
-													<div class="row align-items-center">
-														<div class="col-md-6">
-															<div class="form-check">
-																<input class="form-check-input" type="radio" name="Status" value="true" id="statusTrue_@item.PostId" @(item.Status ? "checked" : "") />
-																<label class="form-check-label" for="statusTrue_@item.PostId">
-																	True
-																</label>
-															</div>
-														</div>
-														<div class="col-md-6">
-															<div class="form-check">
-																<input class="form-check-input" type="radio" name="Status" value="false" id="statusFalse_@item.PostId" @(!item.Status ? "checked" : "") />
-																<label class="form-check-label" for="statusFalse_@item.PostId">
-																	False
-																</label>
-															</div>
-														</div>
-													</div>
-
-													<button type="submit" class="btn btn-primary mt-2">Update Status</button>
-												</form>
-												<!-- End Update Status Form -->
-												<p class="text-end mb-0 mt-2">CreateDate: <span>@item.CreateDate.ToString("dd/MM/yyyy")</span></p>
-											</div>
-										</div>
-									</div>
-								}
-							</div>
-						</div>
-						<!-- Start Content Body-->
-						<!-- Create relationship between page and page -->
-						@Html.PagedListPager(Model, page => Url.Action("ViewPost", new { query = ViewBag.Query, page = page }))
-						<!-- End create -->
-					</div>
-				</div>
-				<!-- End Show -->
-			</div>
+			<!-- End Show -->
 		</div>
 	</div>
 </div>
