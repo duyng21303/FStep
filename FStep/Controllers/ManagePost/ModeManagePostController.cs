@@ -1,63 +1,158 @@
 ﻿using FStep.Data;
-using FStep.Models;
+using FStep.Repostory.Interface;
 using FStep.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using System.Drawing.Printing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using X.PagedList;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace FStep.Controllers.ManagePost
 {
 	public class ModeManagePostController : Controller
 	{
-		private readonly FstepDbContext db;
+		private readonly FstepDbContext _db;
 
-		public ModeManagePostController(FstepDbContext context ) => db = context;
-		public IActionResult ViewPost(String? query, int? page)
+		public ModeManagePostController(FstepDbContext context)
 		{
+			_db = context;
+		}
+		[HttpGet("ManagePosts")]
+		public IActionResult ManagePosts(string pendingQuery, string approvedQuery,String currentTab, int pendingPage = 1, int approvedPage = 1, int pageSize = 30)
+		{
+			var pendingPostsResult = GetPendingPosts(pendingQuery, pendingPage, pageSize);
+			var approvedPostsResult = GetApprovedPosts(approvedQuery, approvedPage, pageSize);
 
-			int pageSize = 12; // số lượng sản phẩm mỗi trang 
-			int pageNumber = (page ?? 1);   // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
-			var ListPost = db.Posts.AsQueryable();
-			ListPost = ListPost.Where(p => p.Status == false || p.Status == true);    //check exchangePost là những post thuộc type "exhcange" và có status = 1
-			if (!string.IsNullOrEmpty(query))
+			var viewModel = new ManagePostsVM
 			{
-				ListPost = ListPost.Where(p => p.IdUserNavigation.StudentId.Contains(query));
-			}
-			var result = ListPost.Select(s => new ListPostVM
-			{
-				PostId = s.IdPost,
-				PostTitle = s.Content ?? string.Empty, // Default to empty string if Content is null
-				PostBody = s.Detail ?? string.Empty, // Assuming PostBody should be included and default to empty string
-				Type = s.Type ?? string.Empty, // Default to empty string if Type is null
-				StudentId = s.IdUserNavigation.StudentId ?? string.Empty, // Default to empty string if StudentId is null
-				Quantity = s.IdProductNavigation.Quantity ?? 0, // Default to 0 if Quantity is null
-				Price = s.IdProductNavigation.Price ?? 0f, // Default to 0 if Price is null
-				Image = s.Img ?? string.Empty, // Default to empty string if Image is null
-				CreateDate = s.Date ?? DateTime.Now, // Default to current DateTime if Date is null
-				Status = s.Status ?? false
-			}).OrderByDescending(o => o.PostId);
+				PendingPosts = pendingPostsResult.Posts,
+				ApprovedPosts = approvedPostsResult.Posts,
+				PendingPostsCount = pendingPostsResult.Count,
+				ApprovedPostsCount = approvedPostsResult.Count,
+				PendingQuery = pendingQuery,
+				ApprovedQuery = approvedQuery
+			};
 
-			var pageList = result.ToPagedList(pageNumber, pageSize);
-			ViewBag.Query = query;
-			return View(pageList);
+			ViewBag.PageSize = pageSize;
+			ViewBag.CurrentTab = currentTab; // Add this line
+			ViewBag.PendingPostsCount = pendingPostsResult.Count;
+			ViewBag.ApprovedPostsCount = approvedPostsResult.Count;
+			ViewBag.PendingQuery = pendingQuery;
+			ViewBag.ApprovedQuery = approvedQuery;
+			ViewBag.PendingPage = pendingPage;
+			ViewBag.ApprovedPage = approvedPage;
+			return View(viewModel);
 		}
 
-		public IActionResult UpdateStatus(int PostId, string Status)
+		private PendingPostsResultVM GetPendingPosts(string query, int pageNumber, int pageSize)
 		{
-			// Find the post by PostId
-			var post = db.Posts.FirstOrDefault(p => p.IdPost == PostId);
+			var queryable = _db.Posts
+				.Include(p => p.IdUserNavigation)
+				.Include(p => p.IdProductNavigation)
+				.Where(p => p.Status == "false");
+
+			if (!string.IsNullOrEmpty(query))
+			{
+				queryable = queryable.Where(p => p.IdUserNavigation.StudentId.Contains(query));
+			}
+
+			var result = queryable
+				.OrderBy(p => p.Date)
+				.Select(s => new ListPostVM
+				{
+					PostId = s.IdPost,
+					PostTitle = s.Content ?? string.Empty,
+					PostBody = s.Detail ?? string.Empty,
+					Type = s.Type ?? string.Empty,
+					StudentId = s.IdUserNavigation.StudentId ?? string.Empty,
+					Quantity = s.IdProductNavigation != null && s.IdProductNavigation.Quantity.HasValue ? s.IdProductNavigation.Quantity.Value : 0,
+					Price = s.IdProductNavigation != null && s.IdProductNavigation.Price.HasValue ? s.IdProductNavigation.Price.Value : 0f,
+					Image = s.Img ?? string.Empty,
+					CreateDate = s.Date ?? DateTime.Now,
+					Status = s.Status ?? string.Empty,
+				})
+				.ToPagedList(pageNumber, pageSize);
+
+			return new PendingPostsResultVM
+			{
+				Posts = result,
+				Count = result.TotalItemCount
+			};
+
+		}
+
+		private ApprovedPostsResultVM GetApprovedPosts(string query, int pageNumber, int pageSize)
+		{
+			var queryable = _db.Posts
+				.Include(p => p.IdUserNavigation)
+				.Include(p => p.IdProductNavigation)
+				.Where(p => p.Status == "true");
+
+			if (!string.IsNullOrEmpty(query))
+			{
+				queryable = queryable.Where(p => p.IdUserNavigation.StudentId.Contains(query));
+			}
+
+			var result = queryable
+				.OrderBy(p => p.Date)
+				.Select(s => new ListPostVM
+				{
+					PostId = s.IdPost,
+					PostTitle = s.Content ?? string.Empty,
+					StudentId = s.IdUserNavigation.StudentId ?? string.Empty,
+					Quantity = s.IdProductNavigation != null && s.IdProductNavigation.Quantity.HasValue ? s.IdProductNavigation.Quantity.Value : 0,
+					Image = s.Img ?? string.Empty,
+					CreateDate = s.Date ?? DateTime.Now,
+					Location = s.Location ?? string.Empty,
+				})
+			.ToPagedList(pageNumber, pageSize);
+
+			return new ApprovedPostsResultVM
+			{
+				Posts = result,
+				Count = result.TotalItemCount
+			};
+
+		}
+
+		[HttpPost]
+		public IActionResult UpdateStatus(int id, string location)
+		{
+			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
 			if (post != null)
 			{
-				// Update the status
-				post.Status = !post.Status;
+				post.Status = "true";
+				post.Location = location;
 				post.Date = DateTime.Now;
-				// Save changes to the database
-				db.SaveChanges();
+
+				_db.Posts.Update(post);
+				_db.SaveChanges();
+				TempData["SuccessMessage"] = $"Bài đăng {id} đã được duyệt thành công.";
 			}
-			// Redirect back to the ViewPost action
-			return RedirectToAction("ViewPost");
+			else
+			{
+				TempData["ErrorMessage"] = $"Bài đăng {id} không được tìm thấy.";
+			}
+			return Redirect(Url.Action("ManagePosts") + "#pendingPosts");
+		}
+
+		[Authorize(Roles = "Moderator")]
+		[HttpPost("DeletePost/{id}")]
+		public IActionResult DeletePost(int id)
+		{
+			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
+			if (post != null)
+			{
+				post.Status = "reCheck";
+				_db.Posts.Update(post);
+				_db.SaveChanges();
+				TempData["SuccessMessage"] = $"Bài đăng {id} đã được xóa thành công.";
+			}
+			else
+			{
+				TempData["ErrorMessage"] = $"Bài đăng {id} không được tìm thấy.";
+			}
+			return Redirect(Url.Action("ManagePosts") + "#approvedPosts");
 		}
 	}
 }

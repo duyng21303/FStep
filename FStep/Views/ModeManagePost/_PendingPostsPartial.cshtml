@@ -1,0 +1,93 @@
+﻿@model X.PagedList.IPagedList<FStep.ViewModels.ListPostVM>
+@using X.PagedList.Mvc.Core
+
+@{
+	var successMessage = TempData["SuccessMessage"] as string;
+	var errorMessage = TempData["ErrorMessage"] as string;
+}
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+	<div id="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+		@successMessage
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+	<div id="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+		@errorMessage
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+}
+<div>
+	<!-- Header body  -->
+	<!-- Title header body  -->
+	<div class="row align-items-center mb-8 search-header">
+		<div>
+			<div class="row">
+				<div class="col-md-5 d-flex justify-content-between align-items-center">
+					<p class="mb-0">Tổng Số Bài Chờ Duyệt: @ViewBag.PendingPostsCount</p>
+				</div>
+			</div>
+		</div>
+		<div class="custom-container">
+			<!-- Start Content Body-->
+			<div class="container">
+				<div class="row mt-3">
+					<div class="col">
+						<table class="table table-striped">
+							<thead class="thead-light">
+								<tr>
+									<th scope="col">Ảnh</th>
+									<th scope="col">Tên</th>
+									<th scope="col">Loại SP</th>
+									<th scope="col">MSSV</th>
+									<th scope="col">Loại BD</th>
+									<th scope="col">Số Lượng</th>
+									<th scope="col">Giá</th>
+									<th scope="col">Ngày Tạo</th>
+									<th scope="col">Còn Lại</th>
+									<th scope="col">Thao Tác</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- Loop through posts -->
+								@foreach (var item in Model)
+								{
+									<tr>
+										<td><img src="@Url.Content("~/img/postPic/" + item.Image)" class="img-fluid small-rounded-image" alt="Post Image"></td>
+										<td class="post-title">@Html.Raw(item.PostTitle)</td>
+										<td>@Html.Raw(item.Type)</td>
+										<td class="post-studentid">@Html.Raw(item.StudentId)</td>
+										<td>@Html.Raw(item.Type)</td>
+										<td>@Html.Raw(item.Quantity)</td>
+										<td>@Html.Raw(item.Price)</td>
+										<td>@Html.Raw(item.CreateDate.ToString("yyyy-MM-dd"))</td>
+										<td>@Html.Raw(item.DaysRemainingPending)</td>
+										<td>
+											<form asp-controller="ModeManagePost" asp-action="UpdateStatus" method="post" onsubmit="return confirmApprove()">
+												<input type="text" class="form-control note-input" placeholder="Nhập vị trí" data-postid="@item.PostId" name="location" required />
+												<input type="hidden" name="id" value="@item.PostId" /> <!-- Ensure the input name matches your action parameter -->
+												<button type="submit" class="btn btn-success">Duyệt</button>
+											</form>
+											</td>
+											<td>
+											<a asp-controller="ModeManagePost" asp-action="DeletePost" asp-route-id="@item.PostId" style="text-decoration: none;">
+												<button type="button" class="btn btn-danger btn-sm">Xóa</button>
+											</a>
+										</td>
+									</tr>
+								}
+								<!-- End loop -->
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			@Html.PagedListPager(Model, page => Url.Action("ManagePosts", new { pendingQuery = ViewBag.PendingQuery, currentTab = "pendingPosts", pendingPage = page, approvedPage = ViewBag.ApprovedPage }))
+			<!-- End Content Body -->
+		</div>
+	</div>
+</div>

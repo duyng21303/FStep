@@ -349,3 +349,27 @@ body {
 .note {
     color: #666; /* Đặt màu chữ cho thông báo là màu xám (#666) */
 }
+/*CRUD Post*/
+.post-title {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+/* CSS for small and rounded images */
+.small-rounded-image    {
+    width: 60px; /* Độ rộng của hình ảnh */
+    height: 60px; /* Chiều cao tự động để giữ tỉ lệ khung */
+   
+}
+.custom-container {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px !important; /* Thêm khoảng cách top là 20px */
+}
+.input-smaller {
+    width: 100px; /* Điều chỉnh chiều rộng tùy theo nhu cầu */
+}

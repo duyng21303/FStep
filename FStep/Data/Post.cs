@@ -13,11 +13,13 @@ public partial class Post
 
     public string? Img { get; set; }
 
-    public bool? Status { get; set; }
+    public string? Status { get; set; }
 
     public string Type { get; set; } = null!;
 
     public string? Detail { get; set; }
+
+    public string? Location { get; set; }
 
     public int? IdProduct { get; set; }
 
@@ -26,6 +28,8 @@ public partial class Post
     public virtual ICollection<Chat> Chats { get; set; } = new List<Chat>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+
+    public virtual ICollection<Confirm> Confirms { get; set; } = new List<Confirm>();
 
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 
