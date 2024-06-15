@@ -12,10 +12,10 @@ namespace FStep.Controllers.Customer
 {
 	public class PostController : Controller
 	{
-		private readonly FstepDBContext db;
+		private readonly FstepDbContext db;
 		private readonly IMapper _mapper;
 
-		public PostController(FstepDBContext context, IMapper mapper)
+		public PostController(FstepDbContext context, IMapper mapper)
 		{
 			db = context;
 			_mapper = mapper;
@@ -31,7 +31,6 @@ namespace FStep.Controllers.Customer
 		{
 			return View();
 		}
-
 		//Create post
 		[Authorize]
 		[HttpPost]
@@ -53,7 +52,8 @@ namespace FStep.Controllers.Customer
 				post.Date = DateTime.Now;
 				//Helpers.Util.UpLoadImg(model.Img, "")
 				post.Img = Util.UpLoadImg(img, "postPic");
-				post.Status = "true";
+				post.Status = "false";
+
 				post.Type = model.Type;
 				post.Detail = model.Description;
 				post.IdUser = User.FindFirst("UserID").Value;
@@ -70,6 +70,7 @@ namespace FStep.Controllers.Customer
 
 			return View();
 		}
+
 		public IActionResult DetailPost(int id)
 		{
 			var data = db.Posts.Include(x => x.IdProductNavigation).Include(x => x.IdUserNavigation).SingleOrDefault(p => p.IdPost == id);
