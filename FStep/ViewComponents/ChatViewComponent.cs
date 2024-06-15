@@ -1,4 +1,5 @@
 ﻿using FStep.Data;
+using FStep.Helpers;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -48,6 +49,19 @@ namespace FStep.ViewComponents
 					IdPost = null
 				});
 			}
+			//var userClick = HttpContext.Session.Get<User>("USER_LIST");
+			//if(userClick != null)
+			//{
+			//	result.Add(new ChatVM()
+			//	{
+			//		ChatDate = DateTime.Now,
+			//		SenderUser = db.Users.SingleOrDefault(user => user.IdUser.Equals(userIdString)),
+			//		RecieverUser = userClick,
+			//		ChatMsg = null,
+			//		IdPost = null
+			//	});
+			//}
+			//HttpContext.Session.Remove("USER_LIST");
 			result = result.OrderBy(p => p.ChatDate).Reverse().ToList();
 			return View(result);
 		}

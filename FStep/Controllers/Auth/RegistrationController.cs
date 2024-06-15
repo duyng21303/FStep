@@ -60,6 +60,7 @@ namespace FStep.Controllers.Auth
                             user.HashKey = Util.GenerateRandomKey();
                             user.Password = model.password.ToMd5Hash(user.HashKey);
                             user.Role = "Customer";
+                            user.CreateDate = DateTime.Now;
                             db.Add(user);
                             db.SaveChanges();
 

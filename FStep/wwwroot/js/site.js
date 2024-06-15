@@ -79,7 +79,6 @@ connection.on("ReceiveMessage", function (recieveUser, user, message, img, date)
     } else {
         img = "nullAvar/149071.png";
     }
-    console.log(confirm);
     const formattedTime = new Date(date).toLocaleTimeString('en-US', {
         day: '2-digit',
         month: '2-digit',
@@ -137,6 +136,16 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
         var comment = confirm.comment != null ? confirm.comment.idComment : "";
         console.log(comment)
         var accept = "";
+        var currentStatus = `<div class="card text-center bg-danger text-white m-2" style="width: 150px;">
+        <div class="card-body">
+            <p class="card-text">Chưa Đồng Ý</p>
+        </div>
+    </div>`
+        var orderStatus = `<div class="card text-center bg-danger text-white m-2" style="width: 150px;">
+        <div class="card-body">
+            <p class="card-text">Chưa Đồng Ý</p>
+        </div>
+    </div>`
         if (!confirm.checkConfirm) {
             accept = `
                 <div class="col-6 text-end px-0">
@@ -204,7 +213,7 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
         </div>
         <!-- Phần hehe chiếm 4 phần -->
         <div class="col-md-4" style="border-left: 1px solid #ccc;">
-           
+            Tình trạng trao đổi của bạn: ${currentStatus}
         </div>
     </div>
             `;

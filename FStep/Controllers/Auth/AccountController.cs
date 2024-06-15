@@ -120,6 +120,7 @@ namespace FStep.Controllers.Auth
                     HashKey = haskKey,
                     Password = PASSWORD_GOOGLE.ToMd5Hash(haskKey),
                     AvatarImg = downloadedImgPath,
+                    CreateDate = DateTime.Now,
                     Role = "Customer"
                 };
                 db.Add(user);

@@ -44,9 +44,7 @@ namespace FStep.Controllers.Customer
 			try
 			{
 				var product = _mapper.Map<Product>(model);
-				product.Name = model.NameProduct;
 				product.Status = "true";
-				product.Detail = model.DetailProduct;
 				db.Add(product);
 				db.SaveChanges();
 
@@ -80,11 +78,9 @@ namespace FStep.Controllers.Customer
 			try
 			{
 				var product = _mapper.Map<Product>(model);
-				product.Name = model.NameProduct;
 				product.Quantity = model.Quantity;
 				product.Price = model.Price;
 				product.Status = "true";
-				product.Detail = model.DetailProduct;
 				db.Add(product);
 				db.SaveChanges();
 
@@ -162,8 +158,6 @@ namespace FStep.Controllers.Customer
 				Quantity = product.Quantity,
 				Img = post.Img,
 				Description = post.Detail,
-				NameProduct = product.Name,
-				DetailProduct = product.Detail,
 				CreateDate = post.Date,
 				Price = product.Price ?? 0
 			};

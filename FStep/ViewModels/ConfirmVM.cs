@@ -13,5 +13,6 @@ namespace FStep.ViewModels
 		public Post? Post { get; set; }
 
 		public Comment? Comment { get; set; }
+		public bool? CheckConfirmOrder { get; set; }
 	}
 }

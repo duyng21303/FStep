@@ -41,7 +41,7 @@ namespace FStep
 				options.Cookie.IsEssential = true;
 			});
 			
-			
+            builder.Services.AddHttpContextAccessor();
 			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options
 				=>
 			{
