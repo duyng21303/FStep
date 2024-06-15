@@ -16,7 +16,11 @@
 
 <div class="container-fluid fixed-top">
 	<nav class="navbar navbar-expand-lg bg-light navbar-light sticky-top px-4 py-0">
+<<<<<<< HEAD
 		<a href="/" class="navbar-brand d-flex align-items-center">
+=======
+		<a href="Home" class="navbar-brand d-flex align-items-center">
+>>>>>>> develop
 			<h2 class="text-primary mb-0"><i class="fa fa-car me-3"></i>FStep</h2>
 		</a>
 		<button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -24,6 +28,7 @@
 		</button>
 		<div class="collapse navbar-collapse" id="navbarCollapse">
 			<div class="navbar-nav">
+<<<<<<< HEAD
 				@if (User.IsInRole("Moderator"))
 				{
 					<a class="nav-link text-dark" asp-area="" asp-action="ManagePosts" asp-controller="ModeManagePost">Quản lí</a>
@@ -38,6 +43,19 @@
 						<a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">Đã mua</a>
 					</div>
 				}
+=======
+					<a class="nav-link text-dark" asp-area="" asp-controller="home" asp-action="index">Home</a>
+					<a class="nav-link text-dark" asp-area="" asp-controller="home" asp-action="sale">Sale</a>
+				@if (User.IsInRole("Moderator"))
+				{
+					<a class="nav-link text-dark" asp-area="" asp-action="ViewPost" asp-controller="ModeManagePost">CRUD Posts</a>
+					<a class="nav-link text-dark" asp-area="" asp-action="AddProductToWareHouse" asp-controller="Warehouse">Warehouse</a>
+				}
+				<div class="nav-item dropdown">
+					<a class="nav-link text-dark" asp-area="" asp-controller="home" asp-action="">My Post</a>
+
+				</div>
+>>>>>>> develop
 			</div>
 			<div class="navbar-nav ms-auto align-items-center">
 				@if (User.Identity.IsAuthenticated)
@@ -115,10 +133,17 @@
 				{
 					<div class="ms-auto">
 						<a asp-controller="Account" asp-action="Login" type="hidden" class="border-danger" style="text-decoration: none;">
+<<<<<<< HEAD
 							<button type="submit" class="btn btn-primary"> Đăng nhập</button>
 						</a>
 						<a asp-action="Register" asp-controller="Registration" class="border-danger" style="text-decoration: none;">
 							<button type="button" class="btn btn-secondary">Đăng kí</button>
+=======
+							<button type="submit" class="btn btn-primary"> Login</button>
+						</a>
+						<a asp-action="Register" asp-controller="Registration" class="border-danger" style="text-decoration: none;">
+							<button type="button" class="btn btn-secondary">Sign Up</button>
+>>>>>>> develop
 						</a>
 					</div>
 				}

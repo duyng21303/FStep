@@ -19,6 +19,10 @@
 	<div class="container">
 		<main role="main" class="pb-3">
 			@RenderBody()
+			@if (User.Identity.IsAuthenticated)
+			{
+				@await Component.InvokeAsync("Chat")
+			}
 		</main>
 	</div>
 

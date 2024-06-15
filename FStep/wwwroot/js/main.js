@@ -22,3 +22,8 @@ const $dropdown = $(".dropdown");
 const $dropdownToggle = $(".dropdown-toggle");
 const $dropdownMenu = $(".dropdown-menu");
 const showClass = "show";
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> develop

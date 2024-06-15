@@ -8,6 +8,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using FStep.Helpers;
+<<<<<<< HEAD
+=======
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
+
+>>>>>>> develop
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Google;
 using FStep.ViewModels.Email;
@@ -28,6 +34,7 @@ namespace FStep.Controllers.Auth
         private readonly IEmailSender emailSender;
         public AccountController(FstepDbContext context, IMapper mapper, IEmailSender emailSender)
 
+<<<<<<< HEAD
         {
             db = context;
             _mapper = mapper;
@@ -39,6 +46,20 @@ namespace FStep.Controllers.Auth
         {
             ViewBag.ReturnUrl = ReturnUrl;
 
+=======
+
+        {
+            db = context;
+            _mapper = mapper;
+            this.emailSender = emailSender;
+        }
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Login(string? ReturnUrl)
+        {
+            ViewBag.ReturnUrl = ReturnUrl;
+
+>>>>>>> develop
             return View();
         }
         [HttpPost]
@@ -248,7 +269,11 @@ namespace FStep.Controllers.Auth
             {
                 Token = Token,
                 UserId = userId,
+<<<<<<< HEAD
                
+=======
+
+>>>>>>> develop
             };
             return View();
         }

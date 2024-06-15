@@ -26,6 +26,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="ViewComponents\ChatViewComponent.cs" />
+    <Compile Include="ViewComponents\CreatePostViewComponent.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Views\Shared\Components\Chat\Default.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.5" />
@@ -47,9 +56,42 @@
     <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.9.0" />
     <PackageReference Include="X.PagedList" Version="9.1.2" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="9.1.2" />
+<<<<<<< HEAD
+=======
+
+
+	  <Folder Include="Controllers\Admin\" />
+	  <Folder Include="Controllers\Moder\" />
+>>>>>>> develop
 	  <Folder Include="wwwroot\img\pic\" />
+	  <Folder Include="wwwroot\img\postPic\" />
 	  <Folder Include="wwwroot\img\userAvar\" />
 	  <Folder Include="wwwroot\img\nullAvar\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\assets\js\custom.js" />
+    <None Include="wwwroot\assets\js\isotope.js" />
+    <None Include="wwwroot\assets\js\isotope.min.js" />
+    <None Include="wwwroot\assets\js\owl-carousel.js" />
+    <None Include="wwwroot\assets\js\popup.js" />
+    <None Include="wwwroot\assets\js\tabs.js" />
+    <None Include="wwwroot\assets\webfonts\fa-brands-400.woff2" />
+    <None Include="wwwroot\assets\webfonts\fa-regular-400.woff2" />
+    <None Include="wwwroot\assets\webfonts\fa-solid-900.woff2" />
+    <None Include="wwwroot\assets\webfonts\fa-v4compatibility.woff2" />
+    <None Include="wwwroot\detail\js\scripts.js" />
+    <None Include="wwwroot\vendor\bootstrap\js\bootstrap.min.js" />
+    <None Include="wwwroot\vendor\jquery\jquery.js" />
+    <None Include="wwwroot\vendor\jquery\jquery.min.js" />
+    <None Include="wwwroot\vendor\jquery\jquery.min.map" />
+    <None Include="wwwroot\vendor\jquery\jquery.slim.js" />
+    <None Include="wwwroot\vendor\jquery\jquery.slim.min.js" />
+    <None Include="wwwroot\vendor\jquery\jquery.slim.min.map" />
+    <None Include="wwwroot\webfonts\fa-brands-400.woff2" />
+    <None Include="wwwroot\webfonts\fa-regular-400.woff2" />
+    <None Include="wwwroot\webfonts\fa-solid-900.woff2" />
+    <None Include="wwwroot\webfonts\fa-v4compatibility.woff2" />
   </ItemGroup>
 
 </Project>

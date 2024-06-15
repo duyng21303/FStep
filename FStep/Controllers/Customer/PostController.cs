@@ -4,6 +4,9 @@ using FStep.Helpers;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using X.PagedList;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FStep.Controllers.Customer
 {
@@ -24,10 +27,11 @@ namespace FStep.Controllers.Customer
 		}
 
 		[HttpGet]
-		public IActionResult CreateExchangePost()
+		public IActionResult CreatePost()
 		{
 			return View();
 		}
+<<<<<<< HEAD
 		[HttpGet]
 		public IActionResult CreateSalePost()
 		{
@@ -75,13 +79,24 @@ namespace FStep.Controllers.Customer
         [Authorize]
 		[HttpPost]
 		public IActionResult CreateSalePost(SalePostVM model, IFormFile img)
+=======
+		//Create post
+		[Authorize]
+		[HttpPost]
+		public IActionResult CreatePost(PostVM model, IFormFile img)
+>>>>>>> develop
 		{
 			try
 			{
 				var product = _mapper.Map<Product>(model);
 				product.Quantity = model.Quantity;
 				product.Price = model.Price;
+<<<<<<< HEAD
 				product.Status = "false";
+=======
+				product.Status = "true";
+				product.Detail = model.DetailProduct;
+>>>>>>> develop
 				db.Add(product);
 				db.SaveChanges();
 
@@ -91,6 +106,10 @@ namespace FStep.Controllers.Customer
 				//Helpers.Util.UpLoadImg(model.Img, "")
 				post.Img = Util.UpLoadImg(img, "postPic");
 				post.Status = "false";
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
 				post.Type = model.Type;
 				post.Detail = model.Description;
 				post.IdUser = User.FindFirst("UserID").Value;
@@ -108,6 +127,101 @@ namespace FStep.Controllers.Customer
 			return View();
 		}
 
+<<<<<<< HEAD
+=======
+		public IActionResult DetailPost(int id)
+		{
+			var data = db.Posts.Include(x => x.IdProductNavigation).Include(x => x.IdUserNavigation).SingleOrDefault(p => p.IdPost == id);
+			var user = db.Users.SingleOrDefault(user => user.IdUser == data.IdUser);
+			ViewData["USER_CREATE"] = user;
+
+			// lấy thêm comment sản phẩm
+			var comments = db.Comments.Where(x => x.IdPost == id).Include(x => x.IdUserNavigation).Select(x => new CommentVM
+			{
+				IdPost = id,
+				IdUser = x.IdUser,
+				Content = x.Content,
+				Date = x.Date,
+				IdComment = x.IdComment,
+				Name = x.IdUserNavigation.Name
+			}).ToList();
+
+			ViewData["comments"] = comments;
+
+			return View(data);
+		}
+		public IActionResult DetailSalePost(int id)
+		{
+			var post = db.Posts.SingleOrDefault(post => post.IdPost == id);
+
+			var product = db.Products.SingleOrDefault(product => product.IdProduct == post.IdProduct);
+			var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
+			ViewData["USER_CREATE"] = user;
+
+			// lấy thêm comment sản phẩm
+			var comments = db.Comments.Where(x => x.IdPost == id).Include(x => x.IdUserNavigation).Select(x => new CommentVM
+			{
+				IdPost = id,
+				IdUser = x.IdUser,
+				Content = x.Content,
+				Date = x.Date,
+				IdComment = x.IdComment,
+				Name = x.IdUserNavigation.Name
+			}).ToList();
+
+			ViewData["comments"] = comments;
+
+			var result = new PostVM()
+			{
+				IdPost = post.IdPost,
+				Title = post.Content,
+				Quantity = product.Quantity,
+				Img = post.Img,
+				Description = post.Detail,
+				NameProduct = product.Name,
+				DetailProduct = product.Detail,
+				CreateDate = post.Date,
+				Price = product.Price ?? 0
+			};
+
+			return View(result);
+		}
+
+		[HttpPost]
+		public IActionResult PostComment([FromForm] CommentVM comment)
+		{
+			string refererUrl = Request.Headers["Referer"].ToString();
+			try
+			{
+				var isAuthenticated = User?.Identity?.IsAuthenticated;
+				if (isAuthenticated == true)
+				{
+					comment.IdUser = User.FindFirst("UserID")?.Value;
+					comment.Date = DateTime.Now;
+					var saveComment = _mapper.Map<Comment>(comment);
+					saveComment.Reports = null;
+					saveComment.UserNotifications = null;
+					db.Comments.Add(saveComment);
+					db.SaveChanges();
+				}
+			}
+			catch (Exception ex)
+			{
+				var exc = ex;
+			}
+			if (!string.IsNullOrEmpty(refererUrl))
+			{
+				return Redirect(refererUrl);
+			}
+			return RedirectToAction("DetailPost", "Post", new { id = comment.IdPost });
+		}
+
+		public ActionResult _CreatePost()
+		{
+			return PartialView();
+		}
+
+>>>>>>> develop
 	}
 }
 

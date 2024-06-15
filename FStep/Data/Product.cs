@@ -16,6 +16,11 @@ public partial class Product
     public DateTime? SentBuyerDate { get; set; }
 
     public string? Status { get; set; }
+<<<<<<< HEAD
+=======
+
+    public string? Detail { get; set; }
+>>>>>>> develop
 
     public string? RecieveImg { get; set; }
 
@@ -23,7 +28,10 @@ public partial class Product
 
     public string? ItemLocation { get; set; }
 
+<<<<<<< HEAD
     public int? SoldQuantity { get; set; }
 
+=======
+>>>>>>> develop
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 }

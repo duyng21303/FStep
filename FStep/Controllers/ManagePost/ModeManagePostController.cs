@@ -1,16 +1,24 @@
 ﻿using FStep.Data;
+<<<<<<< HEAD
 using FStep.Repostory.Interface;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+=======
+using FStep.Models;
+using FStep.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+>>>>>>> develop
 using X.PagedList;
 
 namespace FStep.Controllers.ManagePost
 {
 	public class ModeManagePostController : Controller
 	{
+<<<<<<< HEAD
 		private readonly FstepDbContext _db;
 
 		public ModeManagePostController(FstepDbContext context)
@@ -153,6 +161,35 @@ namespace FStep.Controllers.ManagePost
 				TempData["ErrorMessage"] = $"Bài đăng {id} không được tìm thấy.";
 			}
 			return Redirect(Url.Action("ManagePosts") + "#approvedPosts");
+=======
+		private readonly FstepDbContext db;
+
+		public ModeManagePostController(FstepDbContext context) => db = context;
+		public IActionResult ViewPost()
+		{
+
+			// số lượng sản phẩm mỗi trang 
+			// số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
+			var ListPost = db.Posts.AsQueryable();
+			ListPost = ListPost.Where(p => p.Status == "false");    //check exchangePost là những post thuộc type "exhcange" và có status = 1
+			var result = ListPost.Select(s => new ListPostVM
+			{
+				PostId = s.IdPost,
+				PostTitle = s.Content,
+				Type = s.Type,
+				StudentId = s.IdUserNavigation.StudentId,
+				Quantity = (int)s.IdProductNavigation.Quantity,
+				Price = s.IdProductNavigation.Price ?? 0,
+				Image = s.Img,
+				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now,
+				Status = s.Status
+			}).OrderByDescending(o => o.PostId);
+
+
+
+
+			return View(result);
+>>>>>>> develop
 		}
 	}
 }
