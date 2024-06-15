@@ -385,8 +385,21 @@
 			<div class="product-price">
 				<span>@String.Format(format, "{0:0,0 VND}", Model.Price)</span>
 				@* <a href="#" class="cart-btn">Mua ngay</a> *@
-				<a asp-action="CheckoutSale" asp-controller="Pay" asp-route-id="@Model.IdPost" class="btn border border-secondary rounded-pill text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i>Buy now</a>
+
 			</div>
+			<form method="get" asp-action="CheckoutSale" asp-controller="Pay" asp-route-id="@Model.IdPost">
+				<div style="min-height:10px;"></div>
+				<div class="d-flex mt-1">
+					<button class="btn btn-outline-secondary" type="button" id="decrease">-</button>
+					<input name="quantity" class="form-control text-center" id="inputQuantity" value="1" min="1" max="@Model.Quantity" style="max-width: 7.5rem;" />
+					<button class="btn btn-outline-secondary" type="button" id="increase">+</button>
+					<div class="text align-content-lg-center mx-3">@Model.Quantity available</div>
+				</div>
+				<div style="min-height:10px;"></div>
+				<button type="submit" class="btn btn-outline-secondary text-bg-primary">
+					<div class="mx-4 text-white">Buy now</div>
+				</button>
+			</form>
 		</div>
 	</div>
 	<div class="container">
@@ -482,6 +495,44 @@
 				});
 			}
 		});
+
+
+		document.addEventListener('DOMContentLoaded', function () {
+			var inputQuantity = document.getElementById('inputQuantity');
+			var increaseButton = document.getElementById('increase');
+			var maxValue = @Model.Quantity; // Lấy giá trị max từ model
+
+			var clicked = false; // Biến để kiểm tra xem đã click lần đầu tiên hay chưa
+
+			increaseButton.addEventListener('click', function () {
+				// if (!clicked) {
+				// 	// Nếu chưa click lần nào thì tăng giá trị từ 1 lên 2 (hoặc 1 đơn vị tăng)
+				// 	inputQuantity.value = 2; // hoặc inputQuantity.value++;
+				// 	clicked = true; // Đánh dấu là đã click lần đầu tiên
+				// } else {
+					var currentValue = parseInt(inputQuantity.value) || 0;
+					if (currentValue < maxValue) {
+						inputQuantity.value = currentValue + 1;
+					}
+				// }
+			});
+
+			document.getElementById('decrease').addEventListener('click', function () {
+				var currentValue = parseInt(inputQuantity.value) || 0;
+				var minValue = 1;
+				if (currentValue > minValue) {
+					inputQuantity.value = currentValue - 1;
+				}
+			});
+
+			inputQuantity.addEventListener('input', function () {
+				var currentValue = inputQuantity.value;
+				if (isNaN(currentValue) || currentValue < 1 || currentValue > maxValue) {
+					inputQuantity.value = 1;
+				}
+			});
+		});
+
 
 	</script>
 </body>
