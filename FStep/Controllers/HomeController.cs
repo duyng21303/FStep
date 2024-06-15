@@ -47,9 +47,7 @@ namespace FStep.Controllers
             }).OrderByDescending(o => o.IdPost);
 
             var pageList = result.ToPagedList(pageNumber, pageSize);
-            var exchange = new PostVM();
 
-            var home = new Tuple<IPagedList<PostVM>, PostVM>(pageList, exchange);
             ViewBag.Query = query;
             return View(pageList);
         }
