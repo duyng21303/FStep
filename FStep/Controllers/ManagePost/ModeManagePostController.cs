@@ -1,5 +1,6 @@
 ﻿using FStep.Data;
 <<<<<<< HEAD
+<<<<<<< HEAD
 using FStep.Repostory.Interface;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -7,10 +8,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 =======
+=======
+>>>>>>> develop
 using FStep.Models;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+<<<<<<< HEAD
+>>>>>>> develop
+=======
 >>>>>>> develop
 using X.PagedList;
 
@@ -18,6 +24,7 @@ namespace FStep.Controllers.ManagePost
 {
 	public class ModeManagePostController : Controller
 	{
+<<<<<<< HEAD
 <<<<<<< HEAD
 		private readonly FstepDbContext _db;
 
@@ -162,6 +169,8 @@ namespace FStep.Controllers.ManagePost
 			}
 			return Redirect(Url.Action("ManagePosts") + "#approvedPosts");
 =======
+=======
+>>>>>>> develop
 		private readonly FstepDbContext db;
 
 		public ModeManagePostController(FstepDbContext context) => db = context;
@@ -189,6 +198,9 @@ namespace FStep.Controllers.ManagePost
 
 
 			return View(result);
+<<<<<<< HEAD
+>>>>>>> develop
+=======
 >>>>>>> develop
 		}
 	}

@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 ﻿using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using X.PagedList;
 
@@ -29,6 +30,10 @@ namespace FStep.ViewModels
 ﻿namespace FStep.ViewModels
 {
 >>>>>>> develop
+=======
+﻿namespace FStep.ViewModels
+{
+>>>>>>> develop
 	public class ListPostVM
 	{
 		public int PostId { get; set; }
@@ -40,9 +45,15 @@ namespace FStep.ViewModels
 		public int Quantity { get; set; }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 		public String Status { get; set; }
 
 		public String Category { get; set; }
+=======
+
+		public string? Status { get; set; }
+
+>>>>>>> develop
 =======
 
 		public string? Status { get; set; }
@@ -53,13 +64,17 @@ namespace FStep.ViewModels
 		public String Type { get; set; } = default!;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 		public String? Location { get; set; }
+=======
+>>>>>>> develop
 =======
 >>>>>>> develop
 		public String StudentId { get; set; } = default!;
 
 		public String Image { get; set; } = default!;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 		public int TotalPosts { get; set; }
         public DateTime CreateDate { get; set; }
@@ -94,6 +109,11 @@ namespace FStep.ViewModels
 	}
 }
 
+=======
+        public DateTime CreateDate { get; set; }
+    }
+}
+>>>>>>> develop
 =======
         public DateTime CreateDate { get; set; }
     }

@@ -16,6 +16,7 @@ namespace FStep.Controllers
 	{
 		private readonly ILogger<HomeController> _logger;
 <<<<<<< HEAD
+<<<<<<< HEAD
 		private readonly FstepDbContext db;
 
 		public HomeController(FstepDbContext context) => db = context;
@@ -25,6 +26,12 @@ namespace FStep.Controllers
 		private readonly IMapper _mapper;
 >>>>>>> develop
 
+=======
+
+		private readonly FstepDbContext db;
+		private readonly IMapper _mapper;
+
+>>>>>>> develop
         public HomeController(FstepDbContext context, IMapper mapper)
         {
             db = context;
@@ -36,6 +43,7 @@ namespace FStep.Controllers
             int pageSize = 12; // số lượng sản phẩm mỗi trang 
             int pageNumber = (page ?? 1);   // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
             var ExchangePost = db.Posts.AsQueryable();
+<<<<<<< HEAD
 <<<<<<< HEAD
 			ExchangePost = ExchangePost.Where(p => p.Type == "Exchange" && !(p.Status == "false"));    //check exchangePost là những post thuộc type "exhcange" và có status = 1
 
@@ -68,11 +76,15 @@ namespace FStep.Controllers
 =======
             ExchangePost = ExchangePost.Where(p => p.Type == "Exchange" && !(p.Status == "false"));    //check exchangePost là những post thuộc type "exhcange" và có status = 1
 >>>>>>> develop
+=======
+            ExchangePost = ExchangePost.Where(p => p.Type == "Exchange" && !(p.Status == "false"));    //check exchangePost là những post thuộc type "exhcange" và có status = 1
+>>>>>>> develop
 
             if (!string.IsNullOrEmpty(query))
             {
                 ExchangePost = ExchangePost.Where(p => p.Content.Contains(query));
             }
+<<<<<<< HEAD
 <<<<<<< HEAD
 
             var result = SalePost.Select(s => new SalePostVM
@@ -86,6 +98,8 @@ namespace FStep.Controllers
 				Price = s.IdProductNavigation.Price ?? 0
 			}).OrderByDescending(o => o.Id);
 =======
+=======
+>>>>>>> develop
             var result = ExchangePost.Select(s => new PostVM
             {
                 IdProduct = s.IdProduct,
@@ -95,6 +109,9 @@ namespace FStep.Controllers
                 Img = s.Img,
                 CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now
             }).OrderByDescending(o => o.IdPost);
+<<<<<<< HEAD
+>>>>>>> develop
+=======
 >>>>>>> develop
 
             var pageList = result.ToPagedList(pageNumber, pageSize);

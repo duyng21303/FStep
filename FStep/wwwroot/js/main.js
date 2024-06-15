@@ -26,4 +26,7 @@ const showClass = "show";
 =======
 
 
+<<<<<<< HEAD
+>>>>>>> develop
+=======
 >>>>>>> develop

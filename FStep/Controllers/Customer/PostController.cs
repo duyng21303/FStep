@@ -32,6 +32,7 @@ namespace FStep.Controllers.Customer
 			return View();
 		}
 <<<<<<< HEAD
+<<<<<<< HEAD
 		[HttpGet]
 		public IActionResult CreateSalePost()
 		{
@@ -85,6 +86,12 @@ namespace FStep.Controllers.Customer
 		[HttpPost]
 		public IActionResult CreatePost(PostVM model, IFormFile img)
 >>>>>>> develop
+=======
+		//Create post
+		[Authorize]
+		[HttpPost]
+		public IActionResult CreatePost(PostVM model, IFormFile img)
+>>>>>>> develop
 		{
 			try
 			{
@@ -92,8 +99,11 @@ namespace FStep.Controllers.Customer
 				product.Quantity = model.Quantity;
 				product.Price = model.Price;
 <<<<<<< HEAD
+<<<<<<< HEAD
 				product.Status = "false";
 =======
+=======
+>>>>>>> develop
 				product.Status = "true";
 				product.Detail = model.DetailProduct;
 >>>>>>> develop
@@ -107,6 +117,10 @@ namespace FStep.Controllers.Customer
 				post.Img = Util.UpLoadImg(img, "postPic");
 				post.Status = "false";
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
 =======
 
 >>>>>>> develop
@@ -128,7 +142,10 @@ namespace FStep.Controllers.Customer
 		}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> develop
 		public IActionResult DetailPost(int id)
 		{
 			var data = db.Posts.Include(x => x.IdProductNavigation).Include(x => x.IdUserNavigation).SingleOrDefault(p => p.IdPost == id);
@@ -221,6 +238,9 @@ namespace FStep.Controllers.Customer
 			return PartialView();
 		}
 
+<<<<<<< HEAD
+>>>>>>> develop
+=======
 >>>>>>> develop
 	}
 }

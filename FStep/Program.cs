@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+<<<<<<< HEAD
+>>>>>>> develop
+=======
 >>>>>>> develop
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +24,7 @@ using System.Security.Claims;
 
 public class Program
 {
+<<<<<<< HEAD
 <<<<<<< HEAD
 	public static void Main(string[] args)
 	{
@@ -50,6 +54,8 @@ public class Program
 		builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 			.AddCookie(options =>
 =======
+=======
+>>>>>>> develop
     public class Program
     {
         public static void Main(string[] args)
@@ -102,8 +108,12 @@ public class Program
 		});
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 		// Add AutoMapper (if needed)
 		builder.Services.AddAutoMapper(typeof(Program));
+=======
+			builder.Services.AddSingleton<IVnPayService, VnPayService>();
+>>>>>>> develop
 =======
 			builder.Services.AddSingleton<IVnPayService, VnPayService>();
 >>>>>>> develop
@@ -146,6 +156,9 @@ public class Program
 
 			app.Run();
 			
+<<<<<<< HEAD
+>>>>>>> develop
+=======
 >>>>>>> develop
 		}
 

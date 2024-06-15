@@ -13,6 +13,9 @@ using FStep.Helpers;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 
+<<<<<<< HEAD
+>>>>>>> develop
+=======
 >>>>>>> develop
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -35,6 +38,7 @@ namespace FStep.Controllers.Auth
         public AccountController(FstepDbContext context, IMapper mapper, IEmailSender emailSender)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         {
             db = context;
             _mapper = mapper;
@@ -48,6 +52,9 @@ namespace FStep.Controllers.Auth
 
 =======
 
+=======
+
+>>>>>>> develop
         {
             db = context;
             _mapper = mapper;
@@ -59,6 +66,9 @@ namespace FStep.Controllers.Auth
         {
             ViewBag.ReturnUrl = ReturnUrl;
 
+<<<<<<< HEAD
+>>>>>>> develop
+=======
 >>>>>>> develop
             return View();
         }
@@ -270,7 +280,11 @@ namespace FStep.Controllers.Auth
                 Token = Token,
                 UserId = userId,
 <<<<<<< HEAD
+<<<<<<< HEAD
                
+=======
+
+>>>>>>> develop
 =======
 
 >>>>>>> develop

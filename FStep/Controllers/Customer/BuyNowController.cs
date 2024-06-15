@@ -10,6 +10,10 @@ namespace FStep.Controllers.Customer
     public class BuyNowController : Controller
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
 =======
 
 >>>>>>> develop

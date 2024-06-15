@@ -23,6 +23,13 @@ namespace FStep.Helpers
             CreateMap<TransactionVM, Transaction>();
 
 
+			CreateMap<CommentVM, Comment>().ReverseMap();
+			CreateMap<CheckoutVM, Payment>();
+			CreateMap<CheckoutVM, Transaction>();
+
+            CreateMap<TransactionVM, Transaction>();
+
+
 		}
 
     }

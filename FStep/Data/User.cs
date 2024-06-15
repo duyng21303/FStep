@@ -36,10 +36,13 @@ public partial class User
     public string? ResetToken { get; set; }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     public int? BankName { get; set; }
 
     public long? BankAccountNumber { get; set; }
 
+=======
+>>>>>>> develop
 =======
 >>>>>>> develop
     public virtual ICollection<Chat> Chats { get; set; } = new List<Chat>();

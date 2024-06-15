@@ -17,7 +17,10 @@ public partial class Product
 
     public string? Status { get; set; }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> develop
 
     public string? Detail { get; set; }
 >>>>>>> develop
@@ -29,8 +32,11 @@ public partial class Product
     public string? ItemLocation { get; set; }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     public int? SoldQuantity { get; set; }
 
+=======
+>>>>>>> develop
 =======
 >>>>>>> develop
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
