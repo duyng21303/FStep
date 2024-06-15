@@ -2,6 +2,7 @@
 using FStep.Helpers;
 using FStep.Repostory.Interface;
 using FStep.Repostory.Service;
+using FStep.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
@@ -12,15 +13,15 @@ using System.Security.Claims;
 
 namespace FStep
 {
-	public class Program
-	{
-		public static void Main(string[] args)
-		{
-			var builder = WebApplication.CreateBuilder(args);
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
 
 			// Add services to the container.
 			builder.Services.AddControllersWithViews();
-			builder.Services.AddDbContext<FstepDBContext>(option =>
+			builder.Services.AddDbContext<FstepDbContext>(option =>
 			{
 				option.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
 			});
@@ -29,6 +30,7 @@ namespace FStep
             //.AddEntityFrameworkStores<Fstep1Context>();
             //.AddDefaultTokenProviders();
 
+
 			//builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 			//.AddEntityFrameworkStores<Fstep1Context>();
 			//.AddDefaultTokenProviders();
@@ -36,7 +38,7 @@ namespace FStep
 			builder.Services.AddSignalR();
 			builder.Services.AddSession(options =>
 			{
-				options.IdleTimeout = TimeSpan.FromSeconds(10);
+				options.IdleTimeout = TimeSpan.FromMinutes(10);
 				options.Cookie.HttpOnly = true;
 				options.Cookie.IsEssential = true;
 			});
@@ -65,10 +67,11 @@ namespace FStep
 
 			builder.Services.AddDistributedMemoryCache();
 
-			
+			builder.Services.AddSingleton<IVnPayService, VnPayService>();
 
 
 			var app = builder.Build();
+
 			// Configure the HTTP request pipeline.
 			if (!app.Environment.IsDevelopment())
 			{
@@ -77,12 +80,12 @@ namespace FStep
 				app.UseHsts();
 			}
 
-			app.UseHttpsRedirection();
-			app.UseStaticFiles();
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
-			app.UseRouting();
+            app.UseRouting();
 
-			app.UseSession();
+            app.UseSession();
 
 			app.UseAuthentication();
 			app.UseAuthorization();

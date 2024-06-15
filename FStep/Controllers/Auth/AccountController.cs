@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using FStep.Helpers;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
+
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Google;
 using FStep.ViewModels.Email;
@@ -23,10 +26,11 @@ namespace FStep.Controllers.Auth
     {
 
         private readonly IMapper _mapper;
-        private readonly FstepDBContext db;
+        private readonly FstepDbContext db;
         private const string PASSWORD_GOOGLE = "KJDHF";
         private readonly IEmailSender emailSender;
-        public AccountController(FstepDBContext context, IMapper mapper, IEmailSender emailSender)
+        public AccountController(FstepDbContext context, IMapper mapper, IEmailSender emailSender)
+
 
         {
             db = context;
@@ -248,6 +252,7 @@ namespace FStep.Controllers.Auth
             {
                 Token = Token,
                 UserId = userId,
+
             };
             return View();
         }

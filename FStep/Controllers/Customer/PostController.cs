@@ -5,16 +5,17 @@ using FStep.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FStep.Controllers.Customer
 {
 	public class PostController : Controller
 	{
-		private readonly FstepDBContext db;
+		private readonly FstepDbContext db;
 		private readonly IMapper _mapper;
 
-		public PostController(FstepDBContext context, IMapper mapper)
+		public PostController(FstepDbContext context, IMapper mapper)
 		{
 			db = context;
 			_mapper = mapper;
@@ -26,56 +27,14 @@ namespace FStep.Controllers.Customer
 		}
 
 		[HttpGet]
-		public IActionResult CreateExchangePost()
+		public IActionResult CreatePost()
 		{
 			return View();
 		}
-		[HttpGet]
-		public IActionResult CreateSalePost()
-		{
-			return View();
-		}
-
 		//Create post
 		[Authorize]
 		[HttpPost]
-		public IActionResult CreateExchangePost(ExchangePostVM model, IFormFile img)
-		{
-			try
-			{
-				var product = _mapper.Map<Product>(model);
-				product.Name = model.NameProduct;
-				product.Status = "true";
-				product.Detail = model.DetailProduct;
-				db.Add(product);
-				db.SaveChanges();
-
-				var post = _mapper.Map<Post>(model);
-				post.Content = model.Title;
-				post.Date = DateTime.Now;
-				//Helpers.Util.UpLoadImg(model.Img, "")
-				post.Img = Util.UpLoadImg(img, "postPic");
-				post.Status = "false";
-				post.Type = model.Type;
-				post.Detail = model.Description;
-				post.IdUser = User.FindFirst("UserID").Value;
-				//get IdProduct from database map to Post
-				post.IdProduct = db.Products.Max(p => p.IdProduct);
-				db.Add(post);
-				db.SaveChanges();
-				return Redirect("/");
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex);
-			}
-
-			return View();
-		}
-		
-		[Authorize]
-		[HttpPost]
-		public IActionResult CreateSalePost(SalePostVM model, IFormFile img)
+		public IActionResult CreatePost(PostVM model, IFormFile img)
 		{
 			try
 			{
@@ -93,7 +52,8 @@ namespace FStep.Controllers.Customer
 				post.Date = DateTime.Now;
 				//Helpers.Util.UpLoadImg(model.Img, "")
 				post.Img = Util.UpLoadImg(img, "postPic");
-				post.Status = "true";
+				post.Status = "false";
+
 				post.Type = model.Type;
 				post.Detail = model.Description;
 				post.IdUser = User.FindFirst("UserID").Value;
@@ -110,6 +70,7 @@ namespace FStep.Controllers.Customer
 
 			return View();
 		}
+
 		public IActionResult DetailPost(int id)
 		{
 			var data = db.Posts.Include(x => x.IdProductNavigation).Include(x => x.IdUserNavigation).SingleOrDefault(p => p.IdPost == id);
@@ -152,9 +113,9 @@ namespace FStep.Controllers.Customer
 
 			ViewData["comments"] = comments;
 
-			var result = new SalePostVM()
+			var result = new PostVM()
 			{
-				Id = post.IdPost,
+				IdPost = post.IdPost,
 				Title = post.Content,
 				Quantity = product.Quantity,
 				Img = post.Img,
@@ -196,6 +157,12 @@ namespace FStep.Controllers.Customer
 			}
 			return RedirectToAction("DetailPost", "Post", new { id = comment.IdPost });
 		}
+
+		public ActionResult _CreatePost()
+		{
+			return PartialView();
+		}
+
 	}
 }
 
