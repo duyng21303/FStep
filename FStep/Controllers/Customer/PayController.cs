@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Identity;
 using FStep.Data;
 using FStep.Helpers;
 using FStep.Services;
@@ -58,7 +59,8 @@ namespace FStep.Controllers.Customer
 		//}
 
 		[HttpGet]
-		public IActionResult CheckoutSale(int id)
+		[Authorize]
+		public IActionResult CheckoutSale(int id, int quantity)
 		{
 			var post = db.Posts.SingleOrDefault(x => x.IdPost == id);
 			var checkout = new CheckoutVM();
@@ -69,8 +71,8 @@ namespace FStep.Controllers.Customer
 			checkout.IdUserSeller = db.Posts.SingleOrDefault(p => p.IdPost == id).IdUser;
 			checkout.ProductId = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).IdProduct;
 			checkout.UnitPrice = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).Price;
-			checkout.Quantity = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).Quantity;
-			checkout.Amount = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).Price * db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).Quantity;
+			checkout.Quantity = quantity;
+			checkout.Amount = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).Price * quantity;
 			checkout.Type = post.Type;
 
 			HttpContext.Session.Set<CheckoutVM>("CHECKOUT_INFO", checkout);
@@ -123,6 +125,7 @@ namespace FStep.Controllers.Customer
 			var transaction = new Transaction();
 			transaction.Date = DateTime.Now;
 			transaction.Status = "Processing";
+			transaction.Quantity = info.Quantity;
 			transaction.Amount = float.Parse(response.Amount.ToString()) / 100;
 			transaction.Note = info.Note;
 			transaction.IdPost = info.IdPost;
@@ -140,6 +143,14 @@ namespace FStep.Controllers.Customer
 			payment.IdTransaction = db.Transactions.SingleOrDefault(p => p.CodeTransaction == transaction.CodeTransaction).IdTransaction;
 			db.Add(payment);
 			db.SaveChanges();
+
+			var product = db.Products.SingleOrDefault(p => p.IdProduct == db.Posts.SingleOrDefault(p => p.IdPost == info.IdPost).IdProduct);
+			product.Quantity -= info.Quantity;
+			if (product.Quantity <= 0)
+				product.Status = "false";
+			db.Update(product);
+			db.SaveChanges();
+
 			TempData["Message"] = $"VnPay success";
 			return RedirectToAction("PaymentSuccess");
 		}
