@@ -134,18 +134,12 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
     `;
     if (confirm) {
         var comment = confirm.comment != null ? confirm.comment.idComment : "";
-        console.log(comment)
+        console.log(confirm)
         var accept = "";
-        var currentStatus = `<div class="card text-center bg-danger text-white m-2" style="width: 150px;">
-        <div class="card-body">
-            <p class="card-text">Chưa Đồng Ý</p>
-        </div>
-    </div>`
-        var orderStatus = `<div class="card text-center bg-danger text-white m-2" style="width: 150px;">
-        <div class="card-body">
-            <p class="card-text">Chưa Đồng Ý</p>
-        </div>
-    </div>`
+        var currentStatus = `<span class="labelConfirm waiting">Đang chờ</span>`;
+
+        var orderStatus = `<span class="labelConfirm waiting">Đang chờ</span>`;
+        var removeConfirm = ``;
         if (!confirm.checkConfirm) {
             accept = `
                 <div class="col-6 text-end px-0">
@@ -165,6 +159,7 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
                 </button>
                 </div>
                 `;
+           
 
         } else {
             accept = `
@@ -185,11 +180,49 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
                 </button>
                 </div>
                 `;
+            
+            
+        }
+        if (confirm.checkConfirm != null) {
+            currentStatus = confirm.checkConfirm ? `<span class="labelConfirm accept">Đã chấp nhận</span>` :
+                `<span class="labelConfirm decline">Không chấp nhận</span>`;
+        }
+        if (confirm.checkConfirmOrder != null) {
+            orderStatus = confirm.checkConfirmOrder ? `<span class="labelConfirm accept">Đã chấp nhận</span>` :
+                `<span class="labelConfirm decline">Không chấp nhận</span>`;
+            if (confirm.checkConfirmOrder && confirm.checkConfirm == null) {
+                accept = `
+                <div class="col-6 text-end px-0">
+                <button id="acceptButton" class="btn btn-success btn-sm mb-1 equal-width"
+                    style="font-size: 12px; padding: 3px 6px; outline: none; box-shadow: none;"
+                    onclick="accept()" data-userid="${recieverUser.idUser}" 
+                    data-idpost="${confirm.post.idPost}" data-idcomment="${comment}" >
+                    Đồng ý
+                </button>
+                </div>
+                <div class="col-6 text-begin px-1">
+                <button id="declineButton" class="btn btn-danger btn-sm equal-width" 
+                    style="font-size: 12px; padding: 3px 6px; margin: 0 0 4px; outline: none; box-shadow: none;" 
+                    onclick="decline()" data-userid="${recieverUser.idUser}" 
+                    data-idpost="${confirm.post.idPost}" data-idcomment="${comment}">
+                    Không đồng ý
+                </button>
+                </div>
+                `
+            }
+            if (confirm.checkConfirm != null) {
+                if (!confirm.checkConfirm) {
+                    removeConfirm = `
+                     <p>Bạn có muốn hủy cuộc trao đổi này?
+                     <a href="javascript:void(0);" onclick="deleteExchange();" data-idcurrent="${currentUser}" data-idrecieve="${recieverUser.idUser}" data-postid="${confirm.post.idPost}" class="delete-link mt-0">Hủy trao đổi</a></p>
+                    `
+                }
+            }
         }
         confirmExchange.innerHTML = `
 <div class="row">
         <!-- Phần chính chiếm 8 phần -->
-        <div class="col-md-8">
+        <div class="col-md-7">
             <div class="d-flex align-items-center">
                 <div class="col-2 text-center p-0">
                     <!-- Hình ảnh sản phẩm nhỏ hơn -->
@@ -202,18 +235,30 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
                     ${confirm.post.content}
                     </p>
                 </div>
-                <div class="col-2 text-center p-0">
-                    <!-- Đặt chỗ trống để căn giữa nút đồng ý và không đồng ý -->
-                </div>
             </div>
              <div class="row justify-content-around mt-2">
                     <!-- Nút đồng ý và không đồng ý, giảm kích thước -->
                     ${accept}
             </div>
+                <div class="content-confirm p-1">
+                    <!-- Nút đồng ý và không đồng ý, giảm kích thước -->
+                    ${removeConfirm}
+                </div>
         </div>
         <!-- Phần hehe chiếm 4 phần -->
-        <div class="col-md-4" style="border-left: 1px solid #ccc;">
-            Tình trạng trao đổi của bạn: ${currentStatus}
+        <div class="col-md-5" style="border-left: 1px solid #ccc;">
+        <div class="content-confirm">
+            <p>
+            Tình trạng trao đổi của bạn: 
+            </p>
+            ${currentStatus}
+            <p>
+            Tình trạng trao đổi của ${recieverUser.name}:
+            </p>
+            <div class="pb-1">
+            ${orderStatus}
+            </div>
+        </div>
         </div>
     </div>
             `;
@@ -342,7 +387,15 @@ function decline() {
 
     displayAlert(message);
 }
-
+function deleteExchange() {
+    var currentUser = $(".delete-link").data("idcurrent").toString();
+    var recieve = $(".delete-link").data("idrecieve").toString();
+    var post = $(".delete-link").data("postid").toString();
+    connection.invoke("DeleteExchange", currentUser, recieve, post)
+        .catch(function (err) {
+            return console.error(err.toString());
+        });
+}
 function displayAlert(message) {
     const alertContainer = document.getElementById('alert-container');
     const alertDiv = document.createElement('div');
