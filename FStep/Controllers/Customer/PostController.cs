@@ -31,6 +31,7 @@ namespace FStep.Controllers.Customer
 		{
 			return View();
 		}
+
 		//Create post
 		[Authorize]
 		[HttpPost]
@@ -39,11 +40,9 @@ namespace FStep.Controllers.Customer
 			try
 			{
 				var product = _mapper.Map<Product>(model);
-				product.Name = model.NameProduct;
 				product.Quantity = model.Quantity;
 				product.Price = model.Price;
 				product.Status = "true";
-				product.Detail = model.DetailProduct;
 				db.Add(product);
 				db.SaveChanges();
 
@@ -52,8 +51,7 @@ namespace FStep.Controllers.Customer
 				post.Date = DateTime.Now;
 				//Helpers.Util.UpLoadImg(model.Img, "")
 				post.Img = Util.UpLoadImg(img, "postPic");
-				post.Status = "false";
-
+				post.Status = "true";
 				post.Type = model.Type;
 				post.Detail = model.Description;
 				post.IdUser = User.FindFirst("UserID").Value;
@@ -70,7 +68,6 @@ namespace FStep.Controllers.Customer
 
 			return View();
 		}
-
 		public IActionResult DetailPost(int id)
 		{
 			var data = db.Posts.Include(x => x.IdProductNavigation).Include(x => x.IdUserNavigation).SingleOrDefault(p => p.IdPost == id);
@@ -120,8 +117,6 @@ namespace FStep.Controllers.Customer
 				Quantity = product.Quantity,
 				Img = post.Img,
 				Description = post.Detail,
-				NameProduct = product.Name,
-				DetailProduct = product.Detail,
 				CreateDate = post.Date,
 				Price = product.Price ?? 0
 			};
@@ -165,4 +160,3 @@ namespace FStep.Controllers.Customer
 
 	}
 }
-

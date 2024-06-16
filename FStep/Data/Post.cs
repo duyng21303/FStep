@@ -19,6 +19,8 @@ public partial class Post
 
     public string? Detail { get; set; }
 
+    public string? Location { get; set; }
+
     public int? IdProduct { get; set; }
 
     public string IdUser { get; set; } = null!;

@@ -1,23 +1,25 @@
 ﻿using FStep.Data;
-using FStep.Helpers;
 using FStep.Repostory.Interface;
 using FStep.Repostory.Service;
-using FStep.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using FStep.Helpers;
+using FStep.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System.Security.Claims;
 
 namespace FStep
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+	public class Program
+	{
+		public static void Main(string[] args)
+		{
+			var builder = WebApplication.CreateBuilder(args);
 
 			// Add services to the container.
 			builder.Services.AddControllersWithViews();
@@ -25,15 +27,8 @@ namespace FStep
 			{
 				option.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
 			});
-            builder.Services.AddTransient<IEmailSender, EmailSender>();
-            //builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-            //.AddEntityFrameworkStores<Fstep1Context>();
-            //.AddDefaultTokenProviders();
-
-
-			//builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-			//.AddEntityFrameworkStores<Fstep1Context>();
-			//.AddDefaultTokenProviders();
+			builder.Services.AddTransient<IEmailSender, EmailSender>();
+			builder.Services.AddHostedService<PostExpirationService>();
 
 			builder.Services.AddSignalR();
 			builder.Services.AddSession(options =>
@@ -42,36 +37,31 @@ namespace FStep
 				options.Cookie.HttpOnly = true;
 				options.Cookie.IsEssential = true;
 			});
-			
-			
+
+
 			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options
 				=>
 			{
 				options.LoginPath = "/Account/Login";
 				options.AccessDeniedPath = "/AccessDenied";
-			}).AddGoogle(googleOptions =>
-			{
-				// Đọc thông tin Authentication:Google từ appsettings.json
-				IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
+			});
 
-				// Thiết lập ClientID và ClientSecret để truy cập API google
+			// Configure Google authentication (if needed)
+			builder.Services.AddAuthentication().AddGoogle(googleOptions =>
+			{
+				IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
 				googleOptions.ClientId = googleAuthNSection["ClientId"];
 				googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
-				// Cấu hình Url callback lại từ Google (không thiết lập thì mặc định là /signin-google)
 				googleOptions.ClaimActions.MapJsonKey("UserID", "sub", "string");
 				googleOptions.ClaimActions.MapJsonKey("IMG_RAW", "picture", "string");
 				googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Name, "name", "givenName");
 				googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Email, "email", "string");
 			});
-			builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
-			builder.Services.AddDistributedMemoryCache();
-
+			// Add AutoMapper (if needed)
+			builder.Services.AddAutoMapper(typeof(Program));
 			builder.Services.AddSingleton<IVnPayService, VnPayService>();
-
-
 			var app = builder.Build();
-
 			// Configure the HTTP request pipeline.
 			if (!app.Environment.IsDevelopment())
 			{
@@ -80,12 +70,12 @@ namespace FStep
 				app.UseHsts();
 			}
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
+			app.UseHttpsRedirection();
+			app.UseStaticFiles();
 
-            app.UseRouting();
+			app.UseRouting();
 
-            app.UseSession();
+			app.UseSession();
 
 			app.UseAuthentication();
 			app.UseAuthorization();
@@ -98,7 +88,7 @@ namespace FStep
 				pattern: "{controller=Home}/{action=Index}/{id?}");
 
 			app.Run();
-			
+
 		}
 	}
 }

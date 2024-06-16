@@ -17,6 +17,8 @@ public partial class Transaction
 
     public string? Note { get; set; }
 
+    public float? UnitPrice { get; set; }
+
     public int IdPost { get; set; }
 
     public string IdUserBuyer { get; set; } = null!;
