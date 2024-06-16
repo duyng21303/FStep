@@ -43,11 +43,17 @@
 										<td>@Html.Raw(item.Quantity)</td>
 										<td>@Html.Raw(item.Location)</td>
 										<td>@Html.Raw(item.CreateDate.ToString("yyyy-MM-dd"))</td>
-										<td>@Html.Raw(item.DaysRemainingApproved)</td>
+										<td>@Html.Raw(item.DaysRemaining)</td>
 										<td>
 											<a asp-controller="ModeManagePost" asp-action="UpdateStatus" asp-route-id="@item.PostId" style="text-decoration: none;">
 												<button type="button" class="btn btn-success btn-sm me-2">Giao dịch</button>
 											</a>
+										</td>
+										<td>
+											<form asp-controller="ModeManagePost" asp-action="FinishPost" method="post" onsubmit="return confirmDelete()">
+												<input type="hidden" name="id" value="@item.PostId" />
+												<button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+											</form>
 										</td>
 									</tr>
 								}

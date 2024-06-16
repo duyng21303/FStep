@@ -65,7 +65,7 @@
 										<td>@Html.Raw(item.Quantity)</td>
 										<td>@Html.Raw(item.Price)</td>
 										<td>@Html.Raw(item.CreateDate.ToString("yyyy-MM-dd"))</td>
-										<td>@Html.Raw(item.DaysRemainingPending)</td>
+										<td>@Html.Raw(item.DaysRemaining)</td>
 										<td>
 											<form asp-controller="ModeManagePost" asp-action="UpdateStatus" method="post" onsubmit="return confirmApprove()">
 												<input type="text" class="form-control note-input" placeholder="Nhập vị trí" data-postid="@item.PostId" name="location" required />
@@ -74,9 +74,10 @@
 											</form>
 											</td>
 											<td>
-											<a asp-controller="ModeManagePost" asp-action="DeletePost" asp-route-id="@item.PostId" style="text-decoration: none;">
-												<button type="button" class="btn btn-danger btn-sm">Xóa</button>
-											</a>
+											<form asp-controller="ModeManagePost" asp-action="DeletePost" method="post" onsubmit="return confirmDelete()">
+												<input type="hidden" name="id" value="@item.PostId" />
+												<button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+											</form>
 										</td>
 									</tr>
 								}

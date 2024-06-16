@@ -58,5 +58,12 @@
 		function confirmApprove() {
 			return confirm("Bạn có muốn duyệt bài này không?");
 		}
+		function confirmDelete() {
+			if (confirm("Bạn có chắc chắn muốn xóa bài đăng này?")) {
+				return true; // Người dùng đã xác nhận muốn xóa
+			} else {
+				return false; // Người dùng đã hủy bỏ xóa
+			}
+		}
 	</script>
 }

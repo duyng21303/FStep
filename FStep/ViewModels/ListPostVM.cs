@@ -52,30 +52,7 @@ namespace FStep.ViewModels
 		public String Email { get; set; }
 
 		// Thuộc tính tính toán DaysRemaining cho Pending
-		public int DaysRemainingPending
-		{
-			get
-			{
-				if (CreateDate  != null)
-				{
-					return 7 - (DateTime.Now.Date - CreateDate.Date).Days;
-				}
-				return 0;
-			}
-		}
-
-		// Thuộc tính tính toán DaysRemaining cho Approved
-		public int DaysRemainingApproved
-		{
-			get
-			{
-				if (CreateDate != null)
-				{
-					return 30 - (DateTime.Now.Date - CreateDate.Date).Days;
-				}
-				return 0;
-			}
-		}
+		public int DaysRemaining => (Status == "false") ? (7 - (DateTime.Now.Date - CreateDate.Date).Days) : (30 - (DateTime.Now.Date - CreateDate.Date).Days);
 	}
 }
 

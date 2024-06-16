@@ -17,6 +17,7 @@ namespace FStep.Controllers.ManagePost
 		{
 			_db = context;
 		}
+		[Authorize(Roles = "Moderator")]
 		[HttpGet("ManagePosts")]
 		public IActionResult ManagePosts(string pendingQuery, string approvedQuery,String currentTab, int pendingPage = 1, int approvedPage = 1, int pageSize = 30)
 		{
@@ -44,6 +45,7 @@ namespace FStep.Controllers.ManagePost
 			return View(viewModel);
 		}
 
+		[Authorize(Roles = "Moderator")]
 		private PendingPostsResultVM GetPendingPosts(string query, int pageNumber, int pageSize)
 		{
 			var queryable = _db.Posts
@@ -81,6 +83,7 @@ namespace FStep.Controllers.ManagePost
 
 		}
 
+		[Authorize(Roles = "Moderator")]
 		private ApprovedPostsResultVM GetApprovedPosts(string query, int pageNumber, int pageSize)
 		{
 			var queryable = _db.Posts
@@ -114,7 +117,7 @@ namespace FStep.Controllers.ManagePost
 			};
 
 		}
-
+		[Authorize(Roles = "Moderator")]
 		[HttpPost]
 		public IActionResult UpdateStatus(int id, string location)
 		{
@@ -133,11 +136,13 @@ namespace FStep.Controllers.ManagePost
 			{
 				TempData["ErrorMessage"] = $"Bài đăng {id} không được tìm thấy.";
 			}
-			return Redirect(Url.Action("ManagePosts") + "#pendingPosts");
-		}
+			string encodedUrl = Url.Action("ManagePosts", new { currentTab = "pendingPosts" });
+			return Redirect(encodedUrl);
+
+	}
 
 		[Authorize(Roles = "Moderator")]
-		[HttpPost("DeletePost/{id}")]
+		[HttpPost]
 		public IActionResult DeletePost(int id)
 		{
 			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
@@ -152,7 +157,25 @@ namespace FStep.Controllers.ManagePost
 			{
 				TempData["ErrorMessage"] = $"Bài đăng {id} không được tìm thấy.";
 			}
-			return Redirect(Url.Action("ManagePosts") + "#approvedPosts");
+			string encodedUrl = Url.Action("ManagePosts", new { currentTab = "pendingPosts" });
+			return Redirect(encodedUrl);
+		}
+		public IActionResult FinishPost(int id)
+		{
+			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
+			if (post != null)
+			{
+				post.Status = "false";
+				_db.Posts.Update(post);
+				_db.SaveChanges();
+				TempData["SuccessMessage"] = $"Bài đăng {id} đã được xóa thành công.";
+			}
+			else
+			{
+				TempData["ErrorMessage"] = $"Bài đăng {id} không được tìm thấy.";
+			}
+			string encodedUrl = Url.Action("ManagePosts", new { currentTab = "approvedPosts" });
+			return Redirect(encodedUrl);
 		}
 	}
 }
