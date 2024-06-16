@@ -1,72 +1,107 @@
 ﻿@model FStep.ViewModels.PostVM
 @{
-	ViewData["Title"] = "CreatePost";
+    ViewData["Title"] = "CreatePost";
 }
-<div class="container-fluid py-5">
-	<div class="container py-5">
-		<h1 class="mb-4">Create Post</h1>
-		<form asp-controller="Post" asp-action="CreatePost" enctype="multipart/form-data">
-			<div class="row">
-				<div class="col-md-12 col-lg-6 col-xl-7">
-					<div class="row">
-						<div class="form-item">
-							<div class="form-item w-100">
-								<label asp-for="@Model.Content" class="form-label my-3"></label><sup>*</sup>
-								<input asp-for="@Model.Content" type="text" class="form-control">
-								<span asp-validation-for="@Model.Content" class="text-danger"></span>
-							</div>
-						</div>
-						<div class="form-item">
-							<label class="form-label my-3" >Image</label><sup>*</sup>
-							<input type="file" name="img" class="form-control">
-						</div>
+<div class="tab-class">
+    <div class="row g-4">
+        <div class="col-lg-8 text-end">
+            <ul class="nav nav-pills d-inline-flex text-center mb-5">
+                <li class="nav-item">
+                    <a class="d-flex m-2 py-2 bg-light rounded-pill active" data-bs-toggle="pill" href="#tab-1" style="width: 130px; text-decoration: none">
+                        <span class="text-dark" style="width: 130px;">Exchange</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="d-flex py-2 m-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-2" style="width: 130px; text-decoration: none">
+                        <span class="text-dark" style="width: 130px;">Sale</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="tab-content">
+        <div id="tab-1" class="tab-pane fade show p-0 active">
+            <div class="container-fluid py-5">
+                <div class="container py-5">
+                    <h1 class="mb-4">Create Exchange Post</h1>
+                    <form asp-controller="Post" asp-action="CreatePost" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-6 col-xl-7">
+                                <div class="row">
+                                    <div class="form-item">
+                                        <div class="form-item w-100">
+                                            <label asp-for="@Model.Title" class="form-label my-3"></label><sup>*</sup>
+                                            <textarea asp-for="@Model.Title" type="text" class="form-control"></textarea>
+                                            <span asp-validation-for="@Model.Title" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-item">
+                                        <label class="form-label my-3">Image</label><sup>*</sup>
+                                        <input type="file" name="img" class="form-control">
+                                        <input type="hidden" asp-for="@Model.Type" value="Exchange"/>
+                                    </div>
+                                    <div class="form-item">
+                                        <label asp-for="@Model.Description" class="form-label my-3"></label><sup>*</sup>
+                                        <textarea asp-for="@Model.Description" type="text" class="form-control" id="summernoteDescription"></textarea>
+                                        <span asp-validation-for="@Model.Description" class="text-danger"></span>
+                                    </div>
+                                    <div style="background-color=gray">
+                                        <button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Post</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="tab-2" class="tab-pane fade show p-0">
+            <div class="container-fluid py-5">
+                <div class="container py-5">
+                    <h1 class="mb-4">Create Sale Post</h1>
+                    <form asp-controller="Post" asp-action="CreatePost" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-6 col-xl-7">
+                                <div class="row">
+                                    <div class="form-item">
+                                        <div class="form-item w-100">
+                                            <label asp-for="@Model.Title" class="form-label my-3"></label><sup>*</sup>
+                                            <textarea asp-for="@Model.Title" type="text" class="form-control"></textarea>
+                                            <span asp-validation-for="@Model.Title" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-item">
+                                        <label class="form-label my-3">Image</label><sup>*</sup>
+                                        <input type="file" name="img" class="form-control">
+                                        <input type="hidden" asp-for="@Model.Type" value="Sale" />
+                                    </div>
+                                    <div class="form-item">
+                                        <label asp-for="@Model.Description" class="form-label my-3"></label><sup>*</sup>
+                                        <textarea asp-for="@Model.Description" type="text" class="form-control" id="summernoteDescription"></textarea>
+                                        <span asp-validation-for="@Model.Description" class="text-danger"></span>
+                                    </div>
 
-						<div class="form-item">
-							<label asp-for="@Model.Detail" class="form-label my-3"></label><sup>*</sup>
-							<input asp-for="@Model.Detail" type="text" class="form-control">
-							<span asp-validation-for="@Model.Detail" class="text-danger"></span>
-						</div>
+                                    <div class="form-item">
+                                        <label asp-for="@Model.Quantity" class="form-label my-3"></label><sup>*</sup>
+                                        <input asp-for="@Model.Quantity" type="text" class="form-control">
+                                        <span asp-validation-for="@Model.Quantity" class="text-danger"></span>
+                                    </div>
 
-						<div class="form-item">
-							<label asp-for="@Model.Type" class="form-label my-3"></label><sup>*</sup>
-							<select class="form-control" name="Type" asp-for="@Model.Type">
-								<option value="Exchange">Exchange</option>
-								<option value="Sale">Sale</option>
-							</select>
-						</div>
+                                    <div class="form-item">
+                                        <label asp-for="@Model.Price" class="form-label my-3"></label><sup>*</sup>
+                                        <input asp-for="@Model.Price" type="text" class="form-control">
+                                        <span asp-validation-for="@Model.Price" class="text-danger"></span>
+                                    </div>
 
-						<div class="form-item">
-							<label asp-for="@Model.NameProduct" class="form-label my-3"></label><sup>*</sup>
-							<input asp-for="@Model.NameProduct" type="text" class="form-control">
-							<span asp-validation-for="@Model.NameProduct" class="text-danger"></span>
-						</div>
-
-						<div class="form-item">
-							<label asp-for="@Model.Quantity" class="form-label my-3"></label><sup>*</sup>
-							<input asp-for="@Model.Quantity" type="text" class="form-control">
-							<span asp-validation-for="@Model.Quantity" class="text-danger"></span>
-						</div>
-
-						<div class="form-item">
-							<label asp-for="@Model.Price" class="form-label my-3"></label><sup>*</sup>
-							<input asp-for="@Model.Price" type="text" class="form-control">
-							<span asp-validation-for="@Model.Price" class="text-danger"></span>
-						</div>
-
-						<div class="form-item">
-							<label asp-for="@Model.DetailProduct" class="form-label my-3"></label><sup>*</sup>
-							<input asp-for="@Model.Price" type="text" class="form-control">
-							<span asp-validation-for="@Model.Price" class="text-danger"></span>
-						</div>
-
-						<div style="background-color=gray;">
-							<button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Post</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</form>
-	</div>
+                                    <div style="background-color=gray;">
+                                        <button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Post</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-

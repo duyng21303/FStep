@@ -52,7 +52,6 @@ header {
 body {
     background-color: #f2f2f2; /* Light gray background for the whole page */
     padding-top: 60px; /* Space for the header if needed */
-    border: 1px solid #ddd; /* Lightest gray border around the page */
     border-radius: 5px; /* Rounded corners for the page */
 }
 
@@ -191,11 +190,20 @@ body {
     -webkit-line-clamp: 2; /* Limit the lines to 2 */
     height: 2.4em;
 }
+<<<<<<< HEAD
     .fruit-item .price {
     color: red; /* Màu đỏ cho giá */
     font-weight: bold; /* Chữ đậm cho giá */
 }
     /* Date text at the end of each post */
+=======
+
+.fruit-item .price {
+    color: red; /* Màu đỏ cho giá */
+    font-weight: bold; /* Chữ đậm cho giá */
+}
+/* Date text at the end of each post */
+>>>>>>> develop
 .fruit-item .text-end {
     font-size: 0.9rem; /* Font size for the date */
     color: #999; /* Light gray color for the date */
@@ -286,6 +294,14 @@ body {
         top: 0;
         left: 0;
     }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> develop
+=======
+>>>>>>> develop
    
 /*Css cho Payment layout*/
 .payment-container {
@@ -333,6 +349,28 @@ body {
     color: red;
     font-size: 28px;
 }
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> develop
+
+.success-message, .instruction, .address, .note {
+    font-weight: bold; /* Đặt font-weight là bold cho toàn bộ các phần tử trong container */
+}
+
+.instruction {
+    font-style: normal; /* Loại bỏ font-style là italic cho phần hướng dẫn */
+}
+
+.address {
+    color: #000; /* Đặt màu chữ thành màu đen (#000) cho địa chỉ */
+
+    .comment-form-content a {
+        color: #333;
+        font-weight: bold;
+    }
+>>>>>>> develop
 
 .success-message, .instruction, .address, .note {
     font-weight: bold; /* Đặt font-weight là bold cho toàn bộ các phần tử trong container */
@@ -366,6 +404,7 @@ body {
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 8px;
+<<<<<<< HEAD
     margin-bottom: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-top: 20px !important; /* Thêm khoảng cách top là 20px */
@@ -373,3 +412,17 @@ body {
 .input-smaller {
     width: 100px; /* Điều chỉnh chiều rộng tùy theo nhu cầu */
 }
+=======
+    color: #fff;
+    gap: 5px;
+    width: 70px;
+}
+
+.note {
+    color: #666; /* Đặt màu chữ cho thông báo là màu xám (#666) */
+}
+>>>>>>> 06d8e33ad4806eea4d3b5ec76a0b1908613d0dce
+<<<<<<< HEAD
+>>>>>>> develop
+=======
+>>>>>>> develop

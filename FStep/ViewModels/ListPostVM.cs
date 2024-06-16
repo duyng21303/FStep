@@ -1,3 +1,4 @@
+
 ﻿using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using X.PagedList;
 
@@ -23,7 +24,10 @@ namespace FStep.ViewModels
 		public IPagedList<ListPostVM> Posts { get; set; }
 		public int Count { get; set; }
 	}
+}
 
+﻿namespace FStep.ViewModels
+{
 	public class ListPostVM
 	{
 		public int PostId { get; set; }
@@ -34,14 +38,18 @@ namespace FStep.ViewModels
 
 		public int Quantity { get; set; }
 
+
 		public String Status { get; set; }
 
 		public String Category { get; set; }
+
 		public float Price { get; set; }
 
 		public String Type { get; set; } = default!;
 
+
 		public String? Location { get; set; }
+
 		public String StudentId { get; set; } = default!;
 
 		public String Image { get; set; } = default!;
@@ -56,3 +64,4 @@ namespace FStep.ViewModels
 	}
 }
 
+       
