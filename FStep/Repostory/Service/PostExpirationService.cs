@@ -8,11 +8,11 @@ using FStep.Data; // Sử dụng entity framework core lưu trữ data.
 
 namespace FStep.Repostory.Service
 {
-	public class PostExpirationService : IHostedService, IDisposable
+	public class PostExpirationService : IHostedService, IDisposable  //IHostedService: dv hoạt động chạy ngầm 
 	{
-		private readonly IServiceProvider _services;
-		private readonly IEmailSender _emailSender;
-		private Timer _timer;
+		private readonly IServiceProvider _services;  // tạo scope để lấy dbContext
+		private readonly IEmailSender _emailSender;  // sendMail
+		private Timer _timer; //
 		private readonly ILogger<PostExpirationService> _logger;
 
 		public PostExpirationService(IServiceProvider services, IEmailSender emailSender, ILogger<PostExpirationService> logger)

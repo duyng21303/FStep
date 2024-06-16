@@ -25,7 +25,7 @@ public class Program
 
 		// Register EmailSender service
 		builder.Services.AddTransient<IEmailSender, EmailSender>();
-		builder.Services.AddHostedService<PostExpirationService>();
+		//builder.Services.AddHostedService<PostExpirationService>();
 		// Add session support
 		builder.Services.AddSession(options =>
 		{
