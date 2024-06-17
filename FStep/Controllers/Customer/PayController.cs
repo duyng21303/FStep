@@ -13,7 +13,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace FStep.Controllers.Customer
 {
-    public class PayController : Controller
+	public class PayController : Controller
 	{
 
 		private readonly FstepDbContext db;
@@ -61,6 +61,7 @@ namespace FStep.Controllers.Customer
 		[HttpGet]
 		[Authorize]
 		public IActionResult CheckoutSale(int id, int quantity)
+
 		{
 			var post = db.Posts.SingleOrDefault(x => x.IdPost == id);
 			var checkout = new CheckoutVM();
@@ -73,6 +74,7 @@ namespace FStep.Controllers.Customer
 			checkout.UnitPrice = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).Price;
 			checkout.Quantity = quantity;
 			checkout.Amount = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).Price * quantity;
+
 			checkout.Type = post.Type;
 
 			HttpContext.Session.Set<CheckoutVM>("CHECKOUT_INFO", checkout);
@@ -126,6 +128,7 @@ namespace FStep.Controllers.Customer
 			transaction.Date = DateTime.Now;
 			transaction.Status = "Processing";
 			transaction.Quantity = info.Quantity;
+
 			transaction.Amount = float.Parse(response.Amount.ToString()) / 100;
 			transaction.Note = info.Note;
 			transaction.IdPost = info.IdPost;
@@ -150,6 +153,7 @@ namespace FStep.Controllers.Customer
 				product.Status = "false";
 			db.Update(product);
 			db.SaveChanges();
+
 
 			TempData["Message"] = $"VnPay success";
 			return RedirectToAction("PaymentSuccess");

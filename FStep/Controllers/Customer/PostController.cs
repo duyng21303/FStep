@@ -31,6 +31,7 @@ namespace FStep.Controllers.Customer
 		{
 			return View();
 		}
+
 		//Create post
 		[Authorize]
 		[HttpPost]
@@ -50,8 +51,7 @@ namespace FStep.Controllers.Customer
 				post.Date = DateTime.Now;
 				//Helpers.Util.UpLoadImg(model.Img, "")
 				post.Img = Util.UpLoadImg(img, "postPic");
-				post.Status = "false";
-
+				post.Status = "true";
 				post.Type = model.Type;
 				post.Detail = model.Description;
 				post.IdUser = User.FindFirst("UserID").Value;
@@ -68,7 +68,6 @@ namespace FStep.Controllers.Customer
 
 			return View();
 		}
-
 		public IActionResult DetailPost(int id)
 		{
 			var data = db.Posts.Include(x => x.IdProductNavigation).Include(x => x.IdUserNavigation).SingleOrDefault(p => p.IdPost == id);
@@ -161,4 +160,3 @@ namespace FStep.Controllers.Customer
 
 	}
 }
-

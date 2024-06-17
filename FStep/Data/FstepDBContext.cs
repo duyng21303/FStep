@@ -39,15 +39,11 @@ public partial class FstepDbContext : DbContext
 
 	public virtual DbSet<UserNotification> UserNotifications { get; set; }
 
-	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-		=> optionsBuilder.UseSqlServer("Data Source=MSITRONGLE\\TRONGLE;Initial Catalog=FSTEP;Persist Security Info=True;User ID=sa;Password=12345;Encrypt=True;Trust Server Certificate=True");
-
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		modelBuilder.Entity<Chat>(entity =>
 		{
-			entity.HasKey(e => e.IdChat).HasName("PK__Chat__68D484D1364C0E80");
+			entity.HasKey(e => e.IdChat).HasName("PK__Chat__68D484D13A40FE13");
 
 			entity.ToTable("Chat");
 
@@ -78,7 +74,7 @@ public partial class FstepDbContext : DbContext
 
 		modelBuilder.Entity<Comment>(entity =>
 		{
-			entity.HasKey(e => e.IdComment).HasName("PK__Comment__7E14AC859AEEDAD8");
+			entity.HasKey(e => e.IdComment).HasName("PK__Comment__7E14AC855FFBEDFF");
 
 			entity.ToTable("Comment");
 
@@ -113,7 +109,7 @@ public partial class FstepDbContext : DbContext
 
 		modelBuilder.Entity<Confirm>(entity =>
 		{
-			entity.HasKey(e => e.IdConfirm).HasName("PK__Confirm__DAF2DF8F8BBC634D");
+			entity.HasKey(e => e.IdConfirm).HasName("PK__Confirm__DAF2DF8F52DE7F46");
 
 			entity.ToTable("Confirm");
 
@@ -139,7 +135,7 @@ public partial class FstepDbContext : DbContext
 
 		modelBuilder.Entity<Feedback>(entity =>
 		{
-			entity.HasKey(e => e.IdFeedback).HasName("PK__Feedback__36BC86304F1A84C8");
+			entity.HasKey(e => e.IdFeedback).HasName("PK__Feedback__36BC863062550F70");
 
 			entity.ToTable("Feedback");
 
@@ -166,7 +162,7 @@ public partial class FstepDbContext : DbContext
 
 		modelBuilder.Entity<Notification>(entity =>
 		{
-			entity.HasKey(e => e.IdNotification).HasName("PK__Notifica__925C842F87B4A606");
+			entity.HasKey(e => e.IdNotification).HasName("PK__Notifica__925C842F51866B6C");
 
 			entity.ToTable("Notification");
 
@@ -184,7 +180,7 @@ public partial class FstepDbContext : DbContext
 
 		modelBuilder.Entity<Payment>(entity =>
 		{
-			entity.HasKey(e => e.IdPayment).HasName("PK__Payment__862FEFE0AD7785D5");
+			entity.HasKey(e => e.IdPayment).HasName("PK__Payment__862FEFE015A57133");
 
 			entity.ToTable("Payment");
 
@@ -209,7 +205,7 @@ public partial class FstepDbContext : DbContext
 
 		modelBuilder.Entity<Post>(entity =>
 		{
-			entity.HasKey(e => e.IdPost).HasName("PK__Post__3840C79DE518A943");
+			entity.HasKey(e => e.IdPost).HasName("PK__Post__3840C79DE706F933");
 
 			entity.ToTable("Post");
 
@@ -252,7 +248,7 @@ public partial class FstepDbContext : DbContext
 
 		modelBuilder.Entity<Product>(entity =>
 		{
-			entity.HasKey(e => e.IdProduct).HasName("PK__Product__BA39E84F07D7A49B");
+			entity.HasKey(e => e.IdProduct).HasName("PK__Product__BA39E84FF10DF258");
 
 			entity.ToTable("Product");
 
@@ -282,7 +278,7 @@ public partial class FstepDbContext : DbContext
 
 		modelBuilder.Entity<Report>(entity =>
 		{
-			entity.HasKey(e => e.IdReport).HasName("PK__Report__D8639F52C4A452C6");
+			entity.HasKey(e => e.IdReport).HasName("PK__Report__D8639F528F328C92");
 
 			entity.ToTable("Report");
 
@@ -307,7 +303,7 @@ public partial class FstepDbContext : DbContext
 
 		modelBuilder.Entity<Transaction>(entity =>
 		{
-			entity.HasKey(e => e.IdTransaction).HasName("PK__Transact__E8E1732DE20E64AA");
+			entity.HasKey(e => e.IdTransaction).HasName("PK__Transact__E8E1732DA17FF437");
 
 			entity.ToTable("Transaction");
 
@@ -351,7 +347,7 @@ public partial class FstepDbContext : DbContext
 
 		modelBuilder.Entity<User>(entity =>
 		{
-			entity.HasKey(e => e.IdUser).HasName("PK__User__D2D14637B07FBAAB");
+			entity.HasKey(e => e.IdUser).HasName("PK__User__D2D146373B3AC1A9");
 
 			entity.ToTable("User");
 
@@ -402,7 +398,7 @@ public partial class FstepDbContext : DbContext
 
 		modelBuilder.Entity<UserNotification>(entity =>
 		{
-			entity.HasKey(e => new { e.IdUser, e.IdNotification }).HasName("PK__User_Not__3BF48E75B40D02F8");
+			entity.HasKey(e => new { e.IdUser, e.IdNotification }).HasName("PK__User_Not__3BF48E7583765DEA");
 
 			entity.ToTable("User_Notification");
 
