@@ -25,10 +25,22 @@ namespace FStep.Repostory.Service
 
 		public Task StartAsync(CancellationToken cancellationToken)
 		{
+			//DateTime now = DateTime.Now;
+			//DateTime nextEightAM = now.Date.AddHours(8);
+
+			//if (now >= nextEightAM)
+			//{
+			//	nextEightAM = nextEightAM.AddDays(1); // Move to 8:00 AM tomorrow
+			//}
+			//TimeSpan initialDueTime = nextEightAM - now;
+
 			_timer = new Timer(CheckPostExpiration, null, TimeSpan.Zero, TimeSpan.FromDays(1)); // Kiểm tra nếu post hết hạn sau mỗi ngày
+			_logger.LogInformation($"Found :{_timer}");
 			return Task.CompletedTask;
 			//triển khia từ ihostedservice được gọi ngay khi dịch vụ bắt đầu . _timer được khởi tạo để chạy hàm checkpost mỗi ngày 1 lần
+
 		}
+
 
 		private async void CheckPostExpiration(object state)
 		{
