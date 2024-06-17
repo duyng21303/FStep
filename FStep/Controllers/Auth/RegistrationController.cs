@@ -16,6 +16,7 @@ namespace FStep.Controllers.Auth
         private readonly ILogger<RegistrationController> _logger;
 
         public RegistrationController(FstepDbContext context, IMapper mapper, IEmailSender emailSender, ILogger<RegistrationController> logger)
+
         {
             db = context;
             _mapper = mapper;
