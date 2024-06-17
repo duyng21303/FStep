@@ -16,6 +16,7 @@ namespace FStep.Controllers.Auth
         private readonly ILogger<RegistrationController> _logger;
 
         public RegistrationController(FstepDbContext context, IMapper mapper, IEmailSender emailSender, ILogger<RegistrationController> logger)
+
         {
             db = context;
             _mapper = mapper;
@@ -56,9 +57,11 @@ namespace FStep.Controllers.Auth
                             // Only save the user if the email was sent successfully
                             var user = _mapper.Map<User>(model);
                             user.IdUser = model.username;
+                            user.Name = model.email.Split("@")[0];
                             user.HashKey = Util.GenerateRandomKey();
                             user.Password = model.password.ToMd5Hash(user.HashKey);
                             user.Role = "Customer";
+                            user.CreateDate = DateTime.Now;
                             db.Add(user);
                             db.SaveChanges();
 

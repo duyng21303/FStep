@@ -1,0 +1,493 @@
+﻿@model IEnumerable<FStep.ViewModels.ChatVM>
+<head>
+	<meta charset="utf-8" />
+	<title>Fixed Chat</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		/* Button used to open the chat form - fixed at the bottom of the page */
+		.open-button {
+			background-color: #fd7e14;
+			color: white;
+			padding: 10px 15px;
+			border: none;
+			cursor: pointer;
+			opacity: 0.8;
+			position: fixed;
+			bottom: 0;
+			right: 0;
+			width: 120px; /* Giảm kích thước nút */
+			height: 40px;
+		}
+
+
+		/* The popup chat - hidden by default */
+		.chat-popup {
+			display: none;
+			position: fixed;
+			bottom: 0;
+			right: 0;
+			z-index: 9;
+		}
+
+		/* Add styles to the form container */
+		.form-container {
+			max-width: 250px;
+			padding: 10px;
+			background-color: white;
+			height: 100%; /* Chiếm toàn bộ chiều cao của chat-popup */
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+			/* Full-width textarea */
+			.form-container textarea {
+				width: 100%;
+				padding: 10px;
+				margin: 5px 0 15px 0;
+				border: none;
+				background: #f1f1f1;
+				resize: none;
+				flex-grow: 1; /* Chiếm không gian còn lại */
+			}
+
+				/* When the textarea gets focus, do something */
+				.form-container textarea:focus {
+					background-color: #ddd;
+					outline: none;
+				}
+
+			/* Set a style for the submit/login button */
+			.form-container .btn {
+				background-color: #04AA6D;
+				color: white;
+				padding: 10px 15px;
+				border: none;
+				cursor: pointer;
+				width: 100%;
+				margin-bottom: 10px;
+				opacity: 0.8;
+			}
+
+			/* Add a red background color to the cancel button */
+			.form-container .cancel {
+				background-color: red;
+			}
+
+			/* Add some hover effects to buttons */
+			.form-container .btn:hover, .open-button:hover {
+				background-color: #fd8e00;
+			}
+
+
+
+		.card {
+			background: #fff;
+			transition: .5s;
+			border: 0;
+			margin-bottom: 0px;
+			border-radius: .55rem;
+			position: relative;
+			width: 70%;
+			box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
+		}
+
+		.chat-app .people-list {
+			width: 215px;
+			position: absolute;
+			left: 0;
+			top: 0;
+			padding: 10px;
+			z-index: 7
+		}
+
+		.chat-app .chat {
+			margin-left: 210px;
+			border-left: 1px solid #eaeaea
+		}
+
+		.people-list {
+			-moz-transition: .5s;
+			-o-transition: .5s;
+			-webkit-transition: .5s;
+			transition: .5s
+		}
+
+		.chat-list {
+			max-height: 300px; /* Đặt chiều cao tối đa cho danh sách */
+			overflow: auto; /* Hiển thị thanh cuộn khi nội dung vượt quá chiều cao tối đa */
+			padding: 10px; /* Thêm padding để tạo khoảng cách giữa các phần tử trong danh sách */
+			list-style-type: none; /* Ẩn các dấu đầu dòng của danh sách */
+		}
+
+		.people-list .chat-list li {
+			padding: 5px 5px;
+			list-style: none;
+			border-radius: 3px;
+			margin-bottom: 10px; /* Thêm margin dưới để tạo khoảng cách giữa các mục trong danh sách */
+		}
+
+			.people-list .chat-list li:hover {
+				background: #efefef;
+				cursor: pointer
+			}
+
+			.people-list .chat-list li.active {
+				background: #efefef
+			}
+
+			.people-list .chat-list li .name {
+				font-size: 15px
+			}
+
+		.people-list .chat-list img {
+			width: 35px;
+			border-radius: 50%
+		}
+
+		.people-list img {
+			float: left;
+			border-radius: 50%
+		}
+
+		.people-list .about {
+			float: left;
+			padding-left: 8px
+		}
+
+		.people-list .status {
+			color: #999;
+			font-size: 13px
+		}
+
+		.chat .chat-header {
+			padding: 10px 10px;
+			border-bottom: 2px solid #f4f7f6
+		}
+
+			.chat .chat-header img {
+				float: left;
+				border-radius: 40px;
+				width: 40px
+			}
+
+			.chat .chat-header .chat-about {
+				float: left;
+				padding-left: 10px
+			}
+
+		.chat .chat-history {
+			padding: 20px;
+			border-bottom: 2px solid #fff;
+			max-height: 250px; /* Đặt chiều cao tối đa cho div */
+			overflow: auto; /* Hiển thị thanh cuộn khi nội dung vượt quá chiều cao tối đa */
+			padding: 10px; /* Thêm padding để tạo khoảng cách giữa nội dung và biên của div */
+		}
+
+			.chat .chat-history ul {
+				padding: 0
+			}
+
+				.chat .chat-history ul li {
+					list-style: none;
+					margin-bottom: 10px
+				}
+
+					.chat .chat-history ul li:last-child {
+						margin-bottom: 0px
+					}
+
+			.chat .chat-history .message-data {
+				margin-bottom: 15px
+			}
+
+				.chat .chat-history .message-data img {
+					border-radius: 40px;
+					width: 40px;
+					margin-left: 10px;
+				}
+
+			.chat .chat-history .message-data-time {
+				color: #434651;
+				padding-left: 6px
+			}
+
+			.chat .chat-history .message {
+				color: #444;
+				padding: 7px 11px;
+				line-height: 26px;
+				font-size: 15px;
+				border-radius: 7px;
+				display: inline-block;
+				position: relative;
+				max-width: 300px; /* Đặt chiều rộng tối đa */
+				word-wrap: break-word; /* Cho phép các từ chữ trong nội dung tự động xuống dòng nếu cần */
+				overflow-wrap: break-word; /* Tương tự như word-wrap nhưng hỗ trợ rộng hơn */
+				border: 1px solid #ccc; /* Hiển thị viền cho thẻ */
+				padding: 10px; /* Thêm padding để tạo khoảng cách giữa nội dung và biên của thẻ */
+				margin-bottom: 10px; /* Thêm margin dưới để tạo khoảng cách giữa các thẻ */
+			}
+
+				.chat .chat-history .message:after {
+					bottom: 100%;
+					left: 7%;
+					border: solid transparent;
+					content: " ";
+					height: 0;
+					width: 0;
+					position: absolute;
+					pointer-events: none;
+					border-bottom-color: #fff;
+					border-width: 10px;
+					margin-left: -10px
+				}
+
+			.chat .chat-history .my-message {
+				background: #efefef
+			}
+
+				.chat .chat-history .my-message:after {
+					bottom: 100%;
+					left: 30px;
+					border: solid transparent;
+					content: " ";
+					height: 0;
+					width: 0;
+					position: absolute;
+					pointer-events: none;
+					border-bottom-color: #efefef;
+					border-width: 10px;
+					margin-left: -10px
+				}
+
+			.chat .chat-history .other-message {
+				background: #e8f1f3;
+				text-align: right
+			}
+
+				.chat .chat-history .other-message:after {
+					border-bottom-color: #e8f1f3;
+					left: 93%
+				}
+
+		.chat .chat-message {
+			padding: 0px 20px 10px 20px;
+		}
+
+		.online,
+		.offline,
+		.me {
+			margin-right: 2px;
+			font-size: 8px;
+			vertical-align: middle
+		}
+
+		.online {
+			color: #86c541
+		}
+
+		.offline {
+			color: #e47297
+		}
+
+		.me {
+			color: #1d8ecd
+		}
+
+		.float-right {
+			float: right
+		}
+
+		.clearfix:after {
+			visibility: hidden;
+			display: block;
+			font-size: 0;
+			content: " ";
+			clear: both;
+			height: 0
+		}
+
+		.header-message {
+			display: flex;
+			align-items: center;
+		}
+
+			.header-message a {
+				margin-right: 10px; /* Adjust the margin as needed */
+			}
+
+		.chat-about {
+			display: flex;
+			align-items: center;
+			flex-grow: 1;
+		}
+
+			.chat-about h7 {
+				margin: 0;
+			}
+
+		.content-confirm p {
+			font-size: 12px;
+			font-weight: 300;
+			color: #86939E;
+			line-height: 24px;
+			margin-bottom: 0px;
+		}
+		.labelConfirm {
+			border-radius: 8px;
+			font-size: 0.625rem;
+			text-align: center;
+			line-height: 0.6;
+			padding: 8px 12px;
+			font-weight: 600; /* Chữ đậm hơn */
+			display: inline-block;
+			vertical-align: middle;
+			opacity: 0.5; /* Mức độ mờ */
+		}
+		.accept{
+			border: 1px solid green;
+			color: green;
+			background-color: lightgreen;
+		}
+		.decline{
+			color: red;
+			border: 1px solid red;
+			background-color: lightcoral;
+		}
+		.waiting{
+			color: orange;
+			border: 1px solid orange;
+			background-color: #FFD580; /* Màu nền vàng cam nhạt hơn */
+		}
+
+		.delete-link {
+			display: block;
+			color: #dc3232;
+			font-weight: bold;
+			text-decoration: none;
+			margin-top: 10px;
+		}
+
+			.delete-link:hover {
+				text-decoration: underline;
+			}
+	</style>
+</head>
+
+<body>
+	<button class="open-button" onclick="openForm()">Chat</button>
+	<div id="alert-container" class="container mt-3 position-fixed" style="top: 10px; right: 10px; z-index: 1000;">
+	</div>
+	<div class="chat-popup" id="myForm">
+		<div class="container">
+			<div class="row clearfix">
+				<div class="card chat-app">
+					<div id="plist" class="people-list">
+						<div class="input-group">
+							<!-- Các phần tử trong people-list -->
+						</div>
+						<ul class="list-unstyled chat-list mt-2 mb-0 group-list">
+							@{
+								var usersProcessed = new HashSet<string>();
+								var userId = User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
+							}
+							<input type="hidden" id="sendUserID" value="@userId" /> <!-- Giá trị của sendUserID -->
+							@* <li class="clearfix" data-userid="">
+							</li> *@
+							@foreach (var user in Model)
+							{
+								var userId_Send = user.SenderUser.IdUser;
+								var userId_Recieve = user.RecieverUser.IdUser;
+								// Kiểm tra xem userId của người dùng đã được xử lý trước đó hay chưa
+								@if (!usersProcessed.Contains(userId_Send) && !usersProcessed.Contains(userId_Recieve))
+								{
+									// Thêm userId vào danh sách đã xử lý
+									@if (user.SenderUser.IdUser != User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value)
+									{
+										var img = "";
+										@if (@user.SenderUser.AvatarImg != null)
+										{
+											img = "userAvar/" + @user.SenderUser.AvatarImg;
+										}
+										else
+										{
+											img = "nullAvar/149071.png";
+										}
+										@* <a asp-action="Chat" asp-controller="Chat" asp-route-idUser="@user.SenderUser.IdUser"> *@
+										<li class="clearfix" data-userid="@user.SenderUser.IdUser">
+											<img src="~/img/@img" alt="avatar">
+											<div class="about">
+												<div class="name">@(@user.SenderUser.Name.Length > 16 ? @user.SenderUser.Name.Substring(0, 16) + "..." : @user.SenderUser.Name)</div>
+												<div class="status"> <i class="fa fa-circle online"></i> online </div>
+											</div>
+										</li>
+										usersProcessed.Add(userId_Send);
+										@* </a> *@
+									}
+									else
+									{
+										var img = "";
+										@if (@user.RecieverUser.AvatarImg != null)
+										{
+											img = "userAvar/" + @user.RecieverUser.AvatarImg;
+										}
+										else
+										{
+											img = "nullAvar/149071.png";
+										}
+										@* <a asp-action="Chat" asp-controller="Chat" asp-route-idUser="@user.RecieverUser.IdUser"> *@
+										<li class="clearfix" data-userid="@user.RecieverUser.IdUser">
+											<img src="~/img/@img" alt="avatar">
+											<div class="about">
+												<div class="name">@(@user.RecieverUser.Name.Length > 16 ? @user.RecieverUser.Name.Substring(0, 16) + "..." : @user.RecieverUser.Name)</div>
+												<div class="status"> <i class="fa fa-circle online"></i> online </div>
+											</div>
+										</li>
+										@* </a> *@
+
+										usersProcessed.Add(userId_Recieve);
+									}
+								}
+								<input type="hidden" id="list-already" value='' />
+							}
+						</ul>
+					</div>
+					<div class="chat">
+						<div class="chat-header clearfix">
+							<div class="row">
+								<div class="col-lg-10 header-message">
+								</div>
+								<div class="col-lg-2 hidden-sm close">
+									<button onclick="closeForm()" class="btn btn-outline-warning float-right">
+										X
+									</button>
+								</div>
+							</div>
+						</div>
+						<div class="confirm-exchange clearfix justify-content-center" style="border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9; width: 400px;">
+							
+						</div>
+
+						<div class="chat-history" style="height: 400px; width: 400px;" id="chat-history">
+							<ul class="list-unstyled m-b-0" id="chatMessages">
+								<!-- Các tin nhắn sẽ được hiển thị ở đây -->
+							</ul>
+						</div>
+						<div class="chat-message clearfix">
+							<div class="input-group mb-0 " id="submit-chat">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/jquery/dist/jquery.js"></script>
+	<script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
+	<script src="~/lib/signalr/dist/browser/signalr.js"></script>
+	<script src="~/js/site.js"></script>
+</body>

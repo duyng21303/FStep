@@ -1,0 +1,59 @@
+﻿@model X.PagedList.IPagedList<FStep.ViewModels.ListPostVM>
+@using X.PagedList.Mvc.Core;
+
+<div class="container-fluid fruit py-5">
+	<div class="container py-5">
+		<!-- Title header body  -->
+		<div class="row align-items-center mb-4 search-header">
+			<div class="col-md-6">
+				<h1 class="exchange-title">List Post</h1>
+			</div>
+
+			<div class="col-md-5">
+				<form asp-action="ViewPost" asp-controller="ManagePost" class="d-flex justify-content-end search-form">
+					<input type="search" class="form-control search-input" placeholder="keywords" name="query">
+					<button class="btn btn-primary search-button" type="submit">
+						<i class="fa fa-search search-icon"></i>
+					</button>
+				</form>
+			</div>
+			<!-- End header body -->
+			<!-- Start Content Body-->
+			<div class="row g-4">
+				<div class="col-lg-12">
+					<div class="container-contentboby">
+						<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+
+
+							<!-- Start of post item column -->
+							@foreach (var item in Model)
+							{
+								<div class="col">
+									<div class="rounded position-relative fruit-item">
+										<div class="fruit-img">
+											<img src="@Url.Content("~/img/postPic/" + item.Image)" class="img-fluid w-100 rounded-top" alt="Laptop">
+										</div>
+										<div class="p-4 border border-secondary border-top-0 rounded-bottom">
+											<h4 class="Title mb-3">@Html.Raw(item.PostTitle)</h4>
+											<p class="description mb-4">@Html.Raw(item.PostBody)</p>
+											<p class="description mb-4">@Html.Raw(item.Quantity)</p>
+											<p class="description mb-4">@Html.Raw(item.Price)</p>
+											<p class="description mb-4">@Html.Raw(item.Type)</p>
+											<p class="description mb-4">@Html.Raw(item.StudentId)</p>
+											<p class="text-end mb-0 mt-2">CreateDate: <span>@item.CreateDate.ToString("dd/MM/yyyy")</span></p>
+										</div>
+									</div>
+								</div>
+							}
+						</div>
+					</div>
+					<!-- Start Content Body-->
+					<!-- Create relationship between page and page -->
+					@Html.PagedListPager(Model, page => Url.Action("ViewPost", new { query = ViewBag.Query, page = page }))
+					<!-- End create -->
+				</div>
+			</div>
+			<!-- End Show -->
+		</div>
+	</div>
+</div>

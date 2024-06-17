@@ -1,10 +1,12 @@
 ﻿using FStep.Data;
 using FStep.Repostory.Interface;
-using FStep.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using FStep.Models;
+using FStep.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using X.PagedList;
 
 namespace FStep.Controllers.ManagePost

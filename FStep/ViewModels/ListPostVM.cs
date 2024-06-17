@@ -37,11 +37,13 @@ namespace FStep.ViewModels
 		public String Status { get; set; }
 
 		public String Category { get; set; }
+
 		public float Price { get; set; }
 
 		public String Type { get; set; } = default!;
 
 		public String? Location { get; set; }
+
 		public String StudentId { get; set; } = default!;
 
 		public String Image { get; set; } = default!;
@@ -55,4 +57,3 @@ namespace FStep.ViewModels
 		public int DaysRemaining => (Status == "false") ? (7 - (DateTime.Now.Date - CreateDate.Date).Days) : (30 - (DateTime.Now.Date - CreateDate.Date).Days);
 	}
 }
-
