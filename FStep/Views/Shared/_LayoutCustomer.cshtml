@@ -8,7 +8,6 @@
 	<link rel="stylesheet" href="~/FStep.styles.css" asp-append-version="true" />
 	<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Sedgwick+Ave&display=swap" rel="stylesheet">
-
 </head>
 <body>
 	<header>
@@ -19,13 +18,13 @@
 	<div class="container">
 		<main role="main" class="pb-3">
 			@RenderBody()
-			@if (User.Identity.IsAuthenticated)
-			{
-				@await Component.InvokeAsync("Chat")
-			}
+			
 		</main>
 	</div>
-
+	@if (User.Identity.IsAuthenticated)
+	{
+		@await Component.InvokeAsync("Chat")
+	}
 	<footer class="border-top footer text-muted">
 		@await Html.PartialAsync("_Footer")
 	</footer>
