@@ -20,6 +20,7 @@ namespace FStep
 		private readonly IHttpContextAccessor _httpContextAccessor;
 
 		public ChatHub(FstepDBContext context, IHttpContextAccessor httpContextAccessor)
+
 		{
 			_context = context;
 			_httpContextAccessor = httpContextAccessor;

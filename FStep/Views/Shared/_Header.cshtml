@@ -16,7 +16,7 @@
 
 <div class="container-fluid fixed-top">
 	<nav class="navbar navbar-expand-lg bg-light navbar-light sticky-top px-4 py-0">
-		<a href="#" class="navbar-brand d-flex align-items-center">
+		<a href="/" class="navbar-brand d-flex align-items-center">
 			<h2 class="text-primary mb-0"><i class="fa fa-car me-3"></i>FStep</h2>
 		</a>
 		<button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -24,25 +24,20 @@
 		</button>
 		<div class="collapse navbar-collapse" id="navbarCollapse">
 			<div class="navbar-nav">
-					
 				@if (User.IsInRole("Moderator"))
 				{
-					<a class="nav-link text-dark" asp-action="ViewPost" asp-controller="ModeManagePost">Manage Posts</a>
+					<a class="nav-link text-dark" asp-area="" asp-action="ManagePosts" asp-controller="ModeManagePost">Quản lí</a>
+					<a class="nav-link text-dark" asp-area="" asp-action="AddProductToWareHouse" asp-controller="Warehouse">Kho hàng</a>
 				}
 				else
 				{
-					<a class="nav-link text-dark" asp-area="" asp-controller="home" asp-action="index">Home</a>
-					<a class="nav-link text-dark" asp-area="" asp-controller="home" asp-action="sale">Sale</a>
-				}
-				<div class="nav-item dropdown">
-					<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
-					<div class="dropdown-menu m-0">
-						<a href="booking.html" class="dropdown-item">Booking</a>
-						<a href="team.html" class="dropdown-item">Technicians</a>
-						<a href="testimonial.html" class="dropdown-item">Testimonial</a>
-						<a href="404.html" class="dropdown-item">404 Page</a>
+					<a class="nav-link text-dark" asp-area="" asp-controller="home" asp-action="index">Trang chủ </a>
+					<a class="nav-link text-dark" asp-area="" asp-controller="home" asp-action="Sale">Bán</a>
+					<a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">Trao đổi</a>
+					<div class="nav-item dropdown">
+						<a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">Đã mua</a>
 					</div>
-				</div>
+				}
 			</div>
 			<div class="navbar-nav ms-auto align-items-center">
 				@if (User.Identity.IsAuthenticated)
@@ -51,7 +46,7 @@
 						<div class="nav-item dropdown">
 							<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
 								<i class="fa fa-envelope me-lg-2"></i>
-								<span class="d-none d-lg-inline-flex">Message</span>
+								<span class="d-none d-lg-inline-flex">Tin nhắn</span>
 							</a>
 							<div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
 								<a href="#" class="dropdown-item">
@@ -120,10 +115,10 @@
 				{
 					<div class="ms-auto">
 						<a asp-controller="Account" asp-action="Login" type="hidden" class="border-danger" style="text-decoration: none;">
-							<button type="submit" class="btn btn-primary"> Login</button>
+							<button type="submit" class="btn btn-primary"> Đăng nhập</button>
 						</a>
 						<a asp-action="Register" asp-controller="Registration" class="border-danger" style="text-decoration: none;">
-							<button type="button" class="btn btn-secondary">Sign Up</button>
+							<button type="button" class="btn btn-secondary">Đăng kí</button>
 						</a>
 					</div>
 				}
