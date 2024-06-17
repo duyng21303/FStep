@@ -9,9 +9,9 @@ namespace FStep.Controllers.ManagePost
 {
 	public class ModeManagePostController : Controller
 	{
-		private readonly FstepDbContext db;
+		private readonly FstepDBContext db;
 
-		public ModeManagePostController(FstepDbContext context) => db = context;
+		public ModeManagePostController(FstepDBContext context) => db = context;
 		public IActionResult ViewPost()
 		{
 
@@ -31,10 +31,6 @@ namespace FStep.Controllers.ManagePost
 				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now,
 				Status = s.Status
 			}).OrderByDescending(o => o.PostId);
-
-
-
-
 			return View(result);
 		}
 	}

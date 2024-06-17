@@ -10,9 +10,6 @@ public partial class Confirm
     public string? IdUserConfirm { get; set; }
 
     public string? IdUserConnect { get; set; }
-    public int? IdUser { get; set; }
-
-
     public bool? Confirm1 { get; set; }
 
     public int? IdPost { get; set; }

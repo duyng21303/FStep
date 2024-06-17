@@ -23,7 +23,7 @@ namespace FStep
 
 			// Add services to the container.
 			builder.Services.AddControllersWithViews();
-			builder.Services.AddDbContext<FstepDbContext>(option =>
+			builder.Services.AddDbContext<FstepDBContext>(option =>
 			{
 				option.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
 			});
@@ -37,7 +37,8 @@ namespace FStep
 				options.Cookie.HttpOnly = true;
 				options.Cookie.IsEssential = true;
 			});
-
+			
+            builder.Services.AddHttpContextAccessor();
 
 			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options
 				=>

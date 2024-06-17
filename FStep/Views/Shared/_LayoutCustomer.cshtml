@@ -13,18 +13,17 @@
 	<header>
 		@await Html.PartialAsync("_Header")
 	</header>
-	
+
 
 	<div class="container">
 		<main role="main" class="pb-3">
 			@RenderBody()
-			
 		</main>
+		@if (User.Identity.IsAuthenticated && !Context.Request.Path.StartsWithSegments("/Post/DetailPost") && !Context.Request.Path.StartsWithSegments("/Post/DetailSalePost"))
+		{
+			@await Component.InvokeAsync("Chat")
+		}
 	</div>
-	@if (User.Identity.IsAuthenticated)
-	{
-		@await Component.InvokeAsync("Chat")
-	}
 	<footer class="border-top footer text-muted">
 		@await Html.PartialAsync("_Footer")
 	</footer>
