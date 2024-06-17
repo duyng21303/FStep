@@ -9,15 +9,15 @@ public partial class UserNotification
 
     public int IdNotification { get; set; }
 
-    public int IdTypeNotif { get; set; }
+    public string? Type { get; set; }
+
+    public int? IdReport { get; set; }
 
     public int? IdComment { get; set; }
 
-    public int? IdTransaction { get; set; }
-
     public int? IdPayment { get; set; }
 
-    public int? IdReport { get; set; }
+    public int? IdTransaction { get; set; }
 
     public virtual Comment? IdCommentNavigation { get; set; }
 
@@ -28,8 +28,6 @@ public partial class UserNotification
     public virtual Report? IdReportNavigation { get; set; }
 
     public virtual Transaction? IdTransactionNavigation { get; set; }
-
-    public virtual NotificationType IdTypeNotifNavigation { get; set; } = null!;
 
     public virtual User IdUserNavigation { get; set; } = null!;
 }

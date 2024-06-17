@@ -15,23 +15,35 @@ public partial class User
 
     public string? Address { get; set; }
 
-    public string Email { get; set; } = null!;
+    public string? Email { get; set; }
 
     public string Password { get; set; } = null!;
 
-    public string StudentId { get; set; } = null!;
+    public string? StudentId { get; set; }
 
     public DateTime? CreateDate { get; set; }
 
     public int? Rating { get; set; }
 
-    public int IdRole { get; set; }
+    public string Role { get; set; } = null!;
+
+    public string? TokenGoogle { get; set; }
+
+    public string? HashKey { get; set; }
+
+    public string? Gender { get; set; }
+
+    public string? ResetToken { get; set; }
+
+    public int? BankName { get; set; }
+
+    public long? BankAccountNumber { get; set; }
+
+    public virtual ICollection<Chat> Chats { get; set; } = new List<Chat>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
-
-    public virtual Role IdRoleNavigation { get; set; } = null!;
 
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 

@@ -9,19 +9,25 @@ public partial class Transaction
 
     public DateTime? Date { get; set; }
 
-    public bool? Status { get; set; }
+    public string? Status { get; set; }
 
     public int? Quantity { get; set; }
 
-    public decimal? Amount { get; set; }
+    public float? Amount { get; set; }
 
     public string? Note { get; set; }
 
-    public string? IdUserSeller { get; set; }
+    public float? UnitPrice { get; set; }
 
     public int IdPost { get; set; }
 
     public string IdUserBuyer { get; set; } = null!;
+
+    public string IdUserSeller { get; set; } = null!;
+
+    public string? Type { get; set; }
+
+    public string? CodeTransaction { get; set; }
 
     public virtual Post IdPostNavigation { get; set; } = null!;
 
