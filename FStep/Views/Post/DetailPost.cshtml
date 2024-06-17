@@ -370,7 +370,7 @@
 		<div class="left-column">
 			<img src="~/img/postPic/@Model.Img" alt="Project Image">
 		</div>
-
+		
 		<!-- Right Column -->
 		<div class="right-column">
 			<!-- Product Description -->
@@ -404,16 +404,16 @@
 							<div class="mb-2">
 								<span class="fs-20 pr-16">@user.Name</span>
 							</div>
-
+							
 							@if (User.Identity.IsAuthenticated)
 							{
 								@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser))
 								{
-									<button type="button" class="btn btn-sm btn-primary load-chat" data-userid="@Model.IdUser" data-post="@Model.IdPost">
+									<button type="button" class="btn btn-sm btn-primary load-chat" data-userid="@Model.IdUser" data-post="@Model.IdPost" >
 										<span>Chat ngay</span>
 
 									</button>
-
+									
 								}
 								<div id="chatContainerRaw" style="display: block;">
 									@await Component.InvokeAsync("Chat")
@@ -421,7 +421,7 @@
 								<div id="chatContainer" style="display: none;">
 									@await Component.InvokeAsync("Chat", Model.IdUser)
 								</div>
-
+								
 							}
 						</div>
 					</div>
@@ -488,7 +488,7 @@
 							<button type="button" class="btn btn-sm btn-primary load-chat-comment" data-userid="@comment.IdUser" data-post="@comment.IdPost" data-comment="@comment.IdComment">
 								<span>Chat ngay</span>
 							</button>
-
+							
 						}
 						<div id="chatContainerComment" style="display: none;">
 							@await Component.InvokeAsync("Chat", @comment.IdUser)

@@ -23,10 +23,10 @@ namespace FStep.Controllers.Auth
 	{
 
 		private readonly IMapper _mapper;
-		private readonly FstepDBContext db;
+		private readonly FstepDbContext db;
 		private const string PASSWORD_GOOGLE = "KJDHF";
 		private readonly IEmailSender emailSender;
-		public AccountController(FstepDBContext context, IMapper mapper, IEmailSender emailSender)
+		public AccountController(FstepDbContext context, IMapper mapper, IEmailSender emailSender)
 
 		{
 			db = context;
@@ -205,6 +205,8 @@ namespace FStep.Controllers.Auth
 			catch (Exception ex) { }
 			return View();
 		}
+
+
 		public async Task<IActionResult> ForgetPassword()
 		{
 			return View();

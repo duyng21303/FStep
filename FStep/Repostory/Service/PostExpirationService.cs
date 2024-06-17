@@ -34,7 +34,7 @@ namespace FStep.Repostory.Service
 		{
 			using (var scope = _services.CreateScope())
 			{
-				var dbContext = scope.ServiceProvider.GetRequiredService<FstepDBContext>();
+				var dbContext = scope.ServiceProvider.GetRequiredService<FstepDbContext>();
 
 				// Lấy các bài post sắp hết hạn
 				var pendingPosts = await dbContext.Posts

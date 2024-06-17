@@ -10,9 +10,9 @@ namespace FStep.Controllers.Customer
     public class BuyNowController : Controller
     {
 
-        private readonly FstepDBContext _db;
+        private readonly FstepDbContext _db;
         private readonly IMapper _mapper;
-        public  BuyNowController(FstepDBContext context, IMapper mapper)
+        public  BuyNowController(FstepDbContext context, IMapper mapper)
         {
             _db = context;
             _mapper = mapper;

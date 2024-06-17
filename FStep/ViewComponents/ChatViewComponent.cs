@@ -11,9 +11,9 @@ namespace FStep.ViewComponents
 {
 	public class ChatViewComponent : ViewComponent
 	{
-		private readonly FstepDBContext db;
+		private readonly FstepDbContext db;
 
-		public ChatViewComponent(FstepDBContext context)
+		public ChatViewComponent(FstepDbContext context)
 		{
 			db = context;
 		}

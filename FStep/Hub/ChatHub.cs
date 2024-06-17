@@ -16,10 +16,10 @@ namespace FStep
 {
 	public class ChatHub : Hub
 	{
-		private readonly FstepDBContext _context;
+		private readonly FstepDbContext _context;
 		private readonly IHttpContextAccessor _httpContextAccessor;
 
-		public ChatHub(FstepDBContext context, IHttpContextAccessor httpContextAccessor)
+		public ChatHub(FstepDbContext context, IHttpContextAccessor httpContextAccessor)
 
 		{
 			_context = context;
@@ -73,7 +73,7 @@ namespace FStep
 				else
 				{
 					confirmDb = await _context.Confirms
-						.Where(m => m.IdPost == postDto.IdPost && (m.IdUserConnect == userId || m.IdUserConfirm == userId))
+						.Where(m => m.IdPost == postDto.IdPost && (m.IdUserConnect == userId || m.IdUserConfirm == userId) && (m.IdUserConnect == currentUser || m.IdUserConfirm == currentUser))
 						.FirstOrDefaultAsync();
 				}
 			}
