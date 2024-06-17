@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using System.Security.Claims;
 using FStep;
 
+
 public class Program
 {
 	public static void Main(string[] args)
@@ -55,6 +56,7 @@ public class Program
 				options.AccessDeniedPath = "/AccessDenied";
 			});
 
+
 			// Configure Google authentication (if needed)
 			builder.Services.AddAuthentication().AddGoogle(googleOptions =>
 			{
@@ -85,6 +87,7 @@ public class Program
 
 		app.UseSession();
 
+
 			app.UseAuthentication();
 			app.UseAuthorization();
 			app.UseEndpoints(endpoints =>
@@ -99,3 +102,5 @@ public class Program
 
 		}
 	}
+
+}

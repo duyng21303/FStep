@@ -229,6 +229,7 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
                     <img src="/img/postPic/${confirm.post.img}" alt="Product Image" class="img-thumbnail" style="width: 50px; height: 50px;">
                 </div>
                 <div class="col text-left p-2">
+
                     <!-- Tên sản phẩm và chi tiết, giảm kích thước chữ -->
                     <h6 class="product-name m-0" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px;"">${confirm.post.content}</h6>
                     <p class="product-detail m-0" style="font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px;">

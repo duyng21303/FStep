@@ -68,6 +68,7 @@ namespace FStep
 				{
 					confirmDb = await _context.Confirms
 						.Where(m => m.IdPost == postDto.IdPost && m.IdComment == commentDto.IdComment && (m.IdUserConnect == userId || m.IdUserConfirm == userId) && (m.IdUserConnect == currentUser || m.IdUserConfirm == currentUser))
+
 						.FirstOrDefaultAsync();
 				}
 				else
