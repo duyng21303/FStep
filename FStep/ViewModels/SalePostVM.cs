@@ -20,7 +20,7 @@ namespace FStep.ViewModels
 		[Required(ErrorMessage = "This is required")]
 		[MaxLength(250, ErrorMessage = "Maximun 250 characters")]
 		public string? Description { get; set; }
-		public DateTime? CreateDate { get; set; }
+		public DateTime CreateDate { get; set; }
 		public string Type { get; set; } = "Sale";
 		[Display(Name = "Name of product")]
 		[Required(ErrorMessage = "This is required")]
@@ -29,7 +29,7 @@ namespace FStep.ViewModels
 
 		[Display(Name = "Quantity")]
 		[Required(ErrorMessage = "This is required")]
-		public int? Quantity { get; set; }
+		public int Quantity { get; set; }
 
 		[Display(Name = "Unit Price")]
 		[DataType(DataType.Currency)]
@@ -37,8 +37,5 @@ namespace FStep.ViewModels
 		public float Price { get; set; }
 		[Display(Name = "Detail information of Product")]
 		public string? DetailProduct { get; set; }
-
-
-
 	}
 }

@@ -1,5 +1,7 @@
 ﻿@using FStep.Data
 @using FStep.ViewModels
+@model FStep.Data.Post
+
 @{
 	var user = ViewData["USER_CREATE"] as User;
 	var comments = ViewData["comments"] as List<CommentVM> ?? new List<CommentVM>();
@@ -392,13 +394,38 @@
 				<div class="media card-body">
 					<div class="media-left pr-12">
 						<div class="img">
-							<img class="avatar avatar-xl no-radius" src="~/img/userAvar/@user.AvatarImg" alt="...">
+							@if (user.AvatarImg != null)
+							{
+								<img class="avatar avatar-xl no-radius" src="~/img/userAvar/@user.AvatarImg" alt="...">
+							}
+							else
+							{
+								<img class="avatar avatar-xl no-radius" src="~/img/nullAvar/149071.png" alt="...">
+							}
 						</div>
 						<div class="name">
 							<div class="mb-2">
 								<span class="fs-20 pr-16">@user.Name</span>
 							</div>
-							<button type="button" class="btn btn-sm btn-primary"><span>Chat ngay</span></button>
+
+							@if (User.Identity.IsAuthenticated)
+							{
+								@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser))
+								{
+									<button type="button" class="btn btn-sm btn-primary load-chat" data-userid="@Model.IdUser" data-post="@Model.IdPost">
+										<span>Chat ngay</span>
+
+									</button>
+
+								}
+								<div id="chatContainerRaw" style="display: block;">
+									@await Component.InvokeAsync("Chat")
+								</div>
+								<div id="chatContainer" style="display: none;">
+									@await Component.InvokeAsync("Chat", Model.IdUser)
+								</div>
+
+							}
 						</div>
 					</div>
 
@@ -478,22 +505,23 @@
 					<div class="product-rating__time">@comment.Date?.ToString("dd-MM-yyyy HH:mm:ss")</div>
 					<div class="product-rating__content">@comment.Content</div>
 				</div>
+				<div class="name ms-auto align-self-center">
+					@if (User.Identity.IsAuthenticated)
+					{
+						@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(comment.IdUser))
+						{
+							<button type="button" class="btn btn-sm btn-primary load-chat-comment" data-userid="@comment.IdUser" data-post="@comment.IdPost" data-comment="@comment.IdComment">
+								<span>Chat ngay</span>
+							</button>
+
+						}
+						<div id="chatContainerComment" style="display: none;">
+							@await Component.InvokeAsync("Chat", @comment.IdUser)
+						</div>
+					}
+				</div>
 			</div>
 		}
-		<div class="inner-column wow fadeInRight card" style="padding : 5px 5px 5px 5px;box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);">
-			<span class="lead">Add your comment</span>
-			<form method="post" asp-action="PostComment" asp-asp-controller="Post">
-				<div>
-					<input name="IdPost" value="@Model.IdPost" type="hidden" />
-					<input name="RedirectUrl" value="DetailPost" type="hidden" />
-					<textarea rows="3" class="form-control" name="Content"></textarea>
-				</div>
-				<div style="min-height:10px;"></div>
-				<div>
-					<button class="btn btn-danger" name="btn-comment">Comment</button>
-				</div>
-			</form>
-		</div>
 	</div>
 
 	<script>

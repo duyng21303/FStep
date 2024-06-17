@@ -28,6 +28,7 @@
   <ItemGroup>
     <Compile Include="Controllers\Admin\AdminController.cs" />
     <Compile Include="ViewComponents\ChatViewComponent.cs" />
+    <Compile Include="ViewComponents\CreatePostViewComponent.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,11 +52,16 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
+    <PackageReference Include="Quartz" Version="3.9.0" />
+    <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.9.0" />
     <PackageReference Include="X.PagedList" Version="9.1.2" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="9.1.2" />
+	  <Folder Include="Controllers\Admin\" />
 	  <Folder Include="Controllers\Moder\" />
 	  <Folder Include="wwwroot\img\pic\" />
+	  <Folder Include="wwwroot\img\postPic\" />
 	  <Folder Include="wwwroot\img\userAvar\" />
 	  <Folder Include="wwwroot\img\nullAvar\" />
   </ItemGroup>

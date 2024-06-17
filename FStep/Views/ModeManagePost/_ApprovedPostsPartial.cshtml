@@ -1,0 +1,70 @@
+﻿@model X.PagedList.IPagedList<FStep.ViewModels.ListPostVM>
+@using X.PagedList.Mvc.Core;
+
+<div>
+	<!-- Header body  -->
+	<!-- Title header body  -->
+	<div class="row align-items-center mb-8 search-header">
+		<div>
+			<div class="row">
+				<div class="col-md-5 d-flex justify-content-between align-items-center">
+					<p class="mb-0">Tổng Số Bài Đã Duyệt: @ViewBag.ApprovedPostsCount</p>
+				</div>
+			</div>
+		</div>
+		<div class="custom-container">
+			<!-- Start Content Body-->
+			<div class="container">
+				<div class="row mt-3">
+					<div class="col">
+						<table class="table table-striped">
+							<thead class="thead-light">
+								<tr>
+									<th scope="col">Ảnh</th>
+									<th scope="col">Tên</th>
+									<th scope="col">Loại SP</th>
+									<th scope="col">MSSV</th>
+									<th scope="col">Số Lượng</th>
+									<th scope="col">Vị Trí</th>
+									<th scope="col">Ngày Tạo</th>
+									<th scope="col">Còn Lại</th>
+									<th scope="col">Thao Tác</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- Loop through posts -->
+								@foreach (var item in Model)
+								{
+									<tr>
+										<td><img src="@Url.Content("~/img/postPic/" + item.Image)" class="img-fluid small-rounded-image" alt="Post Image"></td>
+										<td class="post-title">@Html.Raw(item.PostTitle)</td>
+										<td>@Html.Raw(item.Type)</td>
+										<td class="post-studentid">@Html.Raw(item.StudentId)</td>
+										<td>@Html.Raw(item.Quantity)</td>
+										<td>@Html.Raw(item.Location)</td>
+										<td>@Html.Raw(item.CreateDate.ToString("yyyy-MM-dd"))</td>
+										<td>@Html.Raw(item.DaysRemaining)</td>
+										<td>
+											<a asp-controller="ModeManagePost" asp-action="UpdateStatus" asp-route-id="@item.PostId" style="text-decoration: none;">
+												<button type="button" class="btn btn-success btn-sm me-2">Giao dịch</button>
+											</a>
+										</td>
+										<td>
+											<form asp-controller="ModeManagePost" asp-action="FinishPost" method="post" onsubmit="return confirmDelete()">
+												<input type="hidden" name="id" value="@item.PostId" />
+												<button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+											</form>
+										</td>
+									</tr>
+								}
+								<!-- End loop -->
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			@Html.PagedListPager(Model, page => Url.Action("ManagePosts", new { approvedQuery = ViewBag.ApprovedQuery, currentTab = "approvedPosts", approvedPage = page, pendingPage = ViewBag.PendingPage }))
+			<!-- End Content Body -->
+		</div>
+	</div>
+</div>

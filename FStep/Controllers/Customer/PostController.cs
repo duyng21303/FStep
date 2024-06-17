@@ -5,6 +5,7 @@ using FStep.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FStep.Controllers.Customer
@@ -26,12 +27,7 @@ namespace FStep.Controllers.Customer
 		}
 
 		[HttpGet]
-		public IActionResult CreateExchangePost()
-		{
-			return View();
-		}
-		[HttpGet]
-		public IActionResult CreateSalePost()
+		public IActionResult CreatePost()
 		{
 			return View();
 		}
@@ -39,52 +35,14 @@ namespace FStep.Controllers.Customer
 		//Create post
 		[Authorize]
 		[HttpPost]
-		public IActionResult CreateExchangePost(ExchangePostVM model, IFormFile img)
+		public IActionResult CreatePost(PostVM model, IFormFile img)
 		{
 			try
 			{
 				var product = _mapper.Map<Product>(model);
-				product.Name = model.NameProduct;
-				product.Status = "true";
-				product.Detail = model.DetailProduct;
-				db.Add(product);
-				db.SaveChanges();
-
-				var post = _mapper.Map<Post>(model);
-				post.Content = model.Title;
-				post.Date = DateTime.Now;
-				//Helpers.Util.UpLoadImg(model.Img, "")
-				post.Img = Util.UpLoadImg(img, "postPic");
-				post.Status = "false";
-				post.Type = model.Type;
-				post.Detail = model.Description;
-				post.IdUser = User.FindFirst("UserID").Value;
-				//get IdProduct from database map to Post
-				post.IdProduct = db.Products.Max(p => p.IdProduct);
-				db.Add(post);
-				db.SaveChanges();
-				return Redirect("/");
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex);
-			}
-
-			return View();
-		}
-
-		[Authorize]
-		[HttpPost]
-		public IActionResult CreateSalePost(SalePostVM model, IFormFile img)
-		{
-			try
-			{
-				var product = _mapper.Map<Product>(model);
-				product.Name = model.NameProduct;
 				product.Quantity = model.Quantity;
 				product.Price = model.Price;
 				product.Status = "true";
-				product.Detail = model.DetailProduct;
 				db.Add(product);
 				db.SaveChanges();
 
@@ -112,35 +70,22 @@ namespace FStep.Controllers.Customer
 		}
 		public IActionResult DetailPost(int id)
 		{
-			// Lấy thông tin bài đăng
-			var data = db.Posts
-						 .Include(x => x.IdProductNavigation)
-						 .Include(x => x.IdUserNavigation)
-						 .SingleOrDefault(p => p.IdPost == id);
+			var data = db.Posts.Include(x => x.IdProductNavigation).Include(x => x.IdUserNavigation).SingleOrDefault(p => p.IdPost == id);
+			var user = db.Users.SingleOrDefault(user => user.IdUser == data.IdUser);
 
-			if (data == null)
+			ViewData["USER_CREATE"] = user;
+
+			// lấy thêm comment sản phẩm
+			var comments = db.Comments.Where(x => x.IdPost == id).Include(x => x.IdUserNavigation).Select(x => new CommentVM
 			{
-				return NotFound();
-			}
-
-			// Thông tin người dùng tạo bài đăng
-			ViewData["USER_CREATE"] = data.IdUserNavigation;
-
-
-			// Lấy các bình luận cho bài đăng
-			var comments = db.Comments
-							 .Where(x => x.IdPost == id)
-							 .Include(x => x.IdUserNavigation)
-							 .Select(x => new CommentVM
-							 {
-								 IdPost = id,
-								 IdUser = x.IdUser,
-								 Content = x.Content,
-								 Date = x.Date,
-								 IdComment = x.IdComment,
-								 Name = x.IdUserNavigation.Name,
-								 AvatarImg = x.IdUserNavigation.AvatarImg
-							 }).ToList();
+				IdPost = id,
+				IdUser = x.IdUser,
+				Content = x.Content,
+				Date = x.Date,
+				IdComment = x.IdComment,
+				Name = x.IdUserNavigation.Name,
+				avarImg = x.IdUserNavigation.AvatarImg // Adjust this property name to match your actual property name for the user's image
+			}).ToList();
 
 			ViewData["comments"] = comments;
 
@@ -184,22 +129,20 @@ namespace FStep.Controllers.Customer
 				Date = x.Date,
 				IdComment = x.IdComment,
 				Name = x.IdUserNavigation.Name,
-				AvatarImg = x.IdUserNavigation.AvatarImg
+				avarImg = x.IdUserNavigation.AvatarImg // Adjust this property name to match your actual property name for the user's image
 			}).ToList();
 
 			ViewData["comments"] = comments;
 
-			var result = new SalePostVM()
+			var result = new PostVM()
 			{
-				Id = data.IdPost,
-				Title = data.Content,
-				Quantity = data.IdProductNavigation.Quantity,
-				Img = data.Img,
-				Description = data.Detail,
-				NameProduct = data.IdProductNavigation.Name,
-				DetailProduct = data.IdProductNavigation.Detail,
-				CreateDate = data.Date,
-				Price = data.IdProductNavigation.Price ?? 0
+				IdPost = post.IdPost,
+				Title = post.Content,
+				Quantity = product.Quantity,
+				Img = post.Img,
+				Description = post.Detail,
+				CreateDate = post.Date,
+				Price = product.Price ?? 0
 			};
 
 			// Lấy giá của sản phẩm hiện tại
@@ -248,6 +191,11 @@ namespace FStep.Controllers.Customer
 			}
 			return RedirectToAction("DetailPost", "Post", new { id = comment.IdPost });
 		}
+
+		public ActionResult _CreatePost()
+		{
+			return PartialView();
+		}
+
 	}
 }
-
