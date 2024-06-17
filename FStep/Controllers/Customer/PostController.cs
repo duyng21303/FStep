@@ -84,7 +84,7 @@ namespace FStep.Controllers.Customer
 				Date = x.Date,
 				IdComment = x.IdComment,
 				Name = x.IdUserNavigation.Name,
-				avarImg = x.IdUserNavigation.AvatarImg // Adjust this property name to match your actual property name for the user's image
+                AvatarImg = x.IdUserNavigation.AvatarImg // Adjust this property name to match your actual property name for the user's image
 			}).ToList();
 
 			ViewData["comments"] = comments;
@@ -106,47 +106,38 @@ namespace FStep.Controllers.Customer
 
 			return View(data);
 		}
-		public IActionResult DetailSalePost(int id)
-		{
-			var data = db.Posts
-						 .Include(x => x.IdProductNavigation)
-						 .Include(x => x.IdUserNavigation)
-						 .SingleOrDefault(p => p.IdPost == id);
+        public IActionResult DetailSalePost(int id)
+        {
+            var post = db.Posts.SingleOrDefault(post => post.IdPost == id);
 
-			if (data == null)
-			{
-				return NotFound();
-			}
+            var product = db.Products.SingleOrDefault(product => product.IdProduct == post.IdProduct);
+            var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
+            ViewData["USER_CREATE"] = user;
 
-			ViewData["USER_CREATE"] = data.IdUserNavigation;
+            // lấy thêm comment sản phẩm
+            var comments = db.Comments.Where(x => x.IdPost == id).Include(x => x.IdUserNavigation).Select(x => new CommentVM
+            {
+                IdPost = id,
+                IdUser = x.IdUser,
+                Content = x.Content,
+                Date = x.Date,
+                IdComment = x.IdComment,
+                Name = x.IdUserNavigation.Name
+            }).ToList();
 
-			// lấy thêm comment sản phẩm
-			var comments = db.Comments.Where(x => x.IdPost == id).Include(x => x.IdUserNavigation).Select(x => new CommentVM
-			{
-				IdPost = id,
-				IdUser = x.IdUser,
-				Content = x.Content,
-				Date = x.Date,
-				IdComment = x.IdComment,
-				Name = x.IdUserNavigation.Name,
-				avarImg = x.IdUserNavigation.AvatarImg // Adjust this property name to match your actual property name for the user's image
-			}).ToList();
+            ViewData["comments"] = comments;
 
-			ViewData["comments"] = comments;
-
-			var result = new PostVM()
-			{
-				IdPost = post.IdPost,
-				Title = post.Content,
-				Quantity = product.Quantity,
-				Img = post.Img,
-				Description = post.Detail,
-				CreateDate = post.Date,
-				Price = product.Price ?? 0
-			};
-
-			// Lấy giá của sản phẩm hiện tại
-			var currentProductPrice = data.IdProductNavigation?.Price;
+            var result = new PostVM()
+            {
+                IdPost = post.IdPost,
+                Title = post.Content,
+                Quantity = product.Quantity,
+                Img = post.Img,
+                Description = post.Detail,
+                CreateDate = post.Date,
+                Price = product.Price ?? 0
+            };
+        var currentProductPrice = post.IdProductNavigation?.Price;
 
 			// Truy vấn các bài đăng chứa sản phẩm đề xuất trong khoảng giá ±1 triệu đồng
 			var recommendedSales = db.Posts
@@ -160,8 +151,8 @@ namespace FStep.Controllers.Customer
 
 			ViewData["recommendedSales"] = recommendedSales;
 
-			return View(result);
-		}
+            return View(result);
+        }
 
 		[HttpPost]
 		public IActionResult PostComment([FromForm] CommentVM comment)
