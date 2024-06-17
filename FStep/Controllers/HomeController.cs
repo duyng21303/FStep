@@ -12,7 +12,7 @@ using X.PagedList;
 namespace FStep.Controllers
 {
 
-	public class HomeController : Controller
+    public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
 
@@ -93,11 +93,9 @@ namespace FStep.Controllers
             try
             {
                 var product = _mapper.Map<Product>(model);
-                product.Name = model.NameProduct;
                 product.Quantity = model.Quantity;
                 product.Price = model.Price;
                 product.Status = "true";
-                product.Detail = model.DetailProduct;
                 db.Add(product);
                 db.SaveChanges();
 

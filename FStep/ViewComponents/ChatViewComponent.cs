@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 namespace FStep.ViewComponents
 {
-	public class ChatViewComponent : ViewComponent
+    public class ChatViewComponent : ViewComponent
 	{
 		private readonly FstepDbContext db;
 

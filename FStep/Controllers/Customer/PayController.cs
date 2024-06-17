@@ -13,7 +13,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace FStep.Controllers.Customer
 {
-	public class PayController : Controller
+    public class PayController : Controller
 	{
 
 		private readonly FstepDbContext db;

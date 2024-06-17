@@ -3,14 +3,13 @@ using System.Net.WebSockets;
 using System.Web;
 using AutoMapper;
 using FStep.Data;
-using FStep.Helpers;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 namespace FStep
 {
-	public class ChatHub : Hub
+    public class ChatHub : Hub
 	{
 		private readonly FstepDbContext _context;
 

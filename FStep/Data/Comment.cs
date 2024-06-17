@@ -11,9 +11,15 @@ public partial class Comment
 
     public DateTime? Date { get; set; }
 
+    public string? Img { get; set; }
+
+    public string? Type { get; set; }
+
     public int IdPost { get; set; }
 
     public string IdUser { get; set; } = null!;
+
+    public virtual ICollection<Confirm> Confirms { get; set; } = new List<Confirm>();
 
     public virtual Post IdPostNavigation { get; set; } = null!;
 

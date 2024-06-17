@@ -7,7 +7,7 @@ using X.PagedList;
 
 namespace FStep.Controllers.ManagePost
 {
-	public class ModeManagePostController : Controller
+    public class ModeManagePostController : Controller
 	{
 		private readonly FstepDbContext db;
 
