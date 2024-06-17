@@ -114,12 +114,19 @@
 											</a>
 										</div>
 										<div class="p-4 border border-secondary border-top-0 rounded-bottom">
-
-											<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@item.IdPost">@Html.Raw(item.Title)</a>
-											<p class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Description)</p>
-											<p class="price">Price: @String.Format(format, "{0:0,0 VND}", item.Price)</p>
+											<h4 class="Title">@Html.Raw(item.Title)</h4>
+											<p class="description">@Html.Raw(item.Description)</p>
+											<p class="price">Price: @Html.Raw(item.Price) (VND)</p>
 											<p class="quantity">Quantity: @Html.Raw(item.Quantity)</p>
-											<p class="text-end mb-0 mt-2">CreateDate <span>@item.CreateDate?.ToString("dd/MM/yyyy")</span></p>
+											<form asp-controller="BuyNow" asp-action="BuyNow" method="get">
+												<input type="hidden" name="id" value="@item.Id" />
+												<div class="form-group">
+													<label for="Quantity">Quantity:</label>
+													<input type="number" name="Quantity" class="form-control" />
+												</div>
+												<button type="submit" class="btn btn-primary">Buy Now</button>
+											</form>
+											<p class="text-end mb-0 mt-2">CreateDate <span>@item.CreateDate.ToString("dd/MM/yyyy")</span></p>
 										</div>
 									</div>
 								</div>

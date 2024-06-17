@@ -8,11 +8,11 @@ using FStep.Data; // Sử dụng entity framework core lưu trữ data.
 
 namespace FStep.Repostory.Service
 {
-	public class PostExpirationService : IHostedService, IDisposable
+	public class PostExpirationService : IHostedService, IDisposable  //IHostedService: dv hoạt động chạy ngầm 
 	{
-		private readonly IServiceProvider _services;
-		private readonly IEmailSender _emailSender;
-		private Timer _timer;
+		private readonly IServiceProvider _services;  // tạo scope để lấy dbContext
+		private readonly IEmailSender _emailSender;  // sendMail
+		private Timer _timer; //
 		private readonly ILogger<PostExpirationService> _logger;
 
 		public PostExpirationService(IServiceProvider services, IEmailSender emailSender, ILogger<PostExpirationService> logger)
@@ -25,17 +25,26 @@ namespace FStep.Repostory.Service
 
 		public Task StartAsync(CancellationToken cancellationToken)
 		{
+			//DateTime now = DateTime.Now;
+			//DateTime nextEightAM = now.Date.AddHours(8);
+
+			//if (now >= nextEightAM)
+			//{
+			//	nextEightAM = nextEightAM.AddDays(1); // Move to 8:00 AM tomorrow
+			//}
+			//TimeSpan initialDueTime = nextEightAM - now;
+
 			_timer = new Timer(CheckPostExpiration, null, TimeSpan.Zero, TimeSpan.FromDays(1)); // Kiểm tra nếu post hết hạn sau mỗi ngày
+			_logger.LogInformation($"Found :{_timer}");
 			return Task.CompletedTask;
 			//triển khia từ ihostedservice được gọi ngay khi dịch vụ bắt đầu . _timer được khởi tạo để chạy hàm checkpost mỗi ngày 1 lần
-		}
 
+		}
 		private async void CheckPostExpiration(object state)
 		{
 			using (var scope = _services.CreateScope())
 			{
-				var dbContext = scope.ServiceProvider.GetRequiredService<FstepDBContext>();
-
+				var dbContext = scope.ServiceProvider.GetRequiredService<FstepDbContext>();
 				// Lấy các bài post sắp hết hạn
 				var pendingPosts = await dbContext.Posts
 					.Include(p => p.IdUserNavigation)
@@ -122,3 +131,4 @@ namespace FStep.Repostory.Service
 		}
 	}
 }
+

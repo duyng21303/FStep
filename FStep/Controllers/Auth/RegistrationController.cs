@@ -10,12 +10,13 @@ namespace FStep.Controllers.Auth
 {
     public class RegistrationController : Controller
     {
-        private readonly FstepDBContext db;
+        private readonly FstepDbContext db;
         private readonly IMapper _mapper;
         private readonly IEmailSender emailSender;
         private readonly ILogger<RegistrationController> _logger;
 
-        public RegistrationController(FstepDBContext context, IMapper mapper, IEmailSender emailSender, ILogger<RegistrationController> logger)
+        public RegistrationController(FstepDbContext context, IMapper mapper, IEmailSender emailSender, ILogger<RegistrationController> logger)
+
         {
             db = context;
             _mapper = mapper;
