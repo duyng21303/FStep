@@ -31,6 +31,7 @@ namespace FStep.Controllers.Customer
 		{
 			return View();
 		}
+
 		//Create post
 		[Authorize]
 		[HttpPost]
@@ -50,7 +51,6 @@ namespace FStep.Controllers.Customer
 				post.Date = DateTime.Now;
 				//Helpers.Util.UpLoadImg(model.Img, "")
 				post.Img = Util.UpLoadImg(img, "postPic");
-
 				post.Status = "true";
 				post.Type = model.Type;
 				post.Detail = model.Description;
@@ -59,7 +59,7 @@ namespace FStep.Controllers.Customer
 				post.IdProduct = db.Products.Max(p => p.IdProduct);
 				db.Add(post);
 				db.SaveChanges();
-				return Redirect("CreatePostSuccess");
+				return Redirect("/");
 			}
 			catch (Exception ex)
 			{
@@ -68,12 +68,6 @@ namespace FStep.Controllers.Customer
 
 			return View();
 		}
-        public IActionResult CreatePostSuccess()
-        {
-            return View();
-        }
-
-        [Authorize]
 		public IActionResult DetailPost(int id)
 		{
 			var data = db.Posts.Include(x => x.IdProductNavigation).Include(x => x.IdUserNavigation).SingleOrDefault(p => p.IdPost == id);
@@ -139,27 +133,6 @@ namespace FStep.Controllers.Customer
 			string refererUrl = Request.Headers["Referer"].ToString();
 			try
 			{
-				var product = _mapper.Map<Product>(model);
-				product.Quantity = model.Quantity;
-				product.Price = model.Price;
-				product.Status = "false";
-				db.Add(product);
-				db.SaveChanges();
-
-				var post = _mapper.Map<Post>(model);
-				post.Content = model.Title;
-				post.Date = DateTime.Now;
-				//Helpers.Util.UpLoadImg(model.Img, "")
-				post.Img = Util.UpLoadImg(img, "postPic");
-				post.Status = "false";
-				post.Type = model.Type;
-				post.Detail = model.Description;
-				post.IdUser = User.FindFirst("UserID").Value;
-				//get IdProduct from database map to Post
-				post.IdProduct = db.Products.Max(p => p.IdProduct);
-				db.Add(post);
-				db.SaveChanges();
-				return Redirect("CreatePostSuccess");
 				var isAuthenticated = User?.Identity?.IsAuthenticated;
 				if (isAuthenticated == true)
 				{

@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Security.Claims;
+using FStep;
 
 public class Program
 {
@@ -30,7 +31,7 @@ public class Program
 
 			// Add services to the container.
 			builder.Services.AddControllersWithViews();
-			builder.Services.AddDbContext<FstepDBContext>(option =>
+			builder.Services.AddDbContext<FstepDbContext>(option =>
 			{
 				option.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
 			});
@@ -98,4 +99,3 @@ public class Program
 
 		}
 	}
-}

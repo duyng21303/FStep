@@ -16,10 +16,10 @@ namespace FStep
 {
 	public class ChatHub : Hub
 	{
-		private readonly FstepDBContext _context;
+		private readonly FstepDbContext _context;
 		private readonly IHttpContextAccessor _httpContextAccessor;
 
-		public ChatHub(FstepDBContext context, IHttpContextAccessor httpContextAccessor)
+		public ChatHub(FstepDbContext context, IHttpContextAccessor httpContextAccessor)
 
 		{
 			_context = context;
