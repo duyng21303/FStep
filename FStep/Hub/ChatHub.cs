@@ -67,13 +67,13 @@ namespace FStep
 				if (commentDto != null)
 				{
 					confirmDb = await _context.Confirms
-						.Where(m => m.IdPost == postDto.IdPost && m.IdComment == commentDto.IdComment && (m.IdUserConnect == userId || m.IdUserConfirm == userId))
+						.Where(m => m.IdPost == postDto.IdPost && m.IdComment == commentDto.IdComment && (m.IdUserConnect == userId || m.IdUserConfirm == userId) && (m.IdUserConnect == currentUser || m.IdUserConfirm == currentUser))
 						.FirstOrDefaultAsync();
 				}
 				else
 				{
 					confirmDb = await _context.Confirms
-						.Where(m => m.IdPost == postDto.IdPost && (m.IdUserConnect == userId || m.IdUserConfirm == userId))
+						.Where(m => m.IdPost == postDto.IdPost && (m.IdUserConnect == userId || m.IdUserConfirm == userId) && (m.IdUserConnect == currentUser || m.IdUserConfirm == currentUser))
 						.FirstOrDefaultAsync();
 				}
 			}
