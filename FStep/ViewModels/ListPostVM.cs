@@ -26,6 +26,7 @@ namespace FStep.ViewModels
 
 
 
+
 	public class ListPostVM
 	{
 		public int PostId { get; set; }
@@ -63,3 +64,4 @@ namespace FStep.ViewModels
 
 
 }
+
