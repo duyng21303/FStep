@@ -18,6 +18,8 @@ namespace FStep
 	{
 		private readonly FstepDbContext _context;
 		private readonly IHttpContextAccessor _httpContextAccessor;
+		private static Dictionary<string, string> userConnections = new Dictionary<string, string>();
+		private static Dictionary<string, string> userCurrentTabs = new Dictionary<string, string>();
 
 		public ChatHub(FstepDbContext context, IHttpContextAccessor httpContextAccessor)
 
@@ -25,11 +27,36 @@ namespace FStep
 			_context = context;
 			_httpContextAccessor = httpContextAccessor;
 		}
-		public async Task SendMessage(string toUser, string fromUser, string massage, string img)
+		public async Task UpdateUserTab(string userId, string currentTab)
+		{
+			if (userId != null)
+			{
+				userCurrentTabs[userId] = currentTab;
+			}
+		}
+		public override async Task OnConnectedAsync()
+		{
+			var userId = Context.User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
+			if (userId != null)
+			{
+				userConnections[userId] = Context.ConnectionId;
+			}
+			await base.OnConnectedAsync();
+		}
+		public override async Task OnDisconnectedAsync(Exception exception)
+		{
+			var userId = Context.User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
+			if (userId != null && userConnections.ContainsKey(userId))
+			{
+				userConnections.Remove(userId);
+			}
+			await base.OnDisconnectedAsync(exception);
+		}
+		public async Task SendMessage(string toUser, string fromUser, string message, string img)
 		{
 			var chat = new Chat()
 			{
-				ChatMsg = massage,
+				ChatMsg = message,
 				ChatDate = DateTime.Now,
 				RecieverUserId = toUser,
 				SenderUserId = fromUser,
@@ -37,7 +64,19 @@ namespace FStep
 			};
 			await _context.Chats.AddAsync(chat);
 			await _context.SaveChangesAsync();
-			await Clients.All.SendAsync("ReceiveMessage", toUser, fromUser, massage, img, DateTime.Now);
+			var recieverUser = await _context.Users
+							.Where(u => u.IdUser == fromUser)
+							.Select(u => new { u.IdUser, u.AvatarImg, u.Name })
+							.FirstOrDefaultAsync();
+			if (userConnections.ContainsKey(toUser))
+			{
+				var toConnectionId = userConnections[toUser];
+				await Clients.Client(toConnectionId).SendAsync("ReceiveMessage", toUser, fromUser, message, recieverUser.AvatarImg, DateTime.Now);
+			}
+			var fromConnectionId = Context.ConnectionId;
+			// Gửi tin nhắn đến người nhận
+			// Gửi lại tin nhắn đến người gửi
+			await Clients.Client(fromConnectionId).SendAsync("ReceiveMessage", toUser, fromUser, message, img, DateTime.Now);
 		}
 		public async Task LoadMessagesDetail(string userId, string? postID, string? commentID)
 		{
@@ -100,6 +139,10 @@ namespace FStep
 							.Where(u => u.IdUser == userId)
 							.Select(u => new { u.IdUser, u.AvatarImg, u.Name })
 							.FirstOrDefaultAsync();
+			var currentUserDb = await _context.Users
+							.Where(u => u.IdUser == currentUser)
+							.Select(u => new { u.IdUser, u.AvatarImg, u.Name })
+							.FirstOrDefaultAsync();
 			var confirmDbHistory = await _context.Confirms
 				.Where(m => (m.IdUserConnect == userId || m.IdUserConfirm == userId) && (m.IdUserConnect == currentUser || m.IdUserConfirm == currentUser))
 				.OrderByDescending(m => m.IdConfirm) // Sắp xếp theo Id giảm dần
@@ -159,11 +202,31 @@ namespace FStep
 						IdUserConnect = recieverUser.IdUser
 					};
 				}
-
+				//gửi đồng bộ đến người kia
+				var confirmOrder = new ConfirmVM()
+				{
+					CheckConfirm = confirm.CheckConfirmOrder,
+					Comment = commentDto ?? null,
+					Post = postDto,
+					IdUserConfirm = confirm.IdUserConnect,
+					IdUserConnect = confirm.IdUserConfirm,
+					CheckConfirmOrder = confirm.CheckConfirm
+				};
+				if (userConnections.ContainsKey(userId)) /*&& userCurrentTabs.ContainsKey(userId))*/
+				{
+					var toConnectionId = userConnections[userId];
+					await Clients.Client(toConnectionId).SendAsync("LoadMessages", messages, recieverUser.IdUser, currentUserDb, confirmOrder);
+				}
+				//------------------------------------------------
 				await Clients.Caller.SendAsync("LoadMessages", messages, currentUser, recieverUser, confirm);
 			}
 			else
 			{
+				if (userConnections.ContainsKey(userId))/* && userCurrentTabs.ContainsKey(userId))*/
+				{
+					var toConnectionId = userConnections[userId];
+					await Clients.Client(toConnectionId).SendAsync("LoadMessages", messages, recieverUser.IdUser, currentUserDb, null);
+				}
 				await Clients.Caller.SendAsync("LoadMessages", messages, currentUser, recieverUser, null);
 			}
 			//_httpContextAccessor.HttpContext.Session.Set("USER_LIST", recieverUser);
@@ -181,14 +244,14 @@ namespace FStep
 						.FirstOrDefaultAsync();
 			var postDto = await _context.Posts
 						.Where(m => m.IdPost == int.Parse(postID))
-						.Select(p => new Post 
+						.Select(p => new Post
 						{
 							IdUser = p.IdUser
 						})
 						.FirstOrDefaultAsync();
 			var idBuyer = "";
 			var idSeller = "";
-			if(userID != postDto.IdUser)
+			if (userID != postDto.IdUser)
 			{
 				idBuyer = postDto.IdUser;
 				idSeller = currentUser;
@@ -212,22 +275,28 @@ namespace FStep
 					var checkConfirm = confirmDbOrder.Confirm1 ?? false;
 					if (checkConfirm)
 					{
+						//Thêm transaction
+
+						var transaction = new Transaction()
+						{
+							Date = DateTime.Now,
+							IdPost = int.Parse(postID),
+							IdUserBuyer = idBuyer,
+							IdUserSeller = idSeller,
+							Status = "Waiting",
+							CodeTransaction = Util.GenerateRandomKey(),
+							Type = "Exchange"
+						};
+						//--------------------------------------
+						await _context.Transactions.AddAsync(transaction);
 						if (confirmDbCurrent != null)
 						{
-							//Thêm transaction
-							var transaction = new Transaction()
-							{
-								Date = DateTime.Now,
-								IdPost = int.Parse(postID),
-								IdUserBuyer = idBuyer,
-								IdUserSeller = idSeller,
-								Status = "Waiting",
-								CodeTransaction = Util.GenerateRandomKey(),
-								Type = "Exchange"
-							};
-							await _context.Transactions.AddAsync(transaction);
-							//--------------------------------------
+
 							_context.Confirms.Remove(confirmDbCurrent);
+							_context.Confirms.Remove(confirmDbOrder);
+						}
+						else
+						{
 							_context.Confirms.Remove(confirmDbOrder);
 						}
 					}
@@ -328,7 +397,7 @@ namespace FStep
 			// Xử lý logic khi người dùng nhấp vào "Không đồng ý"
 			await Clients.Caller.SendAsync("ReceiveNotification", message);
 		}
-		public async Task DeleteExchange(string currentUserId,string recieverUserId,string idPost)
+		public async Task DeleteExchange(string currentUserId, string recieverUserId, string idPost)
 		{
 			var confirmDbCurrent = await _context.Confirms
 						.Where(m => m.IdPost == int.Parse(idPost) && m.IdUserConnect == currentUserId && m.IdUserConfirm == recieverUserId)
@@ -337,11 +406,11 @@ namespace FStep
 			var confirmDbOrder = await _context.Confirms
 						.Where(m => m.IdPost == int.Parse(idPost) && m.IdUserConnect == recieverUserId && m.IdUserConfirm == currentUserId)
 						.FirstOrDefaultAsync();
-			if(confirmDbCurrent != null)
+			if (confirmDbCurrent != null)
 			{
 				_context.Confirms.Remove(confirmDbCurrent);
 			}
-			if(confirmDbOrder != null)
+			if (confirmDbOrder != null)
 			{
 				_context.Confirms.Remove(confirmDbOrder);
 			}

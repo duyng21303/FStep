@@ -20,6 +20,9 @@ $(document).ready(function () {
 
         // Set background color of the clicked list item
         $(this).css('background-color', '#f9f9f9');
+        connection.invoke("UpdateUserTab", userId, currentTab).catch(function (err) {
+            return console.error(err.toString());
+        });
         connection.invoke("LoadMessages", userId).catch(function (err) {
             return console.error(err.toString());
         });
