@@ -2,57 +2,86 @@
 @using X.PagedList.Mvc.Core;
 
 <div>
-	<!-- Header body  -->
-	<!-- Title header body  -->
-	<div class="row align-items-center mb-8 search-header">
-		<div class="custom-container">
-			<!-- Start Content Body-->
-			<div class="container">
-				<div class="row mt-3">
-					<div class="col">
-						<table class="table table-striped table-bordered">
-							<!-- Thêm class table-bordered để bảng có viền -->
-							<thead class="thead-light">
-								<tr>
-									<th scope="col">Mã Số</th>
-									<th scope="col">Vị Trí</th>
-									<th scope="col">Tên</th>
-									<th scope="col">Loại SP</th>
-									<th scope="col">MSSV</th>
-									<th scope="col">Số Lượng</th>
-									<th scope="col">Price</th>
-									<th scope="col">Transactions</th>
-								</tr>
-							</thead>
-							<tbody>
-								<!-- Loop through posts -->
-								@foreach (var item in Model)
-								{
-									<tr>
-										<td class="post-title">@Html.Raw(item.IdPost)</td>
-										<td>@Html.Raw(item.Location)</td>
-										<td class="post-studentid">@Html.Raw(item.NameProduct)</td>
-										<td>@Html.Raw(item.Category)</td>
-										<td>@Html.Raw(item.IdStudent)</td>
-										<td>@Html.Raw(item.Quantity)</td>
-										<td>@Html.Raw(item.Price)</td>
-										<td>
-											<form asp-controller="WareHouse" asp-action="TransactionDetail" method="post">
-												<input type="hidden" name="id" value="@item.IdPost"/>
-												<button type="submit">View Transaction</button>
-											</form>
-										</td>
-									</tr>
-								}
-								<!-- End loop -->
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-			@Html.PagedListPager(Model, page => Url.Action("WareHouse", new { query = ViewBag.Query, page = page }))
-			<!-- End Content Body -->
-		</div>
-	</div>
+    <div class="row align-items-center mb-8 search-header">
+        <div class="custom-container">
+            <div class="container">
+                <div class="row mt-3">
+                    <div class="col">
+                        <table class="table table-striped table-bordered">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Mã Số</th>
+                                    <th scope="col">Vị Trí</th>
+                                    <th scope="col">Tên</th>
+                                    <th scope="col">Loại SP</th>
+                                    <th scope="col">MSSV</th>
+                                    <th scope="col">Số Lượng</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Transactions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="post-title">@Html.Raw(item.IdPost)</td>
+                                        <td>@Html.Raw(item.Location)</td>
+                                        <td class="post-studentid">@Html.Raw(item.NameProduct)</td>
+                                        <td>@Html.Raw(item.Category)</td>
+                                        <td>@Html.Raw(item.IdStudent)</td>
+                                        <td>@Html.Raw(item.Quantity)</td>
+                                        <td>@Html.Raw(item.Price)</td>
+                                        <td>
+                                            <!-- Button to trigger modal -->
+                                            <button type="button" class="btn btn-primary view-transaction" data-post-id="@item.IdPost">View Transaction</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            @Html.PagedListPager(Model, page => Url.Action("WareHouse", new { query = ViewBag.Query, page = page }))
+        </div>
+    </div>
 </div>
 
+<!-- Modal to display transaction details -->
+<div class="modal fade" id="transactionModal" tabindex="-1" aria-labelledby="transactionModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="transactionModalLabel">Transaction </h5>
+            </div>
+            <div class="modal-body">
+                <!-- Transaction details will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Handle click event for view transaction button
+            $('.view-transaction').click(function () {
+                var postId = $(this).data('post-id');
+                $.ajax({
+                    url: '@Url.Action("TransactionDetail", "WareHouse")',
+                    type: 'GET',
+                    data: { id: postId },
+                    success: function (data) {
+                        // Load the partial view into the modal body
+                        $('#transactionModal .modal-body').html(data);
+                        // Show the modal
+                        $('#transactionModal').modal('show');
+                    },
+                    error: function () {
+                        alert('Error retrieving transaction details.');
+                    }
+                });
+            });
+        });
+    </script>
+}

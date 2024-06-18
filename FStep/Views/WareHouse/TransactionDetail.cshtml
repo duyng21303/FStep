@@ -1,1 +1,25 @@
-﻿<h1> Hello World</h1>
+﻿@model IEnumerable<FStep.ViewModels.WareHouse.TransactionVM>
+
+<table id="transactionTable" class="table table-striped table-bordered">
+    <thead class="thead-light">
+        <tr>
+            <th>Transaction ID</th>
+            <th>Date</th>
+            <th>Buyer ID</th>
+            <th>Quantity</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody id="transactionTableBody">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.IdTransaction)</td>
+                <td>@Html.DisplayFor(modelItem => item.Date)</td>
+                <td>@Html.DisplayFor(modelItem => item.IdUserBuyer)</td>
+                <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
+                <td>@Html.DisplayFor(modelItem => item.Amount)</td>
+            </tr>
+        }
+    </tbody>
+</table>

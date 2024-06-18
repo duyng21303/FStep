@@ -37,20 +37,22 @@ namespace FStep.Controllers.ManagePost
 			ViewBag.Query = query;
 			return View(pageList);
 		}
-		public IActionResult TransactionDetail(int id)
-		{
-			var transactionDetail = _db.Transactions.AsQueryable();
-			transactionDetail = transactionDetail.Where(p => p.IdPost == id);
+        public IActionResult TransactionDetail(int id)
+        {
+            var transactionDetail = _db.Transactions
+                .Where(t => t.IdPost == id)
+                .Select(t => new TransactionVM
+                {
+                    IdTransaction = t.IdTransaction,
+                    Date = t.Date ?? DateTime.Now,
+                    IdUserBuyer = t.IdUserBuyer ?? string.Empty,
+                    Quantity = t.Quantity ?? 1,
+                    Amount = t.Amount ?? 0
+                })
+                .OrderByDescending(t => t.IdTransaction)
+                .ToList();
 
-			var result = transactionDetail.Select(t => new TransactionVM
-			{
-				CodeTransaction = t.CodeTransaction ?? string.Empty,
-				Date = t.Date ?? DateTime.Now,
-				IdUserBuyer = t.IdUserBuyer ?? string.Empty,
-				Quantity = t.Quantity ?? 1,
-				Amount = t.Amount ?? 0,
-			}).OrderByDescending(o => o.IdTransaction);
-			return View(result);
-		}
-	}	
+            return PartialView("TransactionDetail", transactionDetail);
+        }
+    }	
 }
