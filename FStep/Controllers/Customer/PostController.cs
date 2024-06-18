@@ -10,7 +10,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FStep.Controllers.Customer
 {
-    public class PostController : Controller
+	public class PostController : Controller
 	{
 		private readonly FstepDbContext db;
 		private readonly IMapper _mapper;
@@ -162,4 +162,5 @@ namespace FStep.Controllers.Customer
 		}
 
 	}
+}
 

@@ -24,9 +24,6 @@ namespace FStep.ViewModels
 		public int Count { get; set; }
 	}
 
-}
-
-
 	public class ListPostVM
 	{
 		public int PostId { get; set; }

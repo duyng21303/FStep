@@ -23,7 +23,5 @@ public partial class Product
 
     public string? ItemLocation { get; set; }
 
-    public int? SoldQuantity { get; set; }
-
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 }
