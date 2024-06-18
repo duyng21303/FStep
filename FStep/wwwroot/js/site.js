@@ -20,9 +20,6 @@ $(document).ready(function () {
 
         // Set background color of the clicked list item
         $(this).css('background-color', '#f9f9f9');
-        connection.invoke("UpdateUserTab", userId, currentTab).catch(function (err) {
-            return console.error(err.toString());
-        });
         connection.invoke("LoadMessages", userId).catch(function (err) {
             return console.error(err.toString());
         });
@@ -162,7 +159,7 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
                 </button>
                 </div>
                 `;
-           
+
 
         } else {
             accept = `
@@ -183,8 +180,8 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
                 </button>
                 </div>
                 `;
-            
-            
+
+
         }
         if (confirm.checkConfirm != null) {
             currentStatus = confirm.checkConfirm ? `<span class="labelConfirm accept">Đã chấp nhận</span>` :
@@ -424,4 +421,32 @@ function displayAlert(message) {
 
 connection.start().catch(function (err) {
     return console.error(err.toString());
+});
+$(document).ready(function () {
+    $('#createPostForm').submit(function (event) {
+        event.preventDefault(); // Prevent the default form submission
+        var formData = new FormData(this); // Get the form data
+
+        $.ajax({
+            type: 'POST',
+            url: $(this).attr('action'),
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.success) {
+                    // Handle success (e.g., close modal, update UI)
+                    $('#exampleModal').modal('hide');
+                    window.location.reload(); // Optionally reload the page to reflect changes
+                } else {
+                    // Display error message
+                    alert(response.message);
+                }
+            },
+            error: function (response) {
+                // Handle error
+                alert('An error occurred. Please try again.');
+            }
+        });
+    });
 });

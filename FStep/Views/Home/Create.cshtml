@@ -25,7 +25,7 @@
 			<div class="container-fluid py-5">
 				<div class="container py-5">
 					<h1 class="mb-4">Create Exchange Post</h1>
-					<form asp-controller="Home" asp-action="Create" enctype="multipart/form-data">
+					<form asp-controller="Home" asp-action="Create" id="createPostForm" enctype="multipart/form-data">
 						<div class="row">
 							<div class="col-md-12 col-lg-6 col-xl-7">
 								<div class="row">
@@ -60,10 +60,11 @@
 			<div class="container-fluid py-5">
 				<div class="container py-5">
 					<h1 class="mb-4">Create Sale Post</h1>
-					<form asp-controller="Home" asp-action="Create" enctype="multipart/form-data">
+					<form asp-controller="Home" asp-action="Create" id="createPostForm" enctype="multipart/form-data">
 						<div class="row">
 							<div class="col-md-12 col-lg-6 col-xl-7">
 								<div class="row">
+									<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 									<div class="form-item">
 										<div class="form-item w-100">
 											<label asp-for="@Model.Title" class="form-label my-3"></label><sup>*</sup>
