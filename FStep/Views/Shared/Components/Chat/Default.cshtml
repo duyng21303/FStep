@@ -328,11 +328,60 @@
 			.chat-about h7 {
 				margin: 0;
 			}
+
+		.content-confirm p {
+			font-size: 12px;
+			font-weight: 300;
+			color: #86939E;
+			line-height: 24px;
+			margin-bottom: 0px;
+		}
+		.labelConfirm {
+			border-radius: 8px;
+			font-size: 0.625rem;
+			text-align: center;
+			line-height: 0.6;
+			padding: 8px 12px;
+			font-weight: 600; /* Chữ đậm hơn */
+			display: inline-block;
+			vertical-align: middle;
+			opacity: 0.5; /* Mức độ mờ */
+		}
+		.accept{
+			border: 1px solid green;
+			color: green;
+			background-color: lightgreen;
+		}
+		.decline{
+			color: red;
+			border: 1px solid red;
+			background-color: lightcoral;
+		}
+		.waiting{
+			color: orange;
+			border: 1px solid orange;
+			background-color: #FFD580; /* Màu nền vàng cam nhạt hơn */
+		}
+
+		.delete-link {
+			display: block;
+			color: #dc3232;
+			font-weight: bold;
+			text-decoration: none;
+			margin-top: 10px;
+		}
+
+			.delete-link:hover {
+				text-decoration: underline;
+			}
+
 	</style>
 </head>
 
 <body>
 	<button class="open-button" onclick="openForm()">Chat</button>
+	<div id="alert-container" class="container mt-3 position-fixed" style="top: 10px; right: 10px; z-index: 1000;">
+	</div>
 	<div class="chat-popup" id="myForm">
 		<div class="container">
 			<div class="row clearfix">
@@ -341,26 +390,36 @@
 						<div class="input-group">
 							<!-- Các phần tử trong people-list -->
 						</div>
-						<ul class="list-unstyled chat-list mt-2 mb-0">
+						<ul class="list-unstyled chat-list mt-2 mb-0 group-list">
 							@{
 								var usersProcessed = new HashSet<string>();
 								var userId = User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
 							}
 							<input type="hidden" id="sendUserID" value="@userId" /> <!-- Giá trị của sendUserID -->
+							@* <li class="clearfix" data-userid="">
+							</li> *@
 							@foreach (var user in Model)
 							{
 								var userId_Send = user.SenderUser.IdUser;
 								var userId_Recieve = user.RecieverUser.IdUser;
 								// Kiểm tra xem userId của người dùng đã được xử lý trước đó hay chưa
-								if (!usersProcessed.Contains(userId_Send) && !usersProcessed.Contains(userId_Recieve))
+								@if (!usersProcessed.Contains(userId_Send) && !usersProcessed.Contains(userId_Recieve))
 								{
 									// Thêm userId vào danh sách đã xử lý
-
 									@if (user.SenderUser.IdUser != User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value)
 									{
+										var img = "";
+										@if (@user.SenderUser.AvatarImg != null)
+										{
+											img = "userAvar/" + @user.SenderUser.AvatarImg;
+										}
+										else
+										{
+											img = "nullAvar/149071.png";
+										}
 										@* <a asp-action="Chat" asp-controller="Chat" asp-route-idUser="@user.SenderUser.IdUser"> *@
 										<li class="clearfix" data-userid="@user.SenderUser.IdUser">
-											<img src="~/img/userAvar/@user.SenderUser.AvatarImg" alt="avatar">
+											<img src="~/img/@img" alt="avatar">
 											<div class="about">
 												<div class="name">@(@user.SenderUser.Name.Length > 16 ? @user.SenderUser.Name.Substring(0, 16) + "..." : @user.SenderUser.Name)</div>
 												<div class="status"> <i class="fa fa-circle online"></i> online </div>
@@ -371,9 +430,18 @@
 									}
 									else
 									{
+										var img = "";
+										@if (@user.RecieverUser.AvatarImg != null)
+										{
+											img = "userAvar/" + @user.RecieverUser.AvatarImg;
+										}
+										else
+										{
+											img = "nullAvar/149071.png";
+										}
 										@* <a asp-action="Chat" asp-controller="Chat" asp-route-idUser="@user.RecieverUser.IdUser"> *@
 										<li class="clearfix" data-userid="@user.RecieverUser.IdUser">
-											<img src="~/img/userAvar/@user.RecieverUser.AvatarImg" alt="avatar">
+											<img src="~/img/@img" alt="avatar">
 											<div class="about">
 												<div class="name">@(@user.RecieverUser.Name.Length > 16 ? @user.RecieverUser.Name.Substring(0, 16) + "..." : @user.RecieverUser.Name)</div>
 												<div class="status"> <i class="fa fa-circle online"></i> online </div>
@@ -384,6 +452,7 @@
 										usersProcessed.Add(userId_Recieve);
 									}
 								}
+								<input type="hidden" id="list-already" value='' />
 							}
 						</ul>
 					</div>
@@ -399,6 +468,10 @@
 								</div>
 							</div>
 						</div>
+						<div class="confirm-exchange clearfix justify-content-center" style="border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9; width: 400px;">
+							
+						</div>
+
 						<div class="chat-history" style="height: 400px; width: 400px;" id="chat-history">
 							<ul class="list-unstyled m-b-0" id="chatMessages">
 								<!-- Các tin nhắn sẽ được hiển thị ở đây -->

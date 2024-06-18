@@ -15,7 +15,6 @@ namespace FStep.Controllers
     public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
-
 		private readonly FstepDbContext db;
 		private readonly IMapper _mapper;
 
