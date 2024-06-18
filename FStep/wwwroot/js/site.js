@@ -20,6 +20,9 @@ $(document).ready(function () {
 
         // Set background color of the clicked list item
         $(this).css('background-color', '#f9f9f9');
+        connection.invoke("UpdateUserTab", userId, currentTab).catch(function (err) {
+            return console.error(err.toString());
+        });
         connection.invoke("LoadMessages", userId).catch(function (err) {
             return console.error(err.toString());
         });
@@ -228,7 +231,7 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
                     <!-- Hình ảnh sản phẩm nhỏ hơn -->
                     <img src="/img/postPic/${confirm.post.img}" alt="Product Image" class="img-thumbnail" style="width: 50px; height: 50px;">
                 </div>
-                <div class="col text-left p-2">
+                <div class="col text-left p-2 ml-12">
 
                     <!-- Tên sản phẩm và chi tiết, giảm kích thước chữ -->
                     <h6 class="product-name m-0" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px;"">${confirm.post.content}</h6>
