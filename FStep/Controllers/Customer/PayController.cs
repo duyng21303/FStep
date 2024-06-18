@@ -148,9 +148,14 @@ namespace FStep.Controllers.Customer
 			db.SaveChanges();
 
 			var product = db.Products.SingleOrDefault(p => p.IdProduct == db.Posts.SingleOrDefault(p => p.IdPost == info.IdPost).IdProduct);
+			var post = db.Posts.SingleOrDefault(p => p.IdPost == info.IdPost);
 			product.Quantity -= info.Quantity;
 			if (product.Quantity <= 0)
+			{
+				post.Status = "false";
 				product.Status = "false";
+
+			}
 			db.Update(product);
 			db.SaveChanges();
 
