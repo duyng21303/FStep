@@ -116,7 +116,7 @@ namespace FStep.Repostory.Service
 					if (post.IdUserNavigation != null && !string.IsNullOrEmpty(post.IdUserNavigation.Email))
 					{
 						await _emailSender.EmailSendAsync(post.IdUserNavigation.Email, $"Bài đăng {post.Content} sắp hết hạn",
-						$"Hello,<br/><br/>Your post titled '{post.Content}' will expire in 2 days. If you want to continue using it, please pay.<br/ ><br/>Sincerely,<br/>Admin Team");
+						$"Hello,<br/><br/>Your post titled '{post.Content}' will expire in 2 days. If you want to continue using it<br/ ><br/>Sincerely,<br/>Admin Team");
 					}
 				}
 			}

@@ -214,6 +214,7 @@ public partial class FstepDbContext : DbContext
             entity.ToTable("Post");
 
             entity.Property(e => e.IdPost).HasColumnName("id_post");
+            entity.Property(e => e.Category).HasMaxLength(50);
             entity.Property(e => e.Content)
                 .HasMaxLength(255)
                 .HasColumnName("content");

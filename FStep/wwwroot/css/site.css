@@ -373,3 +373,8 @@ body {
 .input-smaller {
     width: 100px; /* Điều chỉnh chiều rộng tùy theo nhu cầu */
 }
+/*CSS cho WareHouse*/
+.table-bordered th,
+.table-bordered td {
+    border-right: 2px solid #dee2e6; /* Màu và độ dày của thanh dọc */
+}

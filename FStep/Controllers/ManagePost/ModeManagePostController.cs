@@ -64,14 +64,11 @@ namespace FStep.Controllers.ManagePost
 				{
 					PostId = s.IdPost,
 					PostTitle = s.Content ?? string.Empty,
-					PostBody = s.Detail ?? string.Empty,
-					Type = s.Type ?? string.Empty,
 					StudentId = s.IdUserNavigation.StudentId ?? string.Empty,
-					Quantity = s.IdProductNavigation != null && s.IdProductNavigation.Quantity.HasValue ? s.IdProductNavigation.Quantity.Value : 0,
-					Price = s.IdProductNavigation != null && s.IdProductNavigation.Price.HasValue ? s.IdProductNavigation.Price.Value : 0f,
 					Image = s.Img ?? string.Empty,
 					CreateDate = s.Date ?? DateTime.Now,
 					Status = s.Status ?? string.Empty,
+					Category = s.Category ?? string.Empty,
 				})
 				.ToPagedList(pageNumber, pageSize);
 
@@ -103,10 +100,10 @@ namespace FStep.Controllers.ManagePost
 					PostId = s.IdPost,
 					PostTitle = s.Content ?? string.Empty,
 					StudentId = s.IdUserNavigation.StudentId ?? string.Empty,
-					Quantity = s.IdProductNavigation != null && s.IdProductNavigation.Quantity.HasValue ? s.IdProductNavigation.Quantity.Value : 0,
 					Image = s.Img ?? string.Empty,
 					CreateDate = s.Date ?? DateTime.Now,
 					Location = s.Location ?? string.Empty,
+					Category = s.Category ?? string.Empty,
 				})
 			.ToPagedList(pageNumber, pageSize);
 
@@ -119,13 +116,12 @@ namespace FStep.Controllers.ManagePost
 		}
 		[Authorize(Roles = "Moderator")]
 		[HttpPost]
-		public IActionResult UpdateStatus(int id, string location)
+		public IActionResult UpdateStatus(int id)
 		{
 			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
 			if (post != null)
 			{
 				post.Status = "true";
-				post.Location = location;
 				post.Date = DateTime.Now;
 
 				_db.Posts.Update(post);
@@ -140,16 +136,14 @@ namespace FStep.Controllers.ManagePost
 			return Redirect(encodedUrl);
 
 	}
-
 		[Authorize(Roles = "Moderator")]
 		[HttpPost]
 		public IActionResult DeletePost(int id)
 		{
 			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
 			if (post != null)
-			{
-				post.Status = "reCheck";
-				_db.Posts.Update(post);
+			{	
+				_db.Posts.Remove(post);
 				_db.SaveChanges();
 				TempData["SuccessMessage"] = $"Bài đăng {id} đã được xóa thành công.";
 			}
@@ -165,7 +159,7 @@ namespace FStep.Controllers.ManagePost
 			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
 			if (post != null)
 			{
-				post.Status = "false";
+				post.Status = "finish";
 				_db.Posts.Update(post);
 				_db.SaveChanges();
 				TempData["SuccessMessage"] = $"Bài đăng {id} đã được xóa thành công.";

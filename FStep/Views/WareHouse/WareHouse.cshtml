@@ -1,0 +1,58 @@
+﻿@model X.PagedList.IPagedList<FStep.ViewModels.WareHouse.WareHouseVM>
+@using X.PagedList.Mvc.Core;
+
+<div>
+	<!-- Header body  -->
+	<!-- Title header body  -->
+	<div class="row align-items-center mb-8 search-header">
+		<div class="custom-container">
+			<!-- Start Content Body-->
+			<div class="container">
+				<div class="row mt-3">
+					<div class="col">
+						<table class="table table-striped table-bordered">
+							<!-- Thêm class table-bordered để bảng có viền -->
+							<thead class="thead-light">
+								<tr>
+									<th scope="col">Mã Số</th>
+									<th scope="col">Vị Trí</th>
+									<th scope="col">Tên</th>
+									<th scope="col">Loại SP</th>
+									<th scope="col">MSSV</th>
+									<th scope="col">Số Lượng</th>
+									<th scope="col">Price</th>
+									<th scope="col">Transactions</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- Loop through posts -->
+								@foreach (var item in Model)
+								{
+									<tr>
+										<td class="post-title">@Html.Raw(item.IdPost)</td>
+										<td>@Html.Raw(item.Location)</td>
+										<td class="post-studentid">@Html.Raw(item.NameProduct)</td>
+										<td>@Html.Raw(item.Category)</td>
+										<td>@Html.Raw(item.IdStudent)</td>
+										<td>@Html.Raw(item.Quantity)</td>
+										<td>@Html.Raw(item.Price)</td>
+										<td>
+											<form asp-controller="WareHouse" asp-action="TransactionDetail" method="post">
+												<input type="hidden" name="id" value="@item.IdPost"/>
+												<button type="submit">View Transaction</button>
+											</form>
+										</td>
+									</tr>
+								}
+								<!-- End loop -->
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			@Html.PagedListPager(Model, page => Url.Action("WareHouse", new { query = ViewBag.Query, page = page }))
+			<!-- End Content Body -->
+		</div>
+	</div>
+</div>
+
