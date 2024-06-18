@@ -3,6 +3,7 @@ using FStep.Repostory.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+
 using FStep.Models;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -178,6 +179,7 @@ namespace FStep.Controllers.ManagePost
 			}
 			string encodedUrl = Url.Action("ManagePosts", new { currentTab = "approvedPosts" });
 			return Redirect(encodedUrl);
+
 		}
 	}
 }

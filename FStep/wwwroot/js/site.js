@@ -229,9 +229,10 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
             <div class="d-flex align-items-center">
                 <div class="col-2 text-center p-0">
                     <!-- Hình ảnh sản phẩm nhỏ hơn -->
-                    <img src="/img/postPic/${confirm.post.img}" alt="Product Image" class="img-thumbnail" style="width: 50px; height: 50px;">
+                    <img src="/img/postPic/${confirm.post.img}" alt="Product Image" class="img-thumbnail" style="width: 50px; height: 50px; min-height: 50px; min-width: 50px">
                 </div>
                 <div class="col text-left p-2">
+
                     <!-- Tên sản phẩm và chi tiết, giảm kích thước chữ -->
                     <h6 class="product-name m-0" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px;"">${confirm.post.content}</h6>
                     <p class="product-detail m-0" style="font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px;">

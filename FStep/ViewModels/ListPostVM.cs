@@ -24,6 +24,8 @@ namespace FStep.ViewModels
 		public int Count { get; set; }
 	}
 
+
+
 	public class ListPostVM
 	{
 		public int PostId { get; set; }
@@ -34,6 +36,7 @@ namespace FStep.ViewModels
 
 		public int Quantity { get; set; }
 
+
 		public String Status { get; set; }
 
 		public String Category { get; set; }
@@ -41,6 +44,7 @@ namespace FStep.ViewModels
 		public float Price { get; set; }
 
 		public String Type { get; set; } = default!;
+
 
 		public String? Location { get; set; }
 
@@ -56,4 +60,6 @@ namespace FStep.ViewModels
 		// Thuộc tính tính toán DaysRemaining cho Pending
 		public int DaysRemaining => (Status == "false") ? (7 - (DateTime.Now.Date - CreateDate.Date).Days) : (30 - (DateTime.Now.Date - CreateDate.Date).Days);
 	}
+
+
 }

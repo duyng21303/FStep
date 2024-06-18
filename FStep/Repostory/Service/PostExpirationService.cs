@@ -13,6 +13,7 @@ namespace FStep.Repostory.Service
 		private readonly IServiceProvider _services;  // tạo scope để lấy dbContext
 		private readonly IEmailSender _emailSender;  // sendMail
 		private Timer _timer; //
+
 		private readonly ILogger<PostExpirationService> _logger;
 
 		public PostExpirationService(IServiceProvider services, IEmailSender emailSender, ILogger<PostExpirationService> logger)
@@ -40,11 +41,13 @@ namespace FStep.Repostory.Service
 			//triển khia từ ihostedservice được gọi ngay khi dịch vụ bắt đầu . _timer được khởi tạo để chạy hàm checkpost mỗi ngày 1 lần
 
 		}
+
 		private async void CheckPostExpiration(object state)
 		{
 			using (var scope = _services.CreateScope())
 			{
 				var dbContext = scope.ServiceProvider.GetRequiredService<FstepDbContext>();
+
 				// Lấy các bài post sắp hết hạn
 				var pendingPosts = await dbContext.Posts
 					.Include(p => p.IdUserNavigation)
@@ -131,4 +134,5 @@ namespace FStep.Repostory.Service
 		}
 	}
 }
+
 
