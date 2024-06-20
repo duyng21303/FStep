@@ -18,6 +18,7 @@
 	<div class="container">
 		<main role="main" class="pb-3">
 			@RenderBody()
+			<div id="alert-container"></div>
 		</main>
 		@if (User.Identity.IsAuthenticated && !Context.Request.Path.StartsWithSegments("/Post/DetailPost") && !Context.Request.Path.StartsWithSegments("/Post/DetailSalePost"))
 		{

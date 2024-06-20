@@ -12,10 +12,10 @@ namespace FStep.Controllers.Customer
 {
 	public class PostController : Controller
 	{
-		private readonly FstepDbContext db;
+		private readonly FstepDBContext db;
 		private readonly IMapper _mapper;
 
-		public PostController(FstepDbContext context, IMapper mapper)
+		public PostController(FstepDBContext context, IMapper mapper)
 		{
 			db = context;
 			_mapper = mapper;
@@ -143,7 +143,6 @@ namespace FStep.Controllers.Customer
 					comment.Date = DateTime.Now;
 					var saveComment = _mapper.Map<Comment>(comment);
 					saveComment.Reports = null;
-					saveComment.UserNotifications = null;
 					db.Comments.Add(saveComment);
 					db.SaveChanges();
 				}
@@ -165,5 +164,6 @@ namespace FStep.Controllers.Customer
 		}
 
 	}
-
 }
+
+

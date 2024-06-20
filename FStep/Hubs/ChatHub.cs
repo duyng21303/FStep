@@ -6,6 +6,8 @@ using System.Xml.Linq;
 using AutoMapper;
 using FStep.Data;
 using FStep.Helpers;
+using FStep.Hubs;
+using FStep.Services;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Routing;
@@ -16,24 +18,16 @@ namespace FStep
 {
 	public class ChatHub : Hub
 	{
-		private readonly FstepDbContext _context;
-		private readonly IHttpContextAccessor _httpContextAccessor;
+		private readonly FstepDBContext _context;
 		private static Dictionary<string, string> userConnections = new Dictionary<string, string>();
-		private static Dictionary<string, string> userCurrentTabs = new Dictionary<string, string>();
-
-		public ChatHub(FstepDbContext context, IHttpContextAccessor httpContextAccessor)
+		private readonly NotificationServices notificationServices;
+		public ChatHub(FstepDBContext context)
 
 		{
 			_context = context;
-			_httpContextAccessor = httpContextAccessor;
+			notificationServices = new NotificationServices(_context);
 		}
-		public async Task UpdateUserTab(string userId, string currentTab)
-		{
-			if (userId != null)
-			{
-				userCurrentTabs[userId] = currentTab;
-			}
-		}
+		
 		public override async Task OnConnectedAsync()
 		{
 			var userId = Context.User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
@@ -262,6 +256,7 @@ namespace FStep
 				idBuyer = postDto.IdUser;
 				idSeller = userID;
 			}
+			var checkTransaction = false;
 			//-----------------------------------------------------------------------------
 			if (confirmDbCurrent != null && confirmDbOrder == null)
 			{
@@ -288,8 +283,10 @@ namespace FStep
 							CodeTransaction = Util.GenerateRandomKey(),
 							Type = "Exchange"
 						};
+						
 						//--------------------------------------
 						await _context.Transactions.AddAsync(transaction);
+						checkTransaction = true;
 						if (confirmDbCurrent != null)
 						{
 
@@ -327,6 +324,12 @@ namespace FStep
 					await _context.Confirms.AddAsync(confirm);
 				}
 				await _context.SaveChangesAsync();
+			}
+			if (checkTransaction)
+			{
+				var transaction = await _context.Transactions.OrderByDescending(t => t.Date).FirstOrDefaultAsync();
+				await notificationServices.CreateNotification(userID, "TransactionExchangeSuccess", "Transaction", currentUser, transaction.IdTransaction);
+				await notificationServices.CreateNotification(currentUser, "TransactionExchangeSuccess", "Transaction", userID, transaction.IdTransaction);
 			}
 			await LoadMessages(userID);
 			// Xử lý logic khi người dùng nhấp vào "Đồng ý"

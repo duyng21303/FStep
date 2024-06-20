@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Security.Claims;
 using FStep;
+using FStep.Hubs;
 
 
 public class Program
@@ -25,14 +26,14 @@ public class Program
 		builder.Services.AddControllersWithViews();
 
 		// Register DbContext
-		builder.Services.AddDbContext<FstepDbContext>(options =>
+		builder.Services.AddDbContext<FstepDBContext>(options =>
 		{
 			options.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
 		});
 
 		// Add services to the container.
 		builder.Services.AddControllersWithViews();
-		builder.Services.AddDbContext<FstepDbContext>(option =>
+		builder.Services.AddDbContext<FstepDBContext>(option =>
 		{
 			option.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
 		});
@@ -93,6 +94,7 @@ public class Program
 		app.UseEndpoints(endpoints =>
 		{
 			endpoints.MapHub<ChatHub>("chatHub");
+			endpoints.MapHub<NotificationHub>("notificationhub");
 		});
 		app.MapControllerRoute(
 			name: "default",
@@ -102,4 +104,5 @@ public class Program
 
 	}
 }
+
 
