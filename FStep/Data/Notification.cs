@@ -7,11 +7,21 @@ public partial class Notification
 {
     public int IdNotification { get; set; }
 
-    public string? Name { get; set; }
+    public DateTime? Date { get; set; }
 
     public string? Content { get; set; }
 
-    public DateTime? Date { get; set; }
+    public string? Name { get; set; }
 
-    public virtual ICollection<UserNotification> UserNotifications { get; set; } = new List<UserNotification>();
+    public string? Type { get; set; }
+
+    public string? IdUser { get; set; }
+
+    public int? IdReport { get; set; }
+
+    public int? IdComment { get; set; }
+
+    public int? IdPayment { get; set; }
+
+    public int? IdTransaction { get; set; }
 }

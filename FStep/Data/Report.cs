@@ -18,6 +18,4 @@ public partial class Report
     public virtual Comment? IdCommentNavigation { get; set; }
 
     public virtual Post? IdPostNavigation { get; set; }
-
-    public virtual ICollection<UserNotification> UserNotifications { get; set; } = new List<UserNotification>();
 }
