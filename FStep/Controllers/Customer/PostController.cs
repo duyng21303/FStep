@@ -140,7 +140,7 @@ namespace FStep.Controllers.Customer
 					comment.Date = DateTime.Now;
 					var saveComment = _mapper.Map<Comment>(comment);
 					saveComment.Reports = null;
-					saveComment.UserNotifications = null;
+					//saveComment.UserNotifications = null;
 					db.Comments.Add(saveComment);
 					db.SaveChanges();
 				}
@@ -162,4 +162,5 @@ namespace FStep.Controllers.Customer
 		}
 
 	}
+}
 

@@ -3,29 +3,6 @@ using X.PagedList;
 
 namespace FStep.ViewModels
 {
-	public class ManagePostsVM
-	{
-		public IPagedList<ListPostVM> PendingPosts { get; set; }
-		public IPagedList<ListPostVM> ApprovedPosts { get; set; }
-		public int PendingPostsCount { get; set; }
-		public int ApprovedPostsCount { get; set; }
-		public string PendingQuery { get; set; }
-		public string ApprovedQuery { get; set; }
-	}
-	public class ApprovedPostsResultVM
-	{
-		public IPagedList<ListPostVM> Posts { get; set; }
-		public int Count { get; set; }
-	}
-
-	public class PendingPostsResultVM
-	{
-		public IPagedList<ListPostVM> Posts { get; set; }
-		public int Count { get; set; }
-	}
-
-}
-
 
 	public class ListPostVM
 	{
@@ -54,12 +31,40 @@ namespace FStep.ViewModels
 		public String Image { get; set; } = default!;
 
 		public int TotalPosts { get; set; }
-        public DateTime CreateDate { get; set; }
+		public DateTime CreateDate { get; set; }
+
+
+		public string Description { get; set; }
 
 		public String Email { get; set; }
 
 		// Thuộc tính tính toán DaysRemaining cho Pending
 		public int DaysRemaining => (Status == "false") ? (7 - (DateTime.Now.Date - CreateDate.Date).Days) : (30 - (DateTime.Now.Date - CreateDate.Date).Days);
 	}
+	public class ManagePostsVM
+    {
+        public IPagedList<ListPostVM> PendingPosts { get; set; }
+        public IPagedList<ListPostVM> ApprovedPosts { get; set; }
+        public int PendingPostsCount { get; set; }
+        public int ApprovedPostsCount { get; set; }
+        public string PendingQuery { get; set; }
+        public string ApprovedQuery { get; set; }
+    }
+    public class ApprovedPostsResultVM
+    {
+        public IPagedList<ListPostVM> Posts { get; set; }
+        public int Count { get; set; }
+    }
+
+    public class PendingPostsResultVM
+    {
+        public IPagedList<ListPostVM> Posts { get; set; }
+        public int Count { get; set; }
+    }
+
 }
+
+
+
+
 
