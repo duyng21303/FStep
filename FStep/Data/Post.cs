@@ -25,6 +25,8 @@ public partial class Post
 
     public string IdUser { get; set; } = null!;
 
+    public string? Category { get; set; }
+
     public virtual ICollection<Chat> Chats { get; set; } = new List<Chat>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();

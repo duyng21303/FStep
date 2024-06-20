@@ -48,6 +48,4 @@ public partial class User
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 
     public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
-
-    public virtual ICollection<UserNotification> UserNotifications { get; set; } = new List<UserNotification>();
 }

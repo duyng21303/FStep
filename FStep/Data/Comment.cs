@@ -26,6 +26,4 @@ public partial class Comment
     public virtual User IdUserNavigation { get; set; } = null!;
 
     public virtual ICollection<Report> Reports { get; set; } = new List<Report>();
-
-    public virtual ICollection<UserNotification> UserNotifications { get; set; } = new List<UserNotification>();
 }
