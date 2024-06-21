@@ -1,5 +1,7 @@
 ﻿using FStep.Data;
 using FStep.Helpers;
+using FStep.Hubs;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace FStep.Services
@@ -12,7 +14,7 @@ namespace FStep.Services
 		{
 			_context = context;
 		}
-		
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -53,6 +55,8 @@ namespace FStep.Services
 			}
 			await _context.Notifications.AddAsync(notification);
 			await _context.SaveChangesAsync();
+
+			// Gửi cập nhật số lượng thông báo tới client
 		}
 	}
 }

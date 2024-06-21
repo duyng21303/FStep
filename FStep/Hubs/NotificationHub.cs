@@ -38,6 +38,7 @@ namespace FStep.Hubs
 			var currentUser = Context.User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
 			var notificationUserDB = await _context.Notifications
 				.Where(m => (m.IdUser == currentUser))
+				.OrderByDescending(m => m.Date)
 				.ToListAsync();
 			if (notificationUserDB != null)
 			{
