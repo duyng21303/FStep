@@ -203,7 +203,21 @@ body {
     font-style: italic; /* Italic font style for the span */
 }
 /*Carsousel 2 */
+/*** testimonial Start ***/
+.testimonial-item {
+    border: 1px solid var(--bs-primary);
+    padding: 20px 20px;
+}
 
+.testimonial-carousel .owl-item img {
+    width: 100px;
+    height: 100px;
+}
+
+.testimonial-carousel.owl-rtl .testimonial-item {
+    direction: ltr !important;
+}
+/*** testimonial End ***/
 /*END HOME*/
 /* Pagination styles */
 .pagination {
