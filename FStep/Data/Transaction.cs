@@ -33,7 +33,7 @@ public partial class Transaction
 
     public virtual User IdUserBuyerNavigation { get; set; } = null!;
 
-    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+    public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
-    public virtual ICollection<UserNotification> UserNotifications { get; set; } = new List<UserNotification>();
+    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 }

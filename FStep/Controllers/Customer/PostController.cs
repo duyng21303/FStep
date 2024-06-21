@@ -49,9 +49,8 @@ namespace FStep.Controllers.Customer
 				var post = _mapper.Map<Post>(model);
 				post.Content = model.Title;
 				post.Date = DateTime.Now;
-				//Helpers.Util.UpLoadImg(model.Img, "")
 				post.Img = Util.UpLoadImg(img, "postPic");
-				post.Status = "true";
+				post.Status = "false";
 				post.Type = model.Type;
 				post.Detail = model.Description;
 				post.IdUser = User.FindFirst("UserID").Value;
@@ -97,6 +96,8 @@ namespace FStep.Controllers.Customer
 
 			var product = db.Products.SingleOrDefault(product => product.IdProduct == post.IdProduct);
 			var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
+
+			var feedback = db.Feedbacks.Count(x => x.IdPost == id);
 			ViewData["USER_CREATE"] = user;
 
 			// lấy thêm comment sản phẩm
@@ -121,7 +122,9 @@ namespace FStep.Controllers.Customer
 				Img = post.Img,
 				Description = post.Detail,
 				CreateDate = post.Date,
-				Price = product.Price ?? 0
+				Price = product.Price ?? 0,
+				SoldQuantity = product.SoldQuantity ?? 0,
+				FeedbackNum = feedback
 			};
 
 			return View(result);
@@ -140,7 +143,6 @@ namespace FStep.Controllers.Customer
 					comment.Date = DateTime.Now;
 					var saveComment = _mapper.Map<Comment>(comment);
 					saveComment.Reports = null;
-					saveComment.UserNotifications = null;
 					db.Comments.Add(saveComment);
 					db.SaveChanges();
 				}

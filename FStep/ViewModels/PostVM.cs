@@ -38,5 +38,7 @@ namespace FStep.ViewModels
 		[Display(Name = "Detail information of Product")]
 		public string? DetailProduct { get; set; }
 		public string IdUser { get; set; }
+		public int? SoldQuantity { get; set; }
+		public int? FeedbackNum { get; set; }
 	}
 }
