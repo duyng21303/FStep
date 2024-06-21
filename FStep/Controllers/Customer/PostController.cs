@@ -37,16 +37,14 @@ namespace FStep.Controllers.Customer
 		[HttpPost]
 		public IActionResult CreatePost(PostVM model, IFormFile img)
 		{
-			if (ModelState.IsValid)
+			try
 			{
-				try
-				{
-					var product = _mapper.Map<Product>(model);
-					product.Quantity = model.Quantity;
-					product.Price = model.Price;
-					product.Status = "true";
-					db.Add(product);
-					db.SaveChanges();
+				var product = _mapper.Map<Product>(model);
+				product.Quantity = model.Quantity;
+				product.Price = model.Price;
+				product.Status = "true";
+				db.Add(product);
+				db.SaveChanges();
 
 				var post = _mapper.Map<Post>(model);
 				post.Content = model.Title;
@@ -66,7 +64,8 @@ namespace FStep.Controllers.Customer
 			{
 				Console.WriteLine(ex);
 			}
-			return Json(new { success = false, message = "Model is not valid" });
+
+			return View();
 		}
 		public IActionResult DetailPost(int id)
 		{
@@ -166,5 +165,3 @@ namespace FStep.Controllers.Customer
 
 	}
 }
-
-
