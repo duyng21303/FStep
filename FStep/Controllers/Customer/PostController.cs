@@ -37,39 +37,35 @@ namespace FStep.Controllers.Customer
 		[HttpPost]
 		public IActionResult CreatePost(PostVM model, IFormFile img)
 		{
-			if (ModelState.IsValid)
+			try
 			{
-				try
-				{
-					var product = _mapper.Map<Product>(model);
-					product.Quantity = model.Quantity;
-					product.Price = model.Price;
-					product.Status = "true";
-					db.Add(product);
-					db.SaveChanges();
+				var product = _mapper.Map<Product>(model);
+				product.Quantity = model.Quantity;
+				product.Price = model.Price;
+				product.Status = "true";
+				db.Add(product);
+				db.SaveChanges();
 
-					var post = _mapper.Map<Post>(model);
-					post.Content = model.Title;
-					post.Date = DateTime.Now;
-					//Helpers.Util.UpLoadImg(model.Img, "")
-					post.Img = Util.UpLoadImg(img, "postPic");
-					post.Status = "true";
-					post.Type = model.Type;
-					post.Detail = model.Description;
-					post.IdUser = User.FindFirst("UserID").Value;
-					//get IdProduct from database map to Post
-					post.IdProduct = db.Products.Max(p => p.IdProduct);
-					db.Add(post);
-					db.SaveChanges();
-					return Json(new { success = true });
-				}
-				catch (Exception ex)
-				{
-					Console.WriteLine(ex);
-					return Json(new { success = false, message = ex.Message });
-				}
+				var post = _mapper.Map<Post>(model);
+				post.Content = model.Title;
+				post.Date = DateTime.Now;
+				post.Img = Util.UpLoadImg(img, "postPic");
+				post.Status = "false";
+				post.Type = model.Type;
+				post.Detail = model.Description;
+				post.IdUser = User.FindFirst("UserID").Value;
+				//get IdProduct from database map to Post
+				post.IdProduct = db.Products.Max(p => p.IdProduct);
+				db.Add(post);
+				db.SaveChanges();
+				return Redirect("/");
 			}
-			return Json(new { success = false, message = "Model is not valid" });
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+			}
+
+			return View();
 		}
 		public IActionResult DetailPost(int id)
 		{
@@ -100,6 +96,8 @@ namespace FStep.Controllers.Customer
 
 			var product = db.Products.SingleOrDefault(product => product.IdProduct == post.IdProduct);
 			var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
+
+			var feedback = db.Feedbacks.Count(x => x.IdPost == id);
 			ViewData["USER_CREATE"] = user;
 
 			// lấy thêm comment sản phẩm
@@ -124,7 +122,9 @@ namespace FStep.Controllers.Customer
 				Img = post.Img,
 				Description = post.Detail,
 				CreateDate = post.Date,
-				Price = product.Price ?? 0
+				Price = product.Price ?? 0,
+				SoldQuantity = product.SoldQuantity ?? 0,
+				FeedbackNum = feedback
 			};
 
 			return View(result);
@@ -164,5 +164,4 @@ namespace FStep.Controllers.Customer
 		}
 
 	}
-
 }

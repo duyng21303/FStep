@@ -54,7 +54,7 @@ body {
     padding-top: 60px; /* Space for the header if needed */
     border-radius: 5px; /* Rounded corners for the page */
 }
-
+/*HOME*/
 /* Carousel styles */
 .carousel {
     background-color: #F7E7CE; /* M�u n?n ph� h?p v?i web tr?ng */
@@ -195,14 +195,29 @@ body {
     color: red; /* Màu đỏ cho giá */
     font-weight: bold; /* Chữ đậm cho giá */
 }
-    /* Date text at the end of each post */
-
+/* Date text at the end of each post */
 .fruit-item .text-end {
     font-size: 0.9rem; /* Font size for the date */
     color: #999; /* Light gray color for the date */
     font-style: italic; /* Italic font style for the span */
 }
+/*Carsousel 2 */
+/*** testimonial Start ***/
+.testimonial-item {
+    border: 1px solid var(--bs-primary);
+    padding: 20px 20px;
+}
 
+.testimonial-carousel .owl-item img {
+    width: 100px;
+    height: 100px;
+}
+
+.testimonial-carousel.owl-rtl .testimonial-item {
+    direction: ltr !important;
+}
+/*** testimonial End ***/
+/*END HOME*/
 /* Pagination styles */
 .pagination {
     display: flex;
@@ -418,13 +433,23 @@ body {
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 8px;
-    margin-bottom: 20px;
+    margin-bottom: 1000px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-top: 20px !important; /* Thêm khoảng cách top là 20px */
 }
 .input-smaller {
     width: 100px; /* Điều chỉnh chiều rộng tùy theo nhu cầu */
 }
-}
 
+/* CSS cho tooltip*/
+.tooltip-custom .tooltip-inner {
+    background-color: #ffffff; /* Màu nền không xuyên thấu */
+    color: #000000; /* Màu chữ */
+    border: 1px solid #000000; /* Viền tooltip */
+    max-width: 300px; /* Độ rộng tối đa của tooltip */
+    white-space: normal; /* Cho phép nội dung tự động xuống dòng khi cần */
+    padding: 8px 12px; /* Lề bên trong của tooltip */
+    font-size: 16px; /* Kích thước chữ */
+    font-weight: bold; /* Độ đậm của chữ */
+}
 

@@ -24,8 +24,6 @@ namespace FStep.ViewModels
 		public int Count { get; set; }
 	}
 
-
-
 	public class ListPostVM
 	{
 		public int PostId { get; set; }
@@ -53,13 +51,19 @@ namespace FStep.ViewModels
 		public String Image { get; set; } = default!;
 
 		public int TotalPosts { get; set; }
-        public DateTime CreateDate { get; set; }
+		public DateTime CreateDate { get; set; }
+
+
+		public string Description { get; set; }
 
 		public String Email { get; set; }
 
 		// Thuộc tính tính toán DaysRemaining cho Pending
 		public int DaysRemaining => (Status == "false") ? (7 - (DateTime.Now.Date - CreateDate.Date).Days) : (30 - (DateTime.Now.Date - CreateDate.Date).Days);
 	}
-
-
 }
+
+
+
+
+

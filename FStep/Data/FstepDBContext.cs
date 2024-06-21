@@ -75,6 +75,7 @@ public partial class FstepDBContext : DbContext
         {
             entity.HasKey(e => e.IdComment).HasName("PK__Comment__7E14AC85B9AC4EA0");
 
+
             entity.ToTable("Comment");
 
             entity.Property(e => e.IdComment).HasColumnName("id_comment");
@@ -135,6 +136,7 @@ public partial class FstepDBContext : DbContext
         modelBuilder.Entity<Feedback>(entity =>
         {
             entity.HasKey(e => e.IdFeedback).HasName("PK__Feedback__36BC8630EAF923BA");
+
 
             entity.ToTable("Feedback");
 

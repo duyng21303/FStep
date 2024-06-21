@@ -16,7 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 namespace FStep
 {
-	public class ChatHub : Hub
+    public class ChatHub : Hub
 	{
 		private readonly FstepDBContext _context;
 		private static Dictionary<string, string> userConnections = new Dictionary<string, string>();

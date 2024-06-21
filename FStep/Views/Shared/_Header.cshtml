@@ -5,6 +5,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
 
 
 <!-- Icon Font Stylesheet -->
@@ -184,15 +188,15 @@
 				@if (User.IsInRole("Moderator"))
 				{
 					<a class="nav-link text-dark" asp-area="" asp-action="ManagePosts" asp-controller="ModeManagePost">Quản lí</a>
-					<a class="nav-link text-dark" asp-area="" asp-action="AddProductToWareHouse" asp-controller="Warehouse">Kho hàng</a>
+					<a class="nav-link text-dark" asp-area="" asp-action="WareHouse" asp-controller="Warehouse">Kho hàng</a>
 				}
 				else
 				{
-					<a class="nav-link text-dark" asp-area="" asp-controller="home" asp-action="index">Trang chủ </a>
-					<a class="nav-link text-dark" asp-area="" asp-controller="home" asp-action="Sale">Bán</a>
+					<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ </a>
+					<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Sale">Bán</a>
 					<a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">Trao đổi</a>
 					<div class="nav-item dropdown">
-						<a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">Đã mua</a>
+						<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="TransactionHistory">Đã mua</a>
 					</div>
 				}
 			</div>

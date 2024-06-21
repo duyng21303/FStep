@@ -1,5 +1,5 @@
-﻿@model X.PagedList.IPagedList<FStep.ViewModels.PostVM>
-@using X.PagedList.Mvc.Core;
+﻿@using X.PagedList.Mvc.Core;
+@model X.PagedList.IPagedList<FStep.ViewModels.PostVM>
 @{
 	ViewData["TypePost"] = "Exchange";
 }
@@ -91,9 +91,6 @@
 				</div>
 				<div class="col-md-1">
 					<i class="fa fa-plus-square" data-bs-toggle="modal" data-bs-target="#exampleModal" style="font-size:45px;"></i>
-					@* <a asp-action="CreatePost" asp-controller="Post">
-					<i class="fa fa-plus-square" style="font-size:45px;"></i>
-					</a> *@
 				</div>
 				</>
 				<!-- End header body -->
@@ -113,8 +110,8 @@
 												</a>
 											</div>
 											<div class="p-4 border border-secondary border-top-0 rounded-bottom">
-												<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost">
-													<h4 class="Title">@Html.Raw(item.Title)</h4>
+												<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost" style="text-decoration:none">
+													<h4 class="title">@Html.Raw(item.Title)</h4>
 												</a>
 												<div class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Description)</div>
 												<p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate?.ToString("dd/MM/yyyy")</span></p>
@@ -150,10 +147,10 @@
 
 
 				</div>
-				<div class="modal-footer">
+				@* <div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 					<button type="button" class="btn btn-primary">Save changes</button>
-				</div>
+				</div> *@
 			</div>
 		</div>
 	</div>

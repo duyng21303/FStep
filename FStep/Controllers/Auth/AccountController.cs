@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using FStep.Helpers;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
+
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Google;
 using FStep.ViewModels.Email;
