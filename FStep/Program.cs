@@ -1,6 +1,7 @@
 ﻿using FStep.Data;
 using FStep.Repostory.Interface;
 using FStep.Repostory.Service;
+using FStep.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using FStep.Helpers;
@@ -22,12 +23,19 @@ public class Program
 	public static void Main(string[] args)
 	{
 		var builder = WebApplication.CreateBuilder(args);
+namespace FStep
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
 
 		// Add services to the container.
 		builder.Services.AddControllersWithViews();
 
 		// Register DbContext
-		builder.Services.AddDbContext<FstepDBContext>(options =>
+		builder.Services.AddDbContext<FstepDbContext>(options =>
 		{
 			options.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
 		});
@@ -70,6 +78,18 @@ public class Program
 			googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Name, "name", "givenName");
 			googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Email, "email", "string");
 		});
+			// Configure Google authentication (if needed)
+			builder.Services.AddAuthentication().AddGoogle(googleOptions =>
+			{
+				IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
+				googleOptions.ClientId = googleAuthNSection["ClientId"];
+				googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
+				googleOptions.ClaimActions.MapJsonKey("UserID", "sub", "string");
+				googleOptions.ClaimActions.MapJsonKey("IMG_RAW", "picture", "string");
+				googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Name, "name", "givenName");
+				googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Email, "email", "string");
+			});
+			builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 		// Add AutoMapper (if needed)
 		builder.Services.AddAutoMapper(typeof(Program));
@@ -84,10 +104,29 @@ public class Program
 		}
 		app.UseHttpsRedirection();
 		app.UseStaticFiles();
+			builder.Services.AddDistributedMemoryCache();
 
-		app.UseRouting();
+			
 
-		app.UseSession();
+
+			// Add AutoMapper (if needed)
+			builder.Services.AddAutoMapper(typeof(Program));
+			builder.Services.AddSingleton<IVnPayService, VnPayService>();
+			var app = builder.Build();
+			// Configure the HTTP request pipeline.
+			if (!app.Environment.IsDevelopment())
+			{
+				app.UseExceptionHandler("/Home/Error");
+				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+				app.UseHsts();
+			}
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseRouting();
+
+            app.UseSession();
 
 
 		app.UseAuthentication();

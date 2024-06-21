@@ -380,12 +380,27 @@
 				<a class="read-more" href="javascript:void(0)">Xem thêm</a>
 				<a class="shrink-btn" href="javascript:void(0)">Thu gọn</a>
 			</div>
-
+			<div class="row">
+				<div class="mb-3 text-muted small">
+					<span>
+						5.0 <span class="text-danger">
+							<i class="fa fa-star"></i>
+							<i class="fa fa-star"></i>
+							<i class="fa fa-star"></i>
+							<i class="fa fa-star"></i>
+							<i class="fa fa-star"></i>
+						</span>
+					</span>
+					<span class="text-primary p-2"> | </span>
+					<span>@Model.FeedbackNum <span>Đánh giá</span></span>
+					<span class="text-primary p-2"> | </span>
+					<span>@Model.SoldQuantity <span>Đã bán</span><br /></span>
+				</div>
+			</div>
 			<!-- Product Pricing -->
 			<div class="product-price">
 				<span>@String.Format(format, "{0:0,0 VND}", Model.Price)</span>
 				@* <a href="#" class="cart-btn">Mua ngay</a> *@
-
 			</div>
 			<form method="get" asp-action="CheckoutSale" asp-controller="Pay" asp-route-id="@Model.IdPost">
 				<div style="min-height:10px;"></div>
@@ -449,7 +464,7 @@
 		{
 			<div class="product-rating d-flex gap-2 mb-2 p-2">
 				<div class="product-rating__avatar">
-						<img class="rounded-circle me-lg-2 product-rating__avatar-img" src="~/img/@User.FindFirst("IMG")?.Value" alt="" style="width: 40px; height: 40px;">
+					<img class="rounded-circle me-lg-2 product-rating__avatar-img" src="~/img/@User.FindFirst("IMG")?.Value" alt="" style="width: 40px; height: 40px;">
 				</div>
 				<div class="product-rating-main">
 					<div class="product-rating__author-name">@comment.Name</div>
@@ -510,10 +525,10 @@
 				// 	inputQuantity.value = 2; // hoặc inputQuantity.value++;
 				// 	clicked = true; // Đánh dấu là đã click lần đầu tiên
 				// } else {
-					var currentValue = parseInt(inputQuantity.value) || 0;
-					if (currentValue < maxValue) {
-						inputQuantity.value = currentValue + 1;
-					}
+				var currentValue = parseInt(inputQuantity.value) || 0;
+				if (currentValue < maxValue) {
+					inputQuantity.value = currentValue + 1;
+				}
 				// }
 			});
 

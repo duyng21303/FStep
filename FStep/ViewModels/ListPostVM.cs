@@ -3,6 +3,27 @@ using X.PagedList;
 
 namespace FStep.ViewModels
 {
+	public class ManagePostsVM
+	{
+		public IPagedList<ListPostVM> PendingPosts { get; set; }
+		public IPagedList<ListPostVM> ApprovedPosts { get; set; }
+		public int PendingPostsCount { get; set; }
+		public int ApprovedPostsCount { get; set; }
+		public string PendingQuery { get; set; }
+		public string ApprovedQuery { get; set; }
+	}
+	public class ApprovedPostsResultVM
+	{
+		public IPagedList<ListPostVM> Posts { get; set; }
+		public int Count { get; set; }
+	}
+
+	public class PendingPostsResultVM
+	{
+		public IPagedList<ListPostVM> Posts { get; set; }
+		public int Count { get; set; }
+	}
+
 	public class ListPostVM
 	{
 		public int PostId { get; set; }

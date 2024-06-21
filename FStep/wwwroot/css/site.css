@@ -195,8 +195,7 @@ body {
     color: red; /* Màu đỏ cho giá */
     font-weight: bold; /* Chữ đậm cho giá */
 }
-    /* Date text at the end of each post */
-
+/* Date text at the end of each post */
 .fruit-item .text-end {
     font-size: 0.9rem; /* Font size for the date */
     color: #999; /* Light gray color for the date */
@@ -441,6 +440,7 @@ body {
 .input-smaller {
     width: 100px; /* Điều chỉnh chiều rộng tùy theo nhu cầu */
 }
+
 /* CSS cho tooltip*/
 .tooltip-custom .tooltip-inner {
     background-color: #ffffff; /* Màu nền không xuyên thấu */

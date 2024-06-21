@@ -83,7 +83,7 @@
 					<h1 class="exchange-title">Sale: Suggestion Today</h1>
 				</div>
 				<div class="col-md-5">
-					<form asp-action="Index" asp-controller="Home" class="d-flex justify-content-end search-form">
+					<form asp-action="Sale" asp-controller="Home" class="d-flex justify-content-end search-form">
 						<input type="search" class="form-control search-input" placeholder="keywords" name="query">
 						<button class="btn btn-primary search-button" type="submit">
 							<i class="fa fa-search search-icon"></i>
@@ -114,11 +114,13 @@
 											</a>
 										</div>
 										<div class="p-4 border border-secondary border-top-0 rounded-bottom">
-											<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@item.IdPost">@Html.Raw(item.Title)</a>
+											<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@item.IdPost" style="text-decoration:none">
+												<h4 class="title">@Html.Raw(item.Title)</h4>
+											</a>
 											<p class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Description)</p>
 											<p class="price">Price: @String.Format(format, "{0:0,0 VND}", item.Price)</p>
 											<p class="quantity">Quantity: @Html.Raw(item.Quantity)</p>
-											<p class="text-end mb-0 mt-2">CreateDate <span>@item.CreateDate?.ToString("dd/MM/yyyy")</span></p>
+											<p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate?.ToString("dd/MM/yyyy")</span></p>
 
 										</div>
 									</div>
@@ -152,10 +154,10 @@
 
 
 			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary">Save changes</button>
-			</div>
+			@* <div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			<button type="button" class="btn btn-primary">Save changes</button>
+			</div> *@
 		</div>
 	</div>
 </div>

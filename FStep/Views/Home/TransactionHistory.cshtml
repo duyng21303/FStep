@@ -1,0 +1,91 @@
+﻿@model X.PagedList.IPagedList<FStep.ViewModels.TransactionVM>
+@using X.PagedList.Mvc.Core;
+@{
+	ViewData["Title"] = "List bought Posts";
+	var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+}
+<div>
+	<!-- Header body  -->
+	<div class="container py-5">
+		<!-- Title header body  -->
+		<div class="row align-items-center mb-4 search-header">
+			<div class="col-md-6">
+				<h1 class="exchange-title">Transaction history</h1>
+			</div>
+			<div class="col-md-6">
+				<form asp-action="TransactionHistory" asp-controller="Home" method="get" class="d-flex justify-content-end search-form">
+					<input type="search" class="form-control search-input" placeholder="keywords" name="query">
+					<button class="btn btn-primary search-button" type="submit">
+						<i class="fa fa-search search-icon"></i>
+					</button>
+				</form>
+			</div>
+		</div>
+		<!-- End header body -->
+		<!-- Start Content Body-->
+		<div class="row g-4">
+			<div class="col-lg-12">
+				<div class="container-contentboby">
+					<div class="container py-5">
+						@foreach (var item in Model)
+						{
+							<div class="row justify-content-center mb-3">
+								<div class="card shadow-0 border rounded-3">
+									<div class="card-body">
+										<div class="col-lg-12">
+											<div class="row">
+												<div class="col-md-6 col-lg-3 col-xl-3 mb-4 mb-lg-0">
+													<div class="fruit-img">
+														<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded" alt="Laptop">
+													</div>
+												</div>
+												<div class="col-md-3 col-lg-6 col-xl-6">
+													<h4>@item.Content</h4>
+													@if (item.TypePost == "Sale")
+													{
+														<h6 class="badge bg-danger text-white fw-bold rounded">@item.TypePost</h6>
+													}
+													else
+													{
+														<h6 class="badge bg-success text-white fw-bold rounded">@item.TypePost</h6>
+													}
+													<h4 class="mb-1 me-1">@String.Format(format, "{0:0,0 VND}", item.UnitPrice)</h4>
+													<h5 class="text-success text-end"><span>x</span>@item.Quantity</h5>
+													<p class="text-truncate mb-4 mb-md-0">@Html.Raw(item.Detail)</p>
+												</div>
+												<div class="col-md-3 col-lg-3 col-xl-3 border-sm-start-none border-start">
+													<div class="d-flex flex-row align-items-center mb-1">
+														<span>Thành tiền:</span>
+														<h5 class="mb-1 me-1 text-danger mx-2">@String.Format(format, "{0:0,0 VND}", item.Amount)</h5>
+														@* <span class="text-danger"><s>$20.99</s></span> *@
+													</div>
+													<div class="d-flex flex-column mt-4">
+														<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm" asp-action="TransactionDetail" asp-controller="Home" asp-route-id="@item.TransactionId">Details</a>
+														<button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-sm mt-2" type="button">
+															Feedback
+														</button>
+													</div>
+													<p class="fst-italic text-end mb-0 mt-5">Đánh giá sản phẩm trước: <span>@item.CreateDate?.AddDays(7).ToString("dd/MM/yyyy")</span></p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						}
+					</div>
+					<!-- Start of post item column -->
+				</div>
+				<!-- Start Content Body-->
+				<!-- Create relationship between page and page -->
+				@Html.PagedListPager(Model, page => Url.Action("Sale", new { query = ViewBag.Query, page = page }))
+				<!-- End create -->
+			</div>
+		</div>
+		<!-- End Show -->
+	</div>
+</div>
+
+
+
+
