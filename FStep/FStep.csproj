@@ -58,8 +58,10 @@
     <PackageReference Include="X.PagedList" Version="9.1.2" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="9.1.2" />
 
+
 	  <Folder Include="Controllers\Admin\" />
 	  <Folder Include="Controllers\Moder\" />
+	  <Folder Include="wwwroot\detail\css\" />
 	  <Folder Include="wwwroot\img\pic\" />
 	  <Folder Include="wwwroot\img\postPic\" />
 	  <Folder Include="wwwroot\img\userAvar\" />
@@ -67,16 +69,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\assets\js\custom.js" />
-    <None Include="wwwroot\assets\js\isotope.js" />
-    <None Include="wwwroot\assets\js\isotope.min.js" />
-    <None Include="wwwroot\assets\js\owl-carousel.js" />
-    <None Include="wwwroot\assets\js\popup.js" />
-    <None Include="wwwroot\assets\js\tabs.js" />
-    <None Include="wwwroot\assets\webfonts\fa-brands-400.woff2" />
-    <None Include="wwwroot\assets\webfonts\fa-regular-400.woff2" />
-    <None Include="wwwroot\assets\webfonts\fa-solid-900.woff2" />
-    <None Include="wwwroot\assets\webfonts\fa-v4compatibility.woff2" />
     <None Include="wwwroot\detail\js\scripts.js" />
     <None Include="wwwroot\vendor\bootstrap\js\bootstrap.min.js" />
     <None Include="wwwroot\vendor\jquery\jquery.js" />

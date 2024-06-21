@@ -17,7 +17,164 @@
 
 
 <!-- Navbar Start -->
+<style>
+	body {
+		font-family: "Arial", sans-serif;
+		background-color: #f0f2f5;
+		margin: 0;
+		padding: 0;
+	}
 
+	/* Navbar dropdown */
+	.nav-item {
+		position: relative;
+	}
+
+	.notification {
+		width: 360px;
+		max-height: 400px; /* Giới hạn chiều cao của dropdown menu để có thể cuộn */
+		overflow-y: auto; /* Cho phép cuộn dọc khi nội dung vượt quá giới hạn */
+		border: none;
+		border-radius: 0;
+		margin-top: 5px; /* Adjust as needed */
+		padding: 0;
+		box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+	}
+
+	.notification {
+		width: 360px; /* Adjust the overall width of the notification card */
+		padding: 15px;
+		background-color: #ffffff;
+		border-radius: 16px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	}
+
+	.notification-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 15px;
+	}
+
+	.notification-title {
+		font-size: 16px;
+		font-weight: 600;
+		margin: 0;
+		text-transform: capitalize;
+	}
+
+	.notification-close {
+		cursor: pointer;
+		color: #aaa;
+	}
+
+		.notification-close:hover {
+			color: #666;
+		}
+
+	.notification-container {
+		display: flex;
+		align-items: flex-start;
+	}
+
+	.notification-media {
+		position: relative;
+		margin-right: 15px;
+	}
+
+	.notification-user-avatar {
+		width: 60px;
+		height: 60px;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+
+	.notification-reaction {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		width: 30px;
+		height: 30px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%;
+		color: white;
+		background-image: linear-gradient(45deg, #0070e1, #14abfe);
+		font-size: 14px;
+	}
+
+	.notification-content {
+		flex: 1;
+	}
+
+	.notification-text {
+		margin: 0 0 5px 0;
+		font-weight: 400;
+	}
+
+	.notification-timer {
+		font-size: 12px;
+		color: #777;
+	}
+
+	.notification-status {
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		background-color: #dc3545;
+	}
+
+	/* Badge styles */
+	.badge {
+		font-size: 12px;
+		padding: 4px 8px;
+		border-radius: 12px;
+	}
+
+		.badge.bg-danger {
+			background-color: #dc3545;
+			color: #fff;
+		}
+
+	/* Font Awesome icons */
+	.fa {
+		font-size: 16px;
+	}
+
+	/* Dropdown styles */
+	.dropdown-toggle::after {
+		display: none;
+	}
+
+	.dropdown-toggle.notification-toggle {
+		cursor: pointer;
+		color: #333;
+		text-decoration: none;
+	}
+
+		.dropdown-toggle.notification-toggle:hover {
+			color: #555;
+			text-decoration: none;
+		}
+
+	.dropdown-menu-end {
+		right: 0 !important;
+		left: auto !important;
+	}
+
+	.dropdown-menu .notification {
+		position: relative;
+	}
+
+		.dropdown-menu .notification:last-child {
+			margin-bottom: 0;
+		}
+
+</style>
 <div class="container-fluid fixed-top">
 	<nav class="navbar navbar-expand-lg bg-light navbar-light sticky-top px-4 py-0">
 		<a href="/" class="navbar-brand d-flex align-items-center">
@@ -48,37 +205,14 @@
 				{
 					<div class="navbar-nav align-items-center ms-auto">
 						<div class="nav-item dropdown">
-							<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-								<i class="fa fa-envelope me-lg-2"></i>
-								<span class="d-none d-lg-inline-flex">Tin nhắn</span>
-							</a>
-							<div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-								<a href="#" class="dropdown-item">
-									<div class="d-flex align-items-center">
-										<img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-										<div class="ms-2">
-											<h6 class="fw-normal mb-0">John sent you a message</h6>
-											<small>15 minutes ago</small>
-										</div>
-									</div>
-								</a>
-								<hr class="dropdown-divider">
-								<a href="#" class="dropdown-item text-center">See all messages</a>
-							</div>
-						</div>
-
-						<div class="nav-item dropdown">
-							<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+							<a href="#" class="nav-link dropdown-toggle notification-toggle" data-bs-toggle="dropdown">
 								Thông báo
 								<span class="badge bg-danger">@ViewBag.NotificationCount</span>
 							</a>
-							<div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-								@* @foreach (var notification in ViewBag.Notifications)
-								{
-									<a class="dropdown-item">@notification.Message</a>
-								} *@
-
+							<div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0 notification" id="notification">
+									
 							</div>
+
 						</div>
 						<div class="nav-item dropdown">
 							<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">

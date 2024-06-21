@@ -12,10 +12,10 @@ namespace FStep.Controllers.Customer
 {
 	public class PostController : Controller
 	{
-		private readonly FstepDbContext db;
+		private readonly FstepDBContext db;
 		private readonly IMapper _mapper;
 
-		public PostController(FstepDbContext context, IMapper mapper)
+		public PostController(FstepDBContext context, IMapper mapper)
 		{
 			db = context;
 			_mapper = mapper;
@@ -37,36 +37,39 @@ namespace FStep.Controllers.Customer
 		[HttpPost]
 		public IActionResult CreatePost(PostVM model, IFormFile img)
 		{
-			try
+			if (ModelState.IsValid)
 			{
-				var product = _mapper.Map<Product>(model);
-				product.Quantity = model.Quantity;
-				product.Price = model.Price;
-				product.Status = "true";
-				db.Add(product);
-				db.SaveChanges();
+				try
+				{
+					var product = _mapper.Map<Product>(model);
+					product.Quantity = model.Quantity;
+					product.Price = model.Price;
+					product.Status = "true";
+					db.Add(product);
+					db.SaveChanges();
 
-				var post = _mapper.Map<Post>(model);
-				post.Content = model.Title;
-				post.Date = DateTime.Now;
-				//Helpers.Util.UpLoadImg(model.Img, "")
-				post.Img = Util.UpLoadImg(img, "postPic");
-				post.Status = "true";
-				post.Type = model.Type;
-				post.Detail = model.Description;
-				post.IdUser = User.FindFirst("UserID").Value;
-				//get IdProduct from database map to Post
-				post.IdProduct = db.Products.Max(p => p.IdProduct);
-				db.Add(post);
-				db.SaveChanges();
-				return Redirect("/");
+					var post = _mapper.Map<Post>(model);
+					post.Content = model.Title;
+					post.Date = DateTime.Now;
+					//Helpers.Util.UpLoadImg(model.Img, "")
+					post.Img = Util.UpLoadImg(img, "postPic");
+					post.Status = "true";
+					post.Type = model.Type;
+					post.Detail = model.Description;
+					post.IdUser = User.FindFirst("UserID").Value;
+					//get IdProduct from database map to Post
+					post.IdProduct = db.Products.Max(p => p.IdProduct);
+					db.Add(post);
+					db.SaveChanges();
+					return Json(new { success = true });
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex);
+					return Json(new { success = false, message = ex.Message });
+				}
 			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex);
-			}
-
-			return View();
+			return Json(new { success = false, message = "Model is not valid" });
 		}
 		public IActionResult DetailPost(int id)
 		{
@@ -140,7 +143,7 @@ namespace FStep.Controllers.Customer
 					comment.Date = DateTime.Now;
 					var saveComment = _mapper.Map<Comment>(comment);
 					saveComment.Reports = null;
-					//saveComment.UserNotifications = null;
+
 					db.Comments.Add(saveComment);
 					db.SaveChanges();
 				}
@@ -163,4 +166,5 @@ namespace FStep.Controllers.Customer
 
 	}
 }
+
 

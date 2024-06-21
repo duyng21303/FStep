@@ -14,9 +14,9 @@ namespace FStep.Controllers.ManagePost
 {
 	public class ModeManagePostController : Controller
 	{
-		private readonly FstepDbContext _db;
+		private readonly FstepDBContext _db;
 
-		public ModeManagePostController(FstepDbContext context)
+		public ModeManagePostController(FstepDBContext context)
 		{
 			_db = context;
 		}
