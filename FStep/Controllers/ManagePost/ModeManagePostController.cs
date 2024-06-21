@@ -75,6 +75,8 @@ namespace FStep.Controllers.ManagePost
 					Image = s.Img ?? string.Empty,
 					CreateDate = s.Date ?? DateTime.Now,
 					Status = s.Status ?? string.Empty,
+					Category = s.Category ?? string.Empty,
+					Description = s.Detail ?? string.Empty
 				})
 				.ToPagedList(pageNumber, pageSize);
 
@@ -110,6 +112,7 @@ namespace FStep.Controllers.ManagePost
 					Image = s.Img ?? string.Empty,
 					CreateDate = s.Date ?? DateTime.Now,
 					Location = s.Location ?? string.Empty,
+					Category = s.Category ?? string.Empty,
 				})
 			.ToPagedList(pageNumber, pageSize);
 
@@ -122,13 +125,12 @@ namespace FStep.Controllers.ManagePost
 		}
 		[Authorize(Roles = "Moderator")]
 		[HttpPost]
-		public IActionResult UpdateStatus(int id, string location)
+		public IActionResult UpdateStatus(int id)
 		{
 			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
 			if (post != null)
 			{
 				post.Status = "true";
-				post.Location = location;
 				post.Date = DateTime.Now;
 
 				_db.Posts.Update(post);
@@ -163,6 +165,32 @@ namespace FStep.Controllers.ManagePost
 			string encodedUrl = Url.Action("ManagePosts", new { currentTab = "pendingPosts" });
 			return Redirect(encodedUrl);
 		}
+
+
+		[Authorize(Roles = "Moderator")]
+		[HttpPost]
+		public IActionResult UpdateStatusAgain(int id)
+		{
+			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
+			if (post != null)
+			{
+				post.Status = "true";
+				post.Date = DateTime.Now;
+
+				_db.Posts.Update(post);
+				_db.SaveChanges();
+				TempData["SuccessMessage"] = $"Bài đăng {id} đã được duyệt thành công.";
+			}
+			else
+			{
+				TempData["ErrorMessage"] = $"Bài đăng {id} không được tìm thấy.";
+			}
+			string encodedUrl = Url.Action("ManagePosts", new { currentTab = "approvedPosts" });
+			return Redirect(encodedUrl);
+
+		}
+
+		
 		public IActionResult FinishPost(int id)
 		{
 			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);

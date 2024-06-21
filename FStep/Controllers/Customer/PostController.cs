@@ -143,6 +143,7 @@ namespace FStep.Controllers.Customer
 					comment.Date = DateTime.Now;
 					var saveComment = _mapper.Map<Comment>(comment);
 					saveComment.Reports = null;
+
 					db.Comments.Add(saveComment);
 					db.SaveChanges();
 				}
