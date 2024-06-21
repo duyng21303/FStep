@@ -8,9 +8,9 @@ namespace FStep.Controllers.ManagePost
 {
     public class WareHouseController : Controller
     {
-        private readonly FstepDbContext db;
+        private readonly FstepDBContext db;
 
-        public WareHouseController(FstepDbContext context) => db = context;
+        public WareHouseController(FstepDBContext context) => db = context;
         public IActionResult WareHouse(int? query, int? page)
         {
             int pageSize = 30;
