@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using X.PagedList;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FStep.Controllers.Customer
 {
@@ -107,9 +106,7 @@ namespace FStep.Controllers.Customer
 		}
 		public IActionResult DetailSalePost(int id)
 		{
-			var post = db.Posts.SingleOrDefault(post => post.IdPost == id);
-
-			var product = db.Products.SingleOrDefault(product => product.IdProduct == post.IdProduct);
+			var post = db.Posts.Include(x => x.IdProductNavigation).SingleOrDefault(post => post.IdPost == id);
 			var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
 
 			var feedback = db.Feedbacks.Count(x => x.IdPost == id);
@@ -133,12 +130,12 @@ namespace FStep.Controllers.Customer
 			{
 				IdPost = post.IdPost,
 				Title = post.Content,
-				Quantity = product.Quantity,
+				Quantity = post.IdProductNavigation?.Quantity,
 				Img = post.Img,
 				Description = post.Detail,
 				CreateDate = post.Date,
-				Price = product.Price ?? 0,
-				SoldQuantity = product.SoldQuantity ?? 0,
+				Price = post.IdProductNavigation?.Price ?? 0,
+				SoldQuantity = post.IdProductNavigation?.SoldQuantity ?? 0,
 				FeedbackNum = feedback
 			};
 
@@ -160,16 +157,34 @@ namespace FStep.Controllers.Customer
 		}
 
 		[HttpPost]
-		public IActionResult PostComment([FromForm] CommentVM comment)
+		public IActionResult PostComment([FromForm] CommentVM comment, IFormFile image)
 		{
 			string refererUrl = Request.Headers["Referer"].ToString();
 			try
 			{
+				if (string.IsNullOrWhiteSpace(comment.Content))
+				{
+					TempData["CommentError"] = "Comment content cannot be empty.";
+					if (!string.IsNullOrEmpty(refererUrl))
+					{
+						return Redirect(refererUrl);
+					}
+					return RedirectToAction("DetailPost", "Post", new { id = comment.IdPost });
+				}
+
 				var isAuthenticated = User?.Identity?.IsAuthenticated;
 				if (isAuthenticated == true)
 				{
 					comment.IdUser = User.FindFirst("UserID")?.Value;
 					comment.Date = DateTime.Now;
+
+					// Handle image upload
+					if (image != null)
+					{
+						var folder = "comments";
+						comment.Img = Util.UpLoadImg(image, folder);
+					}
+
 					var saveComment = _mapper.Map<Comment>(comment);
 					saveComment.Reports = null;
 					db.Comments.Add(saveComment);
@@ -178,14 +193,18 @@ namespace FStep.Controllers.Customer
 			}
 			catch (Exception ex)
 			{
-				var exc = ex;
+				Console.WriteLine($"Error posting comment: {ex.Message}");
+
 			}
+
 			if (!string.IsNullOrEmpty(refererUrl))
 			{
 				return Redirect(refererUrl);
 			}
+
 			return RedirectToAction("DetailPost", "Post", new { id = comment.IdPost });
 		}
+
 
 		public ActionResult _CreatePost()
 		{

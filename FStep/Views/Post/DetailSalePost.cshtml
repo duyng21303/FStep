@@ -5,9 +5,11 @@
 	var comments = ViewData["comments"] as List<CommentVM> ?? new List<CommentVM>();
 	var recommendedSales = ViewData["recommendedSales"] as List<Post> ?? new List<Post>();
 	var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+	var commentError = TempData["CommentError"] as string;
 }
 <style>
-	html, body {
+	html,
+	body {
 		height: 100%;
 		width: 100%;
 		margin: 0;
@@ -26,10 +28,14 @@
 	.left-column {
 		width: 65%;
 		position: relative;
-		overflow: auto; /* Thêm overflow để có thanh cuộn */
-		height: 400px; /* Chiều cao cố định */
-		max-width: 400px; /* Chiều rộng cố định */
-		text-align: left; /* Đưa thanh cuộn sang trái */
+		overflow: auto;
+		/* Thêm overflow để có thanh cuộn */
+		height: 400px;
+		/* Chiều cao cố định */
+		max-width: 400px;
+		/* Chiều rộng cố định */
+		text-align: left;
+		/* Đưa thanh cuộn sang trái */
 		white-space: nowrap;
 	}
 
@@ -42,7 +48,8 @@
 	.left-column img {
 		width: 100%;
 		height: 100%;
-		object-fit: cover; /* Bao phủ vùng chứa mà không bị méo */
+		object-fit: cover;
+		/* Bao phủ vùng chứa mà không bị méo */
 		border-radius: 25px;
 	}
 
@@ -52,27 +59,27 @@
 		margin-bottom: 20px;
 	}
 
-		.product-description span {
-			font-size: 12px;
-			color: #358ED7;
-			letter-spacing: 1px;
-			text-transform: uppercase;
-			text-decoration: none;
-		}
+	.product-description span {
+		font-size: 12px;
+		color: #358ED7;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		text-decoration: none;
+	}
 
-		.product-description h1 {
-			font-weight: 300;
-			font-size: 52px;
-			color: #43484D;
-			letter-spacing: -2px;
-		}
+	.product-description h1 {
+		font-weight: 300;
+		font-size: 52px;
+		color: #43484D;
+		letter-spacing: -2px;
+	}
 
-		.product-description p {
-			font-size: 16px;
-			font-weight: 300;
-			color: #86939E;
-			line-height: 24px;
-		}
+	.product-description p {
+		font-size: 16px;
+		font-weight: 300;
+		color: #86939E;
+		line-height: 24px;
+	}
 
 	/* Product Price */
 	.product-price {
@@ -80,12 +87,12 @@
 		align-items: center;
 	}
 
-		.product-price span {
-			font-size: 26px;
-			font-weight: 300;
-			color: #43474D;
-			margin-right: 20px;
-		}
+	.product-price span {
+		font-size: 26px;
+		font-weight: 300;
+		color: #43474D;
+		margin-right: 20px;
+	}
 
 	.cart-btn {
 		display: inline-block;
@@ -98,9 +105,9 @@
 		transition: all .5s;
 	}
 
-		.cart-btn:hover {
-			background-color: #64af3d;
-		}
+	.cart-btn:hover {
+		background-color: #64af3d;
+	}
 
 	.mt-2 {
 		margin-top: 20px;
@@ -138,20 +145,23 @@
 		cursor: pointer;
 	}
 
-		.btn-danger:hover {
-			background-color: #da0606;
-		}
+	.btn-danger:hover {
+		background-color: #da0606;
+	}
 
 	.text {
-		max-height: 100px; /* Hoặc bất kỳ giới hạn chiều cao nào bạn muốn hiển thị ban đầu */
+		max-height: 100px;
+		/* Hoặc bất kỳ giới hạn chiều cao nào bạn muốn hiển thị ban đầu */
 		overflow: hidden;
-		transition: max-height 0.5s ease; /* Để tạo hiệu ứng mượt mà */
+		transition: max-height 0.5s ease;
+		/* Để tạo hiệu ứng mượt mà */
 	}
 
 
 	.product-description .read-more,
 	.product-description .shrink-btn {
-		display: none; /* Ẩn liên kết "Xem thêm" và "Thu gọn" ban đầu */
+		display: none;
+		/* Ẩn liên kết "Xem thêm" và "Thu gọn" ban đầu */
 		text-decoration: none;
 	}
 
@@ -179,12 +189,13 @@
 		word-wrap: break-word;
 		background-color: #fff;
 		background-clip: border-box;
-		border: 1px solid rgba(0,0,0,.125);
+		border: 1px solid rgba(0, 0, 0, .125);
 		border-radius: .25rem;
 		border: 0;
 		margin-bottom: 30px;
 		transition: .5s;
-		width: 100% !important; /* Ensure full width */
+		width: 100% !important;
+		/* Ensure full width */
 	}
 
 	.media {
@@ -271,12 +282,14 @@
 		font-size: 16px !important;
 	}
 
-	.media-body > * {
+	.media-body>* {
 		margin-bottom: 0;
 	}
 
-	small, time, .small {
-		font-family: Roboto,sans-serif;
+	small,
+	time,
+	.small {
+		font-family: Roboto, sans-serif;
 		font-weight: 400;
 		font-size: 11px;
 		color: #8b95a5;
@@ -291,7 +304,7 @@
 	}
 
 	.text-fade {
-		color: rgba(77,82,89,0.7) !important;
+		color: rgba(77, 82, 89, 0.7) !important;
 	}
 
 	.card-footer:last-child {
@@ -300,7 +313,7 @@
 
 	.card-footer {
 		background-color: #fcfdfe;
-		border-top: 1px solid rgba(77,82,89,0.07);
+		border-top: 1px solid rgba(77, 82, 89, 0.07);
 		color: #8b95a5;
 		padding: 10px 20px;
 	}
@@ -319,8 +332,8 @@
 
 	.card-footer {
 		padding: .75rem 1.25rem;
-		background-color: rgba(0,0,0,.03);
-		border-top: 1px solid rgba(0,0,0,.125);
+		background-color: rgba(0, 0, 0, .03);
+		border-top: 1px solid rgba(0, 0, 0, .125);
 	}
 
 
@@ -331,9 +344,9 @@
 		padding: 10px 20px
 	}
 
-		.card-footer > *:last-child {
-			margin-bottom: 0
-		}
+	.card-footer>*:last-child {
+		margin-bottom: 0
+	}
 
 	.hover-shadow {
 		-webkit-box-shadow: 0 0 35px rgba(0, 0, 0, 0.11);
@@ -348,12 +361,11 @@
 		display: flex;
 	}
 
-		.media-left .img {
-		}
+	.media-left .img {}
 
-		.media-left .name {
-			margin-left: 12px;
-		}
+	.media-left .name {
+		margin-left: 12px;
+	}
 
 	.product-rating__author-name,
 	.product-rating__time {
@@ -363,7 +375,17 @@
 	.product-rating {
 		background-color: var(--bs-body-bg);
 	}
+
+	.swiper-slide {
+		text-align: center;
+		font-size: 18px;
+		background: #fff;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
 <body>
 	<div class="container-detail">
@@ -408,7 +430,8 @@
 				<div style="min-height:10px;"></div>
 				<div class="d-flex mt-1">
 					<button class="btn btn-outline-secondary" type="button" id="decrease">-</button>
-					<input name="quantity" class="form-control text-center" id="inputQuantity" value="1" min="1" max="@Model.Quantity" style="max-width: 7.5rem;" />
+					<input name="quantity" class="form-control text-center" id="inputQuantity" value="1" min="1"
+						max="@Model.Quantity" style="max-width: 7.5rem;" />
 					<button class="btn btn-outline-secondary" type="button" id="increase">+</button>
 					<div class="text align-content-lg-center mx-3">@Model.Quantity available</div>
 				</div>
@@ -425,7 +448,8 @@
 				<div class="media card-body">
 					<div class="media-left pr-12">
 						<div class="img">
-							<img class="avatar avatar-xl no-radius" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="...">
+							<img class="avatar avatar-xl no-radius"
+								src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="...">
 						</div>
 						<div class="name">
 							<div class="mb-2">
@@ -447,52 +471,75 @@
 				</div>
 				<div class="card-hover-show">
 				<a class="btn btn-xs fs-10 btn-bold btn-info" href="#">Download CV</a>
-				<a class="btn btn-xs fs-10 btn-bold btn-primary" href="#" data-toggle="modal" data-target="#modal-contact">Contact</a>
+				<a class="btn btn-xs fs-10 btn-bold btn-primary" href="#" data-toggle="modal"
+				data-target="#modal-contact">Contact</a>
 				<a class="btn btn-xs fs-10 btn-bold btn-warning" href="#">Delete</a>
 				</div>
 				</footer> *@
 			</div>
 		</div>
-	</div>	<!-- Chat Button -->
+	</div> <!-- Chat Button -->
 	<!-- Chat Button -->
-	<div class="mt-2 btn border-secondary text-uppercase text-primary" style="background-color: gray; text-align: center;">
+	<div class="mt-2 btn border-secondary text-uppercase text-primary"
+		style="background-color: gray; text-align: center;">
 		Chat
 	</div>
+	<style>
+		.recommend-post {
+			height: 300px !important;
+			width: 300px !important;
+		}
 
+		.recommend-post-body {}
+
+		.recommend-post-content {
+			display: inline-block;
+			width: 250px;
+			white-space: nowrap;
+			overflow: hidden !important;
+			text-overflow: ellipsis;
+		}
+	</style>
 	<!-- Recommended Posts -->
 	@if (recommendedSales.Count > 0)
 	{
 		<div class="col-lg-12 mt-3">
 			<h3 class="page-header">Recommended Sales</h3>
-			<div class="row">
-				@foreach (var post in recommendedSales)
-				{
-					<div class="col-lg-4 col-md-6 col-sm-12">
-						<div class="card b-1 hover-shadow">
-							<div class="media card-body">
-								<div class="media-left pr-12">
-									<div class="img">
-										<img class="avatar avatar-xl no-radius" src="~/img/postPic/@post.Img" alt="...">
+			<div class="swiper">
+				@* col-lg-4 col-md-6 col-sm-12 *@
+				<div class="swiper-wrapper">
+					@foreach (var post in recommendedSales)
+					{
+						<div class="swiper-slide">
+							<div class="card b-1 hover-shadow recommend-post">
+								<a class="media card-body recommend-post-body p-2" asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@post.IdPost">
+									<div class="media-body w-100">
+										<div class="img">
+											<img class="avatar avatar-xl no-radius" src="~/img/postPic/@post.Img" alt="...">
+										</div>
+										<div>
+											<span class="fs-20 pr-16 recommend-post-content">@post.Content</span>
+										</div>
+										<div class="fs-14 text-fade">
+											<span>Post Date: @post.Date</span>
+										</div>
+										<div class="fs-14 text-fade">
+											<span>Type: @post.Type</span>
+										</div>
+										<div class="fs-14 text-fade">
+											<span>Rating: @post.IdUserNavigation.Rating</span>
+										</div>
 									</div>
-								</div>
-								<div class="media-body">
-                                    <div>
-										<span class="fs-20 pr-16">@post.Content</span>
-									</div>
-									<div class="fs-14 text-fade">
-										<span>Post Date: @post.Date</span>
-									</div>
-									<div class="fs-14 text-fade">
-										<span>Type: @post.Type</span>
-									</div>
-									<div class="fs-14 text-fade">
-										<span>Rating: @post.IdUserNavigation.Rating</span>
-									</div>
-								</div>
+								</a>
 							</div>
 						</div>
-					</div>
-				}
+					}
+				</div>
+				<!-- Add Pagination -->
+				<div class="swiper-pagination"></div>
+				<!-- Add Navigation -->
+				<div class="swiper-button-next"></div>
+				<div class="swiper-button-prev"></div>
 			</div>
 		</div>
 	}
@@ -500,12 +547,21 @@
 	<!-- Comment Section -->
 	<div class="col-lg-12 mt-3">
 		<h3 class="page-header">Comments</h3>
-		@* TODO: Hiển thị danh sách comment ở đây  *@
+		@* TODO: Hiển thị danh sách comment ở đây *@
+
+		@if (!string.IsNullOrEmpty(commentError))
+		{
+			<div class="alert alert-danger" role="alert">
+				@commentError
+			</div>
+		}
+
 		@foreach (var comment in comments.OrderByDescending(c => c.Date))
 		{
 			<div class="product-rating d-flex gap-2 mb-2 p-2">
 				<div class="product-rating__avatar">
-					<img class="rounded-circle me-lg-2 product-rating__avatar-img" src="~/img/@User.FindFirst("IMG")?.Value" alt="" style="width: 40px; height: 40px;">
+					<img class="rounded-circle me-lg-2 product-rating__avatar-img" src="~/img/@User.FindFirst("IMG")?.Value"
+						alt="" style="width: 40px; height: 40px;">
 				</div>
 				<div class="product-rating-main">
 					<div class="product-rating__author-name">@comment.Name</div>
@@ -514,9 +570,10 @@
 				</div>
 			</div>
 		}
-		<div class="inner-column wow fadeInRight card" style="padding : 5px 5px 5px 5px;box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);">
+		<div class="inner-column wow fadeInRight card"
+			style="padding : 5px 5px 5px 5px;box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);">
 			<span class="lead">Add your comment</span>
-			<form method="post" asp-action="PostComment" asp-asp-controller="Post">
+			<form method="post" asp-action="PostComment" asp-asp-controller="Post" asp-controller="Post">
 				<div>
 					<input name="IdPost" value="@Model.IdPost" type="hidden" />
 					<input name="RedirectUrl" value="DetailPost" type="hidden" />
@@ -590,5 +647,30 @@
 		});
 
 
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+	<script>
+		const swiper = new Swiper('.swiper', {
+			// Optional parameters
+			direction: 'horizontal',
+			loop: true,
+			slidesPerView: 3,
+		@* autoplay: {
+			delay: 3000, // milliseconds
+			disableOnInteraction: false, // continue autoplay even when user interacts with swiper
+			}, *@
+
+			// If we need pagination
+			pagination: {
+			el: '.swiper-pagination',
+			clickable: true,
+		},
+
+			// Navigation arrows
+			navigation: {
+			nextEl: '.swiper-button-next',
+			prevEl: '.swiper-button-prev',
+		},
+		});
 	</script>
 </body>

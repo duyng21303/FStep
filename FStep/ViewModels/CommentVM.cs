@@ -16,5 +16,7 @@ namespace FStep.ViewModels
 		public string? Name { get; set; } = null!;
 		public string? AvatarImg { get; set; } = null!;
 
-    }
+		public string? Img { get; set; } = null!;
+		public IFormFile? img { get; set; } = null!;
+	}
 }
