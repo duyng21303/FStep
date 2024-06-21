@@ -31,35 +31,8 @@ namespace FStep.Controllers.Customer
 			return View();
 		}
 
-		//[HttpGet]
-		//public IActionResult CheckoutExchange(int id)
-		//{
-		//	var exchange = db.Posts.SingleOrDefault(x => x.IdPost == id);
-		//	ViewData["Content"] = exchange.Content;
-		//	ViewData["Img"] = exchange.Img;
-		//	ViewData["Type"] = exchange.Type;
-		//	return View("Checkout");
-		//}
-		//[Authorize]
-		//[HttpPost]
-		//public IActionResult CheckoutExchange(CheckoutVM model)
-		//{
-		//	if (ModelState.IsValid)
-		//	{
-		//		var transaction = _mapper.Map<Transaction>(model);
-		//		transaction.IdUserBuyer = User.FindFirst("UserID").Value;
-		//		transaction.IdUserSeller = "";
-		//		transaction.Amount = model.Amount;
-		//		transaction.Date = DateTime.Now;
-		//		transaction.IdPost = model.IdPost;
-		//		db.Add(transaction);
-		//		db.SaveChanges();
-		//	}
-		//	return RedirectToAction("Index");
-		//}
-
-		[HttpGet]
 		[Authorize]
+		[HttpGet]
 		public IActionResult CheckoutSale(int id, int quantity)
 
 		{
@@ -92,8 +65,8 @@ namespace FStep.Controllers.Customer
 				Description = "Thanh toan don hang",
 				FullName = User.FindFirst("UserID").Value,
 				TransactionCode = info.ProductId,
-			}; 
-			
+			};
+
 			info.Note = model.Note;
 			HttpContext.Session.Set<CheckoutVM>("CHECKOUT_INFO", info);
 			return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, vnPayModel));
@@ -123,12 +96,12 @@ namespace FStep.Controllers.Customer
 			}
 			CheckoutVM info = HttpContext.Session.Get<CheckoutVM>("CHECKOUT_INFO");
 
-			
+
 			var transaction = new Transaction();
 			transaction.Date = DateTime.Now;
 			transaction.Status = "Processing";
 			transaction.Quantity = info.Quantity;
-
+			transaction.UnitPrice = info.UnitPrice;
 			transaction.Amount = float.Parse(response.Amount.ToString()) / 100;
 			transaction.Note = info.Note;
 			transaction.IdPost = info.IdPost;
@@ -148,9 +121,18 @@ namespace FStep.Controllers.Customer
 			db.SaveChanges();
 
 			var product = db.Products.SingleOrDefault(p => p.IdProduct == db.Posts.SingleOrDefault(p => p.IdPost == info.IdPost).IdProduct);
+			var post = db.Posts.SingleOrDefault(p => p.IdPost == info.IdPost);
 			product.Quantity -= info.Quantity;
+			if (product.SoldQuantity == null)
+				product.SoldQuantity = 0;
+			product.SoldQuantity += info.Quantity;
+
 			if (product.Quantity <= 0)
+			{
+				post.Status = "false";
 				product.Status = "false";
+
+			}
 			db.Update(product);
 			db.SaveChanges();
 

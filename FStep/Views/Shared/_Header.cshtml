@@ -5,6 +5,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
 
 
 <!-- Icon Font Stylesheet -->
@@ -13,7 +17,164 @@
 
 
 <!-- Navbar Start -->
+<style>
+	body {
+		font-family: "Arial", sans-serif;
+		background-color: #f0f2f5;
+		margin: 0;
+		padding: 0;
+	}
 
+	/* Navbar dropdown */
+	.nav-item {
+		position: relative;
+	}
+
+	.notification {
+		width: 360px;
+		max-height: 400px; /* Giới hạn chiều cao của dropdown menu để có thể cuộn */
+		overflow-y: auto; /* Cho phép cuộn dọc khi nội dung vượt quá giới hạn */
+		border: none;
+		border-radius: 0;
+		margin-top: 5px; /* Adjust as needed */
+		padding: 0;
+		box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+	}
+
+	.notification {
+		width: 360px; /* Adjust the overall width of the notification card */
+		padding: 15px;
+		background-color: #ffffff;
+		border-radius: 16px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	}
+
+	.notification-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 15px;
+	}
+
+	.notification-title {
+		font-size: 16px;
+		font-weight: 600;
+		margin: 0;
+		text-transform: capitalize;
+	}
+
+	.notification-close {
+		cursor: pointer;
+		color: #aaa;
+	}
+
+		.notification-close:hover {
+			color: #666;
+		}
+
+	.notification-container {
+		display: flex;
+		align-items: flex-start;
+	}
+
+	.notification-media {
+		position: relative;
+		margin-right: 15px;
+	}
+
+	.notification-user-avatar {
+		width: 60px;
+		height: 60px;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+
+	.notification-reaction {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		width: 30px;
+		height: 30px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%;
+		color: white;
+		background-image: linear-gradient(45deg, #0070e1, #14abfe);
+		font-size: 14px;
+	}
+
+	.notification-content {
+		flex: 1;
+	}
+
+	.notification-text {
+		margin: 0 0 5px 0;
+		font-weight: 400;
+	}
+
+	.notification-timer {
+		font-size: 12px;
+		color: #777;
+	}
+
+	.notification-status {
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		background-color: #dc3545;
+	}
+
+	/* Badge styles */
+	.badge {
+		font-size: 12px;
+		padding: 4px 8px;
+		border-radius: 12px;
+	}
+
+		.badge.bg-danger {
+			background-color: #dc3545;
+			color: #fff;
+		}
+
+	/* Font Awesome icons */
+	.fa {
+		font-size: 16px;
+	}
+
+	/* Dropdown styles */
+	.dropdown-toggle::after {
+		display: none;
+	}
+
+	.dropdown-toggle.notification-toggle {
+		cursor: pointer;
+		color: #333;
+		text-decoration: none;
+	}
+
+		.dropdown-toggle.notification-toggle:hover {
+			color: #555;
+			text-decoration: none;
+		}
+
+	.dropdown-menu-end {
+		right: 0 !important;
+		left: auto !important;
+	}
+
+	.dropdown-menu .notification {
+		position: relative;
+	}
+
+		.dropdown-menu .notification:last-child {
+			margin-bottom: 0;
+		}
+
+</style>
 <div class="container-fluid fixed-top">
 	<nav class="navbar navbar-expand-lg bg-light navbar-light sticky-top px-4 py-0">
 		<a href="/" class="navbar-brand d-flex align-items-center">
@@ -27,15 +188,15 @@
 				@if (User.IsInRole("Moderator"))
 				{
 					<a class="nav-link text-dark" asp-area="" asp-action="ManagePosts" asp-controller="ModeManagePost">Quản lí</a>
-					<a class="nav-link text-dark" asp-area="" asp-action="AddProductToWareHouse" asp-controller="Warehouse">Kho hàng</a>
+					<a class="nav-link text-dark" asp-area="" asp-action="WareHouse" asp-controller="Warehouse">Kho hàng</a>
 				}
 				else
 				{
-					<a class="nav-link text-dark" asp-area="" asp-controller="home" asp-action="index">Trang chủ </a>
-					<a class="nav-link text-dark" asp-area="" asp-controller="home" asp-action="Sale">Bán</a>
+					<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ </a>
+					<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Sale">Bán</a>
 					<a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">Trao đổi</a>
 					<div class="nav-item dropdown">
-						<a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">Đã mua</a>
+						<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="TransactionHistory">Đã mua</a>
 					</div>
 				}
 			</div>
@@ -44,48 +205,14 @@
 				{
 					<div class="navbar-nav align-items-center ms-auto">
 						<div class="nav-item dropdown">
-							<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-								<i class="fa fa-envelope me-lg-2"></i>
-								<span class="d-none d-lg-inline-flex">Tin nhắn</span>
+							<a href="#" class="nav-link dropdown-toggle notification-toggle" data-bs-toggle="dropdown">
+								Thông báo
+								<span class="badge bg-danger">@ViewBag.NotificationCount</span>
 							</a>
-							<div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-								<a href="#" class="dropdown-item">
-									<div class="d-flex align-items-center">
-										<img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-										<div class="ms-2">
-											<h6 class="fw-normal mb-0">John sent you a message</h6>
-											<small>15 minutes ago</small>
-										</div>
-									</div>
-								</a>
-								<hr class="dropdown-divider">
-								<a href="#" class="dropdown-item text-center">See all messages</a>
+							<div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0 notification" id="notification">
+									
 							</div>
-						</div>
 
-						<div class="nav-item dropdown">
-							<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-								<i class="fa fa-bell me-lg-2"></i>
-								<span class="d-none d-lg-inline-flex">Notification</span>
-							</a>
-							<div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-								<a href="#" class="dropdown-item">
-									<h6 class="fw-normal mb-0">Profile updated</h6>
-									<small>15 minutes ago</small>
-								</a>
-								<hr class="dropdown-divider">
-								<a href="#" class="dropdown-item">
-									<h6 class="fw-normal mb-0">New user added</h6>
-									<small>15 minutes ago</small>
-								</a>
-								<hr class="dropdown-divider">
-								<a href="#" class="dropdown-item">
-									<h6 class="fw-normal mb-0">Password changed</h6>
-									<small>15 minutes ago</small>
-								</a>
-								<hr class="dropdown-divider">
-								<a href="#" class="dropdown-item text-center">See all notifications</a>
-							</div>
 						</div>
 						<div class="nav-item dropdown">
 							<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">

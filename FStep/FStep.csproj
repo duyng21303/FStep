@@ -58,8 +58,11 @@
     <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.9.0" />
     <PackageReference Include="X.PagedList" Version="9.1.2" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="9.1.2" />
+
+
 	  <Folder Include="Controllers\Admin\" />
 	  <Folder Include="Controllers\Moder\" />
+	  <Folder Include="wwwroot\detail\css\" />
 	  <Folder Include="wwwroot\img\pic\" />
 	  <Folder Include="wwwroot\img\postPic\" />
 	  <Folder Include="wwwroot\img\userAvar\" />

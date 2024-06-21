@@ -6,6 +6,8 @@ using FStep.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using System.Diagnostics;
 using X.PagedList;
 
@@ -15,7 +17,6 @@ namespace FStep.Controllers
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
-
 		private readonly FstepDBContext db;
 		private readonly IMapper _mapper;
 
@@ -119,6 +120,65 @@ namespace FStep.Controllers
 				Console.WriteLine(ex);
 			}
 			return PartialView("Create");
+		}
+
+		[Authorize]
+		public IActionResult TransactionHistory(String? query, int? page)
+		{
+			int pageSize = 12; // số lượng sản phẩm mỗi trang 
+			int pageNumber = (page ?? 1);   // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
+
+			var transaction = db.Transactions.AsQueryable();
+			transaction = transaction.Where(p => p.IdUserBuyer == User.FindFirst("UserID").Value);
+
+			if (!string.IsNullOrEmpty(query))
+			{
+				transaction = transaction.Where(p => p.IdPostNavigation.Content.Contains(query));
+				//db.Posts.FirstOrDefault(x => x.Content.Contains(query)).IdPost
+			}
+			var result = transaction.Select(s => new TransactionVM
+			{
+				TransactionId = s.IdTransaction,
+				IdPost = s.IdPost,
+				Content = s.IdPostNavigation.Content,
+				Detail = s.IdPostNavigation.Detail,
+				TypePost = s.IdPostNavigation.Type,
+				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now,
+				Img = s.IdPostNavigation.Img,
+				UnitPrice = s.UnitPrice,
+				Quantity = s.Quantity,
+				Amount = s.Amount,
+				IdUserSeller = s.IdUserSeller,
+				CodeTransaction = s.CodeTransaction,
+				UserName = db.Users.FirstOrDefault(p => p.IdUser == s.IdUserBuyer).Name ?? null,
+			}).OrderByDescending(o => o.TransactionId);
+
+			var pageList = result.ToPagedList(pageNumber, pageSize);
+
+			ViewBag.Query = query;
+			return View(pageList);
+		}
+		[Authorize]
+		[HttpGet]
+		public ActionResult TransactionDetail(int id)
+		{
+
+			return View(new TransactionVM()
+			{
+				TransactionId = id,
+				IdPost = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdPost,
+				Content = db.Posts.FirstOrDefault(p => p.IdPost == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdPost).Content,
+				Detail = db.Posts.FirstOrDefault(p => p.IdPost == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdPost).Detail,
+				TypePost = db.Posts.FirstOrDefault(p => p.IdPost == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdPost).Type,
+				CreateDate = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).Date,
+				Img = db.Posts.FirstOrDefault(p => p.IdPost == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdPost).Img,
+				UnitPrice = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).UnitPrice,
+				Quantity = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).Quantity,
+				Amount = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).Amount,
+				IdUserSeller = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdUserSeller,
+				CodeTransaction = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).CodeTransaction,
+				UserName = db.Users.FirstOrDefault(p => p.IdUser == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdUserBuyer).Name ?? null,
+			});
 		}
 	}
 }

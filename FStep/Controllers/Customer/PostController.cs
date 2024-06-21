@@ -49,9 +49,8 @@ namespace FStep.Controllers.Customer
 				var post = _mapper.Map<Post>(model);
 				post.Content = model.Title;
 				post.Date = DateTime.Now;
-				//Helpers.Util.UpLoadImg(model.Img, "")
 				post.Img = Util.UpLoadImg(img, "postPic");
-				post.Status = "true";
+				post.Status = "false";
 				post.Type = model.Type;
 				post.Detail = model.Description;
 				post.IdUser = User.FindFirst("UserID").Value;
@@ -84,7 +83,7 @@ namespace FStep.Controllers.Customer
 				Date = x.Date,
 				IdComment = x.IdComment,
 				Name = x.IdUserNavigation.Name,
-                AvatarImg = x.IdUserNavigation.AvatarImg // Adjust this property name to match your actual property name for the user's image
+				AvatarImg = x.IdUserNavigation.AvatarImg // Adjust this property name to match your actual property name for the user's image
 			}).ToList();
 
 			ViewData["comments"] = comments;
@@ -106,38 +105,44 @@ namespace FStep.Controllers.Customer
 
 			return View(data);
 		}
-        public IActionResult DetailSalePost(int id)
-        {
-            var post = db.Posts.SingleOrDefault(post => post.IdPost == id);
+		public IActionResult DetailSalePost(int id)
+		{
+			var post = db.Posts.SingleOrDefault(post => post.IdPost == id);
 
-            var product = db.Products.SingleOrDefault(product => product.IdProduct == post.IdProduct);
-            var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
-            ViewData["USER_CREATE"] = user;
+			var product = db.Products.SingleOrDefault(product => product.IdProduct == post.IdProduct);
+			var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
 
-            // lấy thêm comment sản phẩm
-            var comments = db.Comments.Where(x => x.IdPost == id).Include(x => x.IdUserNavigation).Select(x => new CommentVM
-            {
-                IdPost = id,
-                IdUser = x.IdUser,
-                Content = x.Content,
-                Date = x.Date,
-                IdComment = x.IdComment,
-                Name = x.IdUserNavigation.Name
-            }).ToList();
+			var feedback = db.Feedbacks.Count(x => x.IdPost == id);
+			ViewData["USER_CREATE"] = user;
 
-            ViewData["comments"] = comments;
+			// lấy thêm comment sản phẩm
+			var comments = db.Comments.Where(x => x.IdPost == id).Include(x => x.IdUserNavigation).Select(x => new CommentVM
+			{
+				IdPost = id,
+				IdUser = x.IdUser,
+				Content = x.Content,
+				Date = x.Date,
+				IdComment = x.IdComment,
+				Name = x.IdUserNavigation.Name,
+				AvatarImg = x.IdUserNavigation.AvatarImg
+			}).ToList();
 
-            var result = new PostVM()
-            {
-                IdPost = post.IdPost,
-                Title = post.Content,
-                Quantity = product.Quantity,
-                Img = post.Img,
-                Description = post.Detail,
-                CreateDate = post.Date,
-                Price = product.Price ?? 0
-            };
-        var currentProductPrice = post.IdProductNavigation?.Price;
+			ViewData["comments"] = comments;
+
+			var result = new PostVM()
+			{
+				IdPost = post.IdPost,
+				Title = post.Content,
+				Quantity = product.Quantity,
+				Img = post.Img,
+				Description = post.Detail,
+				CreateDate = post.Date,
+				Price = product.Price ?? 0,
+				SoldQuantity = product.SoldQuantity ?? 0,
+				FeedbackNum = feedback
+			};
+
+			var currentProductPrice = post.IdProductNavigation?.Price;
 
 			// Truy vấn các bài đăng chứa sản phẩm đề xuất trong khoảng giá ±1 triệu đồng
 			var recommendedSales = db.Posts
@@ -151,8 +156,8 @@ namespace FStep.Controllers.Customer
 
 			ViewData["recommendedSales"] = recommendedSales;
 
-            return View(result);
-        }
+			return View(result);
+		}
 
 		[HttpPost]
 		public IActionResult PostComment([FromForm] CommentVM comment)
@@ -167,7 +172,6 @@ namespace FStep.Controllers.Customer
 					comment.Date = DateTime.Now;
 					var saveComment = _mapper.Map<Comment>(comment);
 					saveComment.Reports = null;
-					saveComment.UserNotifications = null;
 					db.Comments.Add(saveComment);
 					db.SaveChanges();
 				}

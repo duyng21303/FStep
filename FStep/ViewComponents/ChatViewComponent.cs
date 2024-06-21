@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace FStep.ViewComponents
 {
-	public class ChatViewComponent : ViewComponent
+    public class ChatViewComponent : ViewComponent
 	{
 		private readonly FstepDBContext db;
 
@@ -61,6 +61,20 @@ namespace FStep.ViewComponents
 				.OrderBy(p => p.ChatDate)
 				.ToList();
 
+			foreach (var userId in allUserIds)
+			{
+				if (!result.Any(r => r.SenderUser.IdUser == userId || r.RecieverUser.IdUser == userId))
+				{
+					result.Add(new ChatVM
+					{
+						ChatDate = DateTime.Now,
+						SenderUser = db.Users.SingleOrDefault(user => user.IdUser == userIdString),
+						RecieverUser = db.Users.SingleOrDefault(user => user.IdUser == userId),
+						ChatMsg = null,
+						IdPost = null
+					});
+				}
+			}
 			if (!string.IsNullOrEmpty(userid))
 			{
 				var newUser = db.Users.SingleOrDefault(user => user.IdUser == userid);
@@ -76,22 +90,6 @@ namespace FStep.ViewComponents
 					});
 				}
 			}
-
-			foreach (var userId in allUserIds)
-			{
-				if (!result.Any(r => r.SenderUser.IdUser == userId || r.RecieverUser.IdUser == userId))
-				{
-					result.Add(new ChatVM
-					{
-						ChatDate = DateTime.Now,
-						SenderUser = db.Users.SingleOrDefault(user => user.IdUser == userIdString),
-						RecieverUser = db.Users.SingleOrDefault(user => user.IdUser == userId),
-						ChatMsg = null,
-						IdPost = null
-					});
-				}
-			}
-
 			result = result.OrderBy(p => p.ChatDate).Reverse().ToList();
 
 			return View(result);

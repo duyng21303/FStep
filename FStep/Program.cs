@@ -1,6 +1,7 @@
 ﻿using FStep.Data;
 using FStep.Repostory.Interface;
 using FStep.Repostory.Service;
+using FStep.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using FStep.Helpers;
@@ -12,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Security.Claims;
+using FStep;
 
 namespace FStep
 {
@@ -20,6 +22,15 @@ namespace FStep
 		public static void Main(string[] args)
 		{
 			var builder = WebApplication.CreateBuilder(args);
+
+			// Add services to the container.
+			builder.Services.AddControllersWithViews();
+
+			// Register DbContext
+			builder.Services.AddDbContext<FstepDBContext>(options =>
+			{
+				options.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
+			});
 
 			// Add services to the container.
 			builder.Services.AddControllersWithViews();
@@ -37,8 +48,8 @@ namespace FStep
 				options.Cookie.HttpOnly = true;
 				options.Cookie.IsEssential = true;
 			});
-			
-            builder.Services.AddHttpContextAccessor();
+
+			builder.Services.AddHttpContextAccessor();
 
 			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options
 				=>
@@ -46,6 +57,7 @@ namespace FStep
 				options.LoginPath = "/Account/Login";
 				options.AccessDeniedPath = "/AccessDenied";
 			});
+
 
 			// Configure Google authentication (if needed)
 			builder.Services.AddAuthentication().AddGoogle(googleOptions =>
@@ -58,6 +70,12 @@ namespace FStep
 				googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Name, "name", "givenName");
 				googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Email, "email", "string");
 			});
+			builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+			builder.Services.AddDistributedMemoryCache();
+
+
+
 
 			// Add AutoMapper (if needed)
 			builder.Services.AddAutoMapper(typeof(Program));
@@ -78,6 +96,7 @@ namespace FStep
 
 			app.UseSession();
 
+
 			app.UseAuthentication();
 			app.UseAuthorization();
 			app.UseEndpoints(endpoints =>
@@ -92,4 +111,5 @@ namespace FStep
 
 		}
 	}
+
 }
