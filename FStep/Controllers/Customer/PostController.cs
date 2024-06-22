@@ -140,7 +140,7 @@ namespace FStep.Controllers.Customer
 			{
 				comment.IdUser = User.FindFirst("UserID")?.Value;
 				comment.Date = DateTime.Now;
-				comment.Type = "Exchange";
+				comment.Type = "Comment";
 				var saveComment = _mapper.Map<Comment>(comment);
 				saveComment.Reports = null;
 				db.Comments.Add(saveComment);
@@ -165,6 +165,7 @@ namespace FStep.Controllers.Customer
 			{
 				comment.IdUser = User.FindFirst("UserID")?.Value;
 				comment.Date = DateTime.Now;
+				comment.Type = "Exchange";
 				comment.Img = Util.UpLoadImg(img, "postPic");
 				var saveComment = _mapper.Map<Comment>(comment);
 				db.Comments.Add(saveComment);
