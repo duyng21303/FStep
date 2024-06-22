@@ -16,5 +16,9 @@
 
         public int? Rating { get; set; }
 
+        public string? Gender { get; set; }
+        public string? Role { get; set; }
+        public DateTime? CreateDate { get; set; }
+
     }
 }
