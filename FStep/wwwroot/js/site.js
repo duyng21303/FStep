@@ -46,7 +46,14 @@ $(document).ready(function () {
         });
         openForm();
     });
-    $(".load-chat-comment").click(function () {
+    $('.load-chat-comment').click(function () {
+        var userId = $(this).data('userid').toString();
+        connection.invoke("LoadMessages", userId).catch(function (err) {
+            return console.error(err.toString());
+        });
+        openForm();
+    });
+    $(".load-chat-comment-exchange").click(function () {
         var userId = $(this).data("userid").toString();
         var post = $(this).data("post").toString();
         var comment = $(this).data("comment").toString();
@@ -265,7 +272,7 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
             <div class="d-flex align-items-center">
                 <div class="col-2 text-center p-0">
                     <!-- Hình ảnh sản phẩm nhỏ hơn -->
-                    <img src="/img/postPic/${confirm.post.img}" alt="Product Image" class="img-thumbnail" style="width: 50px; height: 50px;">
+                    <img src="/img/postPic/${confirm.post.img}" alt="Product Image" class="img-thumbnail" style="width: 50px; height: 50px; min-height: 50px; min-width: 50px">
                 </div>
                 <div class="col text-left p-2 ml-12">
 

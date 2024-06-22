@@ -18,6 +18,4 @@ public partial class Payment
     public int IdTransaction { get; set; }
 
     public virtual Transaction IdTransactionNavigation { get; set; } = null!;
-
-    public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 }

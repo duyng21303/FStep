@@ -76,6 +76,6 @@ namespace FStep.Hubs
 				await Clients.Caller.SendAsync("LoadNotification", notificationList);
 			}
 		}
-		
+
 	}
 }
