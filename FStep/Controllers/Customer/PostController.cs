@@ -83,6 +83,8 @@ namespace FStep.Controllers.Customer
 				Date = x.Date,
 				IdComment = x.IdComment,
 				Name = x.IdUserNavigation.Name,
+				Type = x.Type,
+				Img = x.Img,
 				avarImg = x.IdUserNavigation.AvatarImg // Adjust this property name to match your actual property name for the user's image
 			}).ToList();
 
@@ -129,23 +131,44 @@ namespace FStep.Controllers.Customer
 
 			return View(result);
 		}
-
+		[Authorize]
 		[HttpPost]
 		public IActionResult PostComment([FromForm] CommentVM comment)
 		{
 			string refererUrl = Request.Headers["Referer"].ToString();
 			try
 			{
-				var isAuthenticated = User?.Identity?.IsAuthenticated;
-				if (isAuthenticated == true)
-				{
-					comment.IdUser = User.FindFirst("UserID")?.Value;
-					comment.Date = DateTime.Now;
-					var saveComment = _mapper.Map<Comment>(comment);
-					saveComment.Reports = null;
-					db.Comments.Add(saveComment);
-					db.SaveChanges();
-				}
+				comment.IdUser = User.FindFirst("UserID")?.Value;
+				comment.Date = DateTime.Now;
+				comment.Type = "Exchange";
+				var saveComment = _mapper.Map<Comment>(comment);
+				saveComment.Reports = null;
+				db.Comments.Add(saveComment);
+				db.SaveChanges();
+			}
+			catch (Exception ex)
+			{
+				var exc = ex;
+			}
+			if (!string.IsNullOrEmpty(refererUrl))
+			{
+				return Redirect(refererUrl);
+			}
+			return RedirectToAction("DetailPost", "Post", new { id = comment.IdPost });
+		}
+		[Authorize]
+		[HttpPost]
+		public IActionResult PostCommentExchange([FromForm] CommentVM comment, IFormFile img)
+		{
+			string refererUrl = Request.Headers["Referer"].ToString();
+			try
+			{
+				comment.IdUser = User.FindFirst("UserID")?.Value;
+				comment.Date = DateTime.Now;
+				comment.Img = Util.UpLoadImg(img, "postPic");
+				var saveComment = _mapper.Map<Comment>(comment);
+				db.Comments.Add(saveComment);
+				db.SaveChanges();
 			}
 			catch (Exception ex)
 			{
