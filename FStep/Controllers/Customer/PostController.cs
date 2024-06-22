@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using X.PagedList;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FStep.Controllers.Customer
 {
@@ -82,31 +83,20 @@ namespace FStep.Controllers.Customer
 				Date = x.Date,
 				IdComment = x.IdComment,
 				Name = x.IdUserNavigation.Name,
-				AvatarImg = x.IdUserNavigation.AvatarImg // Adjust this property name to match your actual property name for the user's image
+				Type = x.Type,
+				Img = x.Img,
+				avarImg = x.IdUserNavigation.AvatarImg // Adjust this property name to match your actual property name for the user's image
 			}).ToList();
 
 			ViewData["comments"] = comments;
-
-			// Lấy giá của sản phẩm hiện tại
-			var currentProductPrice = data.IdProductNavigation?.Price;
-
-			// Truy vấn các bài đăng chứa sản phẩm đề xuất trong khoảng giá ±1 triệu đồng
-			var recommendedPosts = db.Posts
-									 .Include(p => p.IdProductNavigation)
-									 .Include(p => p.IdUserNavigation)
-									 .Where(p => p.IdProductNavigation.Price >= currentProductPrice - 1000000
-												 && p.IdProductNavigation.Price <= currentProductPrice + 1000000
-												 && p.Type == "Exchange"
-												 && p.IdPost != id)
-									 .ToList();
-
-			ViewData["recommendedPosts"] = recommendedPosts;
 
 			return View(data);
 		}
 		public IActionResult DetailSalePost(int id)
 		{
-			var post = db.Posts.Include(x => x.IdProductNavigation).SingleOrDefault(post => post.IdPost == id);
+			var post = db.Posts.SingleOrDefault(post => post.IdPost == id);
+
+			var product = db.Products.SingleOrDefault(product => product.IdProduct == post.IdProduct);
 			var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
 
 			var feedback = db.Feedbacks.Count(x => x.IdPost == id);
@@ -121,7 +111,7 @@ namespace FStep.Controllers.Customer
 				Date = x.Date,
 				IdComment = x.IdComment,
 				Name = x.IdUserNavigation.Name,
-				AvatarImg = x.IdUserNavigation.AvatarImg
+				avarImg = x.IdUserNavigation.AvatarImg // Adjust this property name to match your actual property name for the user's image
 			}).ToList();
 
 			ViewData["comments"] = comments;
@@ -130,81 +120,66 @@ namespace FStep.Controllers.Customer
 			{
 				IdPost = post.IdPost,
 				Title = post.Content,
-				Quantity = post.IdProductNavigation?.Quantity,
+				Quantity = product.Quantity,
 				Img = post.Img,
 				Description = post.Detail,
 				CreateDate = post.Date,
-				Price = post.IdProductNavigation?.Price ?? 0,
-				SoldQuantity = post.IdProductNavigation?.SoldQuantity ?? 0,
+				Price = product.Price ?? 0,
+				SoldQuantity = product.SoldQuantity ?? 0,
 				FeedbackNum = feedback
 			};
 
-			var currentProductPrice = post.IdProductNavigation?.Price;
-
-			// Truy vấn các bài đăng chứa sản phẩm đề xuất trong khoảng giá ±1 triệu đồng
-			var recommendedSales = db.Posts
-									 .Include(p => p.IdProductNavigation)
-									 .Include(p => p.IdUserNavigation)
-									 .Where(p => p.IdProductNavigation.Price >= currentProductPrice - 1000000
-												 && p.IdProductNavigation.Price <= currentProductPrice + 1000000
-												 && p.Type == "Sale"
-												 && p.IdPost != id)
-									 .ToList();
-
-			ViewData["recommendedSales"] = recommendedSales;
-
 			return View(result);
 		}
-
+		[Authorize]
 		[HttpPost]
-		public IActionResult PostComment([FromForm] CommentVM comment, IFormFile image)
+		public IActionResult PostComment([FromForm] CommentVM comment)
 		{
 			string refererUrl = Request.Headers["Referer"].ToString();
 			try
 			{
-				if (string.IsNullOrWhiteSpace(comment.Content))
-				{
-					TempData["CommentError"] = "Comment content cannot be empty.";
-					if (!string.IsNullOrEmpty(refererUrl))
-					{
-						return Redirect(refererUrl);
-					}
-					return RedirectToAction("DetailPost", "Post", new { id = comment.IdPost });
-				}
-
-				var isAuthenticated = User?.Identity?.IsAuthenticated;
-				if (isAuthenticated == true)
-				{
-					comment.IdUser = User.FindFirst("UserID")?.Value;
-					comment.Date = DateTime.Now;
-
-					// Handle image upload
-					if (image != null)
-					{
-						var folder = "comments";
-						comment.Img = Util.UpLoadImg(image, folder);
-					}
-
-					var saveComment = _mapper.Map<Comment>(comment);
-					saveComment.Reports = null;
-					db.Comments.Add(saveComment);
-					db.SaveChanges();
-				}
+				comment.IdUser = User.FindFirst("UserID")?.Value;
+				comment.Date = DateTime.Now;
+				comment.Type = "Exchange";
+				var saveComment = _mapper.Map<Comment>(comment);
+				saveComment.Reports = null;
+				db.Comments.Add(saveComment);
+				db.SaveChanges();
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine($"Error posting comment: {ex.Message}");
-
+				var exc = ex;
 			}
-
 			if (!string.IsNullOrEmpty(refererUrl))
 			{
 				return Redirect(refererUrl);
 			}
-
 			return RedirectToAction("DetailPost", "Post", new { id = comment.IdPost });
 		}
-
+		[Authorize]
+		[HttpPost]
+		public IActionResult PostCommentExchange([FromForm] CommentVM comment, IFormFile img)
+		{
+			string refererUrl = Request.Headers["Referer"].ToString();
+			try
+			{
+				comment.IdUser = User.FindFirst("UserID")?.Value;
+				comment.Date = DateTime.Now;
+				comment.Img = Util.UpLoadImg(img, "postPic");
+				var saveComment = _mapper.Map<Comment>(comment);
+				db.Comments.Add(saveComment);
+				db.SaveChanges();
+			}
+			catch (Exception ex)
+			{
+				var exc = ex;
+			}
+			if (!string.IsNullOrEmpty(refererUrl))
+			{
+				return Redirect(refererUrl);
+			}
+			return RedirectToAction("DetailPost", "Post", new { id = comment.IdPost });
+		}
 
 		public ActionResult _CreatePost()
 		{

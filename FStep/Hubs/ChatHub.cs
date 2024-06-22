@@ -328,8 +328,16 @@ namespace FStep
 			if (checkTransaction)
 			{
 				var transaction = await _context.Transactions.OrderByDescending(t => t.Date).FirstOrDefaultAsync();
-				await notificationServices.CreateNotification(userID, "TransactionExchangeSuccess", "Transaction", currentUser, transaction.IdTransaction);
-				await notificationServices.CreateNotification(currentUser, "TransactionExchangeSuccess", "Transaction", userID, transaction.IdTransaction);
+				var currentUserDb = await _context.Users
+							.Where(u => u.IdUser == currentUser)
+							.Select(u => new { u.Name })
+							.FirstOrDefaultAsync();
+				var otherUserDb = await _context.Users
+							.Where(u => u.IdUser == userID)
+							.Select(u => new { u.Name })
+							.FirstOrDefaultAsync();
+				await notificationServices.CreateNotification(userID, "TransactionExchangeSuccess", "Transaction", currentUserDb.Name, transaction.IdTransaction);
+				await notificationServices.CreateNotification(currentUser, "TransactionExchangeSuccess", "Transaction", otherUserDb.Name, transaction.IdTransaction);
 			}
 			await LoadMessages(userID);
 			// Xử lý logic khi người dùng nhấp vào "Đồng ý"
