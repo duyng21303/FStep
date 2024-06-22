@@ -46,7 +46,14 @@ $(document).ready(function () {
         });
         openForm();
     });
-    $(".load-chat-comment").click(function () {
+    $('.load-chat-comment').click(function () {
+        var userId = $(this).data('userid').toString();
+        connection.invoke("LoadMessages", userId).catch(function (err) {
+            return console.error(err.toString());
+        });
+        openForm();
+    });
+    $(".load-chat-comment-exchange").click(function () {
         var userId = $(this).data("userid").toString();
         var post = $(this).data("post").toString();
         var comment = $(this).data("comment").toString();
@@ -79,18 +86,24 @@ _notiConnection.on("LoadNotification", function (notification) {
     notificationList.innerHTML = '';
 
     notification.forEach(notification => {
+        var img = '';
         console.log(notification);
+        if (notification.avatarImg != null) {
+            img = "userAvar/" + recieverUser.avatarImg;
+        } else {
+            img = "nullAvar/149071.png";
+        }
         const notificationItem = document.createElement('div');
         notificationItem.classList.add('notification-container');
         notificationItem.innerHTML = `
 							<div class="notification-media">
-								<img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80" alt="" class="notification-user-avatar">
+								<img src="/img/${img}" alt="" class="notification-user-avatar">
 							</div>
 							<div class="notification-content">
 								<p class="notification-text" style="max-height: 70px; overflow: hidden; transition: max-height 0.5s ease; text-overflow: ellipsis;">
-												evondev, Trần Anh Tuấn and 154 others react to your post in Cộng đồng Frontend Việt Nam
+												${notification.content}
 								</p>
-								<span class="notification-timer">a few seconds ago</span>
+								<span class="notification-timer">${notification.date}</span>
 							</div>
         `;
         notificationList.appendChild(notificationItem);
@@ -259,7 +272,7 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
             <div class="d-flex align-items-center">
                 <div class="col-2 text-center p-0">
                     <!-- Hình ảnh sản phẩm nhỏ hơn -->
-                    <img src="/img/postPic/${confirm.post.img}" alt="Product Image" class="img-thumbnail" style="width: 50px; height: 50px;">
+                    <img src="/img/postPic/${confirm.post.img}" alt="Product Image" class="img-thumbnail" style="width: 50px; height: 50px; min-height: 50px; min-width: 50px">
                 </div>
                 <div class="col text-left p-2 ml-12">
 
@@ -450,7 +463,6 @@ function CreateNotification(userID, typeMessage, type, parameter, idEvent) {
 connection.start().catch(function (err) {
     return console.error(err.toString());
 });
-
 _notiConnection.start().catch(function (err) {
     return console.error(err.toString());
 });
