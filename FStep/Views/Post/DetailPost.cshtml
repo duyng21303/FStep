@@ -577,6 +577,7 @@
                     <ul class="nav nav-pills d-inline-flex text-center mb-5">
 						@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser))
 						{
+
                         <li class="nav-item">
                             <a class="d-flex m-2 py-2 bg-light rounded-pill active" data-bs-toggle="pill" href="#tab-comment" style="width: 130px; text-decoration: none">
                                 <span class="text-dark" style="width: 130px;">Bình luận</span>
@@ -588,6 +589,7 @@
                             </a>
                         </li>
 						}
+
                     </ul>
                 </div>
             </div>
@@ -664,6 +666,7 @@
 													@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(comment.IdUser))
 													{
 													<button type="button"
+
 															class="btn btn-sm btn-primary load-chat-comment-exchange" style="float: inline-end" data-userid="@comment.IdUser" data-post="@comment.IdPost" data-comment="@comment.IdComment">
 														<span>Liên hệ để trao đổi ngay</span>
 													</button>
