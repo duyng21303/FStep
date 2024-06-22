@@ -575,16 +575,21 @@
             <div class="row g-4">
                 <div class="col-lg-8 text-end">
                     <ul class="nav nav-pills d-inline-flex text-center mb-5">
+						@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser))
+						{
+
                         <li class="nav-item">
                             <a class="d-flex m-2 py-2 bg-light rounded-pill active" data-bs-toggle="pill" href="#tab-comment" style="width: 130px; text-decoration: none">
                                 <span class="text-dark" style="width: 130px;">Bình luận</span>
                             </a>
                         </li>
-                        <li class="nav-item">
+						<li class="nav-item">
                             <a class="d-flex py-2 m-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-comment-image" style="width: 130px; text-decoration: none">
                                 <span class="text-dark" style="width: 130px;">Tôi muốn trao đổi</span>
                             </a>
                         </li>
+						}
+
                     </ul>
                 </div>
             </div>
@@ -655,19 +660,26 @@
                                             <a href="#">@comment.Name</a> <small>@comment.Date?.ToString("dd-MM-yyyy HH:mm:ss")</small>
                                             @if (User.Identity.IsAuthenticated)
                                             {
-                                                if (comment.Type == "Exchange" && User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser))
+                                                @if (comment.Type == "Exchange" && User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser))
                                                 {
-                                                    <span class="labelConfirm exchange">Trao đổi</span>
-                                                    <button type="button"
+													<span class="labelConfirm exchange">Trao đổi</span>
+													@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(comment.IdUser))
+													{
+													<button type="button"
+
 															class="btn btn-sm btn-primary load-chat-comment-exchange" style="float: inline-end" data-userid="@comment.IdUser" data-post="@comment.IdPost" data-comment="@comment.IdComment">
 														<span>Liên hệ để trao đổi ngay</span>
 													</button>
+													}
 												}
 												else
 												{
+													@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(comment.IdUser))
+													{
 													<button type="button" class="btn btn-sm btn-primary load-chat-comment" style="float: inline-end" data-userid="@comment.IdUser">
 														<span>Liên hệ với người này</span>
 													</button>
+														}
 												}
 												<div id="chatContainerComment" style="display: none;">
 													@await Component.InvokeAsync("Chat", @comment.IdUser)
