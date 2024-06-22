@@ -450,34 +450,7 @@ function CreateNotification(userID, typeMessage, type, parameter, idEvent) {
 connection.start().catch(function (err) {
     return console.error(err.toString());
 });
-$(document).ready(function () {
-    $('#createPostForm').submit(function (event) {
-        event.preventDefault(); // Prevent the default form submission
-        var formData = new FormData(this); // Get the form data
 
-        $.ajax({
-            type: 'POST',
-            url: $(this).attr('action'),
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                if (response.success) {
-                    // Handle success (e.g., close modal, update UI)
-                    $('#exampleModal').modal('hide');
-                    window.location.reload(); // Optionally reload the page to reflect changes
-                } else {
-                    // Display error message
-                    alert(response.message);
-                }
-            },
-            error: function (response) {
-                // Handle error
-                alert('An error occurred. Please try again.');
-            }
-        });
-    });
-});
 _notiConnection.start().catch(function (err) {
     return console.error(err.toString());
 });
