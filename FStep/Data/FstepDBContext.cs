@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FStep.Data;
 
-public partial class FstepDbContext : DbContext
+public partial class FstepDBContext : DbContext
 {
     public FstepDbContext()
     {
@@ -442,3 +442,4 @@ public partial class FstepDbContext : DbContext
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
+

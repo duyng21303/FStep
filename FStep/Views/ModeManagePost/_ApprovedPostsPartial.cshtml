@@ -1,6 +1,26 @@
 ﻿@model X.PagedList.IPagedList<FStep.ViewModels.ListPostVM>
 @using X.PagedList.Mvc.Core;
 
+@{
+	var successMessage = TempData["SuccessMessage"] as string;
+	var errorMessage = TempData["ErrorMessage"] as string;
+}
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+	<div id="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+		@successMessage
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+	<div id="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+		@errorMessage
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+}
 <div>
 	<!-- Header body  -->
 	<!-- Title header body  -->
@@ -25,10 +45,10 @@
 									<th scope="col">Loại SP</th>
 									<th scope="col">MSSV</th>
 									<th scope="col">Số Lượng</th>
-									<th scope="col">Vị Trí</th>
 									<th scope="col">Ngày Tạo</th>
 									<th scope="col">Còn Lại</th>
-									<th scope="col">Thao Tác</th>
+									<th scope="col">Duyệt Lại</th>
+									<th scope="col">Xóa Bài</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -38,16 +58,16 @@
 									<tr>
 										<td><img src="@Url.Content("~/img/postPic/" + item.Image)" class="img-fluid small-rounded-image" alt="Post Image"></td>
 										<td class="post-title">@Html.Raw(item.PostTitle)</td>
-										<td>@Html.Raw(item.Type)</td>
+										<td>@Html.Raw(item.Category)</td>
 										<td class="post-studentid">@Html.Raw(item.StudentId)</td>
 										<td>@Html.Raw(item.Quantity)</td>
-										<td>@Html.Raw(item.Location)</td>
 										<td>@Html.Raw(item.CreateDate.ToString("yyyy-MM-dd"))</td>
 										<td>@Html.Raw(item.DaysRemaining)</td>
 										<td>
-											<a asp-controller="ModeManagePost" asp-action="UpdateStatus" asp-route-id="@item.PostId" style="text-decoration: none;">
-												<button type="button" class="btn btn-success btn-sm me-2">Giao dịch</button>
-											</a>
+											<form asp-controller="ModeManagePost" asp-action="UpdateStatusAgain" method="post" onsubmit="return confirmApprove()">
+												<input type="hidden" name="id" value="@item.PostId" /> <!-- Ensure the input name matches your action parameter -->
+												<button type="submit" class="btn btn-success">Duyệt</button>
+											</form>
 										</td>
 										<td>
 											<form asp-controller="ModeManagePost" asp-action="FinishPost" method="post" onsubmit="return confirmDelete()">

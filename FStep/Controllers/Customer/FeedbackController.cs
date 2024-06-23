@@ -10,9 +10,9 @@ namespace FStep.Controllers.Customer
 {
 	public class FeedbackController : Controller
 	{
-		private readonly FstepDbContext db;
-
-		public FeedbackController(FstepDbContext context) => db = context;
+		private readonly FstepDBContext db;
+		
+		public FeedbackController(FstepDBContext context) => db = context;
 
 		public IActionResult Index()
 		{

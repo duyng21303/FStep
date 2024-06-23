@@ -15,5 +15,7 @@ namespace FStep.ViewModels
 		public string IdUser { get; set; } = null!;
 		public string? Name { get; set; } = null!;
 		public string? avarImg { get; set; }
+		public string? Img {  get; set; }
+		public string? Type { get; set; }
     }
 }

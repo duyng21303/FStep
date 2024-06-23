@@ -46,7 +46,14 @@ $(document).ready(function () {
         });
         openForm();
     });
-    $(".load-chat-comment").click(function () {
+    $('.load-chat-comment').click(function () {
+        var userId = $(this).data('userid').toString();
+        connection.invoke("LoadMessages", userId).catch(function (err) {
+            return console.error(err.toString());
+        });
+        openForm();
+    });
+    $(".load-chat-comment-exchange").click(function () {
         var userId = $(this).data("userid").toString();
         var post = $(this).data("post").toString();
         var comment = $(this).data("comment").toString();
@@ -65,10 +72,49 @@ $(document).ready(function () {
         });
         openForm();
     });
-
+    $(".notification-toggle").click(function () {
+        _notiConnection.invoke("LoadNotification").catch(function (err) {
+            return console.error(err.toString());
+        });
+    });
 });
 
 const connection = new signalR.HubConnectionBuilder().withUrl("/chathub").build();
+const _notiConnection = new signalR.HubConnectionBuilder().withUrl("/notificationhub").build();
+_notiConnection.on("LoadNotification", function (notification) {
+    const notificationList = document.getElementById('notification');
+    notificationList.innerHTML = '';
+
+    notification.forEach(notification => {
+        var img = '';
+        console.log(notification);
+        if (notification.avatarImg != null) {
+            img = "userAvar/" + recieverUser.avatarImg;
+        } else {
+            img = "nullAvar/149071.png";
+        }
+        const notificationItem = document.createElement('div');
+        notificationItem.classList.add('notification-container');
+        notificationItem.innerHTML = `
+							<div class="notification-media">
+								<img src="/img/${img}" alt="" class="notification-user-avatar">
+							</div>
+							<div class="notification-content">
+								<p class="notification-text" style="max-height: 70px; overflow: hidden; transition: max-height 0.5s ease; text-overflow: ellipsis;">
+												${notification.content}
+								</p>
+								<span class="notification-timer">${notification.date}</span>
+							</div>
+        `;
+        notificationList.appendChild(notificationItem);
+    });
+});
+
+function removeNotification(element) {
+    element.parentElement.parentElement.parentElement.remove();
+}
+
+// Start the connection.
 
 connection.on("ReceiveMessage", function (recieveUser, user, message, img, date) {
     var currentUser = document.getElementById('sendUserID').value; // hoặc truyền từ server
@@ -159,7 +205,7 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
                 </button>
                 </div>
                 `;
-           
+
 
         } else {
             accept = `
@@ -180,8 +226,8 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
                 </button>
                 </div>
                 `;
-            
-            
+
+
         }
         if (confirm.checkConfirm != null) {
             currentStatus = confirm.checkConfirm ? `<span class="labelConfirm accept">Đã chấp nhận</span>` :
@@ -226,9 +272,9 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
             <div class="d-flex align-items-center">
                 <div class="col-2 text-center p-0">
                     <!-- Hình ảnh sản phẩm nhỏ hơn -->
-                    <img src="/img/postPic/${confirm.post.img}" alt="Product Image" class="img-thumbnail" style="width: 50px; height: 50px;">
+                    <img src="/img/postPic/${confirm.post.img}" alt="Product Image" class="img-thumbnail" style="width: 50px; height: 50px; min-height: 50px; min-width: 50px">
                 </div>
-                <div class="col text-left p-2">
+                <div class="col text-left p-2 ml-12">
 
                     <!-- Tên sản phẩm và chi tiết, giảm kích thước chữ -->
                     <h6 class="product-name m-0" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px;"">${confirm.post.content}</h6>
@@ -331,17 +377,7 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
 });
 
 // Hàm để kiểm tra trạng thái kết nối và thực hiện gọi invoke
-async function safeInvoke(methodName, ...args) {
-    if (connection.state === signalR.HubConnectionState.Connected) {
-        try {
-            await connection.invoke(methodName, ...args);
-        } catch (err) {
-            console.error(err.toString());
-        }
-    } else {
-        console.error("Cannot send data if the connection is not in the 'Connected' State.");
-    }
-}
+
 function accept() {
     const acceptButton = document.getElementById('acceptButton');
     const declineButton = document.getElementById('declineButton');
@@ -418,7 +454,43 @@ function displayAlert(message) {
         }, 1000); // Thời gian 1 giây để ẩn điều chỉnh bên
     }, 3000); // Thời gian 3 giây để hiển thị
 }
-
+function CreateNotification(userID, typeMessage, type, parameter, idEvent) {
+    _notiConnection.invoke("CreateNotification", userID, typeMessage, type, parameter, idEvent)
+        .catch(function (err) {
+            return console.error(err.toString());
+        });
+}
 connection.start().catch(function (err) {
     return console.error(err.toString());
 });
+_notiConnection.start().catch(function (err) {
+    return console.error(err.toString());
+});
+//$(document).ready(function () {
+//    $('#createPostForm').submit(function (event) {
+//        event.preventDefault(); // Prevent the default form submission
+//        var formData = new FormData(this); // Get the form data
+
+//        $.ajax({
+//            type: 'POST',
+//            url: $(this).attr('action'),
+//            data: formData,
+//            processData: false,
+//            contentType: false,
+//            success: function (response) {
+//                if (response.success) {
+//                    // Handle success (e.g., close modal, update UI)
+//                    $('#exampleModal').modal('hide');
+//                    window.location.reload(); // Optionally reload the page to reflect changes
+//                } else {
+//                    // Display error message
+//                    alert(response.message);
+//                }
+//            },
+//            error: function (response) {
+//                // Handle error
+//                alert('An error occurred. Please try again.');
+//            }
+//        });
+//    });
+//});
