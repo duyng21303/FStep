@@ -32,28 +32,33 @@ namespace FStep.Controllers.Customer
 			feedback.Quantity = db.Transactions.FirstOrDefault(p => p.IdTransaction == idTransaction).Quantity;
 			feedback.UnitPrice = db.Transactions.FirstOrDefault(p => p.IdTransaction == idTransaction).UnitPrice;
 			feedback.Amount = db.Transactions.FirstOrDefault(p => p.IdTransaction == idTransaction).Amount;
+
+			HttpContext.Session.Set<FeedbackVM>("FEEDBACK_INFO", feedback);
+
 			return View("Feedback", feedback);
 		}
 		[Authorize]
 		[HttpPost]
-		public IActionResult Feedback(FeedbackVM model)
+		public ActionResult Feedback(FeedbackVM model)
 		{
 			try
 			{
+				FeedbackVM info = HttpContext.Session.Get<FeedbackVM>("FEEDBACK_INFO");
 				var feedback = new Feedback(); 
 				feedback.Content = model.Content;
 				feedback.Rating = int.Parse(model.Rating); 
 				feedback.IdUser = User.FindFirst("UserID").Value;
-				feedback.IdPost = model.IdPost;
+				feedback.IdPost = info.IdPost;
 				db.Add(feedback);
 				db.SaveChanges();
-				return Redirect("/");
+				return RedirectToAction("TransactionHistory","Home");
 			}
 			catch (Exception ex)
 			{
 				Console.WriteLine(ex);
 			}
-			return View("TransactionHistory");
+			return Redirect("/");
+
 		}
 	}
 }
