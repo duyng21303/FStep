@@ -18,10 +18,10 @@ namespace FStep.ViewModels
 		public string Rating { get; set; }
 		public string IdUser { get; set; }
 		public int IdPost {  get; set; }
-		public string Img {  get; set; }
-		public string Title { get; set; }
-		public string Description { get; set; }
-		public string TypePost { get; set; }
+		public string? Img {  get; set; }
+		public string? Title { get; set; }
+		public string? Description { get; set; }
+		public string? TypePost { get; set; }
 		public int? Quantity { get; set; }
 		public float? UnitPrice { get; set; }
 		public float? Amount { get; set; }
