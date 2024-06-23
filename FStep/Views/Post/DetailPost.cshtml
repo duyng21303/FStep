@@ -7,8 +7,8 @@
 	var comments = ViewData["comments"] as List<CommentVM> ?? new List<CommentVM>();
 	var recommendedPosts = ViewData["recommendedPosts"] as List<Post> ?? new List<Post>();
 	var commentError = TempData["CommentError"] as string;
-	var commentNote = new FStep.ViewModels.Summernote("#commentNote", isLoadScript: false);
 }
+<link rel="stylesheet" href="https://unpkg.com/viewerjs/dist/viewer.css" crossorigin="anonymous">
 <style>
 	html,
 	body {
@@ -461,12 +461,20 @@
 			font-weight: 800;
 		}
 </style>
-
+<style>
+	.three-dot-180 {
+		display: inline-block;
+		width: 180px;
+		white-space: nowrap;
+		overflow: hidden !important;
+		text-overflow: ellipsis;
+	}
+</style>
 <body>
     <div class="container-detail">
         <!-- Left Column / Image -->
         <div class="left-column">
-            <img src="~/img/postPic/@Model.Img" alt="Project Image">
+            <img id="preview-detail-image" src="~/img/postPic/@Model.Img" alt="Project Image" style="cursor: zoom-in">
         </div>
 
         <!-- Right Column -->
@@ -486,22 +494,26 @@
 
     <div class="container">
         <div class="col-md-12">
-            <div class="card b-1 hover-shadow mb-20 full-width">
+            <div class="card b-1	hover-shadow mb-20 full-width">
                 <div class="media card-body">
                     <div class="media-left pr-12">
                         <div class="img">
-                            @if (user.AvatarImg != null)
-                            {
-                                <img class="avatar avatar-xl no-radius" src="~/img/userAvar/@user.AvatarImg" alt="...">
-                            }
-                            else
-                            {
-                                <img class="avatar avatar-xl no-radius" src="~/img/nullAvar/149071.png" alt="...">
-                            }
+							<a asp-action="Detail" asp-route-id="@user.IdUser" asp-controller="User">
+							    @if (user.AvatarImg != null)
+								{
+									<img class="avatar avatar-xl no-radius" src="~/img/userAvar/@user.AvatarImg" alt="...">
+								}
+								else
+								{
+									<img class="avatar avatar-xl no-radius" src="~/img/nullAvar/149071.png" alt="...">
+								}
+						   </a>
                         </div>
                         <div class="name">
                             <div class="mb-2">
-                                <span class="fs-20 pr-16">@user.Name</span>
+								<a asp-action="Detail" asp-route-id="@user.IdUser" asp-controller="User">
+									<span class="fs-20 pr-16">@user.Name</span>
+								</a>
                             </div>
 
                             @if (User.Identity.IsAuthenticated)
@@ -549,7 +561,7 @@
                                 </div>
                                 <div class="media-body">
                                     <div>
-                                        <span class="fs-20 pr-16">@post.Content</span>
+										<span class="fs-20 pr-16 three-dot-180">@post.Content</span>
                                     </div>
                                     <div class="fs-14 text-fade">
                                         <span>Post Date: @post.Date</span>
@@ -679,8 +691,8 @@
 										</p>
 										@if (comment.Type == "Exchange")
 										{
-											<div class="fixed-image-container" style="margin-left: 64px; padding-bottom: 10px;">
-												<img src="~/img/postPic/@comment.Img" alt="Fixed Image" style="width: auto; height: 300px; display: flex;">
+											<div class="fixed-image-container" style="margin-left: 64px; padding-bottom: 10px;cursor: zoom-in">
+												<img id="comment-@comment.IdComment" src="~/img/postPic/@comment.Img" alt="Fixed Image" style="width: auto; height: 300px; display: flex;">
 											</div>
 										}
 									</div>
@@ -692,33 +704,16 @@
 			</div>
 		</div>
 	</div>
-
+	@section Scripts
+	{
+		<script src="https://unpkg.com/viewerjs/dist/viewer.js" crossorigin="anonymous"></script>
+		<script src="~/js/jquery-viewer/dist/jquery-viewer.js"></script>
+		<script>
+			$('.post-comments').viewer();
+			$('#preview-detail-image').viewer();
+		</script>
+	}
 	<script>
-		$(document).ready(function () {
-			$('#commentNote').summernote({
-				height: 200,
-				onImageUpload: function (files, editor, welEditable) {
-					sendFile(files[0], editor, welEditable);
-				}
-			});
-
-			function sendFile(file, editor, welEditable) {
-				data = new FormData();
-				data.append("file", file);
-				$.ajax({
-					data: data,
-					type: "POST",
-					url: "Your URL POST (php)",
-					cache: false,
-					contentType: false,
-					processData: false,
-					success: function (url) {
-						editor.insertImage(welEditable, url);
-					}
-				});
-			}
-		});
-
 		document.addEventListener('DOMContentLoaded', function () {
 			var productDescription = document.querySelector('.product-description');
 			var textContainer = productDescription.querySelector('.text');

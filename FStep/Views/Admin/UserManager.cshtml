@@ -229,7 +229,7 @@
 		</div>
 		<!--  tìm kiếm phía bên phải -->
 		<div class="col-lg-12">
-			<form asp-action="UserManager" asp-controller="Admin" method="get" class="d-flex justify-content-end">
+			<form asp-action="UserManager" asp-controller="Admin" method="get" class="d-flex justify-content-end" id="searchUserForm">
 				<div class="input-group mb-3 w-25">
 					<input type="text" class="form-control" name="search" placeholder="Search by name or email" value="@Model.PagingInfo.Search">
 					<button class="btn btn-outline-secondary" type="submit">Search</button>
@@ -253,8 +253,10 @@
 							{
 								<tr>
 									<td>
-										<img class="rounded-circle me-lg-2 product-rating__avatar-img" src="~/img/userAvar/@user.AvatarImg" alt="" style="width: 40px; height: 40px;">
-										<a href="#" class="user-link">@user.Name</a>
+										<a asp-action="UserDetail" asp-controller="Admin" asp-route-id="@user.IdUser" style="float: left;">
+											<img class="rounded-circle me-lg-2 product-rating__avatar-img" src="~/img/userAvar/@user.AvatarImg" alt="" style="width: 40px; height: 40px;">
+										</a>
+										<a asp-action="UserDetail" asp-controller="Admin" asp-route-id="@user.IdUser" class="user-link">@user.Name</a>
 										<span class="user-subhead">@user.Role</span>
 										<span class="user-subhead">@user.Gender</span>
 									</td>
@@ -282,3 +284,16 @@
 		</div>
 	</div>
 </div>
+@section Scripts {
+	<script>
+		$(document).ready(() => {
+			let timeout;
+			$('#searchUserForm').on('input', () => {
+				clearTimeout(timeout); // Xóa timeout hiện tại nếu có
+				timeoutId = setTimeout(function () {
+					$('#searchUserForm').submit(); // Gửi form khi thời gian chờ (debounce) kết thúc
+				}, 200); // Thời gian debounce là 100ms (có thể điều chỉnh theo nhu cầu của bạn)
+			});
+		})
+	</script>
+}
