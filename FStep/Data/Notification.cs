@@ -36,4 +36,5 @@ public partial class Notification
     public virtual Transaction? IdTransactionNavigation { get; set; }
 
     public virtual User? IdUserNavigation { get; set; }
+
 }

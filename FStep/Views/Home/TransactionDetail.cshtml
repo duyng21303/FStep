@@ -2,32 +2,40 @@
 @{
 	var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
-@* <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">Detail transaction</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body"> *@
+
 
 
 <div class="d-flex justify-content-center align-items-center">
 	<div class="card" style="border-radius: 10px;">
 		<div class="card-header px-3 py-3">
-			@if (Model.UserName != null)
-			{
-				<h5 class="text-muted">Thanks for your Order, <span style="color: #3572EF;">@Model.UserName</span>!</h5>
-			}
-			else
-			{
-				<h5 class="text-muted">Thanks for your Order, <span style="color: #3572EF;">@Model.IdUserSeller</span>!</h5>
-			}
+			<div class="d-flex justify-content-between align-items-center">
+				@if (Model.UserName != null)
+				{
+					<h5 class="text-muted">Cảm ơn, <span style="color: #3572EF;">@Model.UserName</span>!</h5>
+				}
+				else
+				{
+					<h5 class="text-muted">Cảm ơn, <span style="color: #3572EF;">@Model.IdUserSeller</span>!</h5>
+				}
+
+				@if (DateTime.Now.CompareTo(Model.CreateDate?.AddDays(7)) <= 0)
+				{
+					<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm px-5 py-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@Model.IdPost" asp-route-idTransaction="@Model.TransactionId">
+						Đánh giá
+					</a>
+				}
+				else
+				{
+					<button disabled data-mdb-button-init data-mdb-ripple-init class="btn btn-sm mt-2 bg-dark text-light bg-opacity-50" type="button">
+						Đánh giá
+					</button>
+				}
+			</div>
 		</div>
 		<div class="card-body row p-4">
 			<div class="d-flex justify-content-between align-items-center mb-4">
-				<h4 class="lead fw-normal mb-0" style="color: #3572EF;">Transaction</h4>
-				<h4 class="small mb-0">Transaction Code : <span class="text-danger">@Model.CodeTransaction</span></h4>
+				<h4 class="lead fw-bold mb-0" style="color: #3572EF;">Giao dịch</h4>
+				<h4 class="small mb-0">Mã giao dịch : <span class="text-danger">@Model.CodeTransaction</span></h4>
 			</div>
 			<div class="card shadow-0 border mb-4">
 				<div class="card-body">
@@ -58,33 +66,30 @@
 			</div>
 
 			<div class="d-flex justify-content-between pt-2">
-				<h4 class="fw-bold mb-0">Order Details</h4>
+				<h4 class="fw-bold mb-0">Chi tiết</h4>
 			</div>
 
 			<div class="d-flex justify-content-between pt-2">
 				<h5 class="small text-muted mb-0">Ngày đặt hàng: <span>@Model.CreateDate?.ToString("MM/dd/yyyy hh:mm tt")</span></h5>
-				<h5 class="text-muted mb-0"><span class="fw-bold me-4">Total</span> @String.Format(format, "{0:0,0 VND}", Model.Amount)</h5>
+				<h5 class="text-muted mb-0"><span class="fw-bold me-4">Tổng</span> @String.Format(format, "{0:0,0 VND}", Model.Amount)</h5>
 			</div>
 
 			<div class="d-flex justify-content-between">
 				<h5 class="small text-muted mb-0">Ngày nhận hàng: <span>@Model.CreateDate?.ToString("MM/dd/yyyy hh:mm tt")</span></h5>
-				<h5 class="text-muted mb-0"><span class="fw-bold me-4">Discount</span>@String.Format(format, "{0:0,0 VND}", 0)</h5>
+				<h5 class="text-muted mb-0"><span class="fw-bold me-4">Giảm giá</span>@String.Format(format, "{0:0,0 VND}", 0)</h5>
 			</div>
 		</div>
 		<div class="card-footer border-0 px-3 py-3"
 			 style="background-color: #3572EF; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
 			<h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">
-				Total
-				paid: @String.Format(format, "{0:0,0 VND}", Model.Amount)
+				Tổng tiền: @String.Format(format, "{0:0,0 VND}", Model.Amount)
 			</h5>
 		</div>
 	</div>
+
+
 </div>
 
-@*
-			</div>
-		</div>
-	</div>
-</di *@
+
 
 
