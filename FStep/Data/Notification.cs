@@ -25,6 +25,8 @@ public partial class Notification
 
     public int? IdTransaction { get; set; }
 
+    public bool? AlreadySeen { get; set; }
+
     public virtual Comment? IdCommentNavigation { get; set; }
 
     public virtual Payment? IdPaymentNavigation { get; set; }

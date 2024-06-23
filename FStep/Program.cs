@@ -17,20 +17,20 @@ using FStep;
 
 namespace FStep
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
-
-		// Add services to the container.
-		builder.Services.AddControllersWithViews();
-
-		// Register DbContext
-		builder.Services.AddDbContext<FstepDbContext>(options =>
+	public class Program
+	{
+		public static void Main(string[] args)
 		{
-			options.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
-		});
+			var builder = WebApplication.CreateBuilder(args);
+
+			// Add services to the container.
+			builder.Services.AddControllersWithViews();
+
+			// Register DbContext
+			builder.Services.AddDbContext<FstepDbContext>(options =>
+			{
+				options.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
+			});
 
 			// Add services to the container.
 			builder.Services.AddControllersWithViews();
@@ -48,8 +48,9 @@ namespace FStep
 				options.Cookie.HttpOnly = true;
 				options.Cookie.IsEssential = true;
 			});
-			
-            builder.Services.AddHttpContextAccessor();
+
+
+			builder.Services.AddHttpContextAccessor();
 
 			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options
 				=>
@@ -74,13 +75,17 @@ namespace FStep
 
 			builder.Services.AddDistributedMemoryCache();
 
-			
+
 
 
 			// Add AutoMapper (if needed)
 			builder.Services.AddAutoMapper(typeof(Program));
 			builder.Services.AddSingleton<IVnPayService, VnPayService>();
+
+
 			var app = builder.Build();
+
+
 			// Configure the HTTP request pipeline.
 			if (!app.Environment.IsDevelopment())
 			{
@@ -89,12 +94,14 @@ namespace FStep
 				app.UseHsts();
 			}
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
+			app.UseHttpsRedirection();
+			app.UseStaticFiles();
 
-            app.UseRouting();
+			app.UseRouting();
 
-            app.UseSession();
+			app.UseSession();
+
+			//validate
 
 
 			app.UseAuthentication();
