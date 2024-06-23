@@ -22,6 +22,7 @@ namespace FStep.ViewModels
 		public string? Title { get; set; }
 		public string? Description { get; set; }
 		public string? TypePost { get; set; }
+
 		public int? Quantity { get; set; }
 		public float? UnitPrice { get; set; }
 		public float? Amount { get; set; }

@@ -34,6 +34,7 @@ namespace FStep.Controllers.Customer
 			feedback.Amount = db.Transactions.FirstOrDefault(p => p.IdTransaction == idTransaction).Amount;
 
 			HttpContext.Session.Set<FeedbackVM>("FEEDBACK_INFO", feedback);
+
 			return View("Feedback", feedback);
 		}
 		[Authorize]
@@ -57,6 +58,7 @@ namespace FStep.Controllers.Customer
 				Console.WriteLine(ex);
 			}
 			return Redirect("/");
+
 		}
 	}
 }
