@@ -29,6 +29,14 @@ public partial class Transaction
 
     public string? CodeTransaction { get; set; }
 
+    public int? IdComment { get; set; }
+
+    public string? RecieveImg { get; set; }
+
+    public string? SentImg { get; set; }
+
+    public virtual Comment? IdCommentNavigation { get; set; }
+
     public virtual Post IdPostNavigation { get; set; } = null!;
 
     public virtual User IdUserBuyerNavigation { get; set; } = null!;

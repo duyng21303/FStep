@@ -60,12 +60,27 @@
 														@* <span class="text-danger"><s>$20.99</s></span> *@
 													</div>
 													<div class="d-flex flex-column mt-4">
-														<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm" asp-action="TransactionDetail" asp-controller="Home" asp-route-id="@item.TransactionId">Details</a>
-														<button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-sm mt-2" type="button">
-															Feedback
-														</button>
+														<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm" asp-action="TransactionDetail" asp-controller="Home" asp-route-id="@item.TransactionId">Chi tiết</a>
+
+														@if (DateTime.Now.CompareTo(item.CreateDate?.AddDays(7)) <= 0)
+														{
+															<a data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-sm mt-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@item.IdPost" asp-route-idTransaction="@item.TransactionId">
+																Đánh giá
+															</a>
+
+															@* <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-sm mt-2" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+																Feedback
+															</button> *@
+														}
+														else
+														{
+															<button disabled data-mdb-button-init data-mdb-ripple-init class="btn btn-sm mt-2 bg-dark text-light bg-opacity-50" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+																Đánh giá
+															</button>
+														}
 													</div>
 													<p class="fst-italic text-end mb-0 mt-5">Đánh giá sản phẩm trước: <span>@item.CreateDate?.AddDays(7).ToString("dd/MM/yyyy")</span></p>
+
 												</div>
 											</div>
 										</div>
@@ -87,5 +102,11 @@
 </div>
 
 
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
 
+		@await Html.PartialAsync("Feedback", new FeedbackVM())
+
+	</div>
+</div>
 
