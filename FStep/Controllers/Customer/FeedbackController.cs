@@ -53,7 +53,7 @@ namespace FStep.Controllers.Customer
 			{
 				Console.WriteLine(ex);
 			}
-			return View("TransactionHistory");
+			return Redirect("/Home/TransactionHistory");
 		}
 	}
 }
