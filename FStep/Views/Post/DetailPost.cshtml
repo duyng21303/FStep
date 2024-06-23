@@ -706,31 +706,59 @@
 	</div>
 
 	<script>
-		$(document).ready(function () {
-			$('#commentNote').summernote({
-				height: 200,
-				onImageUpload: function (files, editor, welEditable) {
-					sendFile(files[0], editor, welEditable);
-				}
-			});
+		// $(document).ready(function () {
+		// 	$('#commentNote').summernote({
+		// 		height: 200,
+		// 		onImageUpload: function (files, editor, welEditable) {
+		// 			sendFile(files[0], editor, welEditable);
+		// 		}
+		// 	});
 
-			function sendFile(file, editor, welEditable) {
-				data = new FormData();
-				data.append("file", file);
-				$.ajax({
-					data: data,
-					type: "POST",
-					url: "Your URL POST (php)",
-					cache: false,
-					contentType: false,
-					processData: false,
-					success: function (url) {
-						editor.insertImage(welEditable, url);
-					}
-				});
-			}
+		// 	function sendFile(file, editor, welEditable) {
+		// 		data = new FormData();
+		// 		data.append("file", file);
+		// 		$.ajax({
+		// 			data: data,
+		// 			type: "POST",
+		// 			url: "Your URL POST (php)",
+		// 			cache: false,
+		// 			contentType: false,
+		// 			processData: false,
+		// 			success: function (url) {
+		// 				editor.insertImage(welEditable, url);
+		// 			}
+		// 		});
+		// 	}
+		// });
+		const connection = new signalR.HubConnectionBuilder()
+			.withUrl("/exchangeHub")
+			.build();
+
+		connection.start().catch(function (err) {
+			return console.error(err.toString());
 		});
 
+		function submitExchange() {
+			const formData = new FormData(document.getElementById('exchangeForm'));
+			const userId = $("#submitExchange").data("userid");
+
+			$.ajax({
+				url: '/YourController/YourAction', // Thay đổi URL theo action và controller của bạn
+				type: 'POST',
+				data: formData,
+				contentType: false,
+				processData: false,
+				success: function (response) {
+					connection.invoke("SendExchange", userId, response.message).catch(function (err) {
+						return console.error(err.toString());
+					});
+					alert("Đã gửi trao đổi");
+				},
+				error: function (err) {
+					console.error("Error: ", err);
+				}
+			});
+		}
 		document.addEventListener('DOMContentLoaded', function () {
 			var productDescription = document.querySelector('.product-description');
 			var textContainer = productDescription.querySelector('.text');
