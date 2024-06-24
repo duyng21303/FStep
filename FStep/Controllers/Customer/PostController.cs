@@ -126,7 +126,8 @@ namespace FStep.Controllers.Customer
 				CreateDate = post.Date,
 				Price = product.Price ?? 0,
 				SoldQuantity = product.SoldQuantity ?? 0,
-				FeedbackNum = feedback
+				FeedbackNum = feedback,
+				IdUser = post.IdUser
 			};
 
 			return View(result);

@@ -197,8 +197,8 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
 
         var orderStatus = `<span class="labelConfirm waiting">Đang chờ</span>`;
         var removeConfirm = ``;
+        var checkComment = confirm.comment != null ? true : false;
         if (!confirm.checkConfirm) {
-            var checkComment = confirm.comment != null ? true : false;
             accept = `
                 <div class="col-6 text-end px-0">
                 <button id="acceptButton" class="btn btn-success btn-sm equal-width"
@@ -348,10 +348,10 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
                 <div class="col text-left p-2 ml-12">
 
                     <!-- Tên sản phẩm và chi tiết, giảm kích thước chữ -->
-                    <h6 class="product-name m-0" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px;"">${confirm.post.content}</h6>
-                    <p class="product-detail m-0" style="font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px;">
+                    <h6 class="product-name m-0" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; max-height: 15px;"">${confirm.post.content}</h6>
+                    <div class="product-detail m-0" style="font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; max-height: 15px;">
                     ${confirm.post.detail}
-                    </p>
+                    </div>
                 </div>
             </div>
              <div class="row justify-content-around mt-2">
@@ -408,7 +408,7 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
                 `;
             } else {
                 li.innerHTML = `
-                    <div class="message-data">
+                    <div class="message-data float-left">
                         <img src="/img/${img}" alt="avatar">
                         <span class="message-data-time">${formattedTime}</span>
                     </div>
@@ -449,11 +449,10 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
 
 // Hàm để kiểm tra trạng thái kết nối và thực hiện gọi invoke
 
-function accept(checkComment) {
+function accept() {
     const acceptButton = document.getElementById('acceptButton');
     const declineButton = document.getElementById('declineButton');
     // Chuyển nút "Đồng ý" sang trạng thái bấm không được và màu xám
-    if (checkComment) {
         acceptButton.disabled = true;
         acceptButton.style.backgroundColor = 'grey';
         acceptButton.style.color = 'white';
@@ -471,11 +470,7 @@ function accept(checkComment) {
             });
 
         displayAlert(message);
-    }
-    else {
-        const exchangeModal = new bootstrap.Modal(document.getElementById('exchangeModal'));
-        exchangeModal.show();
-    }
+    
 }
 
 function decline() {
@@ -592,29 +587,32 @@ _notiConnection.start().catch(function (err) {
 //        });
 //    });
 //});
-document.addEventListener('DOMContentLoaded', function () {
-    var productDescription = document.querySelector('.product-description');
-    var textContainer = productDescription.querySelector('.text');
-    var readMoreLink = productDescription.querySelector('.read-more');
-    var shrinkButton = productDescription.querySelector('.shrink-btn');
+//const connection = new signalR.HubConnectionBuilder()
+//    .withUrl("/exchangeHub")
+//    .build();
 
-    // Check if content overflows
-    if (textContainer.scrollHeight > textContainer.clientHeight) {
-        readMoreLink.style.display = 'inline-block'; // Show "Read more" link if content overflows
-        shrinkButton.style.display = 'none'; // Hide "Collapse" button initially
+//connection.start().catch(function (err) {
+//    return console.error(err.toString());
+//});
 
-        readMoreLink.addEventListener('click', function () {
-            textContainer.style.maxHeight = 'none'; // Expand content
-            readMoreLink.style.display = 'none'; // Hide "Read more" link
-            shrinkButton.style.display = 'inline-block'; // Show "Collapse" button
-        });
+//function submitExchange() {
+//    const formData = new FormData(document.getElementById('exchangeForm'));
+//    const userId = $("#submitExchange").data("userid");
 
-        shrinkButton.addEventListener('click', function () {
-            textContainer.style.maxHeight = '100px'; // Collapse content to initial height
-            readMoreLink.style.display = 'inline-block'; // Show "Read more" link
-            shrinkButton.style.display = 'none'; // Hide "Collapse" button
-        });
-    } else {
-        readMoreLink.style.display = 'none'; // Hide "Read more" link if content does not overflow
-    }
-});
+//    $.ajax({
+//        url: '/YourController/YourAction', // Thay đổi URL theo action và controller của bạn
+//        type: 'POST',
+//        data: formData,
+//        contentType: false,
+//        processData: false,
+//        success: function (response) {
+//            connection.invoke("SendExchange", userId, response.message).catch(function (err) {
+//                return console.error(err.toString());
+//            });
+//            alert("Đã gửi trao đổi");
+//        },
+//        error: function (err) {
+//            console.error("Error: ", err);
+//        }
+//    });
+//}
