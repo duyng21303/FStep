@@ -69,8 +69,8 @@ namespace FStep.Controllers.Customer
 		}
 		public IActionResult DetailPost(int id)
 		{
-			var data = db.Posts.Include(x => x.IdProductNavigation).Include(x => x.IdUserNavigation).SingleOrDefault(p => p.IdPost == id);
-			var user = db.Users.SingleOrDefault(user => user.IdUser == data.IdUser);
+			var post = db.Posts.Include(x => x.IdProductNavigation).Include(x => x.IdUserNavigation).SingleOrDefault(p => p.IdPost == id);
+			var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
 
 			ViewData["USER_CREATE"] = user;
 
@@ -90,7 +90,7 @@ namespace FStep.Controllers.Customer
 
 			ViewData["comments"] = comments;
 
-			return View(data);
+			return View(post);
 		}
 		public IActionResult DetailSalePost(int id)
 		{
@@ -186,6 +186,26 @@ namespace FStep.Controllers.Customer
 		{
 			return PartialView();
 		}
+		[HttpPost]
+		public async Task<IActionResult> CreateAnonymousExchage(IFormFile img, string content, int idPost)
+		{
+			// Xử lý dữ liệu ở đây, ví dụ: lưu ảnh vào thư mục, lưu thông tin vào database
+			var message = "Nội dung trao đổi đã được gửi.";
 
+			// Ví dụ lưu file vào thư mục
+			if (img != null && img.Length > 0)
+			{
+				var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", img.FileName);
+				using (var stream = new FileStream(filePath, FileMode.Create))
+				{
+					await img.CopyToAsync(stream);
+				}
+			}
+
+			// Lưu thông tin vào database hoặc xử lý logic khác ở đây
+
+			// Trả về JSON để AJAX có thể sử dụng
+			return Json(new { message = message });
+		}
 	}
 }

@@ -186,7 +186,7 @@ public partial class FstepDBContext : DbContext
 				.HasMaxLength(50)
 				.HasColumnName("type");
 
-			
+
 		});
 
 		modelBuilder.Entity<Payment>(entity =>
