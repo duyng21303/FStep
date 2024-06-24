@@ -592,3 +592,29 @@ _notiConnection.start().catch(function (err) {
 //        });
 //    });
 //});
+document.addEventListener('DOMContentLoaded', function () {
+    var productDescription = document.querySelector('.product-description');
+    var textContainer = productDescription.querySelector('.text');
+    var readMoreLink = productDescription.querySelector('.read-more');
+    var shrinkButton = productDescription.querySelector('.shrink-btn');
+
+    // Check if content overflows
+    if (textContainer.scrollHeight > textContainer.clientHeight) {
+        readMoreLink.style.display = 'inline-block'; // Show "Read more" link if content overflows
+        shrinkButton.style.display = 'none'; // Hide "Collapse" button initially
+
+        readMoreLink.addEventListener('click', function () {
+            textContainer.style.maxHeight = 'none'; // Expand content
+            readMoreLink.style.display = 'none'; // Hide "Read more" link
+            shrinkButton.style.display = 'inline-block'; // Show "Collapse" button
+        });
+
+        shrinkButton.addEventListener('click', function () {
+            textContainer.style.maxHeight = '100px'; // Collapse content to initial height
+            readMoreLink.style.display = 'inline-block'; // Show "Read more" link
+            shrinkButton.style.display = 'none'; // Hide "Collapse" button
+        });
+    } else {
+        readMoreLink.style.display = 'none'; // Hide "Read more" link if content does not overflow
+    }
+});
