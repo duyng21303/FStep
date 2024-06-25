@@ -40,5 +40,7 @@ namespace FStep.ViewModels
 		public string IdUser { get; set; }
 		public int? SoldQuantity { get; set; }
 		public int? FeedbackNum { get; set; }
+
+		public string? Status { get; set; }
 	}
 }

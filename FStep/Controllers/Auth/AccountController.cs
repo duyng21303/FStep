@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authentication.Google;
 using FStep.ViewModels.Email;
 using FStep.Repostory.Interface;
 using System.Text;
+using NuGet.Protocol;
 
 
 namespace FStep.Controllers.Auth
@@ -24,10 +25,10 @@ namespace FStep.Controllers.Auth
     {
 
         private readonly IMapper _mapper;
-        private readonly FstepDBContext db;
+        private readonly FstepDbContext db;
         private const string PASSWORD_GOOGLE = "KJDHF";
         private readonly IEmailSender emailSender;
-        public AccountController(FstepDBContext context, IMapper mapper, IEmailSender emailSender)
+        public AccountController(FstepDbContext context, IMapper mapper, IEmailSender emailSender)
 
         {
             db = context;
@@ -147,7 +148,9 @@ namespace FStep.Controllers.Auth
         public IActionResult Profile()
         {
             string userID = User.FindFirstValue("UserID");
-            var user = db.Users.SingleOrDefault(user => user.IdUser == userID);
+            var user = db.Users
+                .Include(u => u.Posts)
+                .SingleOrDefault(user => user.IdUser == userID);
             var profile = new ProfileVM()
             {
                 IdUser = user.IdUser,
@@ -156,7 +159,17 @@ namespace FStep.Controllers.Auth
                 Email = user.Email,
                 Name = user.Name,
                 Rating = user.Rating,
-                StudentId = user.StudentId
+                StudentId = user.StudentId,
+                Posts = user.Posts.Select(p => new PostVM()
+                {
+					IdPost = p.IdPost,
+					Title = p.Content,
+                    Status = p.Status,
+					Description = p.Detail,
+					Img = p.Img,
+					CreateDate = p.Date.HasValue ? p.Date.Value : DateTime.Now
+				}).ToList()
+                
             };
             return View(profile);
         }

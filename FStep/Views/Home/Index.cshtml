@@ -113,6 +113,11 @@
 												<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost" style="text-decoration:none">
 													<h4 class="title">@Html.Raw(item.Title)</h4>
 												</a>
+												@if(item.Type == "sale")
+												{
+													<div class="post-price">Price: @item.Price</div>
+													<div class="post-quantity">Quantity: @item.Quantity</div>
+												}
 												<div class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Description)</div>
 												<p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate?.ToString("dd/MM/yyyy")</span></p>
 
@@ -132,25 +137,4 @@
 			</div>
 		</div>
 	</div>
-
-	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-
-
-					@await Html.PartialAsync("Create", new PostVM())
-
-
-				</div>
-				@* <div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary">Save changes</button>
-				</div> *@
-			</div>
-		</div>
-	</div>
+   

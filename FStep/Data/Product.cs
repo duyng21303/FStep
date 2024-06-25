@@ -17,10 +17,6 @@ public partial class Product
 
     public string? Status { get; set; }
 
-    public string? RecieveImg { get; set; }
-
-    public string? SentImg { get; set; }
-
     public string? ItemLocation { get; set; }
 
     public int? SoldQuantity { get; set; }
