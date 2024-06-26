@@ -185,7 +185,35 @@ public partial class FstepDBContext : DbContext
 			entity.Property(e => e.Type)
 				.HasMaxLength(50)
 				.HasColumnName("type");
+			entity.HasOne(d => d.IdCommentNavigation)
+		  .WithMany(p => p.Notifications)
+		  .HasForeignKey(d => d.IdComment)
+		  .OnDelete(DeleteBehavior.ClientSetNull)
+		  .HasConstraintName("FK_Notification_Comment");
 
+			entity.HasOne(d => d.IdPaymentNavigation)
+				  .WithMany(p => p.Notifications)
+				  .HasForeignKey(d => d.IdPayment)
+				  .OnDelete(DeleteBehavior.ClientSetNull)
+				  .HasConstraintName("FK_Notification_Payment");
+
+			entity.HasOne(d => d.IdReportNavigation)
+				  .WithMany(p => p.Notifications)
+				  .HasForeignKey(d => d.IdReport)
+				  .OnDelete(DeleteBehavior.ClientSetNull)
+				  .HasConstraintName("FK_Notification_Report");
+
+			entity.HasOne(d => d.IdTransactionNavigation)
+				  .WithMany(p => p.Notifications)
+				  .HasForeignKey(d => d.IdTransaction)
+				  .OnDelete(DeleteBehavior.ClientSetNull)
+				  .HasConstraintName("FK_Notification_Transaction");
+
+			entity.HasOne(d => d.IdUserNavigation)
+				  .WithMany(p => p.Notifications)
+				  .HasForeignKey(d => d.IdUser)
+				  .OnDelete(DeleteBehavior.ClientSetNull)
+				  .HasConstraintName("FK_Notification_User");
 
 		});
 
