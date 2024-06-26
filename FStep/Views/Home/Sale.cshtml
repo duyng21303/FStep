@@ -115,9 +115,9 @@
 										</div>
 										<div class="p-4 border border-secondary border-top-0 rounded-bottom">
 											<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@item.IdPost" style="text-decoration:none">
-												<h4 class="title">@Html.Raw(item.Title)</h4>
+												<h4 class="title" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Title)</h4>
 											</a>
-											<p class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Description)</p>
+											<div class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Description)</div>
 											<p class="price">Price: @String.Format(format, "{0:0,0 VND}", item.Price)</p>
 											<p class="quantity">Quantity: @Html.Raw(item.Quantity)</p>
 											<p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate?.ToString("dd/MM/yyyy")</span></p>

@@ -48,6 +48,12 @@ $(document).ready(function () {
     });
     $('.load-chat-comment').click(function () {
         var userId = $(this).data('userid').toString();
+        const chatContainer = document.getElementById('chatContainerComment');
+        const chatContainerRaw = document.getElementById('chatContainer');
+        const chatContainerRaw2 = document.getElementById('chatContainerRaw');
+        chatContainer.style.display = 'block';
+        chatContainerRaw.innerHTML = '';
+        chatContainerRaw2.innerHTML = '';
         connection.invoke("LoadMessages", userId).catch(function (err) {
             return console.error(err.toString());
         });
@@ -61,8 +67,10 @@ $(document).ready(function () {
         // Hiển thị chatContainer
         const chatContainer = document.getElementById('chatContainerComment');
         const chatContainerRaw = document.getElementById('chatContainer');
+        const chatContainerRaw2 = document.getElementById('chatContainerRaw');
         chatContainer.style.display = 'block';
         chatContainerRaw.innerHTML = '';
+        chatContainerRaw2.innerHTML = '';
         //chatContainerRaw.style.zIndex = '1';
         // Thiết lập z-index cho chatContainer thấp hơn
         //chatContainer.style.zIndex = '2';
@@ -164,12 +172,15 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
     const confirmExchange = document.querySelector('.confirm-exchange');
     chatMessagesContainer.innerHTML = ''; // Xóa các tin nhắn hiện tại
     const chatHeader = document.querySelector('.header-message');
+    const detailExchange = document.getElementById('detail-exchange');
     var img;
+    detailExchange.innerHTML = '';
     if (recieverUser.avatarImg != null) {
         img = "userAvar/" + recieverUser.avatarImg;
     } else {
         img = "nullAvar/149071.png";
     }
+    console.log(confirm)
     chatHeader.innerHTML = `
         <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
             <img src="/img/${img}" alt="avatar">
@@ -186,12 +197,13 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
 
         var orderStatus = `<span class="labelConfirm waiting">Đang chờ</span>`;
         var removeConfirm = ``;
+        var checkComment = confirm.comment != null ? true : false;
         if (!confirm.checkConfirm) {
             accept = `
                 <div class="col-6 text-end px-0">
                 <button id="acceptButton" class="btn btn-success btn-sm equal-width"
                     style="font-size: 12px; padding: 3px 6px; margin: 0 0 4px; outline: none; box-shadow: none;"
-                    onclick="accept()" data-userid="${recieverUser.idUser}" 
+                    onclick="accept(${checkComment})" data-userid="${recieverUser.idUser}" 
                     data-idpost="${confirm.post.idPost}" data-idcomment="${comment}">
                     Đồng ý
                 </button>
@@ -265,11 +277,70 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
                 }
             }
         }
+        var checkDOM = false;
+        if (confirm.comment != null) {
+            detailExchange.innerHTML = `
+        <div class="container">
+        <div class="exchange-container">
+            <!-- Your Item -->
+            <div class="exchange-item text-center">
+                <h5>Bạn</h5>
+                <img src="/img/postPic/${confirm.comment.img}" alt="Your Item" class="item-image">
+                <p>${confirm.comment.content}</p>
+            </div>
+            <!-- Exchange Icon -->
+            <div class="d-flex align-items-center justify-content-center">
+                <i class="fa fa-exchange-alt exchange-icon" aria-hidden="true"></i>
+            </div>
+            <!-- Other Person's Item -->
+            <div class="exchange-item text-center">
+                <div class="user-info">
+                    <img src="/img/${img}" alt="Other User" class="user-image">
+                    <div>
+                        <h5>${recieverUser.name}</h5>
+                        <p>${confirm.post.detail}</p>
+                    </div>
+                </div>
+                <img src="/img/postPic/${confirm.post.img}" alt="Other Item" class="item-image">
+            </div>
+        </div>
+        `;
+        } else {
+            detailExchange.innerHTML = `
+            <div id="tab-comment-image" class="tab-pane fade show p-0">
+    <div class="inner-column wow fadeInRight card" style="padding: 5px; box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);">
+        <span class="lead">Sản phẩm trao đổi</span>
+        <form method="post" id="exchangeForm" enctype="multipart/form-data">
+            <div>
+                <input name="IdPost" value="@Model.IdPost" type="hidden" />
+                <textarea rows="3" class="form-control" name="Content"></textarea>
+            </div>
+            <div style="min-height:10px;"></div>
+            <div>
+                <div class="form-item">
+                    <label class="form-label my-3">Thêm hình ảnh</label><sup>*</sup>
+                    <input type="file" name="img" class="form-control">
+                </div>
+            </div>
+            <div style="min-height:10px;"></div>
+            <div>
+                <button id="submitExchange" class="btn btn-danger btn-sm equal-width"
+                        style="font-size: 12px; padding: 3px 6px; margin: 0 0 4px; outline: none; box-shadow: none;"
+                        type="button" onclick="submitExchange()">
+                    Tạo thông tin trao đổi
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+             `;
+        }
+
         confirmExchange.innerHTML = `
 <div class="row">
         <!-- Phần chính chiếm 8 phần -->
         <div class="col-md-7">
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#exchangeModal" style="cursor: pointer;">
                 <div class="col-2 text-center p-0">
                     <!-- Hình ảnh sản phẩm nhỏ hơn -->
                     <img src="/img/postPic/${confirm.post.img}" alt="Product Image" class="img-thumbnail" style="width: 50px; height: 50px; min-height: 50px; min-width: 50px">
@@ -277,10 +348,10 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
                 <div class="col text-left p-2 ml-12">
 
                     <!-- Tên sản phẩm và chi tiết, giảm kích thước chữ -->
-                    <h6 class="product-name m-0" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px;"">${confirm.post.content}</h6>
-                    <p class="product-detail m-0" style="font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px;">
-                    ${confirm.post.content}
-                    </p>
+                    <h6 class="product-name m-0" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; max-height: 15px;"">${confirm.post.content}</h6>
+                    <div class="product-detail m-0" style="font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; max-height: 15px;">
+                    ${confirm.post.detail}
+                    </div>
                 </div>
             </div>
              <div class="row justify-content-around mt-2">
@@ -337,7 +408,7 @@ connection.on("LoadMessages", function (messages, currentUser, recieverUser, con
                 `;
             } else {
                 li.innerHTML = `
-                    <div class="message-data">
+                    <div class="message-data float-left">
                         <img src="/img/${img}" alt="avatar">
                         <span class="message-data-time">${formattedTime}</span>
                     </div>
@@ -382,23 +453,24 @@ function accept() {
     const acceptButton = document.getElementById('acceptButton');
     const declineButton = document.getElementById('declineButton');
     // Chuyển nút "Đồng ý" sang trạng thái bấm không được và màu xám
-    acceptButton.disabled = true;
-    acceptButton.style.backgroundColor = 'grey';
-    acceptButton.style.color = 'white';
-    // Chuyển nút "Không đồng ý" sang trạng thái bấm được và màu gốc
-    declineButton.disabled = false;
-    declineButton.style.backgroundColor = '';
-    declineButton.style.color = '';
-    const userId = acceptButton.dataset.userid;
-    const postId = acceptButton.dataset.idpost;
-    const commentId = acceptButton.dataset.idcomment;
-    const message = "Người dùng đã chấp nhận";
-    connection.invoke("HandleAccept", message, userId, postId, commentId)
-        .catch(function (err) {
-            return console.error(err.toString());
-        });
+        acceptButton.disabled = true;
+        acceptButton.style.backgroundColor = 'grey';
+        acceptButton.style.color = 'white';
+        // Chuyển nút "Không đồng ý" sang trạng thái bấm được và màu gốc
+        declineButton.disabled = false;
+        declineButton.style.backgroundColor = '';
+        declineButton.style.color = '';
+        const userId = acceptButton.dataset.userid;
+        const postId = acceptButton.dataset.idpost;
+        const commentId = acceptButton.dataset.idcomment;
+        const message = "Người dùng đã chấp nhận";
+        connection.invoke("HandleAccept", message, userId, postId, commentId)
+            .catch(function (err) {
+                return console.error(err.toString());
+            });
 
-    displayAlert(message);
+        displayAlert(message);
+    
 }
 
 function decline() {
@@ -460,6 +532,27 @@ function CreateNotification(userID, typeMessage, type, parameter, idEvent) {
             return console.error(err.toString());
         });
 }
+function submitExchange() {
+    const formData = new FormData(document.getElementById('exchangeForm'));
+    const userId = $("#submitExchange").data("userid");
+
+    $.ajax({
+        url: '/PostController/CreateAnonymousExchage', // Thay đổi URL theo action và controller của bạn
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            connection.invoke("SendExchange", userId, response.message).catch(function (err) {
+                return console.error(err.toString());
+            });
+            alert("Đã gửi trao đổi");
+        },
+        error: function (err) {
+            console.error("Error: ", err);
+        }
+    });
+}
 connection.start().catch(function (err) {
     return console.error(err.toString());
 });
@@ -494,3 +587,32 @@ _notiConnection.start().catch(function (err) {
 //        });
 //    });
 //});
+//const connection = new signalR.HubConnectionBuilder()
+//    .withUrl("/exchangeHub")
+//    .build();
+
+//connection.start().catch(function (err) {
+//    return console.error(err.toString());
+//});
+
+//function submitExchange() {
+//    const formData = new FormData(document.getElementById('exchangeForm'));
+//    const userId = $("#submitExchange").data("userid");
+
+//    $.ajax({
+//        url: '/YourController/YourAction', // Thay đổi URL theo action và controller của bạn
+//        type: 'POST',
+//        data: formData,
+//        contentType: false,
+//        processData: false,
+//        success: function (response) {
+//            connection.invoke("SendExchange", userId, response.message).catch(function (err) {
+//                return console.error(err.toString());
+//            });
+//            alert("Đã gửi trao đổi");
+//        },
+//        error: function (err) {
+//            console.error("Error: ", err);
+//        }
+//    });
+//}
