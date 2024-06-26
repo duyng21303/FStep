@@ -6,11 +6,11 @@ namespace FStep.Data;
 
 public partial class FstepDBContext : DbContext
 {
-    public FstepDbContext()
+    public FstepDBContext()
     {
     }
 
-    public FstepDbContext(DbContextOptions<FstepDbContext> options)
+    public FstepDBContext(DbContextOptions<FstepDBContext> options)
         : base(options)
     {
     }
