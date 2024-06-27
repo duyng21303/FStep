@@ -74,7 +74,10 @@ namespace FStep.Controllers.Customer
 			var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
 
 			ViewData["USER_CREATE"] = user;
-
+			if(post.Status == "WaitingExchange")
+			{
+				return Redirect("/");
+			}
 			// lấy thêm comment sản phẩm
 			var comments = db.Comments.Where(x => x.IdPost == id && x.Type != "ExchangeAnonymous").Include(x => x.IdUserNavigation).Select(x => new CommentVM
 			{
