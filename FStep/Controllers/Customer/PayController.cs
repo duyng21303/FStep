@@ -123,10 +123,7 @@ namespace FStep.Controllers.Customer
 			var product = db.Products.SingleOrDefault(p => p.IdProduct == db.Posts.SingleOrDefault(p => p.IdPost == info.IdPost).IdProduct);
 			var post = db.Posts.SingleOrDefault(p => p.IdPost == info.IdPost);
 			product.Quantity -= info.Quantity;
-			if (product.SoldQuantity == null)
-				product.SoldQuantity = 0;
-			product.SoldQuantity += info.Quantity;
-
+			
 			if (product.Quantity <= 0)
 			{
 				post.Status = "false";

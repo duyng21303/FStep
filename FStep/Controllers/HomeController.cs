@@ -97,7 +97,6 @@ namespace FStep.Controllers
 				product.Quantity = model.Quantity;
 				product.Price = model.Price;
 				product.Status = "true";
-				product.SoldQuantity = 0;
 				db.Add(product);
 				db.SaveChanges();
 

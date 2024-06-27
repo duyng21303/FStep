@@ -306,7 +306,6 @@ public partial class FstepDBContext : DbContext
 			entity.Property(e => e.SentBuyerDate)
 				.HasColumnType("datetime")
 				.HasColumnName("sent_buyer_date");
-			entity.Property(e => e.SoldQuantity).HasColumnName("sold_quantity");
 			entity.Property(e => e.Status)
 				.HasMaxLength(255)
 				.HasColumnName("status");
