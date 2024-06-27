@@ -130,8 +130,10 @@
 																	</button>
 																}
 															</div>
-															<p class="fst-italic text-end mb-0 mt-5">Đánh giá sản phẩm trước: <span>@item.DeliveryDate?.AddDays(7).ToString("dd/MM/yyyy")</span></p>
-
+															@if (item.Status == "Completed")
+															{
+																<p class="fst-italic text-end mb-0 mt-5">Đánh giá sản phẩm trước: <span>@item.DeliveryDate?.AddDays(7).ToString("dd/MM/yyyy")</span></p>
+															}
 														</div>
 													</div>
 												</div>
@@ -239,8 +241,6 @@
 																		Đánh giá
 																	</button>
 																</div>
-																<p class="fst-italic text-end mb-0 mt-5">Đánh giá sản phẩm trước: <span>@item.DeliveryDate?.AddDays(7).ToString("dd/MM/yyyy")</span></p>
-
 															</div>
 														</div>
 													</div>
@@ -467,8 +467,6 @@
 																		Đánh giá
 																	</button>
 																</div>
-																<p class="fst-italic text-end mb-0 mt-5">Đánh giá sản phẩm trước: <span>@item.DeliveryDate?.AddDays(7).ToString("dd/MM/yyyy")</span></p>
-
 															</div>
 														</div>
 													</div>

@@ -138,6 +138,21 @@ namespace FStep.Controllers
 				transaction = transaction.Where(p => p.IdPostNavigation.Content.Contains(query));
 				//db.Posts.FirstOrDefault(x => x.Content.Contains(query)).IdPost
 			}
+
+			foreach (var x in transaction)
+			{
+				if (DateTime.Now.CompareTo(x.Date?.AddDays(7)) >= 0 && x.Status == "Processing")
+				{
+					x.Status = "Canceled";
+					db.Update(x);
+					var payment = new Payment(); 
+					payment.PayTime = DateTime.Now;
+					payment.IdTransaction = x.IdTransaction;
+					payment.Type = "Seller";
+					//payment.Status = "Uncussessfully";
+				}
+			}
+			db.SaveChanges();
 			var result = transaction.Select(s => new TransactionVM
 			{
 				TransactionId = s.IdTransaction,
