@@ -1,6 +1,8 @@
 ﻿@model X.PagedList.IPagedList<FStep.ViewModels.WareHouse.WareHouseVM>
 @using X.PagedList.Mvc.Core;
-
+@{
+	var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+}
 
 <div class="container py-5">
 	<div class="py-3">
@@ -69,7 +71,7 @@
 												<td style="color:red">@Html.Raw(item.IdStudentBuyer)</td>
 												<td>@Html.Raw(item.NameProduct)</td>
 												<td>@Html.Raw(item.Quantity)</td>
-												<th style="color:red">@Html.Raw(item.Amount)</th>
+												<th style="color:red">@String.Format(format, "{0:0,0 VND}", item.Amount)</th>
 												<td>@item.Status</td>
 												<td>
 														@* <form asp-controller="" asp-action="Pay" method="post" asp-route-id="@item.CodeTransaction">
@@ -149,7 +151,7 @@
 													<td style="color:red">@Html.Raw(item.IdStudentBuyer)</td>
 													<td>@Html.Raw(item.NameProduct)</td>
 													<td>@Html.Raw(item.Quantity)</td>
-													<th style="color:red">@Html.Raw(item.Amount)</th>
+													<th style="color:red">@String.Format(format, "{0:0,0 VND}", item.Amount)</th>
 													<td>@item.Status</td>
 													<td>
 															@* <form asp-controller="" asp-action="Pay" method="post" asp-route-id="@item.CodeTransaction">
@@ -212,7 +214,7 @@
 									<tbody>
 										@foreach (var item in Model)
 										{
-											@if (item.Status == "Compeleted")
+											@if (item.Status == "Completed")
 											{
 												<form asp-controller="WareHouse" asp-action="CompleteTransaction" asp-route-code="@item.CodeTransaction">
 												<tr>
@@ -224,7 +226,7 @@
 													<td style="color:red">@Html.Raw(item.IdStudentBuyer)</td>
 													<td>@Html.Raw(item.NameProduct)</td>
 													<td>@Html.Raw(item.Quantity)</td>
-													<th style="color:red">@Html.Raw(item.Amount)</th>
+													<th style="color:red">@String.Format(format, "{0:0,0 VND}", item.Amount)</th>
 													<td>@item.Status</td>
 													<td>
 															@* <form asp-controller="" asp-action="Pay" method="post" asp-route-id="@item.CodeTransaction">
@@ -297,7 +299,7 @@
 													<td style="color:red">@Html.Raw(item.IdStudentBuyer)</td>
 													<td>@Html.Raw(item.NameProduct)</td>
 													<td>@Html.Raw(item.Quantity)</td>
-													<th style="color:red">@Html.Raw(item.Amount)</th>
+													<th style="color:red">@String.Format(format, "{0:0,0 VND}", item.Amount)</th>
 													<td>@item.Status</td>
 													<td>
 															@* <form asp-controller="" asp-action="Pay" method="post" asp-route-id="@item.CodeTransaction">

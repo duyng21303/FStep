@@ -407,21 +407,21 @@
 				<a class="shrink-btn" href="javascript:void(0)">Thu gọn</a>
 			</div>
 			@* <div class="row">
-				<div class="mb-3 text-muted small">
-					<span>
-						5.0 <span class="text-danger">
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-						</span>
-					</span>
-					<span class="text-primary p-2"> | </span>
-					<span>@Model.FeedbackNum <span>Đánh giá</span></span>
-					<span class="text-primary p-2"> | </span>
-					<span>@Model.SoldQuantity <span>Đã bán</span><br /></span>
-				</div>
+			<div class="mb-3 text-muted small">
+			<span>
+			5.0 <span class="text-danger">
+			<i class="fa fa-star"></i>
+			<i class="fa fa-star"></i>
+			<i class="fa fa-star"></i>
+			<i class="fa fa-star"></i>
+			<i class="fa fa-star"></i>
+			</span>
+			</span>
+			<span class="text-primary p-2"> | </span>
+			<span>@Model.FeedbackNum <span>Đánh giá</span></span>
+			<span class="text-primary p-2"> | </span>
+			<span>@Model.SoldQuantity <span>Đã bán</span><br /></span>
+			</div>
 			</div> *@
 			<!-- Product Pricing -->
 			<div class="product-price">
@@ -432,15 +432,21 @@
 				<div style="min-height:10px;"></div>
 				<div class="d-flex mt-1">
 					<div class="text align-content-lg-center mx-3">Số lượng</div>
-					<input name="quantity" class="form-control text-center" id="inputQuantity" value="1" disabled style="max-width: 7.5rem; " />
+					<input name="quantity" class="form-control text-center" id="inputQuantity" value="@Model.Quantity" disabled style="max-width: 7.5rem; " />
 				</div>
 				<div style="min-height:10px;"></div>
-				@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser))
+				@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser) && Model.Quantity != 0)
 				{
 					<button type="submit" class="btn btn-outline-secondary text-bg-primary">
-						<div class="mx-4 text-white">Buy now</div>
+						<div class="mx-4 text-white">Mua ngay</div>
 					</button>
 				}
+				else
+				{
+					<button disabled class="btn btn-sm mt-2 bg-dark text-light bg-opacity-50">Mua ngay</button>
+					
+				}
+
 			</form>
 		</div>
 	</div>
@@ -683,6 +689,6 @@
 			nextEl: '.swiper-button-next',
 			prevEl: '.swiper-button-prev',
 		},
-						});
+								});
 	</script>
 </body>
