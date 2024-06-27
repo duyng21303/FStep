@@ -52,12 +52,12 @@ public class Program
 
 			builder.Services.AddHttpContextAccessor();
 
-			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options
-				=>
-			{
-				options.LoginPath = "/Account/Login";
-				options.AccessDeniedPath = "/AccessDenied";
-			});
+		builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options
+			=>
+		{
+			options.LoginPath = "/Account/Login";
+			options.AccessDeniedPath = "/AccessDenied";
+		});
 
 			// Configure Google authentication (if needed)
 			builder.Services.AddAuthentication().AddGoogle(googleOptions =>
@@ -101,7 +101,7 @@ public class Program
 				name: "default",
 				pattern: "{controller=Home}/{action=Index}/{id?}");
 
-			app.Run();
+		app.Run();
 
 		}
 	}

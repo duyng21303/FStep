@@ -61,6 +61,8 @@ namespace FStep.ViewModels
 		// Thuộc tính tính toán DaysRemaining cho Pending
 		public int DaysRemaining => (Status == "false") ? (7 - (DateTime.Now.Date - CreateDate.Date).Days) : (30 - (DateTime.Now.Date - CreateDate.Date).Days);
 	}
+
+
 }
 
 
