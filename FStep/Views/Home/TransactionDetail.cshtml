@@ -18,7 +18,7 @@
 					<h5 class="text-muted">Cảm ơn, <span style="color: #3572EF;">@Model.IdUserSeller</span>!</h5>
 				}
 
-				@if (DateTime.Now.CompareTo(Model.CreateDate?.AddDays(7)) <= 0)
+				@if (DateTime.Now.CompareTo(Model.DeliveryDate?.AddDays(7)) <= 0)
 				{
 					<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm px-5 py-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@Model.IdPost" asp-route-idTransaction="@Model.TransactionId">
 						Đánh giá
@@ -70,12 +70,12 @@
 			</div>
 
 			<div class="d-flex justify-content-between pt-2">
-				<h5 class="small text-muted mb-0">Ngày đặt hàng: <span>@Model.CreateDate?.ToString("MM/dd/yyyy hh:mm tt")</span></h5>
+				<h5 class="small text-muted mb-0">Ngày đặt hàng: <span>@Model.DeliveryDate?.ToString("MM/dd/yyyy hh:mm tt")</span></h5>
 				<h5 class="text-muted mb-0"><span class="fw-bold me-4">Tổng</span> @String.Format(format, "{0:0,0 VND}", Model.Amount)</h5>
 			</div>
 
 			<div class="d-flex justify-content-between">
-				<h5 class="small text-muted mb-0">Ngày nhận hàng: <span>@Model.CreateDate?.ToString("MM/dd/yyyy hh:mm tt")</span></h5>
+				<h5 class="small text-muted mb-0">Ngày nhận hàng: <span>@Model.DeliveryDate?.ToString("MM/dd/yyyy hh:mm tt")</span></h5>
 				<h5 class="text-muted mb-0"><span class="fw-bold me-4">Giảm giá</span>@String.Format(format, "{0:0,0 VND}", 0)</h5>
 			</div>
 		</div>
