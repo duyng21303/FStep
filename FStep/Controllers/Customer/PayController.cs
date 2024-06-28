@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using NuGet.Protocol.Plugins;
 
 namespace FStep.Controllers.Customer
 {
@@ -45,8 +46,8 @@ namespace FStep.Controllers.Customer
 			checkout.IdUserSeller = db.Posts.SingleOrDefault(p => p.IdPost == id).IdUser;
 			checkout.ProductId = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).IdProduct;
 			checkout.UnitPrice = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).Price;
-			checkout.Quantity = quantity;
-			checkout.Amount = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).Price * quantity;
+			checkout.Quantity = 1;
+			checkout.Amount = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct).Price;
 
 			checkout.Type = post.Type;
 
@@ -115,7 +116,8 @@ namespace FStep.Controllers.Customer
 			var payment = new Payment();
 			payment.PayTime = transaction.Date;
 			payment.Amount = transaction.Amount;
-			payment.Type = "buyer";
+			payment.ExternalMomoTransactionCode = transaction.CodeTransaction;
+			payment.Type = "Buyer";
 			payment.IdTransaction = db.Transactions.SingleOrDefault(p => p.CodeTransaction == transaction.CodeTransaction).IdTransaction;
 			db.Add(payment);
 			db.SaveChanges();
@@ -137,5 +139,6 @@ namespace FStep.Controllers.Customer
 			TempData["Message"] = $"VnPay success";
 			return RedirectToAction("PaymentSuccess");
 		}
+
 	}
 }

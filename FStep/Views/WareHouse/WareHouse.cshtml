@@ -1,52 +1,336 @@
 ﻿@model X.PagedList.IPagedList<FStep.ViewModels.WareHouse.WareHouseVM>
 @using X.PagedList.Mvc.Core;
 
-<div>
-    <div class="row align-items-center mb-8 search-header">
-        <div class="custom-container">
-            <div class="container">
-                <div class="row mt-3">
-                    <div class="col">
-                        <table class="table table-striped table-bordered">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th scope="col">Mã Số</th>
-                                    <th scope="col">Vị Trí</th>
-                                    <th scope="col">Mã Giao Dịch</th>
-                                    <th scope="col">Ngày</th>
-                                    <th scope="col">Người Mua</th>
-                                    <th scope="col">Tên Sản Phẩm</th>
-                                    <th scope="col">Số Lượng</th>
-                                    <th scope="col">Tổng Tiền</th>
-                                    <th scope="col">Giao Dịch</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model)
-                                {
-                                    <tr>
-                                        <td class="post-title">@Html.Raw(item.IdPost)</td>
-                                        <td>@Html.Raw(item.Location)</td>
-                                        <td style="color:red">@Html.Raw(item.CodeTransaction)</td>
-                                        <td>@Html.Raw(item.Date)</td>
-                                        <td style="color:red">@Html.Raw(item.IdStudent)</td>
-                                        <td>@Html.Raw(item.NameProduct)</td>
-                                        <td>@Html.Raw(item.Quantity)</td>
-                                        <th style="color:red">@Html.Raw(item.Amount)</th>
-                                        <td>
-                                            <form asp-controller="" asp-action="" method="post">
-                                                <input type="hidden" name="id" value="" />
-                                                <button type="submit" class="btn btn-danger btn-sm">Hoàn Thành</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            @Html.PagedListPager(Model, page => Url.Action("WareHouse", new { query = ViewBag.Query, page = page }))
-        </div>
-    </div>
+
+<div class="container py-5">
+	<div class="py-3">
+		<h1 class="exchange-title">Danh sách giao dịch</h1>
+	</div>
+	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+		<li class="nav-item" role="presentation">
+			<button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-all" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Tất cả</button>
+		</li>
+		<li class="nav-item" role="presentation">
+			<button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-processing" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Chờ giao hàng</button>
+		</li>
+		<li class="nav-item" role="presentation">
+			<button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-completed" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Hoàn thành</button>
+		</li>
+		<li class="nav-item" role="presentation">
+			<button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-canceled" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Đã huỷ</button>
+		</li>
+	</ul>
+	<div class="tab-content" id="pills-tabContent">
+		<div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-home-tab">
+
+			<div class="row align-items-center mb-4 search-header">
+				<div class="col-md-12">
+					<form asp-action="WareHouse" asp-controller="WareHouse" method="get" class="d-flex justify-content-end search-form">
+						<input type="search" class="form-control search-input" placeholder="transaction code" name="query">
+						<button class="btn btn-primary search-button" type="submit">
+							<i class="fa fa-search search-icon"></i>
+						</button>
+					</form>
+				</div>
+			</div>
+			
+			<!-- Start Content Body-->
+			<div class="row align-items-center mb-8 search-header">
+				<div class="custom-container">
+					<div class="container">
+						<div class="row mt-3">
+							<div class="col">
+								<table class="table table-striped table-bordered">
+									<thead class="thead-light">
+										<tr>
+											<th scope="col">Mã Số</th>
+											<th scope="col">Vị Trí</th>
+											<th scope="col">Mã Giao Dịch</th>
+											<th scope="col">Ngày</th>
+											<th scope="col">Người Mua</th>
+											<th scope="col">Người Bán</th>
+											<th scope="col">Tên Sản Phẩm</th>
+											<th scope="col">Số Lượng</th>
+											<th scope="col">Tổng Tiền</th>
+											<th scope="col">Trạng thái</th>
+											<th scope="col">Giao Dịch</th>
+											<th scope="col">Chỉnh sửa</th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach (var item in Model)
+										{
+											<form asp-controller="WareHouse" asp-action="CompleteTransaction" asp-route-code="@item.CodeTransaction">
+											<tr>
+												<td class="post-title">@Html.Raw(item.IdPost)</td>
+												<td><input name="location" value="@Html.Raw(item.Location)" type="text" /></td>
+												<td style="color:red">@Html.Raw(item.CodeTransaction)</td>
+												<td>@Html.Raw(item.Date)</td>
+												<td style="color:red">@item.IdStudentSeller</td>
+												<td style="color:red">@Html.Raw(item.IdStudentBuyer)</td>
+												<td>@Html.Raw(item.NameProduct)</td>
+												<td>@Html.Raw(item.Quantity)</td>
+												<th style="color:red">@Html.Raw(item.Amount)</th>
+												<td>@item.Status</td>
+												<td>
+														@* <form asp-controller="" asp-action="Pay" method="post" asp-route-id="@item.CodeTransaction">
+												<input type="hidden" name="id" value="" />
+												<button type="submit" class="btn btn-danger btn-sm">Hoàn thành</button>
+												</form> *@
+														@if (item.Status == "Completed")
+														{
+														<button disabled class="btn btn-sm bg-dark text-light bg-opacity-50">Hoàn thành</button>
+														}
+														else
+														{
+														<a asp-controller="WareHouse" asp-action="CompleteTransaction" asp-route-code="@item.CodeTransaction" class="btn btn-danger btn-sm">Hoàn thành</a>
+														}
+													</td>
+												<td>
+													<button type="submit" class="btn btn-info btn-sm">Chỉnh sửa</button>
+												</td>
+											</tr>
+											</form>
+										}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					@Html.PagedListPager(Model, page => Url.Action("WareHouse", new { query = ViewBag.Query, page = page }))
+				</div>
+			</div>
+			<!-- End Show -->
+			@* <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-lg">
+
+			@await Html.PartialAsync("Feedback", new FeedbackVM())
+
+			</div>
+			</div> *@
+
+		</div>
+		<div class="tab-pane fade" id="pills-processing" role="tabpanel" aria-labelledby="pills-profile-tab">
+
+			<!-- Start Content Body-->
+			<div class="row align-items-center mb-8 search-header">
+				<div class="custom-container">
+					<div class="container">
+						<div class="row mt-3">
+							<div class="col">
+								<table class="table table-striped table-bordered">
+									<thead class="thead-light">
+										<tr>
+											<th scope="col">Mã Số</th>
+											<th scope="col">Vị Trí</th>
+											<th scope="col">Mã Giao Dịch</th>
+											<th scope="col">Ngày</th>
+											<th scope="col">Người Mua</th>
+											<th scope="col">Người Bán</th>
+											<th scope="col">Tên Sản Phẩm</th>
+											<th scope="col">Số Lượng</th>
+											<th scope="col">Tổng Tiền</th>
+											<th scope="col">Trạng thái</th>
+											<th scope="col">Giao Dịch</th>
+											<th scope="col">Chỉnh sửa</th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach (var item in Model)
+										{
+											@if (item.Status == "Processing")
+											{
+												<form asp-controller="WareHouse" asp-action="CompleteTransaction" asp-route-code="@item.CodeTransaction">
+												<tr>
+													<td class="post-title">@Html.Raw(item.IdPost)</td>
+													<td><input name="Location" value="@Html.Raw(item.Location)" type="text" /> </td>
+													<td style="color:red">@Html.Raw(item.CodeTransaction)</td>
+													<td>@Html.Raw(item.Date)</td>
+													<td style="color:red">@item.IdStudentSeller</td>
+													<td style="color:red">@Html.Raw(item.IdStudentBuyer)</td>
+													<td>@Html.Raw(item.NameProduct)</td>
+													<td>@Html.Raw(item.Quantity)</td>
+													<th style="color:red">@Html.Raw(item.Amount)</th>
+													<td>@item.Status</td>
+													<td>
+															@* <form asp-controller="" asp-action="Pay" method="post" asp-route-id="@item.CodeTransaction">
+												<input type="hidden" name="id" value="" />
+												<button type="submit" class="btn btn-danger btn-sm">Hoàn thành</button>
+												</form> *@
+														<button disabled class="btn btn-sm bg-dark text-light bg-opacity-50">Hoàn thành</button>
+													</td>
+													<td>
+														<button type="submit" class="btn btn-info btn-sm">Chỉnh sửa</button>
+													</td>
+												</tr>
+												</form>
+											}
+										}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					@Html.PagedListPager(Model, page => Url.Action("WareHouse", new { query = ViewBag.Query, page = page }))
+				</div>
+			</div>
+			<!-- End Show -->
+			@* <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-lg">
+
+			@await Html.PartialAsync("Feedback", new FeedbackVM())
+
+			</div>
+			</div> *@
+
+
+		</div>
+		<div class="tab-pane fade" id="pills-completed" role="tabpanel" aria-labelledby="pills-contact-tab">
+
+			<!-- Start Content Body-->
+			<div class="row align-items-center mb-8 search-header">
+				<div class="custom-container">
+					<div class="container">
+						<div class="row mt-3">
+							<div class="col">
+								<table class="table table-striped table-bordered">
+									<thead class="thead-light">
+										<tr>
+											<th scope="col">Mã Số</th>
+											<th scope="col">Vị Trí</th>
+											<th scope="col">Mã Giao Dịch</th>
+											<th scope="col">Ngày</th>
+											<th scope="col">Người Mua</th>
+											<th scope="col">Người Bán</th>
+											<th scope="col">Tên Sản Phẩm</th>
+											<th scope="col">Số Lượng</th>
+											<th scope="col">Tổng Tiền</th>
+											<th scope="col">Trạng thái</th>
+											<th scope="col">Giao Dịch</th>
+											<th scope="col">Chỉnh sửa</th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach (var item in Model)
+										{
+											@if (item.Status == "Compeleted")
+											{
+												<form asp-controller="WareHouse" asp-action="CompleteTransaction" asp-route-code="@item.CodeTransaction">
+												<tr>
+													<td class="post-title">@Html.Raw(item.IdPost)</td>
+													<td><input name="Location" value="@Html.Raw(item.Location)" type="text" /> </td>
+													<td style="color:red">@Html.Raw(item.CodeTransaction)</td>
+													<td>@Html.Raw(item.Date)</td>
+													<td style="color:red">@item.IdStudentSeller</td>
+													<td style="color:red">@Html.Raw(item.IdStudentBuyer)</td>
+													<td>@Html.Raw(item.NameProduct)</td>
+													<td>@Html.Raw(item.Quantity)</td>
+													<th style="color:red">@Html.Raw(item.Amount)</th>
+													<td>@item.Status</td>
+													<td>
+															@* <form asp-controller="" asp-action="Pay" method="post" asp-route-id="@item.CodeTransaction">
+												<input type="hidden" name="id" value="" />
+												<button type="submit" class="btn btn-danger btn-sm">Hoàn thành</button>
+												</form> *@
+														<button disabled class="btn btn-sm bg-dark text-light bg-opacity-50">Hoàn thành</button>
+													</td>
+													<td>
+														<button type="submit" class="btn btn-info btn-sm">Chỉnh sửa</button>
+													</td>
+												</tr>
+												</form>
+											}
+										}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					@Html.PagedListPager(Model, page => Url.Action("WareHouse", new { query = ViewBag.Query, page = page }))
+				</div>
+			</div>
+			<!-- End Show -->
+			@* <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-lg">
+
+			@await Html.PartialAsync("Feedback", new FeedbackVM())
+
+			</div>
+			</div> *@
+
+		</div>
+		<div class="tab-pane fade" id="pills-canceled" role="tabpanel" aria-labelledby="pills-contact-tab">
+			<!-- Start Content Body-->
+			<div class="row align-items-center mb-8 search-header">
+				<div class="custom-container">
+					<div class="container">
+						<div class="row mt-3">
+							<div class="col">
+								<table class="table table-striped table-bordered">
+									<thead class="thead-light">
+										<tr>
+											<th scope="col">Mã Số</th>
+											<th scope="col">Vị Trí</th>
+											<th scope="col">Mã Giao Dịch</th>
+											<th scope="col">Ngày</th>
+											<th scope="col">Người Mua</th>
+											<th scope="col">Người Bán</th>
+											<th scope="col">Tên Sản Phẩm</th>
+											<th scope="col">Số Lượng</th>
+											<th scope="col">Tổng Tiền</th>
+											<th scope="col">Trạng thái</th>
+											<th scope="col">Giao Dịch</th>
+											<th scope="col">Chỉnh sửa</th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach (var item in Model)
+										{
+											@if (item.Status == "Canceled")
+											{
+												<form asp-controller="WareHouse" asp-action="CompleteTransaction" asp-route-code="@item.CodeTransaction">
+												<tr>
+													<td class="post-title">@Html.Raw(item.IdPost)</td>
+													<td><input name="Location" value="@Html.Raw(item.Location)" type="text" /> </td>
+													<td style="color:red">@Html.Raw(item.CodeTransaction)</td>
+													<td>@Html.Raw(item.Date)</td>
+													<td style="color:red">@item.IdStudentSeller</td>
+													<td style="color:red">@Html.Raw(item.IdStudentBuyer)</td>
+													<td>@Html.Raw(item.NameProduct)</td>
+													<td>@Html.Raw(item.Quantity)</td>
+													<th style="color:red">@Html.Raw(item.Amount)</th>
+													<td>@item.Status</td>
+													<td>
+															@* <form asp-controller="" asp-action="Pay" method="post" asp-route-id="@item.CodeTransaction">
+												<input type="hidden" name="id" value="" />
+												<button type="submit" class="btn btn-danger btn-sm">Hoàn thành</button>
+												</form> *@
+														<button disabled class="btn btn-sm bg-dark text-light bg-opacity-50">Hoàn thành</button>
+													</td>
+													<td>
+														<button type="submit" class="btn btn-info btn-sm">Chỉnh sửa</button>
+													</td>
+												</tr>
+												</form>
+											}
+										}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					@Html.PagedListPager(Model, page => Url.Action("WareHouse", new { query = ViewBag.Query, page = page }))
+				</div>
+			</div>
+			<!-- End Show -->
+			@* <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-lg">
+
+			@await Html.PartialAsync("Feedback", new FeedbackVM())
+
+			</div>
+			</div> *@
+		</div>
+	</div>
+
 </div>

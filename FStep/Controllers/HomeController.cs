@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Blazor;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using System.Diagnostics;
 using X.PagedList;
@@ -94,7 +96,7 @@ namespace FStep.Controllers
 			try
 			{
 				var product = _mapper.Map<Product>(model);
-				product.Quantity = model.Quantity;
+				product.Quantity = 1;
 				product.Price = model.Price;
 				product.Status = "true";
 				db.Add(product);
@@ -136,6 +138,21 @@ namespace FStep.Controllers
 				transaction = transaction.Where(p => p.IdPostNavigation.Content.Contains(query));
 				//db.Posts.FirstOrDefault(x => x.Content.Contains(query)).IdPost
 			}
+
+			foreach (var x in transaction)
+			{
+				if (DateTime.Now.CompareTo(x.Date?.AddDays(7)) >= 0 && x.Status == "Processing")
+				{
+					x.Status = "Canceled";
+					db.Update(x);
+					var payment = new Payment(); 
+					payment.PayTime = DateTime.Now;
+					payment.IdTransaction = x.IdTransaction;
+					payment.Type = "Seller";
+					//payment.Status = "Uncussessfully";
+				}
+			}
+			db.SaveChanges();
 			var result = transaction.Select(s => new TransactionVM
 			{
 				TransactionId = s.IdTransaction,
@@ -143,14 +160,19 @@ namespace FStep.Controllers
 				Content = s.IdPostNavigation.Content,
 				Detail = s.IdPostNavigation.Detail,
 				TypePost = s.IdPostNavigation.Type,
-				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now,
+				DeliveryDate = db.Payments.SingleOrDefault(p => p.IdTransaction == s.IdTransaction && p.Type == "Seller").PayTime,
 				Img = s.IdPostNavigation.Img,
+				Status = s.Status,
 				UnitPrice = s.UnitPrice,
 				Quantity = s.Quantity,
 				Amount = s.Amount,
 				IdUserSeller = s.IdUserSeller,
 				CodeTransaction = s.CodeTransaction,
 				UserName = db.Users.FirstOrDefault(p => p.IdUser == s.IdUserBuyer).Name ?? null,
+				IdSeller = s.IdUserSeller,
+				SellerImg = db.Users.SingleOrDefault(p => p.IdUser == s.IdUserSeller).AvatarImg,
+				SellerName = db.Users.SingleOrDefault(p => p.IdUser == s.IdUserSeller).Name,
+				CheckFeedback = (db.Feedbacks.FirstOrDefault(p => p.IdPost == s.IdPost) != null),
 			}).OrderByDescending(o => o.TransactionId);
 
 			var pageList = result.ToPagedList(pageNumber, pageSize);
@@ -169,7 +191,7 @@ namespace FStep.Controllers
 				Content = db.Posts.FirstOrDefault(p => p.IdPost == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdPost).Content,
 				Detail = db.Posts.FirstOrDefault(p => p.IdPost == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdPost).Detail,
 				TypePost = db.Posts.FirstOrDefault(p => p.IdPost == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdPost).Type,
-				CreateDate = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).Date,
+				DeliveryDate = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).Date,
 				Img = db.Posts.FirstOrDefault(p => p.IdPost == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdPost).Img,
 				UnitPrice = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).UnitPrice,
 				Quantity = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).Quantity,

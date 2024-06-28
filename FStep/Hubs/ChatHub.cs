@@ -110,6 +110,13 @@ namespace FStep
 					confirmDb = await _context.Confirms
 						.Where(m => m.IdPost == postDto.IdPost && (m.IdUserConnect == userId || m.IdUserConfirm == userId) && (m.IdUserConnect == currentUser || m.IdUserConfirm == currentUser))
 						.FirstOrDefaultAsync();
+					if(commentDto == null && confirmDb != null)
+					{
+						commentDto = await _context.Comments
+						.Where(m => m.IdComment == confirmDb.IdComment)
+						.Select(c => new Comment { IdComment = c.IdComment, Content = c.Content, Img = c.Img, Date = c.Date, Type = c.Type, IdUser = c.IdUser })
+						.FirstOrDefaultAsync();
+					}
 				}
 			}
 			var confirm = new ConfirmVM()

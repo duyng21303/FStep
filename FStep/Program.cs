@@ -16,6 +16,7 @@ using FStep;
 using FStep.Hubs;
 
 
+
 public class Program
 {
 		public static void Main(string[] args)
@@ -23,8 +24,8 @@ public class Program
 			var builder = WebApplication.CreateBuilder(args);
 
 
-			// Add services to the container.
-			builder.Services.AddControllersWithViews();
+		// Add services to the container.
+		builder.Services.AddControllersWithViews();
 
 			// Register DbContext
 			builder.Services.AddDbContext<FstepDBContext>(options =>
@@ -41,16 +42,16 @@ public class Program
 			builder.Services.AddTransient<IEmailSender, EmailSender>();
 			builder.Services.AddHostedService<PostExpirationService>();
 
-			builder.Services.AddSignalR();
-			builder.Services.AddSession(options =>
-			{
-				options.IdleTimeout = TimeSpan.FromMinutes(10);
-				options.Cookie.HttpOnly = true;
-				options.Cookie.IsEssential = true;
-			});
+		builder.Services.AddSignalR();
+		builder.Services.AddSession(options =>
+		{
+			options.IdleTimeout = TimeSpan.FromMinutes(10);
+			options.Cookie.HttpOnly = true;
+			options.Cookie.IsEssential = true;
+		});
 
 
-			builder.Services.AddHttpContextAccessor();
+		builder.Services.AddHttpContextAccessor();
 
 		builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options
 			=>
