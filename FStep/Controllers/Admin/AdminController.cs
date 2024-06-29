@@ -3,6 +3,7 @@ using FStep.Data;
 using FStep.Models;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace FStep.Controllers.Admin
@@ -81,6 +82,43 @@ namespace FStep.Controllers.Admin
 			return View("UserDetail");
 		}
 
+		public IActionResult CommentManager(int page = 1, int pageSize = 10, string? search = null)
+		{
+			var query = _context.Comments.Include(x => x.IdUserNavigation).Include(x => x.IdPostNavigation).AsQueryable();
+			if (!string.IsNullOrEmpty(search))
+			{
+				query = query.Where(x => x.Content.Contains(search) || x.Type.Contains(search));
+			}
+
+			var comments = query.Skip((page - 1) * pageSize).Take(pageSize).Select(x => new CommentVM
+			{
+				IdPost = x.IdPost,
+				IdUser = x.IdUser,
+				Content = x.Content,
+				Date = x.Date,
+				IdComment = x.IdComment,
+				PostName = x.IdPostNavigation.Content,
+				Name = x.IdUserNavigation.Name,
+				Type = x.Type,
+				Img = x.Img,
+				avarImg = x.IdUserNavigation.AvatarImg
+			}).ToList();
+
+			PagingModel<CommentVM> pagingModel = new()
+			{
+				Items = comments,
+				PagingInfo = new PagingInfo
+				{
+					CurrentPage = page,
+					ItemsPerPage = pageSize,
+					TotalItems = query.Count(),
+					Search = search
+				}
+			};
+
+			return View("CommentManager", pagingModel);
+		}
+
 		[HttpPost]
 		public IActionResult LockUnlock([FromBody] ProfileVM user)
 		{
@@ -110,6 +148,17 @@ namespace FStep.Controllers.Admin
 			return BadRequest();
 		}
 
-
+		[HttpPost]
+		public IActionResult DeleteComment([FromBody] CommentVM comment)
+		{
+			var commentExisted = _context.Comments.FirstOrDefault(x => x.IdComment == comment.IdComment);
+			if (commentExisted != null)
+			{
+				_context.Comments.Remove(commentExisted);
+				_context.SaveChanges();
+				return Ok();
+			}
+			return BadRequest();
+		}
 	}
 }

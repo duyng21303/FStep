@@ -11,6 +11,7 @@ namespace FStep.ViewModels
         public DateTime? Date { get; set; }
 
         public int IdPost { get; set; }
+        public string? PostName { get; set; }
 
         public string IdUser { get; set; } = null!;
         public string? Name { get; set; } = null!;
