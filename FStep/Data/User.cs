@@ -23,7 +23,7 @@ public partial class User
 
     public DateTime? CreateDate { get; set; }
 
-    public int? Rating { get; set; }
+    public int? PointRating { get; set; }
 
     public string Role { get; set; } = null!;
 
@@ -35,9 +35,11 @@ public partial class User
 
     public string? ResetToken { get; set; }
 
-    public int? BankName { get; set; }
+    public string? BankName { get; set; }
 
-    public long? BankAccountNumber { get; set; }
+    public string? AccountHolderName { get; set; }
+
+    public string? BankAccountNumber { get; set; }
 
     public virtual ICollection<Chat> Chats { get; set; } = new List<Chat>();
 
@@ -45,7 +47,11 @@ public partial class User
 
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 
+    public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
+
+    public virtual ICollection<Report> Reports { get; set; } = new List<Report>();
 
     public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 }

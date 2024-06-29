@@ -11,6 +11,8 @@ namespace FStep.Controllers.Admin
 	{
 		private readonly FstepDBContext _context;
 		private readonly IMapper _mapper;
+		private static readonly string[] defaultRole = new[] { "Customer", "Moderator", "Administrator" };
+
 		public AdminController(FstepDBContext context, IMapper mapper)
 
 		{
@@ -39,7 +41,7 @@ namespace FStep.Controllers.Admin
 
 			var users = query.Skip((page - 1) * pageSize).Take(pageSize).Select(x => _mapper.Map<ProfileVM>(x)).ToList();
 			PagingModel<ProfileVM> pagingModel = new()
-            {
+			{
 				Items = users,
 				PagingInfo = new PagingInfo
 				{
@@ -53,32 +55,61 @@ namespace FStep.Controllers.Admin
 			return View("UserManager", pagingModel);
 		}
 
-        public IActionResult UserDetail(string id)
-        {
-            // Lấy thông tin người dùng
-            var user = _context.Users.FirstOrDefault(user => user.IdUser == id);
+		public IActionResult UserDetail(string id)
+		{
+			// Lấy thông tin người dùng
+			var user = _context.Users.FirstOrDefault(user => user.IdUser == id);
 
-            if (user != null)
-            {
-                // Đếm số bài đăng của người dùng có type là Sale
-                var saleCount = _context.Posts.Count(post => post.IdUser == id && post.Type == "Sale");
+			if (user != null)
+			{
+				// Đếm số bài đăng của người dùng có type là Sale
+				var saleCount = _context.Posts.Count(post => post.IdUser == id && post.Type == "Sale");
 
-                // Đếm số bài đăng của người dùng có type là Exchange
-                var exchangeCount = _context.Posts.Count(post => post.IdUser == id && post.Type == "Exchange");
+				// Đếm số bài đăng của người dùng có type là Exchange
+				var exchangeCount = _context.Posts.Count(post => post.IdUser == id && post.Type == "Exchange");
 
-                // Map thông tin người dùng sang ProfileVM
-                var profileVM = _mapper.Map<ProfileVM>(user);
+				// Map thông tin người dùng sang ProfileVM
+				var profileVM = _mapper.Map<ProfileVM>(user);
 
-                // Truyền số bài đăng vào ViewModel hoặc ViewData
-                ViewBag.SalePostCount = saleCount;
-                ViewBag.ExchangePostCount = exchangeCount;
+				// Truyền số bài đăng vào ViewModel hoặc ViewData
+				ViewBag.SalePostCount = saleCount;
+				ViewBag.ExchangePostCount = exchangeCount;
 
-                return View("UserDetail", profileVM);
-            }
+				return View("UserDetail", profileVM);
+			}
 
-            return View("UserDetail");
-        }
+			return View("UserDetail");
+		}
+
+		[HttpPost]
+		public IActionResult LockUnlock([FromBody] ProfileVM user)
+		{
+			var userFound = _context.Users.FirstOrDefault(x => x.IdUser == user.IdUser);
+			if (userFound != null)
+			{
+				userFound.Status = user.Status;
+				_context.Users.Update(userFound);
+				_context.SaveChanges();
+				return Ok();
+
+			}
+			return BadRequest();
+		}
+
+		[HttpPost]
+		public IActionResult ChangeRole([FromBody] ProfileVM user)
+		{
+			var userFound = _context.Users.FirstOrDefault(x => x.IdUser == user.IdUser);
+			if (userFound != null && defaultRole.Contains(user.Role))
+			{
+				userFound.Role = user.Role;
+				_context.Users.Update(userFound);
+				_context.SaveChanges();
+				return Ok();
+			}
+			return BadRequest();
+		}
 
 
-    }
+	}
 }

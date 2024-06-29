@@ -187,8 +187,9 @@
 			<div class="navbar-nav">
 				@if (User.IsInRole("Moderator"))
 				{
-					<a class="nav-link text-dark" asp-area="" asp-action="ManagePosts" asp-controller="ModeManagePost">Quản lí</a>
+					<a class="nav-link text-dark" asp-area="" asp-action="ManagePosts" asp-controller="ModeManagePost">Quản lý bài đăng</a>
 					<a class="nav-link text-dark" asp-area="" asp-action="WareHouse" asp-controller="Warehouse">Kho hàng</a>
+					<a class="nav-link text-dark" asp-area="" asp-action="UserManager" asp-controller="Admin">Quản lý người dùng</a>
 				}
 				else
 				{

@@ -69,12 +69,15 @@ namespace FStep.Helpers
 
 			public static string NewReportOnContent(string contentTitle) =>
 				$"Có một báo cáo mới về nội dung bạn đã đăng: \"{contentTitle}\".";
+			public static string TransactionExchangeFail(string contentTitle) =>
+				$"Rất tiếc, phiên trao đổi của sản phẩm \"{contentTitle}\" đã bị hủy vì người bán đã có giao dịch";
 			public static string TypeMessageFillter(string typeMessage, string parameters)
 			{
 				return typeMessage switch
 				{
 					"TransactionSuccess" => TransactionSuccess(parameters),
 					"TransactionExchangeSuccess" => TransactionExchangeSuccess(parameters),
+					"TransactionExchangeFail" => TransactionExchangeFail(parameters),
 					"TransactionReceived" => TransactionReceived(parameters),
 					"TransactionPending" => TransactionPending(),
 					"TransactionFailed" => TransactionFailed(parameters),

@@ -15,8 +15,6 @@ public partial class Transaction
 
     public float? Amount { get; set; }
 
-    public string? Note { get; set; }
-
     public float? UnitPrice { get; set; }
 
     public int IdPost { get; set; }
@@ -29,9 +27,25 @@ public partial class Transaction
 
     public string? CodeTransaction { get; set; }
 
+    public int? IdComment { get; set; }
+
+    public string? RecieveImg { get; set; }
+
+    public string? SentImg { get; set; }
+
+    public DateTime? ReceivedSellerDate { get; set; }
+
+    public DateTime? SentBuyerDate { get; set; }
+
+    public virtual Comment? IdCommentNavigation { get; set; }
+
     public virtual Post IdPostNavigation { get; set; } = null!;
 
     public virtual User IdUserBuyerNavigation { get; set; } = null!;
 
+    public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+
+    public virtual ICollection<Report> Reports { get; set; } = new List<Report>();
 }

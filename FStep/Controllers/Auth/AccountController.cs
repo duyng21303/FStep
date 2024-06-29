@@ -36,10 +36,10 @@ namespace FStep.Controllers.Auth
         }
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Login(string? ReturnUrl)
+        public IActionResult Login(string? ReturnUrl, string error = "")
         {
             ViewBag.ReturnUrl = ReturnUrl;
-
+            ViewBag.Error = error;
             return View();
         }
         [HttpPost]
@@ -56,9 +56,14 @@ namespace FStep.Controllers.Auth
                 }
                 else
                 {
-                    if (user.Status == false)
+                    if (user.Status == false || user.Status == null)
                     {
-                        ModelState.AddModelError("Error", "Tài khoản đã bị khóa, vui lòng liên hệ Admin hoặc Moder");
+                        string msgError = "Tài khoản đã bị khóa, vui lòng liên hệ Admin hoặc Moder";
+                        if (user.PointRating < 20)
+                        {
+                            msgError = "Tài khoản đã bị khóa do điểm đánh giá < 20, vui lòng liên hệ Admin hoặc Moder";
+                        }
+                        ModelState.AddModelError("Error", msgError);
                     }
                     else
                     {
@@ -121,7 +126,9 @@ namespace FStep.Controllers.Auth
                     HashKey = haskKey,
                     Password = PASSWORD_GOOGLE.ToMd5Hash(haskKey),
                     AvatarImg = downloadedImgPath,
-                    Role = "Customer"
+                    Role = "Customer",
+                    Status = true,
+                    PointRating = 50
                 };
                 db.Add(user);
                 db.SaveChanges();
@@ -131,6 +138,14 @@ namespace FStep.Controllers.Auth
             else
             {
                 var user = db.Users.SingleOrDefault(user => user.IdUser == userID);
+                if (user.Status == false || user.Status == null)
+                {
+                    if (user.PointRating < 20)
+                    {
+                        return RedirectToAction("Login", "Account", new { Error = "Tài khoản đã bị khóa do điểm đánh giá < 20, vui lòng liên hệ Admin hoặc Moder" });
+                    }
+                    return RedirectToAction("Login", "Account", new { Error = "Tài khoản đã bị khóa, vui lòng liên hệ Admin hoặc Moder" });
+                }
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, Util.ClaimsHelper(user)); ;
             }
             // Trả về thông tin người dùng hoặc xử lý theo nhu cầu
@@ -155,7 +170,7 @@ namespace FStep.Controllers.Auth
                 AvatarImg = User.FindFirstValue("IMG"),
                 Email = user.Email,
                 Name = user.Name,
-                Rating = user.Rating,
+                Rating = user.PointRating,
                 StudentId = user.StudentId
             };
             return View(profile);
@@ -171,7 +186,7 @@ namespace FStep.Controllers.Auth
                 user.Address = model.Address;
                 user.Email = model.Email;
                 user.Name = model.Name;
-                user.Rating = model.Rating;
+                user.PointRating = model.Rating;
                 user.StudentId = model.StudentId;
                 db.Update(user);
                 db.SaveChanges();
@@ -218,7 +233,7 @@ namespace FStep.Controllers.Auth
             var user = await db.Users.FirstOrDefaultAsync(user => user.Email == forget.Email);
             if (user != null)
             {
-               
+
                 var code = GenerateToken();
                 user.ResetToken = code;
 
@@ -236,28 +251,28 @@ namespace FStep.Controllers.Auth
             }
             return View();
         }
-		public IActionResult ForgetPasswordConfirmation(Response response)
+        public IActionResult ForgetPasswordConfirmation(Response response)
         {
 
             return View(response);
         }
         [HttpGet]
-		public IActionResult ResetPassword(string userId, string Token)
+        public IActionResult ResetPassword(string userId, string Token)
         {
             var user = db.Users.FirstOrDefault(user => user.IdUser == userId);
             var model = new ForgetPasswordVM
             {
                 Token = Token,
                 UserId = userId,
-               
+
             };
             return View();
         }
-		[HttpPost]
-		public async Task<IActionResult> ResetPassword(ForgetPasswordVM forget)
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ForgetPasswordVM forget)
         {
             ModelState.Remove("Email");
-            
+
             var user = await db.Users.FirstOrDefaultAsync(user => user.IdUser == forget.UserId);
             if (user == null || forget.Token != user.ResetToken)
             {
