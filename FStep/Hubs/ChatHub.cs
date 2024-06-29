@@ -256,14 +256,15 @@ namespace FStep
 			{
 				var idBuyer = "";
 				var idSeller = "";
+				//ai là chủ post thì là seller, ngược lại buyer
 				if (userID != postDto.IdUser)
 				{
-					idBuyer = postDto.IdUser;
+					idBuyer = userID;
 					idSeller = currentUser;
 				}
 				else
 				{
-					idBuyer = postDto.IdUser;
+					idBuyer = currentUser;
 					idSeller = userID;
 				}
 				var checkTransaction = false;
@@ -290,8 +291,9 @@ namespace FStep
 								IdUserBuyer = idBuyer,
 								IdUserSeller = idSeller,
 								Status = "Waiting",
-								CodeTransaction = Util.GenerateRandomKey(),
-								Type = "Exchange"
+								CodeTransaction = Util.GenerateRandomKey(10).ToUpper(),
+								Type = "Exchange",
+								IdComment = int.Parse(commentID)
 							};
 
 							//--------------------------------------

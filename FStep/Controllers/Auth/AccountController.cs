@@ -112,7 +112,7 @@ namespace FStep.Controllers.Auth
             string downloadedImgPath = await Util.DownloadImgGoogle(img, userID, "wwwroot/img/userAvar");
             if (!db.Users.Any(user => user.IdUser == userID))
             {
-                var haskKey = Util.GenerateRandomKey();
+                var haskKey = Util.GenerateRandomKey(5);
                 var user = new User()
                 {
                     IdUser = userID,
@@ -155,7 +155,7 @@ namespace FStep.Controllers.Auth
                 AvatarImg = User.FindFirstValue("IMG"),
                 Email = user.Email,
                 Name = user.Name,
-                Rating = user.Rating,
+                Rating = user.PointRating,
                 StudentId = user.StudentId
             };
             return View(profile);
@@ -171,7 +171,7 @@ namespace FStep.Controllers.Auth
                 user.Address = model.Address;
                 user.Email = model.Email;
                 user.Name = model.Name;
-                user.Rating = model.Rating;
+                user.PointRating = model.Rating;
                 user.StudentId = model.StudentId;
                 db.Update(user);
                 db.SaveChanges();
