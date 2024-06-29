@@ -43,7 +43,7 @@ namespace FStep.Controllers.Customer
         {
             try
             {
-                // TODO: Sửa lại nếu người dùng đã đánh giá rồi thì không cho đánh giá nữa
+                // TODO: Sửa lại nếu người dùng đã đánh giá rồi thì ko cho đánh giá nữa
                 // Bổ sung feeback theo trans
                 FeedbackVM info = HttpContext.Session.Get<FeedbackVM>("FEEDBACK_INFO");
                 var feedback = new Feedback();
