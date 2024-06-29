@@ -14,9 +14,10 @@ using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using Microsoft.SqlServer.Server;
 namespace FStep
 {
-    public class ChatHub : Hub
+	public class ChatHub : Hub
 	{
 		private readonly FstepDbContext _context;
 		private static Dictionary<string, string> userConnections = new Dictionary<string, string>();
@@ -27,7 +28,7 @@ namespace FStep
 			_context = context;
 			notificationServices = new NotificationServices(_context);
 		}
-		
+
 		public override async Task OnConnectedAsync()
 		{
 			var userId = Context.User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
@@ -86,8 +87,8 @@ namespace FStep
 							.Select(u => new { u.IdUser, u.AvatarImg, u.Name })
 							.FirstOrDefaultAsync();
 			var commentDto = commentID != "" ? await _context.Comments
-				.Where(m => m.IdComment == int.Parse(commentID))
-				.Select(c => new Comment { IdComment = c.IdComment, Content = c.Content })
+				.Where(m => m.IdComment == int.Parse(commentID) && (m.Type == "Exchange" || m.Type == "ExchangeAnonymous"))
+				.Select(c => new Comment { IdComment = c.IdComment, Content = c.Content, Img = c.Img, Date = c.Date, Type = c.Type, IdUser = c.IdUser })
 				.FirstOrDefaultAsync() : null;
 
 			var postDto = postID != "" ? await _context.Posts
@@ -145,8 +146,8 @@ namespace FStep
 			if (confirmDbHistory != null)
 			{
 				var commentDto = await _context.Comments
-				.Where(m => m.IdComment == confirmDbHistory.IdComment)
-				.Select(c => new Comment { IdComment = c.IdComment, Content = c.Content })
+				.Where(m => m.IdComment == confirmDbHistory.IdComment && (m.Type == "Exchange" || m.Type == "ExchangeAnonymous"))
+				.Select(c => new Comment { IdComment = c.IdComment, Content = c.Content, Img = c.Img, Date = c.Date, Type = c.Type, IdUser = c.IdUser })
 				.FirstOrDefaultAsync();
 
 				var postDto = await _context.Posts
@@ -228,6 +229,7 @@ namespace FStep
 		}
 		public async Task HandleAccept(string message, string? userID, string? postID, string? commentID)
 		{
+
 			var currentUser = Context.User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
 			//check người dùng hiện tại đã từng confirm bài post này chưa
 			var confirmDbCurrent = await _context.Confirms
@@ -239,63 +241,74 @@ namespace FStep
 						.FirstOrDefaultAsync();
 			var postDto = await _context.Posts
 						.Where(m => m.IdPost == int.Parse(postID))
-						.Select(p => new Post
-						{
-							IdUser = p.IdUser
-						})
 						.FirstOrDefaultAsync();
-			var idBuyer = "";
-			var idSeller = "";
-			if (userID != postDto.IdUser)
+			var confirmsToRemove = await _context.Confirms
+											.Where(c => c.IdPost == int.Parse(postID))
+											.ToListAsync();
+			if (postDto.Status != "WaitingExchange")
 			{
-				idBuyer = postDto.IdUser;
-				idSeller = currentUser;
-			}
-			else
-			{
-				idBuyer = postDto.IdUser;
-				idSeller = userID;
-			}
-			var checkTransaction = false;
-			//-----------------------------------------------------------------------------
-			if (confirmDbCurrent != null && confirmDbOrder == null)
-			{
-				confirmDbCurrent.Confirm1 = true;
-				_context.Confirms.Update(confirmDbCurrent);
-				await _context.SaveChangesAsync();
-			}
-			else
-			{
-				if (confirmDbOrder != null)
+				var idBuyer = "";
+				var idSeller = "";
+				if (userID != postDto.IdUser)
 				{
-					var checkConfirm = confirmDbOrder.Confirm1 ?? false;
-					if (checkConfirm)
+					idBuyer = postDto.IdUser;
+					idSeller = currentUser;
+				}
+				else
+				{
+					idBuyer = postDto.IdUser;
+					idSeller = userID;
+				}
+				var checkTransaction = false;
+				//-----------------------------------------------------------------------------
+				if (confirmDbCurrent != null && confirmDbOrder == null)
+				{
+					confirmDbCurrent.Confirm1 = true;
+					_context.Confirms.Update(confirmDbCurrent);
+					await _context.SaveChangesAsync();
+				}
+				else
+				{
+					if (confirmDbOrder != null)
 					{
-						//Thêm transaction
-
-						var transaction = new Transaction()
+						var checkConfirm = confirmDbOrder.Confirm1 ?? false;
+						if (checkConfirm)
 						{
-							Date = DateTime.Now,
-							IdPost = int.Parse(postID),
-							IdUserBuyer = idBuyer,
-							IdUserSeller = idSeller,
-							Status = "Waiting",
-							CodeTransaction = Util.GenerateRandomKey(),
-							Type = "Exchange"
-						};
-						
-						//--------------------------------------
-						await _context.Transactions.AddAsync(transaction);
-						checkTransaction = true;
-						if (confirmDbCurrent != null)
-						{
+							//Thêm transaction
 
-							_context.Confirms.Remove(confirmDbCurrent);
-							_context.Confirms.Remove(confirmDbOrder);
+							var transaction = new Transaction()
+							{
+								Date = DateTime.Now,
+								IdPost = int.Parse(postID),
+								IdUserBuyer = idBuyer,
+								IdUserSeller = idSeller,
+								Status = "Waiting",
+								CodeTransaction = Util.GenerateRandomKey(),
+								Type = "Exchange"
+							};
+
+							//--------------------------------------
+							await _context.Transactions.AddAsync(transaction);
+							checkTransaction = true;
+							
+							
+							_context.Confirms.RemoveRange(confirmsToRemove);
+							//ẩn bài post ------------------------
+							postDto.Status = "WaitingExchange";
+							_context.Posts.Update(postDto);
+							//-------------------------------------
 						}
 						else
 						{
-							_context.Confirms.Remove(confirmDbOrder);
+							var confirm = new Confirm()
+							{
+								Confirm1 = true,
+								IdComment = commentID != "" ? int.Parse(commentID) : null,
+								IdPost = int.Parse(postID),
+								IdUserConfirm = currentUser,
+								IdUserConnect = userID
+							};
+							await _context.Confirms.AddAsync(confirm);
 						}
 					}
 					else
@@ -310,38 +323,45 @@ namespace FStep
 						};
 						await _context.Confirms.AddAsync(confirm);
 					}
+					await _context.SaveChangesAsync();
 				}
-				else
+				if (checkTransaction)
 				{
-					var confirm = new Confirm()
+					var transaction = await _context.Transactions.OrderByDescending(t => t.Date).FirstOrDefaultAsync();
+					var currentUserDb = await _context.Users
+								.Where(u => u.IdUser == currentUser)
+								.Select(u => new { u.Name })
+								.FirstOrDefaultAsync();
+					var otherUserDb = await _context.Users
+								.Where(u => u.IdUser == userID)
+								.Select(u => new { u.Name })
+								.FirstOrDefaultAsync();
+					foreach (var c in confirmsToRemove)
 					{
-						Confirm1 = true,
-						IdComment = commentID != "" ? int.Parse(commentID) : null,
-						IdPost = int.Parse(postID),
-						IdUserConfirm = currentUser,
-						IdUserConnect = userID
-					};
-					await _context.Confirms.AddAsync(confirm);
+						if (c != confirmDbCurrent && c != confirmDbOrder)
+						{
+							// Lấy thông tin người nhận thông báo
+							var recipientId = c.IdUserConnect == currentUser ? c.IdUserConfirm : c.IdUserConnect;
+
+							// Gửi thông báo đến người nhận
+							await notificationServices.CreateNotification(recipientId, "TransactionExchangeFail", "Transaction", postDto.Content, transaction.IdTransaction);
+						}
+					}
+					await notificationServices.CreateNotification(userID, "TransactionExchangeSuccess", "Transaction", currentUserDb.Name, transaction.IdTransaction);
+					await notificationServices.CreateNotification(currentUser, "TransactionExchangeSuccess", "Transaction", otherUserDb.Name, transaction.IdTransaction);
 				}
-				await _context.SaveChangesAsync();
+				await LoadMessages(userID);
+				// Xử lý logic khi người dùng nhấp vào "Đồng ý"
+				await Clients.Caller.SendAsync("ReceiveNotification", message);
 			}
-			if (checkTransaction)
+			else
 			{
-				var transaction = await _context.Transactions.OrderByDescending(t => t.Date).FirstOrDefaultAsync();
-				var currentUserDb = await _context.Users
-							.Where(u => u.IdUser == currentUser)
-							.Select(u => new { u.Name })
-							.FirstOrDefaultAsync();
 				var otherUserDb = await _context.Users
-							.Where(u => u.IdUser == userID)
-							.Select(u => new { u.Name })
-							.FirstOrDefaultAsync();
-				await notificationServices.CreateNotification(userID, "TransactionExchangeSuccess", "Transaction", currentUserDb.Name, transaction.IdTransaction);
-				await notificationServices.CreateNotification(currentUser, "TransactionExchangeSuccess", "Transaction", otherUserDb.Name, transaction.IdTransaction);
+								.Where(u => u.IdUser == userID)
+								.Select(u => new { u.Name })
+								.FirstOrDefaultAsync();
+				await Clients.Caller.SendAsync("LoadMessages", message, currentUser, otherUserDb, null);
 			}
-			await LoadMessages(userID);
-			// Xử lý logic khi người dùng nhấp vào "Đồng ý"
-			await Clients.Caller.SendAsync("ReceiveNotification", message);
 		}
 
 		public async Task HandleDecline(string message, string? userID, string? postID, string? commentID)
@@ -428,6 +448,25 @@ namespace FStep
 			}
 			await _context.SaveChangesAsync();
 			await LoadMessages(recieverUserId);
+		}
+		public async Task SendExchangeFormData(CommentExchangeVM formData, User recieveUser)
+		{
+			var currentUser = Context.User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
+			var messages = await _context.Chats
+				.Where(m => (m.SenderUserId == currentUser && m.RecieverUserId == recieveUser.IdUser) ||
+							(m.SenderUserId == recieveUser.IdUser && m.RecieverUserId == currentUser))
+				.OrderBy(m => m.ChatDate)
+				.ToListAsync();
+			var currentUserDb = await _context.Users
+							.Where(u => u.IdUser == currentUser)
+							.Select(u => new { u.IdUser, u.AvatarImg, u.Name })
+							.FirstOrDefaultAsync();
+			var idPost = formData.IdPost;
+			var content = formData.Content;
+			var imgFile = formData.Img;
+			var type = formData.Type;
+			var userId = formData.IdUser;
+
 		}
 	}
 }

@@ -4,6 +4,7 @@ using FStep.Helpers;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using X.PagedList;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -69,13 +70,13 @@ namespace FStep.Controllers.Customer
 		}
 		public IActionResult DetailPost(int id)
 		{
-			var data = db.Posts.Include(x => x.IdProductNavigation).Include(x => x.IdUserNavigation).SingleOrDefault(p => p.IdPost == id);
-			var user = db.Users.SingleOrDefault(user => user.IdUser == data.IdUser);
+			var post = db.Posts.Include(x => x.IdProductNavigation).Include(x => x.IdUserNavigation).SingleOrDefault(p => p.IdPost == id);
+			var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
 
 			ViewData["USER_CREATE"] = user;
 
 			// lấy thêm comment sản phẩm
-			var comments = db.Comments.Where(x => x.IdPost == id).Include(x => x.IdUserNavigation).Select(x => new CommentVM
+			var comments = db.Comments.Where(x => x.IdPost == id && x.Type != "ExchangeAnonymous").Include(x => x.IdUserNavigation).Select(x => new CommentVM
 			{
 				IdPost = id,
 				IdUser = x.IdUser,
@@ -90,7 +91,7 @@ namespace FStep.Controllers.Customer
 
 			ViewData["comments"] = comments;
 
-			return View(data);
+			return View(post);
 		}
 		public IActionResult DetailSalePost(int id)
 		{
@@ -126,7 +127,8 @@ namespace FStep.Controllers.Customer
 				CreateDate = post.Date,
 				Price = product.Price ?? 0,
 				SoldQuantity = product.SoldQuantity ?? 0,
-				FeedbackNum = feedback
+				FeedbackNum = feedback,
+				IdUser = post.IdUser
 			};
 
 			return View(result);
@@ -186,6 +188,33 @@ namespace FStep.Controllers.Customer
 		{
 			return PartialView();
 		}
+		[HttpPost]
+		public async Task<IActionResult> CreateAnonymousExchage(IFormFile img, string content, int idPost)
+		{
+			// Xử lý dữ liệu ở đây, ví dụ: lưu ảnh vào thư mục, lưu thông tin vào database
+			var currentUser = User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
+			if (currentUser == null)
+			{
+				return Json(new { success = false, message = "User not authenticated" });
+			}
+			var post = db.Posts.SingleOrDefault(post => post.IdPost == idPost);
 
+			Comment comment = new Comment()
+			{
+				IdPost = idPost,
+				Content = content,
+				Date = DateTime.Now,
+				Img = Util.UpLoadImg(img, "postPic"),
+				Type = "ExchangeAnonymous",
+				IdUser = currentUser
+			};
+			db.Comments.Add(comment);
+			await db.SaveChangesAsync();
+			var latestComment = await db.Comments
+								.Where(c => c.IdPost == idPost)
+								.OrderByDescending(c => c.Date)
+								.FirstOrDefaultAsync();
+			return Json(new { success = true, message = "Exchange created successfully" , commentID = latestComment.IdComment, idPost = idPost});
+		}
 	}
 }

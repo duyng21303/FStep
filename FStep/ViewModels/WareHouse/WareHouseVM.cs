@@ -13,11 +13,13 @@ namespace FStep.ViewModels.WareHouse
         public String IdUserE { get; set; }
 		public String IdUserBuyer { get; set; }
 
+
 		public DateTime Date { get; set; }
 		public float? Amount { get; set; }
 		public int Quantity { get; set; }
 
 		public String Location { get; set; }
+
 	}
     public class WareHouseVM
     {
