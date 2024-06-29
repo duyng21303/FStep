@@ -19,28 +19,29 @@ using FStep.Hubs;
 
 public class Program
 {
-		public static void Main(string[] args)
+	public static void Main(string[] args)
+	{
+		var builder = WebApplication.CreateBuilder(args);
+
+		// Add services to the container.
+		builder.Services.AddControllersWithViews();
+
+		// Register DbContext
+		builder.Services.AddDbContext<FstepDbContext>(options =>
+
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
 
 		// Add services to the container.
 		builder.Services.AddControllersWithViews();
+		builder.Services.AddDbContext<FstepDbContext>(option =>
+		{
+			option.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
+		});
+		builder.Services.AddTransient<IEmailSender, EmailSender>();
+		builder.Services.AddHostedService<PostExpirationService>();
 
-			// Register DbContext
-			builder.Services.AddDbContext<FstepDBContext>(options =>
-			{
-				options.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
-			});
-
-			// Add services to the container.
-			builder.Services.AddControllersWithViews();
-			builder.Services.AddDbContext<FstepDBContext>(option =>
-			{
-				option.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
-			});
-			builder.Services.AddTransient<IEmailSender, EmailSender>();
-			builder.Services.AddHostedService<PostExpirationService>();
 
 		builder.Services.AddSignalR();
 		builder.Services.AddSession(options =>

@@ -98,7 +98,7 @@ namespace FStep.Helpers
 					_ => "Unknown notification type."
 				};
 			}
-			public static User? UserOther(FstepDBContext context, Notification notif)
+			public static User? UserOther(FstepDbContext context, Notification notif)
 			{
 				string type = notif.Type;
 				return type switch
@@ -120,7 +120,7 @@ namespace FStep.Helpers
 					_ => null
 				};
 			}
-			public static T EventEntity<T>(FstepDBContext context, Notification notif)
+			public static T EventEntity<T>(FstepDbContext context, Notification notif)
 			{
 				string type = notif.Type;
 

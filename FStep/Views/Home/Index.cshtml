@@ -113,6 +113,11 @@
 												<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost" style="text-decoration:none">
 													<h4 class="title">@Html.Raw(item.Title)</h4>
 												</a>
+												@if(item.Type == "sale")
+												{
+													<div class="post-price">Price: @item.Price</div>
+													<div class="post-quantity">Quantity: @item.Quantity</div>
+												}
 												<div class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Description)</div>
 												<p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate?.ToString("dd/MM/yyyy")</span></p>
 
@@ -153,3 +158,4 @@
 			</div>
 		</div>
 	</div>
+x
