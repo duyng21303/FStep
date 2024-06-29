@@ -125,7 +125,6 @@ namespace FStep.Controllers.Customer
 				Description = post.Detail,
 				CreateDate = post.Date,
 				Price = product.Price ?? 0,
-				SoldQuantity = product.SoldQuantity ?? 0,
 				FeedbackNum = feedback
 			};
 

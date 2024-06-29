@@ -190,13 +190,14 @@ namespace FStep.Controllers.ManagePost
 
 		}
 
-		
+		[Authorize]
+		[HttpPost]
 		public IActionResult FinishPost(int id)
 		{
 			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
 			if (post != null)
 			{
-				post.Status = "false";
+				post.Status = "finish";
 				_db.Posts.Update(post);
 				_db.SaveChanges();
 				TempData["SuccessMessage"] = $"Bài đăng {id} đã được xóa thành công.";

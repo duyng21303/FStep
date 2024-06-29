@@ -74,6 +74,27 @@
 	</div>
 </div>
 
+
+@{
+	var successMessage = TempData["SuccessMessage"] as string;
+	var errorMessage = TempData["ErrorMessage"] as string;
+}
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+	<div id="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+		@successMessage
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+	<div id="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+		@errorMessage
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+}
 <div class="your-post">
 	<div class="container-xl px-4 mt-4">
 		<h3>Your Posts</h3>
@@ -83,25 +104,31 @@
 				<div class="col-md-6 col-lg-4 col-xl-3 mb-4">
 					<!-- Added mb-4 for spacing between rows -->
 					<div class="rounded position-relative fruit-item">
-						<div class="fruit-img">
-							<div class="post-actions">
-								<button class="btn btn-sm btn-secondary btn-open-actions">
-									...
-								</button>
-								<div class="post-actions-dropdown">
-									<ul class="list-unstyled">
-										@if(post.Status == "false")
-										{
-											<li><a href="#">Update</a></li>
-										}
-										<li><a href="#">Delete</a></li>
-									</ul>
+						<div class="post-img-wrapper">
+							<img src="@Url.Content("~/img/postPic/" + post.Img)" class="img-fluid w-100 rounded-top" alt="Post Image">
+							@if (post.Status != "finish")
+							{
+								<div class="post-actions">
+									<button class="btn btn-sm btn-secondary btn-open-actions">
+										...
+									</button>
+									<div class="post-actions-dropdown">
+										<ul class="list-unstyled">
+											<li><a asp-action="UpdatePost" asp-controller="Account" asp-route-id="@post.IdPost" asp-route-type="@post.Type" class="dropdown-item">Sửa</a></li>
+											<li><a asp-action="FinishPost" asp-controller="Account" asp-route-id="@post.IdPost" class="dropdown-item">Xóa</a></li>
+										</ul>
+									</div>
 								</div>
-							</div>
-								<img src="@Url.Content("~/img/postPic/" + post.Img)" class="img-fluid w-100 rounded-top" alt="Post Image">
+							}
+							else
+							{
+								<div class="completed-label">
+									<span class="badge bg-success">Hoàn thành</span>
+								</div>
+							}
 						</div>
 						<div class="p-4 border border-secondary border-top-0 rounded-bottom">
-								<h4 class="title">@Html.Raw(post.Title)</h4>
+							<h4 class="title">@Html.Raw(post.Title)</h4>
 							<div class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(post.Description)</div>
 							<p class="text-end mb-0 mt-2">Created on: <span>@Html.Raw(post.CreateDate?.ToString("dd/MM/yyyy"))</span></p>
 						</div>
@@ -111,7 +138,6 @@
 		</div>
 	</div>
 </div>
-
 <style>
 	.your-post {
 		margin-top: 40px;
@@ -184,4 +210,20 @@
 	.post-actions:hover .post-actions-dropdown {
 		display: block;
 	}
+
+	/* CSS cho nhãn Hoàn thành */
+	.completed-label {
+		position: absolute;
+		top: 10px;
+		right: 10px; /* Điều chỉnh vị trí sang phải */
+		z-index: 1;
+	}
+
+		.completed-label .badge {
+			background-color: #28a745;
+			color: #fff;
+			padding: 5px 10px;
+			border-radius: 5px;
+			font-size: 0.875rem;
+		}
 </style>

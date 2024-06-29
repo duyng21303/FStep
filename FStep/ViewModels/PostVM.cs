@@ -15,7 +15,7 @@ namespace FStep.ViewModels
 		[Required(ErrorMessage = "This is required")]
 		[DataType(DataType.Upload)]
 		[FileExtensions(Extensions = "png,jgp,jpeg,gif")]
-		public string Img { get; set; }
+        public string Img { get; set; }
 
 		[Display(Name = "Description")]
 		[Required(ErrorMessage = "This is required")]
