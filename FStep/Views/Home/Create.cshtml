@@ -2,118 +2,133 @@
 @{
 	ViewData["Title"] = "Create";
 }
-<div class="tab-class">
-	<div class="row g-4">
-		<div class="d-flex justify-content-center">
-			<ul class="nav nav-pills d-inline-flex text-center md-1">
-				<li class="nav-item">
-					<a class="d-flex m-2 py-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-1" style="width: 130px; text-decoration: none">
-						<span class="text-dark" style="width: 130px;">Exchange</span>
-					</a>
-				</li>
-				<li class="nav-item">
-					<a class="d-flex py-2 m-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-2" style="width: 130px; text-decoration: none">
-						<span class="text-dark" style="width: 130px;">Sale</span>
-					</a>
-				</li>
-			</ul>
-		</div>
-	</div>
-</div>
-<div class="tab-content">
-	<div id="tab-1" class="tab-pane fade show p-0 active">
-		<div class="container-fluid py-1">
-			<div class="container py-5">
-				<h1 class="mb-4">Create Exchange Post</h1>
-				<form asp-controller="Home" asp-action="Create" enctype="multipart/form-data">
-					<div class="row">
-						<div class="col-md-12 col-lg-6 col-xl-12">
-							<div class="row">
-								<div class="form-item">
-									<div class="form-item w-100">
-										<label asp-for="@Model.Title" class="form-label my-3"></label><sup>*</sup>
-										<textarea asp-for="@Model.Title" type="text" class="form-control"></textarea>
-										<span asp-validation-for="@Model.Title" class="text-danger"></span>
-									</div>
 
-									@* @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
-									<div class="col-md-10">
-									@Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
-									@Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
-									</div> *@
-								</div>
-								<div class="form-item">
-									<label asp-for="Img" class="form-label my-3"></label><sup>*</sup>
-									<input asp-for="Img" type="file" class="form-control">
-									<span asp-validation-for="Img" class="text-danger"></span>
-									<input type="hidden" asp-for="@Model.Type" value="Exchange" />
-								</div>
-								<div class="form-item mb-3">
-									<label asp-for="Description" class="form-label my-3"></label><sup>*</sup>
-									<textarea asp-for="Description" type="text" class="form-control" id="summernoteDescription1"></textarea>
-									<span asp-validation-for="Description" class="text-danger"></span>
-								</div>
-								<div style="background-color=gray">
-									<button type="submit" class="btn btn-primary border-secondary py-3 px-4 text-uppercase w-100 text-light">Post</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</form>
-			</div>
+<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		</div>
-	</div>
-	<div id="tab-2" class="tab-pane fade show p-0">
-		<div class="container-fluid py-1">
-			<div class="container py-5">
-				<h1 class="mb-4">Create Sale Post</h1>
-				<form asp-controller="Home" asp-action="Create" enctype="multipart/form-data" id="imageUploadForm">
-					<div class="row">
-						<div class="col-md-12 col-lg-6 col-xl-12">
-							<div class="row">
-								<div class="form-item">
-									<div class="form-item w-100">
-										<label asp-for="@Model.Title" class="form-label my-3"></label><sup>*</sup>
-										<textarea asp-for="@Model.Title" type="text" class="form-control"></textarea>
-										<span asp-validation-for="@Model.Title" class="text-danger"></span>
+		<div class="modal-body">
+
+			<div class="tab-class">
+				<div class="row g-4">
+					<div class="d-flex justify-content-center">
+						<ul class="nav nav-pills d-inline-flex text-center md-1">
+							<li class="nav-item">
+								<a class="d-flex m-2 py-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-1" style="width: 130px; text-decoration: none">
+									<span class="text-dark" style="width: 130px;">Trao đổi</span>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="d-flex py-2 m-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-2" style="width: 130px; text-decoration: none">
+									<span class="text-dark" style="width: 130px;">Mua bán</span>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="tab-content">
+				<div id="tab-1" class="tab-pane fade show p-0 active">
+					<div class="container-fluid py-1">
+						<div class="container py-5">
+							<h1 class="mb-4">Đăng trao đổi</h1>
+							<form asp-controller="Home" asp-action="Create" enctype="multipart/form-data">
+								<div class="row">
+									<div class="col-md-12 col-lg-6 col-xl-12">
+										<div class="row">
+											<div class="form-item">
+												<div class="form-item w-100">
+													<label asp-for="@Model.Title" class="form-label my-3"></label><sup>*</sup>
+													<textarea asp-for="@Model.Title" type="text" class="form-control"></textarea>
+													<span asp-validation-for="@Model.Title" class="text-danger"></span>
+												</div>
+
+												@* @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+												<div class="col-md-10">
+												@Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+												@Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+												</div> *@
+											</div>
+											<div class="form-item">
+												<label asp-for="Img" class="form-label my-3"></label><sup>*</sup>
+												<input asp-for="Img" type="file" class="form-control">
+												<span asp-validation-for="Img" class="text-danger"></span>
+												<input type="hidden" asp-for="@Model.Type" value="Exchange" />
+											</div>
+											<div class="form-item mb-3">
+												<label asp-for="@Model.Description" class="form-label my-3"></label><sup>*</sup>
+												<textarea asp-for="@Model.Description" type="text" class="form-control" id="summernoteDescription1"></textarea>
+												<span asp-validation-for="@Model.Description" class="text-danger"></span>
+												<div class="text-danger">
+													@Html.ValidationMessage("Error")
+												</div>
+											</div>
+											<div style="background-color=gray">
+												<button type="submit" class="btn btn-primary border-secondary py-3 px-4 text-uppercase w-100 text-light">Đăng</button>
+											</div>
+										</div>
 									</div>
 								</div>
-								<div class="form-item">
-									@* <label asp-for="Img" class="control-label"></label>
-									<input asp-for="Img" class="form-control" type="file" >
-									<span asp-validation-for="Img" class="text-danger"></span> *@
-
-									<label asp-for="Img" class="form-label my-3"></label><sup>*</sup>
-									<input asp-for="Img" type="file" class="form-control">
-									<span asp-validation-for="Img" class="text-danger"></span>
-									<input type="hidden" asp-for="@Model.Type" value="Sale" />
-								</div>
-								<div class="form-item">
-									<label asp-for="@Model.Description" class="form-label my-3"></label><sup>*</sup>
-									<textarea asp-for="@Model.Description" type="text" class="form-control" id="summernoteDescription2"></textarea>
-									<span asp-validation-for="@Model.Description" class="text-danger"></span>
-								</div>
-
-								<div class="form-item">
-									<label asp-for="@Model.Quantity" class="form-label my-3"></label><sup>*</sup>
-									<input asp-for="@Model.Quantity" type="number" class="form-control" disabled value="1">
-									<span asp-validation-for="@Model.Quantity" class="text-danger"></span>
-								</div>
-
-								<div class="form-item mb-3">
-									<label asp-for="@Model.Price" class="form-label my-3"></label><sup>*</sup>
-									<input asp-for="@Model.Price" type="text" class="form-control">
-									<span asp-validation-for="@Model.Price" class="text-danger"></span>
-								</div>
-
-								<div style="background-color=gray;">
-									<button type="submit" class="btn btn-primary border-secondary py-3 px-4 text-uppercase w-100 text-light">Post</button>
-								</div>
-							</div>
+							</form>
 						</div>
 					</div>
-				</form>
+				</div>
+				<div id="tab-2" class="tab-pane fade show p-0">
+					<div class="container-fluid py-1">
+						<div class="container py-5">
+							<h1 class="mb-4">Đăng bán</h1>
+							<form asp-controller="Home" asp-action="Create" enctype="multipart/form-data" id="imageUploadForm">
+								<div class="row">
+									<div class="col-md-12 col-lg-6 col-xl-12">
+										<div class="row">
+											<div class="form-item">
+												<div class="form-item w-100">
+													<label asp-for="@Model.Title" class="form-label my-3"></label><sup>*</sup>
+													<textarea asp-for="@Model.Title" type="text" class="form-control"></textarea>
+													<span asp-validation-for="@Model.Title" class="text-danger"></span>
+												</div>
+											</div>
+											<div class="form-item">
+												@* <label asp-for="Img" class="control-label"></label>
+												<input asp-for="Img" class="form-control" type="file" >
+												<span asp-validation-for="Img" class="text-danger"></span> *@
+
+												<label asp-for="Img" class="form-label my-3"></label><sup>*</sup>
+												<input asp-for="Img" type="file" class="form-control">
+												<span asp-validation-for="Img" class="text-danger"></span>
+												<input type="hidden" asp-for="@Model.Type" value="Sale" />
+											</div>
+											<div class="form-item">
+												<label asp-for="@Model.Description" class="form-label my-3"></label><sup>*</sup>
+												<textarea asp-for="@Model.Description" type="text" class="form-control" id="summernoteDescription2"></textarea>
+												<span asp-validation-for="@Model.Description" class="text-danger"></span>
+											</div>
+
+											<div class="form-item">
+												<label asp-for="@Model.Quantity" class="form-label my-3"></label><sup>*</sup>
+												<input asp-for="@Model.Quantity" type="number" class="form-control" disabled value="1">
+												<span asp-validation-for="@Model.Quantity" class="text-danger"></span>
+											</div>
+
+											<div class="form-item mb-3">
+												<label asp-for="@Model.Price" class="form-label my-3"></label><sup>*</sup>
+												<input asp-for="@Model.Price" type="text" class="form-control">
+												<span asp-validation-for="@Model.Price" class="text-danger"></span>
+											</div>
+
+											<div style="background-color=gray;">
+												<button type="submit" class="btn btn-primary border-secondary py-3 px-4 text-uppercase w-100 text-light">Đăng</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
 			</div>
+
 		</div>
 	</div>
 </div>

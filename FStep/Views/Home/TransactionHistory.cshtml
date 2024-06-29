@@ -345,7 +345,7 @@
 																<div class="d-flex flex-column mt-4">
 																	<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm" asp-action="TransactionDetail" asp-controller="Home" asp-route-id="@item.TransactionId">Chi tiết</a>
 
-																	@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.CheckFeedback)
+																	@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && !item.CheckFeedback)
 																	{
 																		<a data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-sm mt-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@item.IdPost" asp-route-idTransaction="@item.TransactionId">
 																			Đánh giá
