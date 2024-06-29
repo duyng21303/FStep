@@ -42,9 +42,7 @@ namespace FStep.Controllers.Customer
         public ActionResult Feedback(FeedbackVM model)
         {
             try
-            {
-                // TODO: Sửa lại nếu người dùng đã đánh giá rồi thì không cho đánh giá nữa
-                // Bổ sung feeback theo trans
+            {                             
                 FeedbackVM info = HttpContext.Session.Get<FeedbackVM>("FEEDBACK_INFO");
                 var feedback = new Feedback();
                 feedback.Content = model.Content;
