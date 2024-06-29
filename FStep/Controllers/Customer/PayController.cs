@@ -104,7 +104,6 @@ namespace FStep.Controllers.Customer
 			transaction.Quantity = info.Quantity;
 			transaction.UnitPrice = info.UnitPrice;
 			transaction.Amount = float.Parse(response.Amount.ToString()) / 100;
-			transaction.Note = info.Note;
 			transaction.IdPost = info.IdPost;
 			transaction.IdUserBuyer = info.IdUserBuyer;
 			transaction.IdUserSeller = info.IdUserSeller;
@@ -116,7 +115,7 @@ namespace FStep.Controllers.Customer
 			var payment = new Payment();
 			payment.PayTime = transaction.Date;
 			payment.Amount = transaction.Amount;
-			payment.ExternalMomoTransactionCode = transaction.CodeTransaction;
+			payment.VnpayTransactionCode = transaction.CodeTransaction;
 			payment.Type = "Buyer";
 			payment.IdTransaction = db.Transactions.SingleOrDefault(p => p.CodeTransaction == transaction.CodeTransaction).IdTransaction;
 			db.Add(payment);
@@ -125,10 +124,7 @@ namespace FStep.Controllers.Customer
 			var product = db.Products.SingleOrDefault(p => p.IdProduct == db.Posts.SingleOrDefault(p => p.IdPost == info.IdPost).IdProduct);
 			var post = db.Posts.SingleOrDefault(p => p.IdPost == info.IdPost);
 			product.Quantity -= info.Quantity;
-			if (product.SoldQuantity == null)
-				product.SoldQuantity = 0;
-			product.SoldQuantity += info.Quantity;
-
+			
 			if (product.Quantity <= 0)
 			{
 				post.Status = "false";

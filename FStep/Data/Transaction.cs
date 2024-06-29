@@ -15,8 +15,6 @@ public partial class Transaction
 
     public float? Amount { get; set; }
 
-    public string? Note { get; set; }
-
     public float? UnitPrice { get; set; }
 
     public int IdPost { get; set; }
@@ -34,6 +32,10 @@ public partial class Transaction
     public string? RecieveImg { get; set; }
 
     public string? SentImg { get; set; }
+
+    public DateTime? ReceivedSellerDate { get; set; }
+
+    public DateTime? SentBuyerDate { get; set; }
 
     public virtual Comment? IdCommentNavigation { get; set; }
 

@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authentication.Google;
 using FStep.ViewModels.Email;
 using FStep.Repostory.Interface;
 using System.Text;
+using NuGet.Protocol;
 
 
 namespace FStep.Controllers.Auth
@@ -147,7 +148,9 @@ namespace FStep.Controllers.Auth
         public IActionResult Profile()
         {
             string userID = User.FindFirstValue("UserID");
-            var user = db.Users.SingleOrDefault(user => user.IdUser == userID);
+            var user = db.Users
+                .Include(u => u.Posts)
+                .SingleOrDefault(user => user.IdUser == userID);
             var profile = new ProfileVM()
             {
                 IdUser = user.IdUser,
@@ -155,8 +158,18 @@ namespace FStep.Controllers.Auth
                 AvatarImg = User.FindFirstValue("IMG"),
                 Email = user.Email,
                 Name = user.Name,
-                Rating = user.Rating,
-                StudentId = user.StudentId
+                Rating = user.PointRating,
+                StudentId = user.StudentId,
+                Posts = user.Posts.Select(p => new PostVM()
+                {
+					IdPost = p.IdPost,
+					Title = p.Content,
+                    Status = p.Status,
+					Description = p.Detail,
+					Img = p.Img,
+					CreateDate = p.Date.HasValue ? p.Date.Value : DateTime.Now
+				}).ToList()
+                
             };
             return View(profile);
         }
@@ -171,7 +184,7 @@ namespace FStep.Controllers.Auth
                 user.Address = model.Address;
                 user.Email = model.Email;
                 user.Name = model.Name;
-                user.Rating = model.Rating;
+                user.PointRating = model.Rating;
                 user.StudentId = model.StudentId;
                 db.Update(user);
                 db.SaveChanges();
