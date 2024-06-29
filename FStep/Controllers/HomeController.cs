@@ -117,7 +117,6 @@ namespace FStep.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Create(PostVM model, IFormFile img)
 		{
-
 			try
 			{
 				var product = _mapper.Map<Product>(model);
@@ -148,7 +147,6 @@ namespace FStep.Controllers
 				Console.WriteLine(ex);
 				ModelState.AddModelError("Error", "Đã xảy ra một số lỗi khi phản hồi yêu cầu của bạn");
 			}
-
 			return View("Create");
 		}
 
@@ -166,7 +164,6 @@ namespace FStep.Controllers
 				transaction = transaction.Where(p => p.IdPostNavigation.Content.Contains(query));
 				//db.Posts.FirstOrDefault(x => x.Content.Contains(query)).IdPost
 			}
-
 			foreach (var x in transaction)
 			{
 				if (DateTime.Now.CompareTo(x.Date?.AddDays(7)) >= 0 && x.Status == "Processing")
