@@ -58,7 +58,7 @@ namespace FStep.Controllers.Auth
                             var user = _mapper.Map<User>(model);
                             user.IdUser = model.username;
                             user.Name = model.email.Split("@")[0];
-                            user.HashKey = Util.GenerateRandomKey();
+                            user.HashKey = Util.GenerateRandomKey(5);
                             user.Password = model.password.ToMd5Hash(user.HashKey);
                             user.Role = "Customer";
                             user.CreateDate = DateTime.Now;
@@ -79,7 +79,7 @@ namespace FStep.Controllers.Auth
         }
         public static string GenerateToken()
         {
-            var pattern = @"ksfjsdkfjhskfnskdfnskdfskvbkxcjvnkcvnosfoxcvnxcivnkjnLSKDLKNGLKFNVLCXNVKCBKJDNGDKOLJVNXCLJVNXLCVN!LSKDFX";
+            var pattern = @"ksfjsdkfjhskfnskdfnskdfskvbkxcjvnkcvnosfoxcvnxcivnkjnLSKDLKNGLKFNVLCXNVKCBKJDNGDKOLJVNXCLJVNXLCVN!sLSKDFX";
             var sb = new StringBuilder();
             var rd = new Random();
             for (int i = 0; i < 5; i++)

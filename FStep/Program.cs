@@ -41,7 +41,6 @@ public class Program
 		});
 		builder.Services.AddTransient<IEmailSender, EmailSender>();
 		builder.Services.AddHostedService<PostExpirationService>();
-
 		builder.Services.AddSignalR();
 		builder.Services.AddSession(options =>
 		{
