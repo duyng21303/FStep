@@ -6,36 +6,36 @@ namespace FStep.ViewModels
 	{
 		public int IdPost { get; set; }
 
-		[Display(Name = "Title")]
-		[Required(ErrorMessage = "This is required")]
+		[Display(Name = "Tiêu đề")]
+		[Required(ErrorMessage = "Bắt buộc")]
 		[MaxLength(250, ErrorMessage = "Maximun 250 characters")]
-		public int? IdProduct { get; set; }
 		public string? Title { get; set; }
-		[Display(Name = "Upload Picture")]
-		[Required(ErrorMessage = "This is required")]
+		public int? IdProduct { get; set; }
+
+		[Display(Name = "Hình ảnh")]
+		[Required(ErrorMessage = "Bắt buộc")]
 		[DataType(DataType.Upload)]
 		[FileExtensions(Extensions = "png,jgp,jpeg,gif")]
         public string Img { get; set; }
 
-		[Display(Name = "Description")]
-		[Required(ErrorMessage = "This is required")]
-		[MaxLength(65500, ErrorMessage = "Exceeds character limit")]
+
+		[Display(Name = "Mô tả")]
+		[Required(ErrorMessage = "Bắt buộc")]
+		[MaxLength(65500, ErrorMessage = "Vượt quá giới hạn ký tự cho phép")]
 		public string? Description { get; set; }
 		public DateTime? CreateDate { get; set; }
 		public string Type { get; set; }
-		[Display(Name = "Name of product")]
-		[Required(ErrorMessage = "This is required")]
-		public string NameProduct { get; set; } = string.Empty;
+		
 
-		[Display(Name = "Quantity")]
-		[Required(ErrorMessage = "This is required")]
+		[Display(Name = "Số lượng")]
+		[Required(ErrorMessage = "Bắt buộc")]
 		public int? Quantity { get; set; }
 
-		[Display(Name = "Unit Price")]
+		[Display(Name = "Giá")]
 		[DataType(DataType.Currency)]
-		[Required(ErrorMessage = "This is required")]
-		public float Price { get; set; }
-		[Display(Name = "Detail information of Product")]
+		[Required(ErrorMessage = "Bắt buộc")]
+		public float? Price { get; set; }
+		[Display(Name = "Thông tin chi tiết sản phẩm")]
 		public string? DetailProduct { get; set; }
 		public string IdUser { get; set; }
 		public int? SoldQuantity { get; set; }

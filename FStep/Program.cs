@@ -16,11 +16,13 @@ using FStep;
 using FStep.Hubs;
 
 
+
 public class Program
 {
 	public static void Main(string[] args)
 	{
 		var builder = WebApplication.CreateBuilder(args);
+
 
 		// Add services to the container.
 		builder.Services.AddControllersWithViews();
@@ -31,14 +33,14 @@ public class Program
 			options.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
 		});
 
-		// Add services to the container.
-		builder.Services.AddControllersWithViews();
-		builder.Services.AddDbContext<FstepDbContext>(option =>
-		{
-			option.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
-		});
-		builder.Services.AddTransient<IEmailSender, EmailSender>();
-		builder.Services.AddHostedService<PostExpirationService>();
+			// Add services to the container.
+			builder.Services.AddControllersWithViews();
+			builder.Services.AddDbContext<FstepDbContext>(option =>
+			{
+				option.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
+			});
+			builder.Services.AddTransient<IEmailSender, EmailSender>();
+			builder.Services.AddHostedService<PostExpirationService>();
 
 		builder.Services.AddSignalR();
 		builder.Services.AddSession(options =>
@@ -48,6 +50,7 @@ public class Program
 			options.Cookie.IsEssential = true;
 		});
 
+
 		builder.Services.AddHttpContextAccessor();
 
 		builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options
@@ -56,7 +59,6 @@ public class Program
 			options.LoginPath = "/Account/Login";
 			options.AccessDeniedPath = "/AccessDenied";
 		});
-
 
 		// Configure Google authentication (if needed)
 		builder.Services.AddAuthentication().AddGoogle(googleOptions =>

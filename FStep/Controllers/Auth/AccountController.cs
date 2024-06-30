@@ -21,6 +21,7 @@ using X.PagedList;
 using System.Data;
 
 
+
 namespace FStep.Controllers.Auth
 {
 	public class AccountController : Controller
@@ -78,20 +79,6 @@ namespace FStep.Controllers.Auth
 							}
 							else
 							{
-								// Determine the role of the user and redirect accordingly
-								//                        var roles = await db.Users.Where(u => u.IdUser == user.IdUser).Select(ur => ur.Role).ToListAsync();
-								//if (roles.Contains("Admin"))
-								//{
-								//	return RedirectToAction("AdminDashboard", "Admin");
-								//}
-								//else if (roles.Contains("Moderator"))
-								//{
-								//	return RedirectToAction("_LayoutModer", "Moderator");
-								//}
-								//else if (roles.Contains("Customer"))
-								//{
-								//	return RedirectToAction("_LayoutCustomer", "Customer");
-								//}
 								return Redirect("/");
 							}
 						}
@@ -129,7 +116,7 @@ namespace FStep.Controllers.Auth
 			string downloadedImgPath = await Util.DownloadImgGoogle(img, userID, "wwwroot/img/userAvar");
 			if (!db.Users.Any(user => user.IdUser == userID))
 			{
-				var haskKey = Util.GenerateRandomKey();
+				var haskKey = Util.GenerateRandomKey(5);
 				var user = new User()
 				{
 					IdUser = userID,
@@ -283,6 +270,7 @@ namespace FStep.Controllers.Auth
 			}
 			return View();
 		}
+
 		public IActionResult ForgetPasswordConfirmation(Response response)
 		{
 
@@ -405,6 +393,47 @@ namespace FStep.Controllers.Auth
 			{
 				Console.WriteLine(ex);
 				TempData["ErrorMessage"] = "Đã xảy ra lỗi khi cập nhật bài đăng của bạn.";
+			}
+			return View(model);
+		}
+
+		// GET: Account/VerifyInfo
+		[HttpGet]
+		[Authorize]
+		public ActionResult VerifyInfo()
+		{
+			return View();
+		}
+
+		// POST: Account/VerifyInfo
+		[HttpPost]
+		public async Task<IActionResult> VerifyInfo(VerifyInfoVM model)
+		{
+			if (ModelState.IsValid)
+			{
+				try
+				{
+					var userId = User.FindFirst("UserID")?.Value;
+					var user = db.Users.FirstOrDefault(p => p.IdUser == userId);
+					if (db.Users.Any(p => p.StudentId == model.StudentId))
+					{
+						ModelState.AddModelError("Error", "MSSV đã được sử dụng");
+					}
+					else
+					{
+						user.StudentId = model.StudentId;
+						//user.BankName = model.BankName;
+						//user.AccountHolderName = model.AccountHolderName;
+						//user.BankAccountNumber = model.AccountNumber;
+						db.Update(user);
+						db.SaveChanges();
+						return RedirectToAction("Profile", "Account");
+					}
+				}
+				catch (Exception ex)
+				{
+					ModelState.AddModelError("Error", "An error occurred while processing your request.");
+				}
 			}
 			return View(model);
 		}

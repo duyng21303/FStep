@@ -7,8 +7,8 @@
 	var comments = ViewData["comments"] as List<CommentVM> ?? new List<CommentVM>();
 	var recommendedPosts = ViewData["recommendedPosts"] as List<Post> ?? new List<Post>();
 	var commentError = TempData["CommentError"] as string;
-	var commentNote = new FStep.ViewModels.Summernote("#commentNote", isLoadScript: false);
 }
+<link rel="stylesheet" href="https://unpkg.com/viewerjs/dist/viewer.css" crossorigin="anonymous">
 <style>
 	html,
 	body {
@@ -461,12 +461,21 @@
 			font-weight: 800;
 		}
 </style>
+<style>
+	.three-dot-180 {
+		display: inline-block;
+		width: 180px;
+		white-space: nowrap;
+		overflow: hidden !important;
+		text-overflow: ellipsis;
+	}
+</style>
 
 <body>
     <div class="container-detail">
         <!-- Left Column / Image -->
         <div class="left-column">
-            <img src="~/img/postPic/@Model.Img" alt="Project Image">
+            <img id="preview-detail-image" src="~/img/postPic/@Model.Img" alt="Project Image" style="cursor: zoom-in">
         </div>
 
         <!-- Right Column -->
@@ -486,22 +495,26 @@
 
     <div class="container">
         <div class="col-md-12">
-            <div class="card b-1 hover-shadow mb-20 full-width">
+            <div class="card b-1	hover-shadow mb-20 full-width">
                 <div class="media card-body">
                     <div class="media-left pr-12">
                         <div class="img">
-                            @if (user.AvatarImg != null)
-                            {
-                                <img class="avatar avatar-xl no-radius" src="~/img/userAvar/@user.AvatarImg" alt="...">
-                            }
-                            else
-                            {
-                                <img class="avatar avatar-xl no-radius" src="~/img/nullAvar/149071.png" alt="...">
-                            }
+							<a asp-action="Detail" asp-route-id="@user.IdUser" asp-controller="User">
+							    @if (user.AvatarImg != null)
+								{
+									<img class="avatar avatar-xl no-radius" src="~/img/userAvar/@user.AvatarImg" alt="...">
+								}
+								else
+								{
+									<img class="avatar avatar-xl no-radius" src="~/img/nullAvar/149071.png" alt="...">
+								}
+						   </a>
                         </div>
                         <div class="name">
                             <div class="mb-2">
-                                <span class="fs-20 pr-16">@user.Name</span>
+								<a asp-action="Detail" asp-route-id="@user.IdUser" asp-controller="User">
+									<span class="fs-20 pr-16">@user.Name</span>
+								</a>
                             </div>
 
                             @if (User.Identity.IsAuthenticated)
@@ -549,7 +562,7 @@
                                 </div>
                                 <div class="media-body">
                                     <div>
-                                        <span class="fs-20 pr-16">@post.Content</span>
+										<span class="fs-20 pr-16 three-dot-180">@post.Content</span>
                                     </div>
                                     <div class="fs-14 text-fade">
                                         <span>Post Date: @post.Date</span>
@@ -575,7 +588,7 @@
             <div class="row g-4">
                 <div class="col-lg-8 text-end">
                     <ul class="nav nav-pills d-inline-flex text-center mb-5">
-						@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser))
+						@if (User.Identity.IsAuthenticated && !User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser))
 						{
 
                         <li class="nav-item">
@@ -660,26 +673,30 @@
                                             <a href="#">@comment.Name</a> <small>@comment.Date?.ToString("dd-MM-yyyy HH:mm:ss")</small>
                                             @if (User.Identity.IsAuthenticated)
                                             {
-                                                @if (comment.Type == "Exchange" && User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser))
+												@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(comment.IdUser))
+												{
+													<button type="button" data-bs-toggle="modal" data-bs-target="#reportComment" class="btn btn-sm btn-danger btn-report" style="float: inline-end;margin-left: 4px;" data-userid="@comment.IdUser" data-post="@comment.IdPost" data-comment="@comment.IdComment">
+														Báo cáo
+													</button>
+												}
+												@if (comment.Type == "Exchange" && User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(comment.IdUser))
                                                 {
 													<span class="labelConfirm exchange">Trao đổi</span>
 													@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(comment.IdUser))
 													{
-													<button type="button"
-
-															class="btn btn-sm btn-primary load-chat-comment-exchange" style="float: inline-end" data-userid="@comment.IdUser" data-post="@comment.IdPost" data-comment="@comment.IdComment">
-														<span>Liên hệ để trao đổi ngay</span>
-													</button>
+														<button type="button" class="btn btn-sm btn-primary load-chat-comment-exchange" style="float: inline-end" data-userid="@comment.IdUser" data-post="@comment.IdPost" data-comment="@comment.IdComment">
+															<span>Liên hệ để trao đổi ngay</span>
+														</button>
 													}
 												}
 												else
 												{
 													@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(comment.IdUser))
 													{
-													<button type="button" class="btn btn-sm btn-primary load-chat-comment" style="float: inline-end" data-userid="@comment.IdUser">
-														<span>Liên hệ với người này</span>
-													</button>
-														}
+														<button type="button" class="btn btn-sm btn-primary load-chat-comment" style="float: inline-end" data-userid="@comment.IdUser">
+															<span>Liên hệ với người này</span>
+														</button>
+													}
 												}
 												<div id="chatContainerComment" style="display: none;">
 													@await Component.InvokeAsync("Chat", @comment.IdUser)
@@ -703,53 +720,178 @@
 				</div>
 			</div>
 		</div>
+		<div class="modal fade" id="reportComment" tabindex="-1" aria-labelledby="reportCommentLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="reportCommentLabel">Báo cáo bình luận</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form id="reportForm">
+							<div class="mb-3">
+								<label for="message-text" class="col-form-label">Lý do:</label>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="reportReason" id="reason1" value="Đánh giá thô tục phản cảm">
+									<label class="form-check-label" for="reason1">
+										Đánh giá thô tục phản cảm
+									</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="reportReason" id="reason2" value="Chứa hình ảnh phản cảm, khỏa thân, khiêu dâm">
+									<label class="form-check-label" for="reason2">
+										Chứa hình ảnh phản cảm, khỏa thân, khiêu dâm
+									</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="reportReason" id="reason3" value="Đánh giá trùng lặp (thông tin rác)">
+									<label class="form-check-label" for="reason3">
+										Đánh giá trùng lặp (thông tin rác)
+									</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="reportReason" id="reason4" value="Chứa thông tin cá nhân">
+									<label class="form-check-label" for="reason4">
+										Chứa thông tin cá nhân
+									</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="reportReason" id="reason5" value="Đánh giá không chính xác / gây hiểu lầm">
+									<label class="form-check-label" for="reason5">
+										Đánh giá không chính xác / gây hiểu lầm
+									</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="reportReason" id="reason6" value="Vi phạm khác">
+									<label class="form-check-label" for="reason6">
+										Vi phạm khác
+									</label>
+								</div>
+								<textarea class="form-control mt-3 d-none" id="message-text" placeholder="Vui lòng mô tả chi tiết vi phạm (bắt buộc)"></textarea>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+						<button type="button" class="btn btn-primary" id="sendReportButton">Gửi báo cáo</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-
-	<script>
-		$(document).ready(function () {
-			$('#commentNote').summernote({
-				height: 200,
-				onImageUpload: function (files, editor, welEditable) {
-					sendFile(files[0], editor, welEditable);
-				}
-			});
-
-			function sendFile(file, editor, welEditable) {
-				data = new FormData();
-				data.append("file", file);
-				$.ajax({
-					data: data,
-					type: "POST",
-					url: "Your URL POST (php)",
-					cache: false,
-					contentType: false,
-					processData: false,
-					success: function (url) {
-						editor.insertImage(welEditable, url);
-					}
-				});
-			}
-		});
-
+	<script src="~/js/site.js"></script>
+	<script
 		document.addEventListener('DOMContentLoaded', function () {
 			var productDescription = document.querySelector('.product-description');
 			var textContainer = productDescription.querySelector('.text');
 			var readMoreLink = productDescription.querySelector('.read-more');
 			var shrinkButton = productDescription.querySelector('.shrink-btn');
 
+			// Check if content overflows
 			if (textContainer.scrollHeight > textContainer.clientHeight) {
 				readMoreLink.style.display = 'inline-block'; // Show "Read more" link if content overflows
+				shrinkButton.style.display = 'none'; // Hide "Collapse" button initially
 
 				readMoreLink.addEventListener('click', function () {
-					if (textContainer.style.maxHeight === 'none') {
-						textContainer.style.maxHeight = '200px'; // Collapse content to initial height
-						readMoreLink.innerText = 'Xem thêm'; // Change link text to "Read more"
-					} else {
-						textContainer.style.maxHeight = 'none'; // Expand content
-						readMoreLink.innerText = 'Thu gọn'; // Change link text to "Collapse"
-					}
+					textContainer.style.maxHeight = 'none'; // Expand content
+					readMoreLink.style.display = 'none'; // Hide "Read more" link
+					shrinkButton.style.display = 'inline-block'; // Show "Collapse" button
 				});
+
+				shrinkButton.addEventListener('click', function () {
+					textContainer.style.maxHeight = '100px'; // Collapse content to initial height
+					readMoreLink.style.display = 'inline-block'; // Show "Read more" link
+					shrinkButton.style.display = 'none'; // Hide "Collapse" button
+				});
+			} else {
+				readMoreLink.style.display = 'none'; // Hide "Read more" link if content does not overflow
 			}
 		});
 	</script>
+	<script>
+		$(document).ready(function () {
+			$('#reportForm input[name="reportReason"]').change(function () {
+				if ($('#reason6').is(':checked')) {
+					$('#message-text').removeClass('d-none');
+				} else {
+					$('#message-text').addClass('d-none');
+				}
+			});
+
+			$('.btn-report').click((e) => {
+				var postId = $('.btn-report').data('post');
+				var commentId = $('.btn-report').data('comment');
+
+				$('#reportForm').data('postid', postId);
+				$('#reportForm').data('commentid', commentId);
+			});
+
+			$('#sendReportButton').click(function () {
+				var reason = $('input[name="reportReason"]:checked').val();
+
+				var additionalComments = $('#message-text').val();
+
+				if (!reason) {
+					alert("Vui lòng chọn vi phạm");
+					return;
+				}
+				if ($('#reason6').is(':checked')) {
+					if (!additionalComments) {
+						Swal.fire({
+							icon: 'error',
+							text: 'Vui lòng nhập mô tả chi tiết vi phạm',
+							showConfirmButton: false,
+						});
+						return;
+					} else {
+						reason += `: ${additionalComments}`;
+					}
+				}
+
+				// Get the bound data
+				var postId = $('#reportForm').data('postid');
+				var commentId = $('#reportForm').data('commentid');
+				var token = $('input[name="__RequestVerificationToken"]').val();
+
+				var reportData = {
+					idPost: postId,
+					idComment: commentId,
+					content: reason
+				};
+
+			    fetch('/Post/ReportComment', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'RequestVerificationToken': token
+					},
+					body: JSON.stringify(reportData)
+				})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+				})
+				.then(data => {
+					Swal.fire({
+						icon: 'success',
+						title: 'Báo cáo đã được gửi!',
+						text: 'Cảm ơn bạn đã báo cáo, chúng tôi sẽ xem xét bình luận này.',
+						showConfirmButton: false,
+					});
+					$('#reportComment').modal('hide');
+					$('#message-text').val('');
+				})
+				.catch(error => {
+					Swal.fire({
+						icon: 'error',
+						text: 'Bạn đã báo cáo bình luận này',
+						showConfirmButton: false,
+					});
+				});
+			});
+
+		});
+	</script>
+
 </body>

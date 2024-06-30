@@ -115,9 +115,9 @@
 										</div>
 										<div class="p-4 border border-secondary border-top-0 rounded-bottom">
 											<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@item.IdPost" style="text-decoration:none">
-												<h4 class="title">@Html.Raw(item.Title)</h4>
+												<h4 class="title" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Title)</h4>
 											</a>
-											<p class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Description)</p>
+											<div class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Description)</div>
 											<p class="price">Price: @String.Format(format, "{0:0,0 VND}", item.Price)</p>
 											<p class="quantity">Quantity: @Html.Raw(item.Quantity)</p>
 											<p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate?.ToString("dd/MM/yyyy")</span></p>
@@ -141,23 +141,25 @@
 </div>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
 
+	@if (ViewBag.checkInfo == "False")
+	{
+		@await Html.PartialAsync("VerifyPopup", new PostVM())
+	}
+	else
+	@if (ViewBag.checkInfo == "True")
+	{
+		@await Html.PartialAsync("Create", new PostVM())
+	}
+	else
+	{
+		@await Html.PartialAsync("LoginPopup", new PostVM())
 
-				@await Html.PartialAsync("Create", new PostVM())
+	}
+	</ div >
+	@* <div class="modal-footer">
+	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	<button type="button" class="btn btn-primary">Save changes</button>
+	</div> *@
 
-
-			</div>
-			@* <div class="modal-footer">
-			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-			<button type="button" class="btn btn-primary">Save changes</button>
-			</div> *@
-		</div>
-	</div>
 </div>

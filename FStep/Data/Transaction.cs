@@ -46,4 +46,6 @@ public partial class Transaction
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+
+    public virtual ICollection<Report> Reports { get; set; } = new List<Report>();
 }

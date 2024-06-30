@@ -7,65 +7,142 @@
 <div>
 	<!-- Header body  -->
 	<div class="container py-5">
-		<!-- Title header body  -->
-		<div class="row align-items-center mb-4 search-header">
-			<div class="col-md-6">
-				<h1 class="exchange-title">Transaction history</h1>
-			</div>
-			<div class="col-md-6">
-				<form asp-action="TransactionHistory" asp-controller="Home" method="get" class="d-flex justify-content-end search-form">
-					<input type="search" class="form-control search-input" placeholder="keywords" name="query">
-					<button class="btn btn-primary search-button" type="submit">
-						<i class="fa fa-search search-icon"></i>
-					</button>
-				</form>
-			</div>
+		<div class="py-3">
+			<h1 class="exchange-title">Lịch sử giao dịch</h1>
 		</div>
-		<!-- End header body -->
-		<!-- Start Content Body-->
-		<div class="row g-4">
-			<div class="col-lg-12">
-				<div class="container-contentboby">
-					<div class="container py-5">
+		<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+			<li class="nav-item" role="presentation">
+				<button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-all" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Tất cả</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-processing" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Chờ giao hàng</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-completed" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Hoàn thành</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-canceled" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Đã huỷ</button>
+			</li>
+		</ul>
+		<div class="tab-content" id="pills-tabContent">
+			<div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-home-tab">
+
+				<div class="row align-items-center mb-4 search-header">
+					<div class="col-md-12">
+						<form asp-action="TransactionHistory" asp-controller="Home" method="get" class="d-flex justify-content-end search-form">
+							<input type="search" class="form-control search-input" placeholder="keywords" name="query">
+							<button class="btn btn-primary search-button" type="submit">
+								<i class="fa fa-search search-icon"></i>
+							</button>
+						</form>
+					</div>
+				</div>
+				<!-- Start Content Body-->
+				<div class="row g-4">
+					<div class="col-lg-12">
 						@foreach (var item in Model)
 						{
-							<div class="row justify-content-center mb-3">
-								<div class="card shadow-0 border rounded-3">
-									<div class="card-body">
-										<div class="col-lg-12">
-											<div class="row">
-												<div class="col-md-6 col-lg-3 col-xl-3 mb-4 mb-lg-0">
-													<div class="fruit-img">
-														<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded" alt="Laptop">
-													</div>
-												</div>
-												<div class="col-md-3 col-lg-6 col-xl-6">
-													<h4>@item.Content</h4>
-													@if (item.TypePost == "Sale")
+							<div class="container-contentboby my-3">
+								<div class="container pt-5">
+									<div class="row">
+										<div class="col-md-9">
+											<div class="name">
+												<div class="mb-2">
+													<span class="fst-italic">Người đăng: </span>
+													<span class="fs-20 pr-16 px-3">@item.SellerName</span>
+
+													@if (User.Identity.IsAuthenticated)
 													{
-														<h6 class="badge bg-danger text-white fw-bold rounded">@item.TypePost</h6>
+														@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(item.IdSeller))
+														{
+															<button type="button" class="btn btn-sm btn-primary load-chat" data-userid="@item.IdSeller">
+																<span>Chat ngay</span>
+															</button>
+														}
+														<div id="chatContainerRaw" style="display: block;">
+															@await Component.InvokeAsync("Chat")
+														</div>
+														<div id="chatContainer" style="display: none;">
+															@await Component.InvokeAsync("Chat", item.IdSeller)
+														</div>
 													}
-													else
-													{
-														<h6 class="badge bg-success text-white fw-bold rounded">@item.TypePost</h6>
-													}
-													<h4 class="mb-1 me-1">@String.Format(format, "{0:0,0 VND}", item.UnitPrice)</h4>
-													<h5 class="text-success text-end"><span>x</span>@item.Quantity</h5>
-													<p class="text-truncate mb-4 mb-md-0">@Html.Raw(item.Detail)</p>
 												</div>
-												<div class="col-md-3 col-lg-3 col-xl-3 border-sm-start-none border-start">
-													<div class="d-flex flex-row align-items-center mb-1">
-														<span>Thành tiền:</span>
-														<h5 class="mb-1 me-1 text-danger mx-2">@String.Format(format, "{0:0,0 VND}", item.Amount)</h5>
-														@* <span class="text-danger"><s>$20.99</s></span> *@
+											</div>
+										</div>
+										<div class="col-md-3">
+											@if (item.Status == "Completed")
+											{
+												<h4 class="fw-bold text-success">
+													@item.Status
+												</h4>
+											}
+											else
+											{
+												<h4 class="text-danger">
+													@item.Status
+												</h4>
+											}
+										</div>
+									</div>
+									<div class="row justify-content-center mb-3">
+										<div class="card shadow-0 border rounded-3">
+											<div class="card-body">
+												<div class="col-lg-12">
+													<div class="row">
+														<div class="col-md-6 col-lg-3 col-xl-3 mb-4 mb-lg-0">
+															<div class="fruit-img">
+																<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded" alt="Laptop">
+															</div>
+														</div>
+														<div class="col-md-3 col-lg-6 col-xl-6">
+															<h4>@item.Content</h4>
+															@if (item.TypePost == "Sale")
+															{
+																<h6 class="badge bg-danger text-white fw-bold rounded">@item.TypePost</h6>
+															}
+															else
+															{
+																<h6 class="badge bg-success text-white fw-bold rounded">@item.TypePost</h6>
+															}
+															<h4 class="mb-1 me-1">@String.Format(format, "{0:0,0 VND}", item.UnitPrice)</h4>
+															<h5 class="text-success text-end"><span>x</span>@item.Quantity</h5>
+															<p class="text-truncate mb-4 mb-md-0">@Html.Raw(item.Detail)</p>
+														</div>
+														<div class="col-md-3 col-lg-3 col-xl-3 border-sm-start-none border-start">
+															<div class="d-flex flex-row align-items-center mb-1">
+																<span>Thành tiền:</span>
+																<h5 class="mb-1 me-1 text-danger mx-2">@String.Format(format, "{0:0,0 VND}", item.Amount)</h5>
+																@* <span class="text-danger"><s>$20.99</s></span> *@
+															</div>
+															<div class="d-flex flex-column mt-4">
+																<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm" asp-action="TransactionDetail" asp-controller="Home" asp-route-id="@item.TransactionId">Chi tiết</a>
+
+																@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.Status == "Completed")
+																{
+																	<a data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-sm mt-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@item.IdPost" asp-route-idTransaction="@item.TransactionId">
+																		Đánh giá
+																	</a>
+																}
+																else
+																{
+																	<button disabled class="btn btn-sm mt-2 bg-dark text-light bg-opacity-50" type="button">
+																		Đánh giá
+																	</button>
+																}
+
+																@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.Status == "Completed")
+																{
+																	<button type="button" data-bs-toggle="modal" data-bs-target="#reportComment" class="btn btn-outline-danger btn-sm mt-2 btn-report" style="float: inline-end;margin-left: 4px;" data-post="@item.IdPost" data-transaction="@item.TransactionId">
+																		Báo cáo
+																	</button>
+																}
+															</div>
+															@if (item.Status == "Completed")
+															{
+																<p class="fst-italic text-end mb-0 mt-5">Đánh giá sản phẩm trước: <span>@item.DeliveryDate?.AddDays(7).ToString("dd/MM/yyyy")</span></p>
+															}
+														</div>
 													</div>
-													<div class="d-flex flex-column mt-4">
-														<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm" asp-action="TransactionDetail" asp-controller="Home" asp-route-id="@item.TransactionId">Details</a>
-														<button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-sm mt-2" type="button">
-															Feedback
-														</button>
-													</div>
-													<p class="fst-italic text-end mb-0 mt-5">Đánh giá sản phẩm trước: <span>@item.CreateDate?.AddDays(7).ToString("dd/MM/yyyy")</span></p>
 												</div>
 											</div>
 										</div>
@@ -73,19 +150,475 @@
 								</div>
 							</div>
 						}
+						<!-- Start of post item column -->
+						<!-- Start Content Body-->
+						<!-- Create relationship between page and page -->
+						@Html.PagedListPager(Model, page => Url.Action("Sale", new { query = ViewBag.Query, page = page }))
+						<!-- End create -->
 					</div>
-					<!-- Start of post item column -->
 				</div>
+				<!-- End Show -->
+
+
+			</div>
+			<div class="tab-pane fade" id="pills-processing" role="tabpanel" aria-labelledby="pills-profile-tab">
+
 				<!-- Start Content Body-->
-				<!-- Create relationship between page and page -->
-				@Html.PagedListPager(Model, page => Url.Action("Sale", new { query = ViewBag.Query, page = page }))
-				<!-- End create -->
+				<div class="row g-4">
+					<div class="col-lg-12">
+						@foreach (var item in Model)
+						{
+							@if (item.Status == "Processing")
+							{
+								<div class="container-contentboby">
+									<div class="container py-5">
+										<div class="row">
+											<div class="col-md-9">
+												<div class="name">
+													<div class="mb-2">
+														<span class="fst-italic">Người đăng: </span>
+														<span class="fs-20 pr-16 px-3">@item.SellerName</span>
+
+														@if (User.Identity.IsAuthenticated)
+														{
+															@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(item.IdSeller))
+															{
+																<button type="button" class="btn btn-sm btn-primary load-chat" data-userid="@item.IdSeller">
+																	<span>Chat ngay</span>
+																</button>
+															}
+															<div id="chatContainerRaw" style="display: block;">
+																@await Component.InvokeAsync("Chat")
+															</div>
+															<div id="chatContainer" style="display: none;">
+																@await Component.InvokeAsync("Chat", item.IdSeller)
+															</div>
+														}
+													</div>
+												</div>
+											</div>
+											<div class="col-md-3">
+												@if (item.Status == "Completed")
+												{
+													<h4 class="fw-bold text-success">
+														@item.Status
+													</h4>
+												}
+												else
+												{
+													<h4 class="text-danger">
+														@item.Status
+													</h4>
+												}
+											</div>
+										</div>
+										<div class="row justify-content-center mb-3">
+											<div class="card shadow-0 border rounded-3">
+												<div class="card-body">
+													<div class="col-lg-12">
+														<div class="row">
+															<div class="col-md-6 col-lg-3 col-xl-3 mb-4 mb-lg-0">
+																<div class="fruit-img">
+																	<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded" alt="Laptop">
+																</div>
+															</div>
+															<div class="col-md-3 col-lg-6 col-xl-6">
+																<h4>@item.Content</h4>
+																@if (item.TypePost == "Sale")
+																{
+																	<h6 class="badge bg-danger text-white fw-bold rounded">@item.TypePost</h6>
+																}
+																else
+																{
+																	<h6 class="badge bg-success text-white fw-bold rounded">@item.TypePost</h6>
+																}
+																<h4 class="mb-1 me-1">@String.Format(format, "{0:0,0 VND}", item.UnitPrice)</h4>
+																<h5 class="text-success text-end"><span>x</span>@item.Quantity</h5>
+																<p class="text-truncate mb-4 mb-md-0">@Html.Raw(item.Detail)</p>
+															</div>
+															<div class="col-md-3 col-lg-3 col-xl-3 border-sm-start-none border-start">
+																<div class="d-flex flex-row align-items-center mb-1">
+																	<span>Thành tiền:</span>
+																	<h5 class="mb-1 me-1 text-danger mx-2">@String.Format(format, "{0:0,0 VND}", item.Amount)</h5>
+																	@* <span class="text-danger"><s>$20.99</s></span> *@
+																</div>
+																<div class="d-flex flex-column mt-4">
+																	<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm" asp-action="TransactionDetail" asp-controller="Home" asp-route-id="@item.TransactionId">Chi tiết</a>
+																	<button disabled class="btn btn-sm mt-2 bg-dark text-light bg-opacity-50" type="button">
+																		Đánh giá
+																	</button>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							}
+						}
+						<!-- Start of post item column -->
+						<!-- Start Content Body-->
+						<!-- Create relationship between page and page -->
+						@Html.PagedListPager(Model, page => Url.Action("Sale", new { query = ViewBag.Query, page = page }))
+						<!-- End create -->
+					</div>
+				</div>
+				<!-- End Show -->
+
+			</div>
+			<div class="tab-pane fade" id="pills-completed" role="tabpanel" aria-labelledby="pills-contact-tab">
+
+				<!-- Start Content Body-->
+				<div class="row g-4">
+					<div class="col-lg-12">
+						@foreach (var item in Model)
+						{
+							@if (item.Status == "Completed")
+							{
+								<div class="container-contentboby">
+									<div class="container py-5">
+										<div class="row">
+											<div class="col-md-9">
+												<div class="name">
+													<div class="mb-2">
+														<span class="fst-italic">Người đăng: </span>
+														<span class="fs-20 pr-16 px-3">@item.SellerName</span>
+
+														@if (User.Identity.IsAuthenticated)
+														{
+															@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(item.IdSeller))
+															{
+																<button type="button" class="btn btn-sm btn-primary load-chat" data-userid="@item.IdSeller">
+																	<span>Chat ngay</span>
+																</button>
+															}
+															<div id="chatContainerRaw" style="display: block;">
+																@await Component.InvokeAsync("Chat")
+															</div>
+															<div id="chatContainer" style="display: none;">
+																@await Component.InvokeAsync("Chat", item.IdSeller)
+															</div>
+														}
+													</div>
+												</div>
+											</div>
+											<div class="col-md-3">
+												@if (item.Status == "Completed")
+												{
+													<h4 class="fw-bold text-success">
+														@item.Status
+													</h4>
+												}
+												else
+												{
+													<h4 class="text-danger">
+														@item.Status
+													</h4>
+												}
+											</div>
+										</div>
+										<div class="row justify-content-center mb-3">
+											<div class="card shadow-0 border rounded-3">
+												<div class="card-body">
+													<div class="col-lg-12">
+														<div class="row">
+															<div class="col-md-6 col-lg-3 col-xl-3 mb-4 mb-lg-0">
+																<div class="fruit-img">
+																	<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded" alt="Laptop">
+																</div>
+															</div>
+															<div class="col-md-3 col-lg-6 col-xl-6">
+																<h4>@item.Content</h4>
+																@if (item.TypePost == "Sale")
+																{
+																	<h6 class="badge bg-danger text-white fw-bold rounded">@item.TypePost</h6>
+																}
+																else
+																{
+																	<h6 class="badge bg-success text-white fw-bold rounded">@item.TypePost</h6>
+																}
+																<h4 class="mb-1 me-1">@String.Format(format, "{0:0,0 VND}", item.UnitPrice)</h4>
+																<h5 class="text-success text-end"><span>x</span>@item.Quantity</h5>
+																<p class="text-truncate mb-4 mb-md-0">@Html.Raw(item.Detail)</p>
+															</div>
+															<div class="col-md-3 col-lg-3 col-xl-3 border-sm-start-none border-start">
+																<div class="d-flex flex-row align-items-center mb-1">
+																	<span>Thành tiền:</span>
+																	<h5 class="mb-1 me-1 text-danger mx-2">@String.Format(format, "{0:0,0 VND}", item.Amount)</h5>
+																	@* <span class="text-danger"><s>$20.99</s></span> *@
+																</div>
+																<div class="d-flex flex-column mt-4">
+																	<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm" asp-action="TransactionDetail" asp-controller="Home" asp-route-id="@item.TransactionId">Chi tiết</a>
+
+																	@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.CheckFeedback)
+																	{
+																		<a data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-sm mt-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@item.IdPost" asp-route-idTransaction="@item.TransactionId">
+																			Đánh giá
+																		</a>
+																	}
+																	else
+																	{
+																		<button disabled class="btn btn-sm mt-2 bg-dark text-light bg-opacity-50" type="button">
+																			Đánh giá
+																		</button>
+																	}
+																</div>
+																<p class="fst-italic text-end mb-0 mt-5">Đánh giá sản phẩm trước: <span>@item.DeliveryDate?.AddDays(7).ToString("dd/MM/yyyy")</span></p>
+
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							}
+						}
+						<!-- Start of post item column -->
+						<!-- Start Content Body-->
+						<!-- Create relationship between page and page -->
+						@Html.PagedListPager(Model, page => Url.Action("Sale", new { query = ViewBag.Query, page = page }))
+						<!-- End create -->
+					</div>
+				</div>
+				<!-- End Show -->
+
+
+			</div>
+			<div class="tab-pane fade" id="pills-canceled" role="tabpanel" aria-labelledby="pills-contact-tab">
+				<!-- Start Content Body-->
+				<div class="row g-4">
+					<div class="col-lg-12">
+						@foreach (var item in Model)
+						{
+							@if (item.Status == "Canceled")
+							{
+								<div class="container-contentboby">
+									<div class="container py-5">
+										<div class="row">
+											<div class="col-md-9">
+												<div class="name">
+													<div class="mb-2">
+														<span class="fst-italic">Người đăng: </span>
+														<span class="fs-20 pr-16 px-3">@item.SellerName</span>
+
+														@if (User.Identity.IsAuthenticated)
+														{
+															@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(item.IdSeller))
+															{
+																<button type="button" class="btn btn-sm btn-primary load-chat" data-userid="@item.IdSeller">
+																	<span>Chat ngay</span>
+																</button>
+															}
+															<div id="chatContainerRaw" style="display: block;">
+																@await Component.InvokeAsync("Chat")
+															</div>
+															<div id="chatContainer" style="display: none;">
+																@await Component.InvokeAsync("Chat", item.IdSeller)
+															</div>
+														}
+													</div>
+												</div>
+											</div>
+											<div class="col-md-3">
+												@if (item.Status == "Completed")
+												{
+													<h4 class="fw-bold text-success">
+														@item.Status
+													</h4>
+												}
+												else
+												{
+													<h4 class="text-danger">
+														@item.Status
+													</h4>
+												}
+											</div>
+										</div>
+										<div class="row justify-content-center mb-3">
+											<div class="card shadow-0 border rounded-3">
+												<div class="card-body">
+													<div class="col-lg-12">
+														<div class="row">
+															<div class="col-md-6 col-lg-3 col-xl-3 mb-4 mb-lg-0">
+																<div class="fruit-img">
+																	<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded" alt="Laptop">
+																</div>
+															</div>
+															<div class="col-md-3 col-lg-6 col-xl-6">
+																<h4>@item.Content</h4>
+																@if (item.TypePost == "Sale")
+																{
+																	<h6 class="badge bg-danger text-white fw-bold rounded">@item.TypePost</h6>
+																}
+																else
+																{
+																	<h6 class="badge bg-success text-white fw-bold rounded">@item.TypePost</h6>
+																}
+																<h4 class="mb-1 me-1">@String.Format(format, "{0:0,0 VND}", item.UnitPrice)</h4>
+																<h5 class="text-success text-end"><span>x</span>@item.Quantity</h5>
+																<p class="text-truncate mb-4 mb-md-0">@Html.Raw(item.Detail)</p>
+															</div>
+															<div class="col-md-3 col-lg-3 col-xl-3 border-sm-start-none border-start">
+																<div class="d-flex flex-row align-items-center mb-1">
+																	<span>Thành tiền:</span>
+																	<h5 class="mb-1 me-1 text-danger mx-2">@String.Format(format, "{0:0,0 VND}", item.Amount)</h5>
+																	@* <span class="text-danger"><s>$20.99</s></span> *@
+																</div>
+																<div class="d-flex flex-column mt-4">
+																	<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm" asp-action="TransactionDetail" asp-controller="Home" asp-route-id="@item.TransactionId">Chi tiết</a>
+																	<button disabled class="btn btn-sm mt-2 bg-dark text-light bg-opacity-50" type="button">
+																		Đánh giá
+																	</button>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							}
+						}
+						<!-- Start of post item column -->
+						<!-- Start Content Body-->
+						<!-- Create relationship between page and page -->
+						@Html.PagedListPager(Model, page => Url.Action("Sale", new { query = ViewBag.Query, page = page }))
+						<!-- End create -->
+					</div>
+				</div>
+				<!-- End Show -->
+
 			</div>
 		</div>
-		<!-- End Show -->
+		<div class="modal fade" id="reportComment" tabindex="-1" aria-labelledby="reportCommentLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="reportCommentLabel">Báo cáo đơn hàng</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form id="reportForm">
+							<div class="mb-3">
+								<label for="message-text" class="col-form-label">Lý do:</label>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="reportReason" id="reason1" value="Sản phẩm kém chất lượng">
+									<label class="form-check-label" for="reason1">
+										Sản phẩm kém chất lượng
+									</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="reportReason" id="reason2" value="Lừa đảo, sai với mô tả">
+									<label class="form-check-label" for="reason2">
+										Lừa đảo, sai với mô tả
+									</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="reportReason" id="reason6" value="Vi phạm khác">
+									<label class="form-check-label" for="reason6">
+										Lý do khác
+									</label>
+								</div>
+								<textarea class="form-control mt-3 d-none" id="message-text" placeholder="Vui lòng mô tả chi tiết (bắt buộc)"></textarea>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+						<button type="button" class="btn btn-primary" id="sendReportButton">Gửi báo cáo</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
+<script>
+	$(document).ready(function () {
+		$('#reportForm input[name="reportReason"]').change(function () {
+			if ($('#reason6').is(':checked')) {
+				$('#message-text').removeClass('d-none');
+			} else {
+				$('#message-text').addClass('d-none');
+			}
+		});
 
+		$('.btn-report').click((e) => {
+			var postId = $('.btn-report').data('post');
+			var transactionId = $('.btn-report').data('transaction');
 
+			$('#reportForm').data('postid', postId);
+			$('#reportForm').data('transactionid', transactionId);
+		});
 
+		$('#sendReportButton').click(function () {
+			var reason = $('input[name="reportReason"]:checked').val();
 
+			var additionalComments = $('#message-text').val();
+
+			if (!reason) {
+				alert("Vui lòng chọn báo cáo");
+				return;
+			}
+			if ($('#reason6').is(':checked')) {
+				if (!additionalComments) {
+					Swal.fire({
+						icon: 'error',
+						text: 'Vui lòng nhập mô tả chi tiết báo cáo',
+						showConfirmButton: false,
+					});
+					return;
+				} else {
+					reason += `: ${additionalComments}`;
+				}
+			}
+
+			// Get the bound data
+			var postId = $('#reportForm').data('postid');
+			var transactionId = $('#reportForm').data('transactionid');
+			var token = $('input[name="__RequestVerificationToken"]').val();
+
+			var reportData = {
+				idPost: postId,
+				idTransaction: transactionId,
+				content: reason
+			};
+
+			fetch('/Post/ReportComment', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'RequestVerificationToken': token
+				},
+				body: JSON.stringify(reportData)
+			})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+				})
+				.then(data => {
+					Swal.fire({
+						icon: 'success',
+						title: 'Báo cáo đã được gửi!',
+						text: 'Cảm ơn bạn đã báo cáo, chúng tôi sẽ xem xét báo cáo này!',
+						showConfirmButton: false,
+					});
+					$('#reportComment').modal('hide');
+					$('#message-text').val('');
+				})
+				.catch(error => {
+					Swal.fire({
+						icon: 'error',
+						text: 'Bạn đã báo cáo đơn hàng này',
+						showConfirmButton: false,
+					});
+				});
+		});
+
+	});
+</script>

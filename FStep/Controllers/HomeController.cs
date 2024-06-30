@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Blazor;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using System.Diagnostics;
 using X.PagedList;
@@ -31,7 +33,7 @@ namespace FStep.Controllers
 			int pageSize = 12; // số lượng sản phẩm mỗi trang 
 			int pageNumber = (page ?? 1);   // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
 			var ExchangePost = db.Posts.AsQueryable();
-			ExchangePost = ExchangePost.Where(p => p.Type == "Exchange" && !(p.Status == "false"));    //check exchangePost là những post thuộc type "exhcange" và có status = 1
+			ExchangePost = ExchangePost.Where(p => p.Type == "Exchange" && p.Status == "true");    //check exchangePost là những post thuộc type "exhcange" và có status = 1
 
 			if (!string.IsNullOrEmpty(query))
 			{
@@ -50,6 +52,18 @@ namespace FStep.Controllers
 			var pageList = result.ToPagedList(pageNumber, pageSize);
 
 			ViewBag.Query = query;
+			string checkInfo;
+			string id = User.FindFirst("UserID")?.Value;
+			if (id != null)
+			{
+				var user = db.Users.FirstOrDefault(p => p.IdUser == id);
+				checkInfo = (user.StudentId != null /*&& user.BankAccountNumber != null && user.BankName != null*/).ToString();
+			}
+			else
+			{
+				checkInfo = "notLogin";
+			}
+			ViewBag.checkInfo = checkInfo;
 			return View(pageList);
 		}
 
@@ -58,7 +72,7 @@ namespace FStep.Controllers
 			int pageSize = 12; // số lượng sản phẩm mỗi trang 
 			int pageNumber = (page ?? 1);  // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
 			var SalePost = db.Posts.AsQueryable();
-			SalePost = SalePost.Where(p => p.Type == "Sale" && !(p.Status == "false"));
+			SalePost = SalePost.Where(p => p.Type == "Sale" && p.Status == "true");
 
 			if (!string.IsNullOrEmpty(query))
 			{
@@ -79,6 +93,18 @@ namespace FStep.Controllers
 			var pageList = result.ToPagedList(pageNumber, pageSize);
 
 			ViewBag.Query = query;
+			string checkInfo;
+			string id = User.FindFirst("UserID")?.Value;
+			if (id != null)
+			{
+				var user = db.Users.FirstOrDefault(p => p.IdUser == id);
+				checkInfo = (user.StudentId != null /*&& user.BankAccountNumber != null && user.BankName != null*/).ToString();
+			}
+			else
+			{
+				checkInfo = "notLogin";
+			}
+			ViewBag.checkInfo = checkInfo;
 			return View(pageList);
 		}
 
@@ -89,12 +115,12 @@ namespace FStep.Controllers
 		}
 		[Authorize]
 		[HttpPost]
-		public ActionResult Create(PostVM model, IFormFile img)
+		public async Task<IActionResult> Create(PostVM model, IFormFile img)
 		{
 			try
 			{
 				var product = _mapper.Map<Product>(model);
-				product.Quantity = model.Quantity;
+				product.Quantity = 1;
 				product.Price = model.Price;
 				product.Status = "true";
 				db.Add(product);
@@ -105,7 +131,7 @@ namespace FStep.Controllers
 				post.Date = DateTime.Now;
 				//Helpers.Util.UpLoadImg(model.Img, "")
 				post.Img = Util.UpLoadImg(img, "postPic");
-				post.Status = "true";
+				post.Status = "false";
 				post.Type = model.Type;
 				post.Detail = model.Description;
 				post.IdUser = User.FindFirst("UserID").Value;
@@ -115,11 +141,13 @@ namespace FStep.Controllers
 				db.SaveChanges();
 				return Redirect("/");
 			}
+
 			catch (Exception ex)
 			{
 				Console.WriteLine(ex);
+				ModelState.AddModelError("Error", "Đã xảy ra một số lỗi khi phản hồi yêu cầu của bạn");
 			}
-			return PartialView("Create");
+			return View("Create");
 		}
 
 		[Authorize]
@@ -136,6 +164,20 @@ namespace FStep.Controllers
 				transaction = transaction.Where(p => p.IdPostNavigation.Content.Contains(query));
 				//db.Posts.FirstOrDefault(x => x.Content.Contains(query)).IdPost
 			}
+			foreach (var x in transaction)
+			{
+				if (DateTime.Now.CompareTo(x.Date?.AddDays(7)) >= 0 && x.Status == "Processing")
+				{
+					x.Status = "Canceled";
+					db.Update(x);
+					var payment = new Payment();
+					payment.PayTime = DateTime.Now;
+					payment.IdTransaction = x.IdTransaction;
+					payment.Type = "Seller";
+					//payment.Status = "Uncussessfully";
+				}
+			}
+			db.SaveChanges();
 			var result = transaction.Select(s => new TransactionVM
 			{
 				TransactionId = s.IdTransaction,
@@ -143,14 +185,19 @@ namespace FStep.Controllers
 				Content = s.IdPostNavigation.Content,
 				Detail = s.IdPostNavigation.Detail,
 				TypePost = s.IdPostNavigation.Type,
-				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now,
+				DeliveryDate = db.Payments.SingleOrDefault(p => p.IdTransaction == s.IdTransaction && p.Type == "Seller").PayTime,
 				Img = s.IdPostNavigation.Img,
+				Status = s.Status,
 				UnitPrice = s.UnitPrice,
 				Quantity = s.Quantity,
 				Amount = s.Amount,
 				IdUserSeller = s.IdUserSeller,
 				CodeTransaction = s.CodeTransaction,
 				UserName = db.Users.FirstOrDefault(p => p.IdUser == s.IdUserBuyer).Name ?? null,
+				IdSeller = s.IdUserSeller,
+				SellerImg = db.Users.SingleOrDefault(p => p.IdUser == s.IdUserSeller).AvatarImg,
+				SellerName = db.Users.SingleOrDefault(p => p.IdUser == s.IdUserSeller).Name,
+				CheckFeedback = (db.Feedbacks.FirstOrDefault(p => p.IdPost == s.IdPost) != null),
 			}).OrderByDescending(o => o.TransactionId);
 
 			var pageList = result.ToPagedList(pageNumber, pageSize);
@@ -162,7 +209,6 @@ namespace FStep.Controllers
 		[HttpGet]
 		public ActionResult TransactionDetail(int id)
 		{
-
 			return View(new TransactionVM()
 			{
 				TransactionId = id,
@@ -170,7 +216,7 @@ namespace FStep.Controllers
 				Content = db.Posts.FirstOrDefault(p => p.IdPost == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdPost).Content,
 				Detail = db.Posts.FirstOrDefault(p => p.IdPost == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdPost).Detail,
 				TypePost = db.Posts.FirstOrDefault(p => p.IdPost == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdPost).Type,
-				CreateDate = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).Date,
+				DeliveryDate = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).Date,
 				Img = db.Posts.FirstOrDefault(p => p.IdPost == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdPost).Img,
 				UnitPrice = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).UnitPrice,
 				Quantity = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).Quantity,

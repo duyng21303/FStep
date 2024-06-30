@@ -35,7 +35,7 @@ namespace FStep.Controllers.Auth
             {
                 try
                 {
-                    //sử dụng Anyđể kiểm tra sự tồn tại.
+                    //sử dụng Any để kiểm tra sự tồn tại.
                     if (db.Users.Any(user => user.IdUser == model.username))
                     {
                         ModelState.AddModelError("Error", "Tên đăng nhập đã tồn tại");
@@ -58,10 +58,12 @@ namespace FStep.Controllers.Auth
                             var user = _mapper.Map<User>(model);
                             user.IdUser = model.username;
                             user.Name = model.email.Split("@")[0];
-                            user.HashKey = Util.GenerateRandomKey();
+                            user.HashKey = Util.GenerateRandomKey(5);
                             user.Password = model.password.ToMd5Hash(user.HashKey);
                             user.Role = "Customer";
                             user.CreateDate = DateTime.Now;
+                            user.PointRating = 50;
+                            user.Status = true;
                             db.Add(user);
                             db.SaveChanges();
 
@@ -75,11 +77,11 @@ namespace FStep.Controllers.Auth
                     ModelState.AddModelError("Error", "An error occurred while processing your request.");
                 }
             }
-            return View(model); ;
+            return View(model);
         }
         public static string GenerateToken()
         {
-            var pattern = @"ksfjsdkfjhskfnskdfnskdfskvbkxcjvnkcvnosfoxcvnxcivnkjnLSKDLKNGLKFNVLCXNVKCBKJDNGDKOLJVNXCLJVNXLCVN!LSKDFX";
+            var pattern = @"ksfjsdkfjhskfnskdfnskdfskvbkxcjvnkcvnosfoxcvnxcivnkjnLSKDLKNGLKFNVLCXNVKCBKJDNGDKOLJVNXCLJVNXLCVN!sLSKDFX";
             var sb = new StringBuilder();
             var rd = new Random();
             for (int i = 0; i < 5; i++)

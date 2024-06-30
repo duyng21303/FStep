@@ -65,7 +65,20 @@ namespace FStep.Helpers
 			}
 			return img.FileName;
 		}
-		public static string GenerateRandomKey(int length = 5)
+		public static string ConvertImgUser(User user)
+		{
+			var img = "";
+			if (user.AvatarImg != null)
+			{
+				img = "userAvar/" + user.AvatarImg;
+			}
+			else
+			{
+				img = "nullAvar/149071.png";
+			}
+			return img;
+		}
+		public static string GenerateRandomKey(int length)
 		{
 			var pattern = @"ksfjsdkfjhskfnskdfnskdfskvbkxcjvnkcvnosfoxcvnxcivnkjnLSKDLKNGLKFNVLCXNVKCBKJDNGDKOLJVNXCLJVNXLCVN!LSKDFX";
 			var sb = new StringBuilder();

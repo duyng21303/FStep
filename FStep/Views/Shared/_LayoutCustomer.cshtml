@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="~/FStep.styles.css" asp-append-version="true" />
 	<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Sedgwick+Ave&display=swap" rel="stylesheet">
+	<link href="~/lib/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">
 </head>
 <body>
 	<header>
@@ -29,27 +30,32 @@
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script> *@
 	<!-- JavaScript Libraries -->
-	<script src="~/lib/jquery/dist/jquery.min.js"></script>
-	<script src="~/lib/jquery/dist/jquery.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-..." crossorigin="anonymous">
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-	<script src="~/js/site.js" asp-append-version="true"></script>
+	<script src="~/lib/sweetalert2/dist/sweetalert2.min.js"></script>
+
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 	<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 	<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 	<script src="https://ajax.googleapis65566.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
-	@* <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script> *@
-	@* <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
-	<script>
-	ClassicEditor
-	.create(document.querySelector('#texteditor'))
-	.catch(error => {
-	console.error(error);
-	});
-	</script> *@
+
+	<!-- jQuery Validation -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+
+
+	@{
+		var summernoteDescription1 = new FStep.ViewModels.Summernote("#summernoteDescription1");
+		var summernoteDescription2 = new FStep.ViewModels.Summernote("#summernoteDescription2", false);
+		//set false for loadLibrary to note load lib again
+	}
+	<partial name="_Summernote" model="summernoteDescription1" />
+	<partial name="_Summernote" model="summernoteDescription2" />
+
 
 	@if (IsSectionDefined("Scripts"))
 	{
