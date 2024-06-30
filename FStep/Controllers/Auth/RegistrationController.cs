@@ -62,6 +62,8 @@ namespace FStep.Controllers.Auth
                             user.Password = model.password.ToMd5Hash(user.HashKey);
                             user.Role = "Customer";
                             user.CreateDate = DateTime.Now;
+                            user.PointRating = 50;
+                            user.Status = true;
                             db.Add(user);
                             db.SaveChanges();
 

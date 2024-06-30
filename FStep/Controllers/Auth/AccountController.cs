@@ -79,20 +79,6 @@ namespace FStep.Controllers.Auth
 							}
 							else
 							{
-								// Determine the role of the user and redirect accordingly
-								//                        var roles = await db.Users.Where(u => u.IdUser == user.IdUser).Select(ur => ur.Role).ToListAsync();
-								//if (roles.Contains("Admin"))
-								//{
-								//	return RedirectToAction("AdminDashboard", "Admin");
-								//}
-								//else if (roles.Contains("Moderator"))
-								//{
-								//	return RedirectToAction("_LayoutModer", "Moderator");
-								//}
-								//else if (roles.Contains("Customer"))
-								//{
-								//	return RedirectToAction("_LayoutCustomer", "Customer");
-								//}
 								return Redirect("/");
 							}
 						}

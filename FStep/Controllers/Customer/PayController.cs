@@ -104,6 +104,7 @@ namespace FStep.Controllers.Customer
 			transaction.Quantity = info.Quantity;
 			transaction.UnitPrice = info.UnitPrice;
 			transaction.Amount = float.Parse(response.Amount.ToString()) / 100;
+
 			transaction.IdPost = info.IdPost;
 			transaction.IdUserBuyer = info.IdUserBuyer;
 			transaction.IdUserSeller = info.IdUserSeller;
@@ -124,6 +125,7 @@ namespace FStep.Controllers.Customer
 			var product = db.Products.SingleOrDefault(p => p.IdProduct == db.Posts.SingleOrDefault(p => p.IdPost == info.IdPost).IdProduct);
 			var post = db.Posts.SingleOrDefault(p => p.IdPost == info.IdPost);
 			product.Quantity -= info.Quantity;
+
 
 			if (product.Quantity <= 0)
 			{
