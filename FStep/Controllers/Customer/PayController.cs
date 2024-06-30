@@ -17,11 +17,11 @@ namespace FStep.Controllers.Customer
 	public class PayController : Controller
 	{
 
-		private readonly FstepDBContext db;
+		private readonly FstepDbContext db;
 		private readonly IMapper _mapper;
 		private readonly IVnPayService _vnPayService;
 
-		public PayController(FstepDBContext context, IMapper mapper, IVnPayService vnPayService)
+		public PayController(FstepDbContext context, IMapper mapper, IVnPayService vnPayService)
 		{
 			db = context;
 			_mapper = mapper;
@@ -104,7 +104,7 @@ namespace FStep.Controllers.Customer
 			transaction.Quantity = info.Quantity;
 			transaction.UnitPrice = info.UnitPrice;
 			transaction.Amount = float.Parse(response.Amount.ToString()) / 100;
-			//transaction.Note = info.Note;
+
 			transaction.IdPost = info.IdPost;
 			transaction.IdUserBuyer = info.IdUserBuyer;
 			transaction.IdUserSeller = info.IdUserSeller;
@@ -125,9 +125,7 @@ namespace FStep.Controllers.Customer
 			var product = db.Products.SingleOrDefault(p => p.IdProduct == db.Posts.SingleOrDefault(p => p.IdPost == info.IdPost).IdProduct);
 			var post = db.Posts.SingleOrDefault(p => p.IdPost == info.IdPost);
 			product.Quantity -= info.Quantity;
-			//if (product.SoldQuantity == null)
-			//	product.SoldQuantity = 0;
-			//product.SoldQuantity += info.Quantity;
+
 
 			if (product.Quantity <= 0)
 			{

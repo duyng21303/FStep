@@ -11,7 +11,6 @@
 				<div class="row">
 					<div class="col-sm-12">
 						<div id="slider-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
-
 							<div class="carousel-inner">
 								<div class="carousel-item active bg-carousel-item">
 									<div class="row align-items-center">
@@ -113,6 +112,11 @@
 												<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost" style="text-decoration:none">
 													<h4 class="title">@Html.Raw(item.Title)</h4>
 												</a>
+												@if(item.Type == "sale")
+												{
+													<div class="post-price">Price: @item.Price</div>
+													<div class="post-quantity">Quantity: @item.Quantity</div>
+												}
 												<div class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Description)</div>
 												<p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate?.ToString("dd/MM/yyyy")</span></p>
 
@@ -132,6 +136,7 @@
 			</div>
 		</div>
 	</div>
+
 
 	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
@@ -153,3 +158,4 @@
 			</div>
 		</div>
 	</div>
+

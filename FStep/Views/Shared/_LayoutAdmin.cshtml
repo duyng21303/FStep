@@ -1,60 +1,63 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - FStep</title>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/FStep.styles.css" asp-append-version="true" />
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Sedgwick+Ave&display=swap" rel="stylesheet">
-    <link href="~/lib/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">
 
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] F-Step</title>
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/FStep.styles.css" asp-append-version="true" />
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Sedgwick+Ave&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        @await Html.PartialAsync("_Header")
-    </header>
+	<header>
+		@await Html.PartialAsync("_Header")
+	</header>
+	<div class="container">
+		<main role="main" class="pb-3">
+			@RenderBody()
+			<div id="alert-container"></div>
+		</main>
+		@if (User.Identity.IsAuthenticated && !Context.Request.Path.StartsWithSegments("/Post/DetailPost") && !Context.Request.Path.StartsWithSegments("/Post/DetailSalePost"))
+		{
+			@await Component.InvokeAsync("Chat")
+		}
+	</div>
+	<footer class="border-top footer text-muted">
 
+		@await Html.PartialAsync("_Footer")
+	</footer>
+	@* <script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script> *@
+	<!-- JavaScript Libraries -->
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/jquery/dist/jquery.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-..." crossorigin="anonymous">
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+	<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+	<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+	<script src="https://ajax.googleapis65566.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-            @if (User.Identity.IsAuthenticated)
-            {
-                @await Component.InvokeAsync("Chat")
-            }
-        </main>
-    </div>
+	@* <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script> *@
+	@* <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+	<script>
+	ClassicEditor
+	.create(document.querySelector('#texteditor'))
+	.catch(error => {
+	console.error(error);
+	});
+	</script> *@
 
-    @* <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script> *@
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-..." crossorigin="anonymous">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
-    <script src="~/lib/sweetalert2/dist/sweetalert2.min.js"></script>
-
-    @* <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
-    <script>
-    ClassicEditor
-    .create(document.querySelector('#texteditor'))
-    .catch(error => {
-    console.error(error);
-    });
-    </script> *@
-
-    @{
-        var summernoteDescription = new FStep.ViewModels.Summernote("#summernoteDescription");
-    }
-    <partial name="_Summernote" model="summernoteDescription" />
-
-    @if (IsSectionDefined("Scripts"))
-    {
-        @await RenderSectionAsync("Scripts", required: false)
-    }
+	@if (IsSectionDefined("Scripts"))
+	{
+		@await RenderSectionAsync("Scripts", required: false)
+	}
 </body>
 
 </html>

@@ -12,10 +12,10 @@ namespace FStep.Controllers.Customer
 {
 	public class PostController : Controller
 	{
-		private readonly FstepDBContext db;
+		private readonly FstepDbContext db;
 		private readonly IMapper _mapper;
 
-		public PostController(FstepDBContext context, IMapper mapper)
+		public PostController(FstepDbContext context, IMapper mapper)
 		{
 			db = context;
 			_mapper = mapper;
@@ -73,7 +73,10 @@ namespace FStep.Controllers.Customer
 			var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
 
 			ViewData["USER_CREATE"] = user;
-
+			if(post.Status == "WaitingExchange")
+			{
+				return Redirect("/");
+			}
 			// lấy thêm comment sản phẩm
 			var comments = db.Comments.Where(x => x.IdPost == id && x.Type != "ExchangeAnonymous").Include(x => x.IdUserNavigation).Select(x => new CommentVM
 			{
@@ -124,6 +127,7 @@ namespace FStep.Controllers.Customer
 				CreateDate = post.Date,
 				Price = post.IdProductNavigation?.Price ?? 0,
 				//SoldQuantity = post.IdProductNavigation?.SoldQuantity ?? 0,
+
 				FeedbackNum = feedback,
 				IdUser = post.IdUser
 			};

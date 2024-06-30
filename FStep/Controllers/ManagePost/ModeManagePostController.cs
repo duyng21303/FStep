@@ -14,9 +14,9 @@ namespace FStep.Controllers.ManagePost
 {
     public class ModeManagePostController : Controller
 	{
-		private readonly FstepDBContext _db;
+		private readonly FstepDbContext _db;
 
-		public ModeManagePostController(FstepDBContext context)
+		public ModeManagePostController(FstepDbContext context)
 		{
 			_db = context;
 		}
@@ -190,13 +190,14 @@ namespace FStep.Controllers.ManagePost
 
 		}
 
-		
+		[Authorize]
+		[HttpPost]
 		public IActionResult FinishPost(int id)
 		{
 			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
 			if (post != null)
 			{
-				post.Status = "false";
+				post.Status = "finish";
 				_db.Posts.Update(post);
 				_db.SaveChanges();
 				TempData["SuccessMessage"] = $"Bài đăng {id} đã được xóa thành công.";

@@ -25,6 +25,7 @@ public partial class Report
 
     public virtual Transaction? IdTransactionNavigation { get; set; }
 
+
     public virtual User? IdUserNavigation { get; set; }
 
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
