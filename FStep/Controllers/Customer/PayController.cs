@@ -129,7 +129,7 @@ namespace FStep.Controllers.Customer
 
 			if (product.Quantity <= 0)
 			{
-				post.Status = "false";
+				post.Status = "hidden";
 				product.Status = "false";
 
 			}
