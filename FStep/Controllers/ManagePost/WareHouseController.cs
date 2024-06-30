@@ -15,10 +15,10 @@ namespace FStep.Controllers.ManagePost
 {
 	public class WareHouseController : Controller
 	{
-		private readonly FstepDBContext db;
+		private readonly FstepDbContext db;
 		private readonly IMapper _mapper;
 
-		public WareHouseController(FstepDBContext context, IMapper mapper)
+		public WareHouseController(FstepDbContext context, IMapper mapper)
 		{
 			db = context;
 			_mapper = mapper;

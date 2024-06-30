@@ -130,7 +130,7 @@ namespace FStep.Controllers.Auth
 			string downloadedImgPath = await Util.DownloadImgGoogle(img, userID, "wwwroot/img/userAvar");
 			if (!db.Users.Any(user => user.IdUser == userID))
 			{
-				var haskKey = Util.GenerateRandomKey();
+				var haskKey = Util.GenerateRandomKey(5);
 				var user = new User()
 				{
 					IdUser = userID,
