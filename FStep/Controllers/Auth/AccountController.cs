@@ -21,6 +21,7 @@ using X.PagedList;
 using System.Data;
 
 
+
 namespace FStep.Controllers.Auth
 {
 	public class AccountController : Controller
@@ -283,6 +284,7 @@ namespace FStep.Controllers.Auth
 			}
 			return View();
 		}
+
 		public IActionResult ForgetPasswordConfirmation(Response response)
 		{
 

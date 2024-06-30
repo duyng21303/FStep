@@ -16,11 +16,13 @@ using FStep;
 using FStep.Hubs;
 
 
+
 public class Program
 {
 	public static void Main(string[] args)
 	{
 		var builder = WebApplication.CreateBuilder(args);
+
 
 		// Add services to the container.
 		builder.Services.AddControllersWithViews();
@@ -39,7 +41,6 @@ public class Program
 		});
 		builder.Services.AddTransient<IEmailSender, EmailSender>();
 		builder.Services.AddHostedService<PostExpirationService>();
-
 		builder.Services.AddSignalR();
 		builder.Services.AddSession(options =>
 		{
@@ -47,6 +48,7 @@ public class Program
 			options.Cookie.HttpOnly = true;
 			options.Cookie.IsEssential = true;
 		});
+
 
 		builder.Services.AddHttpContextAccessor();
 
@@ -56,7 +58,6 @@ public class Program
 			options.LoginPath = "/Account/Login";
 			options.AccessDeniedPath = "/AccessDenied";
 		});
-
 
 		// Configure Google authentication (if needed)
 		builder.Services.AddAuthentication().AddGoogle(googleOptions =>

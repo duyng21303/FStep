@@ -22,11 +22,9 @@ namespace FStep.Helpers
 
             CreateMap<TransactionVM, Transaction>();
 
+			CreateMap<Transaction, TransactionVM>().ForMember(trans => trans.TransactionId, option => option.MapFrom(RegisterVM => RegisterVM.IdTransaction));
 
-			CreateMap<CommentVM, Comment>().ReverseMap();
-			CreateMap<CheckoutVM, Payment>();
-			CreateMap<CheckoutVM, Transaction>();
 		}
 
-    }
+	}
 }
