@@ -63,7 +63,7 @@
 										{
 											<form asp-controller="WareHouse" asp-action="CompleteTransaction" asp-route-code="@item.CodeTransaction">
 											<tr>
-												<td class="post-title">@Html.Raw(item.IdPost)</td>
+												<td class="post-title">@Html.Raw(item.PostVM.IdPost)</td>
 												<td><input name="location" value="@Html.Raw(item.Location)" type="text" /></td>
 												<td style="color:red">@Html.Raw(item.CodeTransaction)</td>
 												<td>@Html.Raw(item.Date)</td>
@@ -143,7 +143,7 @@
 											{
 												<form asp-controller="WareHouse" asp-action="CompleteTransaction" asp-route-code="@item.CodeTransaction">
 												<tr>
-													<td class="post-title">@Html.Raw(item.IdPost)</td>
+													<td class="post-title">@Html.Raw(item.PostVM.IdPost)</td>
 													<td><input name="Location" value="@Html.Raw(item.Location)" type="text" /> </td>
 													<td style="color:red">@Html.Raw(item.CodeTransaction)</td>
 													<td>@Html.Raw(item.Date)</td>
@@ -218,7 +218,7 @@
 											{
 												<form asp-controller="WareHouse" asp-action="CompleteTransaction" asp-route-code="@item.CodeTransaction">
 												<tr>
-													<td class="post-title">@Html.Raw(item.IdPost)</td>
+													<td class="post-title">@Html.Raw(item.PostVM.IdPost)</td>
 													<td><input name="Location" value="@Html.Raw(item.Location)" type="text" /> </td>
 													<td style="color:red">@Html.Raw(item.CodeTransaction)</td>
 													<td>@Html.Raw(item.Date)</td>
@@ -291,7 +291,7 @@
 											{
 												<form asp-controller="WareHouse" asp-action="CompleteTransaction" asp-route-code="@item.CodeTransaction">
 												<tr>
-													<td class="post-title">@Html.Raw(item.IdPost)</td>
+													<td class="post-title">@Html.Raw(item.PostVM.IdPost)</td>
 													<td><input name="Location" value="@Html.Raw(item.Location)" type="text" /> </td>
 													<td style="color:red">@Html.Raw(item.CodeTransaction)</td>
 													<td>@Html.Raw(item.Date)</td>
