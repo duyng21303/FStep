@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 public class DatabaseChangeService
 {
-	private readonly FstepDBContext _context;
+	private readonly FstepDbContext _context;
 	private readonly IHubContext<NotificationHub> _hubContext;
 
-	public DatabaseChangeService(FstepDBContext context, IHubContext<NotificationHub> hubContext)
+	public DatabaseChangeService(FstepDbContext context, IHubContext<NotificationHub> hubContext)
 	{
 		_context = context;
 		_hubContext = hubContext;

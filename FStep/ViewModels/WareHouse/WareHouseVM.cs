@@ -24,4 +24,13 @@ namespace FStep.ViewModels.WareHouse
 		public int FinishCount { get; set; }
 		public int CancelCount { get; set; }
 	}
+    public class WareHouseVM
+    {
+        public IPagedList<WareHouseTransactionVM> ExchangeList { get; set; }
+        public IPagedList<WareHouseTransactionVM> SaleList { get; set; }
+
+        public int ProcessCount { get; set; }
+        public int FinishCount { get; set; }
+        public int CancelCount { get; set; }
+    }
 }

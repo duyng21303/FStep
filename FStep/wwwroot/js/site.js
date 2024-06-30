@@ -749,5 +749,6 @@ $(".testimonial-carousel-2").owlCarousel({
             items: 3
         }
     }
+
 });
 

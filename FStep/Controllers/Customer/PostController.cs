@@ -13,10 +13,10 @@ namespace FStep.Controllers.Customer
 {
 	public class PostController : Controller
 	{
-		private readonly FstepDBContext db;
+		private readonly FstepDbContext db;
 		private readonly IMapper _mapper;
 
-		public PostController(FstepDBContext context, IMapper mapper)
+		public PostController(FstepDbContext context, IMapper mapper)
 		{
 			db = context;
 			_mapper = mapper;
@@ -129,6 +129,7 @@ namespace FStep.Controllers.Customer
 				Description = post.Detail,
 				CreateDate = post.Date,
 				Price = product.Price ?? 0,
+
 				FeedbackNum = feedback,
 				IdUser = post.IdUser
 			};

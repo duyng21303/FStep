@@ -7,22 +7,39 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\**" />
+    <Compile Remove="Area\**" />
     <Compile Remove="Controllers\Admin\**" />
+    <Compile Remove="Controllers\Moder\**" />
     <Compile Remove="ViewComponents\**" />
     <Compile Remove="Views\Shared\Components\**" />
+    <Compile Remove="wwwroot\admin_template_dep\**" />
     <Compile Remove="wwwroot\car-repair-html-template\**" />
+    <Content Remove="Areas\**" />
+    <Content Remove="Area\**" />
     <Content Remove="Controllers\Admin\**" />
+    <Content Remove="Controllers\Moder\**" />
     <Content Remove="ViewComponents\**" />
     <Content Remove="Views\Shared\Components\**" />
+    <Content Remove="wwwroot\admin_template_dep\**" />
     <Content Remove="wwwroot\car-repair-html-template\**" />
+    <EmbeddedResource Remove="Areas\**" />
+    <EmbeddedResource Remove="Area\**" />
     <EmbeddedResource Remove="Controllers\Admin\**" />
+    <EmbeddedResource Remove="Controllers\Moder\**" />
     <EmbeddedResource Remove="ViewComponents\**" />
     <EmbeddedResource Remove="Views\Shared\Components\**" />
+    <EmbeddedResource Remove="wwwroot\admin_template_dep\**" />
     <EmbeddedResource Remove="wwwroot\car-repair-html-template\**" />
+    <None Remove="Areas\**" />
+    <None Remove="Area\**" />
     <None Remove="Controllers\Admin\**" />
+    <None Remove="Controllers\Moder\**" />
     <None Remove="ViewComponents\**" />
     <None Remove="Views\Shared\Components\**" />
+    <None Remove="wwwroot\admin_template_dep\**" />
     <None Remove="wwwroot\car-repair-html-template\**" />
+    <TypeScriptCompile Remove="wwwroot\admin_template_dep\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,6 +70,10 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.4.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
     <PackageReference Include="Quartz" Version="3.9.0" />
     <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.9.0" />
@@ -61,7 +82,6 @@
 
 
 	  <Folder Include="Controllers\Admin\" />
-	  <Folder Include="Controllers\Moder\" />
 	  <Folder Include="wwwroot\detail\css\" />
 	  <Folder Include="wwwroot\img\ReciveImage\" />
 	  <Folder Include="wwwroot\img\pic\" />
@@ -72,16 +92,6 @@
 
   <ItemGroup>
     <None Include="Views\Shared\_Pagination.cshtml" />
-    <None Include="wwwroot\assets\js\custom.js" />
-    <None Include="wwwroot\assets\js\isotope.js" />
-    <None Include="wwwroot\assets\js\isotope.min.js" />
-    <None Include="wwwroot\assets\js\owl-carousel.js" />
-    <None Include="wwwroot\assets\js\popup.js" />
-    <None Include="wwwroot\assets\js\tabs.js" />
-    <None Include="wwwroot\assets\webfonts\fa-brands-400.woff2" />
-    <None Include="wwwroot\assets\webfonts\fa-regular-400.woff2" />
-    <None Include="wwwroot\assets\webfonts\fa-solid-900.woff2" />
-    <None Include="wwwroot\assets\webfonts\fa-v4compatibility.woff2" />
     <None Include="wwwroot\detail\js\scripts.js" />
     <None Include="wwwroot\vendor\bootstrap\js\bootstrap.min.js" />
     <None Include="wwwroot\vendor\jquery\jquery.js" />
