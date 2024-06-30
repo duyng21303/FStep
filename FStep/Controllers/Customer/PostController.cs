@@ -4,18 +4,18 @@ using FStep.Helpers;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using X.PagedList;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FStep.Controllers.Customer
 {
 	public class PostController : Controller
 	{
-		private readonly FstepDBContext db;
+		private readonly FstepDbContext db;
 		private readonly IMapper _mapper;
 
-		public PostController(FstepDBContext context, IMapper mapper)
+		public PostController(FstepDbContext context, IMapper mapper)
 		{
 			db = context;
 			_mapper = mapper;
@@ -73,9 +73,12 @@ namespace FStep.Controllers.Customer
 			var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
 
 			ViewData["USER_CREATE"] = user;
-
+			if(post.Status == "WaitingExchange")
+			{
+				return Redirect("/");
+			}
 			// lấy thêm comment sản phẩm
-			var comments = db.Comments.Where(x => x.IdPost == id).Include(x => x.IdUserNavigation).Select(x => new CommentVM
+			var comments = db.Comments.Where(x => x.IdPost == id && x.Type != "ExchangeAnonymous").Include(x => x.IdUserNavigation).Select(x => new CommentVM
 			{
 				IdPost = id,
 				IdUser = x.IdUser,
@@ -94,9 +97,7 @@ namespace FStep.Controllers.Customer
 		}
 		public IActionResult DetailSalePost(int id)
 		{
-			var post = db.Posts.SingleOrDefault(post => post.IdPost == id);
-
-			var product = db.Products.SingleOrDefault(product => product.IdProduct == post.IdProduct);
+			var post = db.Posts.Include(x => x.IdProductNavigation).SingleOrDefault(post => post.IdPost == id);
 			var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
 
 			var feedback = db.Feedbacks.Count(x => x.IdPost == id);
@@ -120,15 +121,30 @@ namespace FStep.Controllers.Customer
 			{
 				IdPost = post.IdPost,
 				Title = post.Content,
-				Quantity = product.Quantity,
+				Quantity = post.IdProductNavigation?.Quantity,
 				Img = post.Img,
 				Description = post.Detail,
 				CreateDate = post.Date,
-				Price = product.Price ?? 0,
-				SoldQuantity = product.SoldQuantity ?? 0,
+				Price = post.IdProductNavigation?.Price ?? 0,
+				//SoldQuantity = post.IdProductNavigation?.SoldQuantity ?? 0,
+
 				FeedbackNum = feedback,
 				IdUser = post.IdUser
 			};
+
+			var currentProductPrice = post.IdProductNavigation?.Price;
+
+			// Truy vấn các bài đăng chứa sản phẩm đề xuất trong khoảng giá ±1 triệu đồng
+			var recommendedSales = db.Posts
+									 .Include(p => p.IdProductNavigation)
+									 .Include(p => p.IdUserNavigation)
+									 .Where(p => p.IdProductNavigation.Price >= currentProductPrice - 1000000
+												 && p.IdProductNavigation.Price <= currentProductPrice + 1000000
+												 && p.Type == "Sale"
+												 && p.IdPost != id)
+									 .ToList();
+
+			ViewData["recommendedSales"] = recommendedSales;
 
 			return View(result);
 		}
@@ -157,6 +173,7 @@ namespace FStep.Controllers.Customer
 			}
 			return RedirectToAction("DetailPost", "Post", new { id = comment.IdPost });
 		}
+
 		[Authorize]
 		[HttpPost]
 		public IActionResult PostCommentExchange([FromForm] CommentVM comment, IFormFile img)
@@ -187,26 +204,63 @@ namespace FStep.Controllers.Customer
 		{
 			return PartialView();
 		}
+
 		[HttpPost]
 		public async Task<IActionResult> CreateAnonymousExchage(IFormFile img, string content, int idPost)
 		{
 			// Xử lý dữ liệu ở đây, ví dụ: lưu ảnh vào thư mục, lưu thông tin vào database
-			var message = "Nội dung trao đổi đã được gửi.";
-
-			// Ví dụ lưu file vào thư mục
-			if (img != null && img.Length > 0)
+			var currentUser = User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
+			if (currentUser == null)
 			{
-				var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", img.FileName);
-				using (var stream = new FileStream(filePath, FileMode.Create))
-				{
-					await img.CopyToAsync(stream);
-				}
+				return Json(new { success = false, message = "User not authenticated" });
+			}
+			var post = db.Posts.SingleOrDefault(post => post.IdPost == idPost);
+
+			Comment comment = new Comment()
+			{
+				IdPost = idPost,
+				Content = content,
+				Date = DateTime.Now,
+				Img = Util.UpLoadImg(img, "postPic"),
+				Type = "ExchangeAnonymous",
+				IdUser = currentUser
+			};
+			db.Comments.Add(comment);
+			await db.SaveChangesAsync();
+			var latestComment = await db.Comments
+								.Where(c => c.IdPost == idPost)
+								.OrderByDescending(c => c.Date)
+								.FirstOrDefaultAsync();
+			return Json(new { success = true, message = "Exchange created successfully", commentID = latestComment.IdComment, idPost = idPost });
+		}
+
+		[HttpPost]
+		[Authorize]
+		public async Task<IActionResult> ReportComment([FromBody] Report report)
+		{
+			var userId = User.FindFirst("UserID")?.Value;
+			Report? existed = null;
+
+			if (report.IdComment != null)
+			{
+				existed = db.Reports.FirstOrDefault(x => x.IdUser == userId && x.IdComment == report.IdComment);
 			}
 
-			// Lưu thông tin vào database hoặc xử lý logic khác ở đây
+			if (report.IdTransaction != null)
+			{
+				existed = db.Reports.FirstOrDefault(x => x.IdUser == userId && x.IdTransaction == report.IdTransaction);
+			}
 
-			// Trả về JSON để AJAX có thể sử dụng
-			return Json(new { message = message });
+			if (existed != null)
+			{
+				return BadRequest("Existed");
+			}
+
+			report.IdUser = userId;
+			report.Date = DateTime.Now;
+			db.Reports.Add(report);
+			db.SaveChanges();
+			return Ok();
 		}
 	}
 }

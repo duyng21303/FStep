@@ -10,12 +10,12 @@ namespace FStep.Controllers.Auth
 {
     public class RegistrationController : Controller
     {
-        private readonly FstepDBContext db;
+        private readonly FstepDbContext db;
         private readonly IMapper _mapper;
         private readonly IEmailSender emailSender;
         private readonly ILogger<RegistrationController> _logger;
 
-        public RegistrationController(FstepDBContext context, IMapper mapper, IEmailSender emailSender, ILogger<RegistrationController> logger)
+        public RegistrationController(FstepDbContext context, IMapper mapper, IEmailSender emailSender, ILogger<RegistrationController> logger)
 
         {
             db = context;
@@ -58,10 +58,12 @@ namespace FStep.Controllers.Auth
                             var user = _mapper.Map<User>(model);
                             user.IdUser = model.username;
                             user.Name = model.email.Split("@")[0];
-                            user.HashKey = Util.GenerateRandomKey();
+                            user.HashKey = Util.GenerateRandomKey(5);
                             user.Password = model.password.ToMd5Hash(user.HashKey);
                             user.Role = "Customer";
                             user.CreateDate = DateTime.Now;
+                            user.PointRating = 50;
+                            user.Status = true;
                             db.Add(user);
                             db.SaveChanges();
 
@@ -79,7 +81,7 @@ namespace FStep.Controllers.Auth
         }
         public static string GenerateToken()
         {
-            var pattern = @"ksfjsdkfjhskfnskdfnskdfskvbkxcjvnkcvnosfoxcvnxcivnkjnLSKDLKNGLKFNVLCXNVKCBKJDNGDKOLJVNXCLJVNXLCVN!LSKDFX";
+            var pattern = @"ksfjsdkfjhskfnskdfnskdfskvbkxcjvnkcvnosfoxcvnxcivnkjnLSKDLKNGLKFNVLCXNVKCBKJDNGDKOLJVNXCLJVNXLCVN!sLSKDFX";
             var sb = new StringBuilder();
             var rd = new Random();
             for (int i = 0; i < 5; i++)

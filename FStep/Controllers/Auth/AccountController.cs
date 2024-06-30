@@ -16,6 +16,10 @@ using Microsoft.AspNetCore.Authentication.Google;
 using FStep.ViewModels.Email;
 using FStep.Repostory.Interface;
 using System.Text;
+using NuGet.Protocol;
+using X.PagedList;
+using System.Data;
+
 
 
 namespace FStep.Controllers.Auth
@@ -24,10 +28,10 @@ namespace FStep.Controllers.Auth
 	{
 
 		private readonly IMapper _mapper;
-		private readonly FstepDBContext db;
+		private readonly FstepDbContext db;
 		private const string PASSWORD_GOOGLE = "KJDHF";
 		private readonly IEmailSender emailSender;
-		public AccountController(FstepDBContext context, IMapper mapper, IEmailSender emailSender)
+		public AccountController(FstepDbContext context, IMapper mapper, IEmailSender emailSender)
 
 		{
 			db = context;
@@ -112,7 +116,7 @@ namespace FStep.Controllers.Auth
 			string downloadedImgPath = await Util.DownloadImgGoogle(img, userID, "wwwroot/img/userAvar");
 			if (!db.Users.Any(user => user.IdUser == userID))
 			{
-				var haskKey = Util.GenerateRandomKey();
+				var haskKey = Util.GenerateRandomKey(5);
 				var user = new User()
 				{
 					IdUser = userID,
@@ -147,7 +151,9 @@ namespace FStep.Controllers.Auth
 		public IActionResult Profile()
 		{
 			string userID = User.FindFirstValue("UserID");
-			var user = db.Users.SingleOrDefault(user => user.IdUser == userID);
+			var user = db.Users
+				.Include(u => u.Posts)
+				.SingleOrDefault(user => user.IdUser == userID);
 			var profile = new ProfileVM()
 			{
 				IdUser = user.IdUser,
@@ -155,10 +161,39 @@ namespace FStep.Controllers.Auth
 				AvatarImg = User.FindFirstValue("IMG"),
 				Email = user.Email,
 				Name = user.Name,
-				Rating = user.Rating,
-				StudentId = user.StudentId
+				Rating = user.PointRating,
+				StudentId = user.StudentId,
+				Posts = user.Posts.Select(p => new PostVM()
+				{
+					IdPost = p.IdPost,
+					Title = p.Content,
+					Status = p.Status,
+					Description = p.Detail,
+					Img = p.Img,
+					Type = p.Type,
+					CreateDate = p.Date.HasValue ? p.Date.Value : DateTime.Now
+				}).ToList()
+
 			};
 			return View(profile);
+		}
+
+		public IActionResult FinishPost(int id)
+		{
+			var post = db.Posts.FirstOrDefault(p => p.IdPost == id);
+			if (post != null)
+			{
+				post.Status = "finish";
+				db.Posts.Update(post);
+				db.SaveChanges();
+				TempData["SuccessMessage"] = $"Bài đăng {post.Content} đã được xóa thành công.";
+			}
+			else
+			{
+				TempData["ErrorMessage"] = $"Bài đăng {post.Content} không được tìm thấy.";
+			}
+			return RedirectToAction("Profile");
+
 		}
 		[Authorize]
 		[HttpPost]
@@ -171,7 +206,7 @@ namespace FStep.Controllers.Auth
 				user.Address = model.Address;
 				user.Email = model.Email;
 				user.Name = model.Name;
-				user.Rating = model.Rating;
+				user.PointRating = model.Rating;
 				user.StudentId = model.StudentId;
 				db.Update(user);
 				db.SaveChanges();
@@ -206,18 +241,6 @@ namespace FStep.Controllers.Auth
 			catch (Exception ex) { }
 			return View();
 		}
-		[Authorize]
-		[HttpGet]
-		public IActionResult UpdateProfile()
-		{
-			return View();
-		}
-		//[Authorize]
-		//[HttpPost]
-		//public IActionResult UpdateProfile()
-		//{
-		//    return View();
-		//}
 
 		public async Task<IActionResult> ForgetPassword()
 		{
@@ -247,6 +270,7 @@ namespace FStep.Controllers.Auth
 			}
 			return View();
 		}
+
 		public IActionResult ForgetPasswordConfirmation(Response response)
 		{
 
@@ -293,7 +317,7 @@ namespace FStep.Controllers.Auth
 			var pattern = @"ksfjsdkfjhskfnskdfnskdfskvbkxcjvnkcvnosfoxcvnxcivnkjnLSKDLKNGLKFNVLCXNVKCBKJDNGDKOLJVNXCLJVNXLCVN!LSKDFX";
 			var sb = new StringBuilder();
 			var rd = new Random();
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < 10; i++)
 			{
 				sb.Append(pattern[rd.Next(0, pattern.Length)]);
 			}
@@ -302,43 +326,73 @@ namespace FStep.Controllers.Auth
 
 
 
-		// GET: Account/VerifyInfo
 		[HttpGet]
 		[Authorize]
-		public ActionResult VerifyInfo()
+		public IActionResult UpdatePost(int id)
 		{
-			return View();
+			var post = db.Posts
+				.Include(p => p.IdProductNavigation)
+				.FirstOrDefault(p => p.IdPost == id);
+
+			if (post == null)
+			{
+				return NotFound();
+			}
+
+			var postViewModel = new PostVM
+			{
+				IdPost = post.IdPost,
+				Title = post.Content,
+				Img = post.Img,
+				Description = post.Detail,
+				Type = post.Type,
+				Quantity = post.IdProductNavigation.Quantity ?? 1,
+				Price = post.IdProductNavigation.Price ?? 0
+			};
+
+			return View(postViewModel);
 		}
 
-		// POST: Account/VerifyInfo
 		[HttpPost]
-		public async Task<IActionResult> VerifyInfo(VerifyInfoVM model)
+		[Authorize]
+		public IActionResult UpdatePost(PostVM model, IFormFile img)
 		{
-			if (ModelState.IsValid)
+
+			try
 			{
-				try
+				// Lưu thông tin bài đăng
+				var post = db.Posts
+					.Include(p => p.IdProductNavigation)
+					.FirstOrDefault(p => p.IdPost == model.IdPost);
+				if (post == null)
 				{
-					var userId = User.FindFirst("UserID")?.Value;
-					var user = db.Users.FirstOrDefault(p => p.IdUser == userId);
-					if (db.Users.Any(p => p.StudentId == model.StudentId))
-					{
-						ModelState.AddModelError("Error", "MSSV đã được sử dụng");
-					}
-					else
-					{
-						user.StudentId = model.StudentId;
-						//user.BankName = model.BankName;
-						//user.AccountHolderName = model.AccountHolderName;
-						//user.BankAccountNumber = model.AccountNumber;
-						db.Update(user);
-						db.SaveChanges();
-						return RedirectToAction("Profile", "Account");
-					}
+					return NotFound();
 				}
-				catch (Exception ex)
+				else
 				{
-					ModelState.AddModelError("Error", "An error occurred while processing your request.");
+					post.Content = model.Title;
+					post.Date = DateTime.Now;
+					if (img != null)
+					{
+						post.Img = Util.UpLoadImg(img, "postPic"); // Upload và lưu hình ảnh mới
+					}
+					if (post.Type == "Sale" && post.IdProductNavigation != null)
+					{
+						post.IdProductNavigation.Quantity = model.Quantity;
+						post.IdProductNavigation.Price = model.Price;
+					}
+					post.Detail = model.Description;
+					post.Status = "false";
+
+					db.SaveChanges();
+					TempData["SuccessMessage"] = $"Bài đăng của bạn đã được sửa thành công.Chúng tôi sẽ xem duyệt và duyệt!";
+					return RedirectToAction("Profile", "Account");
 				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+				TempData["ErrorMessage"] = "Đã xảy ra lỗi khi cập nhật bài đăng của bạn.";
 			}
 			return View(model);
 		}

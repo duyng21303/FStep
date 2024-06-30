@@ -15,7 +15,9 @@ namespace FStep.ViewModels
 		[Display(Name = "Hình ảnh")]
 		[Required(ErrorMessage = "Bắt buộc")]
 		[DataType(DataType.Upload)]
-		public string Img { get; set; }
+		[FileExtensions(Extensions = "png,jgp,jpeg,gif")]
+        public string Img { get; set; }
+
 
 		[Display(Name = "Mô tả")]
 		[Required(ErrorMessage = "Bắt buộc")]
@@ -38,5 +40,7 @@ namespace FStep.ViewModels
 		public string IdUser { get; set; }
 		public int? SoldQuantity { get; set; }
 		public int? FeedbackNum { get; set; }
+
+		public string? Status { get; set; }
 	}
 }

@@ -117,7 +117,7 @@
 															<div class="d-flex flex-column mt-4">
 																<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm" asp-action="TransactionDetail" asp-controller="Home" asp-route-id="@item.TransactionId">Chi tiết</a>
 
-																@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.Status == "Completed" && !item.CheckFeedback)
+																@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.Status == "Completed")
 																{
 																	<a data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-sm mt-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@item.IdPost" asp-route-idTransaction="@item.TransactionId">
 																		Đánh giá
@@ -127,6 +127,13 @@
 																{
 																	<button disabled class="btn btn-sm mt-2 bg-dark text-light bg-opacity-50" type="button">
 																		Đánh giá
+																	</button>
+																}
+
+																@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.Status == "Completed")
+																{
+																	<button type="button" data-bs-toggle="modal" data-bs-target="#reportComment" class="btn btn-outline-danger btn-sm mt-2 btn-report" style="float: inline-end;margin-left: 4px;" data-post="@item.IdPost" data-transaction="@item.TransactionId">
+																		Báo cáo
 																	</button>
 																}
 															</div>
@@ -345,7 +352,7 @@
 																<div class="d-flex flex-column mt-4">
 																	<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm" asp-action="TransactionDetail" asp-controller="Home" asp-route-id="@item.TransactionId">Chi tiết</a>
 
-																	@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && !item.CheckFeedback)
+																	@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.CheckFeedback)
 																	{
 																		<a data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-sm mt-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@item.IdPost" asp-route-idTransaction="@item.TransactionId">
 																			Đánh giá
@@ -488,7 +495,130 @@
 
 			</div>
 		</div>
-
+		<div class="modal fade" id="reportComment" tabindex="-1" aria-labelledby="reportCommentLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="reportCommentLabel">Báo cáo đơn hàng</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form id="reportForm">
+							<div class="mb-3">
+								<label for="message-text" class="col-form-label">Lý do:</label>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="reportReason" id="reason1" value="Sản phẩm kém chất lượng">
+									<label class="form-check-label" for="reason1">
+										Sản phẩm kém chất lượng
+									</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="reportReason" id="reason2" value="Lừa đảo, sai với mô tả">
+									<label class="form-check-label" for="reason2">
+										Lừa đảo, sai với mô tả
+									</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="reportReason" id="reason6" value="Vi phạm khác">
+									<label class="form-check-label" for="reason6">
+										Lý do khác
+									</label>
+								</div>
+								<textarea class="form-control mt-3 d-none" id="message-text" placeholder="Vui lòng mô tả chi tiết (bắt buộc)"></textarea>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+						<button type="button" class="btn btn-primary" id="sendReportButton">Gửi báo cáo</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
+<script>
+	$(document).ready(function () {
+		$('#reportForm input[name="reportReason"]').change(function () {
+			if ($('#reason6').is(':checked')) {
+				$('#message-text').removeClass('d-none');
+			} else {
+				$('#message-text').addClass('d-none');
+			}
+		});
 
+		$('.btn-report').click((e) => {
+			var postId = $('.btn-report').data('post');
+			var transactionId = $('.btn-report').data('transaction');
+
+			$('#reportForm').data('postid', postId);
+			$('#reportForm').data('transactionid', transactionId);
+		});
+
+		$('#sendReportButton').click(function () {
+			var reason = $('input[name="reportReason"]:checked').val();
+
+			var additionalComments = $('#message-text').val();
+
+			if (!reason) {
+				alert("Vui lòng chọn báo cáo");
+				return;
+			}
+			if ($('#reason6').is(':checked')) {
+				if (!additionalComments) {
+					Swal.fire({
+						icon: 'error',
+						text: 'Vui lòng nhập mô tả chi tiết báo cáo',
+						showConfirmButton: false,
+					});
+					return;
+				} else {
+					reason += `: ${additionalComments}`;
+				}
+			}
+
+			// Get the bound data
+			var postId = $('#reportForm').data('postid');
+			var transactionId = $('#reportForm').data('transactionid');
+			var token = $('input[name="__RequestVerificationToken"]').val();
+
+			var reportData = {
+				idPost: postId,
+				idTransaction: transactionId,
+				content: reason
+			};
+
+			fetch('/Post/ReportComment', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'RequestVerificationToken': token
+				},
+				body: JSON.stringify(reportData)
+			})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+				})
+				.then(data => {
+					Swal.fire({
+						icon: 'success',
+						title: 'Báo cáo đã được gửi!',
+						text: 'Cảm ơn bạn đã báo cáo, chúng tôi sẽ xem xét báo cáo này!',
+						showConfirmButton: false,
+					});
+					$('#reportComment').modal('hide');
+					$('#message-text').val('');
+				})
+				.catch(error => {
+					Swal.fire({
+						icon: 'error',
+						text: 'Bạn đã báo cáo đơn hàng này',
+						showConfirmButton: false,
+					});
+				});
+		});
+
+	});
+</script>

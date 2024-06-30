@@ -386,6 +386,88 @@
 		justify-content: center;
 		align-items: center;
 	}
+
+	.blog-comment::before,
+	.blog-comment::after,
+	.blog-comment-form::before,
+	.blog-comment-form::after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+
+	.blog-comment {
+		padding-left: 8%;
+		padding-right: 5%;
+	}
+
+		.blog-comment ul {
+			list-style-type: none;
+			padding: 0;
+		}
+
+		.blog-comment img {
+			opacity: 1;
+			filter: Alpha(opacity=100);
+			-webkit-border-radius: 4px;
+			-moz-border-radius: 4px;
+			-o-border-radius: 4px;
+			border-radius: 4px;
+		}
+
+			.blog-comment img.avatar {
+				position: relative;
+				float: left;
+				margin-left: 0;
+				margin-top: 0;
+				width: 65px;
+				height: 65px;
+			}
+
+		.blog-comment .post-comments {
+			width: 1000px;
+			border: 1px solid #eee;
+			margin-bottom: 20px;
+			margin-left: 16px;
+			margin-right: 6px;
+			padding: 6px 17px;
+			position: relative;
+			-webkit-border-radius: 4px;
+			-moz-border-radius: 4px;
+			-o-border-radius: 4px;
+			border-radius: 4px;
+			background: #f5f9fc;
+			color: #6b6e80;
+			position: relative;
+		}
+
+		.blog-comment .meta {
+			font-size: 13px;
+			color: #aaaaaa;
+			padding-bottom: 17px;
+			margin-bottom: 10px !important;
+			border-bottom: 1px solid #ccc;
+		}
+
+		.blog-comment ul.comments ul {
+			list-style-type: none;
+			padding: 0;
+			margin-left: 85px;
+		}
+
+	.blog-comment-form {
+		padding-left: 15%;
+		padding-right: 15%;
+		padding-top: 40px;
+	}
+
+		.blog-comment h3,
+		.blog-comment-form h3 {
+			margin-bottom: 40px;
+			font-size: 26px;
+			line-height: 30px;
+			font-weight: 800;
+		}
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
@@ -407,21 +489,21 @@
 				<a class="shrink-btn" href="javascript:void(0)">Thu gọn</a>
 			</div>
 			@* <div class="row">
-			<div class="mb-3 text-muted small">
-			<span>
-			5.0 <span class="text-danger">
-			<i class="fa fa-star"></i>
-			<i class="fa fa-star"></i>
-			<i class="fa fa-star"></i>
-			<i class="fa fa-star"></i>
-			<i class="fa fa-star"></i>
-			</span>
-			</span>
-			<span class="text-primary p-2"> | </span>
-			<span>@Model.FeedbackNum <span>Đánh giá</span></span>
-			<span class="text-primary p-2"> | </span>
-			<span>@Model.SoldQuantity <span>Đã bán</span><br /></span>
-			</div>
+				<div class="mb-3 text-muted small">
+					<span>
+						5.0 <span class="text-danger">
+							<i class="fa fa-star"></i>
+							<i class="fa fa-star"></i>
+							<i class="fa fa-star"></i>
+							<i class="fa fa-star"></i>
+							<i class="fa fa-star"></i>
+						</span>
+					</span>
+					<span class="text-primary p-2"> | </span>
+					<span>@Model.FeedbackNum <span>Đánh giá</span></span>
+					<span class="text-primary p-2"> | </span>
+					<span>@Model.SoldQuantity <span>Đã bán</span><br /></span>
+				</div>
 			</div> *@
 			<!-- Product Pricing -->
 			<div class="product-price">
@@ -432,7 +514,7 @@
 				<div style="min-height:10px;"></div>
 				<div class="d-flex mt-1">
 					<div class="text align-content-lg-center mx-3">Số lượng</div>
-					<input name="quantity" class="form-control text-center" id="inputQuantity" value="@Model.Quantity" disabled style="max-width: 7.5rem; " />
+					<input name="quantity" class="form-control text-center" id="inputQuantity" value="1" disabled style="max-width: 7.5rem; " />
 				</div>
 				<div style="min-height:10px;"></div>
 				@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser) && Model.Quantity != 0)
@@ -481,7 +563,7 @@
 								<div id="chatContainerRaw" style="display: block;">
 									@await Component.InvokeAsync("Chat")
 								</div>
-								<div id="chatContainer" style="display: none;">
+								<div id="chatContainer" style="display: none;"> 
 									@await Component.InvokeAsync("Chat", Model.IdUser)
 								</div>
 							}
@@ -489,7 +571,7 @@
 					</div>
 
 					<div class="media-right text-right d-none d-md-block">
-						<p class="fs-14 text-fade mb-12">Đánh giá: @user.Rating</p>
+						<p class="fs-14 text-fade mb-12">Đánh giá: @user.PointRating</p>
 						<span class="text-fade"><i class="fa fa-money pr-1"></i>@Model.CreateDate</span>
 					</div>
 				</div>
@@ -545,7 +627,7 @@
 											<span>Type: @post.Type</span>
 										</div>
 										<div class="fs-14 text-fade">
-											<span>Rating: @post.IdUserNavigation.Rating</span>
+											<span>Rating: @post.IdUserNavigation.PointRating</span>
 										</div>
 									</div>
 								</a>
@@ -564,44 +646,128 @@
 
 	<!-- Comment Section -->
 	<div class="col-lg-12 mt-3">
-		<h3 class="page-header">Comments</h3>
-		@* TODO: Hiển thị danh sách comments ở đây *@
-
-		@if (!string.IsNullOrEmpty(commentError))
-		{
-			<div class="alert alert-danger" role="alert">
-				@commentError
-			</div>
-		}
-
-		@foreach (var comment in comments.OrderByDescending(c => c.Date))
-		{
-			<div class="product-rating d-flex gap-2 mb-2 p-2">
-				<div class="product-rating__avatar">
-					<img class="rounded-circle me-lg-2 product-rating__avatar-img" src="~/img/@User.FindFirst("IMG")?.Value"
-						 alt="" style="width: 40px; height: 40px;">
-				</div>
-				<div class="product-rating-main">
-					<div class="product-rating__author-name">@comment.Name</div>
-					<div class="product-rating__time">@comment.Date?.ToString("dd-MM-yyyy HH:mm:ss")</div>
-					<div class="product-rating__content">@comment.Content</div>
+		<div class="tab-class">
+			<div class="tab-content">
+				<!-- Tab bình luận thông thường -->
+				<div id="tab-comment" class="tab-pane fade show p-0 active">
+					<div class="inner-column wow fadeInRight card" style="padding: 5px; box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);">
+						<span class="lead">Bình luận</span>
+						<form method="post" asp-action="PostComment" asp-controller="Post">
+							<div>
+								<input name="IdPost" value="@Model.IdPost" type="hidden" />
+								<input name="RedirectUrl" value="DetailPost" type="hidden" />
+								<textarea rows="3" class="form-control" name="Content"></textarea>
+							</div>
+							<div style="min-height:10px;"></div>
+							<div>
+								<button class="btn btn-danger" name="btn-comment">Bình luận</button>
+							</div>
+						</form>
+					</div>
 				</div>
 			</div>
-		}
-		<div class="inner-column wow fadeInRight card"
-			 style="padding : 5px 5px 5px 5px;box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);">
-			<span class="lead">Add your comment</span>
-			<form method="post" asp-action="PostComment" asp-asp-controller="Post" asp-controller="Post">
-				<div>
-					<input name="IdPost" value="@Model.IdPost" type="hidden" />
-					<input name="RedirectUrl" value="DetailPost" type="hidden" />
-					<textarea rows="3" class="form-control" name="Content"></textarea>
+		</div>
+		<div class="container bootstrap snippets bootdey">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="blog-comment">
+						<hr />
+						<ul class="comments">
+							@foreach (var comment in comments.OrderByDescending(c => c.Date))
+							{
+								<li class="clearfix" style="display: flex;">
+									@if (comment.avarImg != null)
+									{
+										<img class="rounded-circle me-lg-2 product-rating__avatar-img" src="~/img/userAvar/@comment.avarImg" alt="" style="width: 40px; height: 40px;">
+									}
+									else
+									{
+										<img class="rounded-circle me-lg-2 product-rating__avatar-img" src="~/img/nullAvar/149071.png" alt="" style="width: 40px; height: 40px;">
+									}
+									<div class="post-comments">
+										<p class="meta">
+											<a href="#">@comment.Name</a> <small>@comment.Date?.ToString("dd-MM-yyyy HH:mm:ss")</small>
+											@if (User.Identity.IsAuthenticated)
+											{
+												@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(comment.IdUser))
+												{
+													<button type="button" data-bs-toggle="modal" data-bs-target="#reportComment" class="btn btn-sm btn-danger btn-report" style="float: inline-end;margin-left: 4px;" data-userid="@comment.IdUser" data-post="@comment.IdPost" data-comment="@comment.IdComment">
+														Báo cáo
+													</button>
+												}
+												<div id="chatContainerComment" style="display: none;">
+													@await Component.InvokeAsync("Chat", @comment.IdUser)
+												</div>
+											}
+										</p>
+										<p style="word-wrap: break-word;">
+											@comment.Content
+										</p>
+									</div>
+								</li>
+							}
+						</ul>
+					</div>
 				</div>
-				<div style="min-height:10px;"></div>
-				<div>
-					<button class="btn btn-danger" name="btn-comment">Comment</button>
+			</div>
+		</div>
+		<div class="modal fade" id="reportComment" tabindex="-1" aria-labelledby="reportCommentLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="reportCommentLabel">Báo cáo bình luận</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form id="reportForm">
+							<div class="mb-3">
+								<label for="message-text" class="col-form-label">Lý do:</label>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="reportReason" id="reason1" value="Đánh giá thô tục phản cảm">
+									<label class="form-check-label" for="reason1">
+										Đánh giá thô tục phản cảm
+									</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="reportReason" id="reason2" value="Chứa hình ảnh phản cảm, khỏa thân, khiêu dâm">
+									<label class="form-check-label" for="reason2">
+										Chứa hình ảnh phản cảm, khỏa thân, khiêu dâm
+									</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="reportReason" id="reason3" value="Đánh giá trùng lặp (thông tin rác)">
+									<label class="form-check-label" for="reason3">
+										Đánh giá trùng lặp (thông tin rác)
+									</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="reportReason" id="reason4" value="Chứa thông tin cá nhân">
+									<label class="form-check-label" for="reason4">
+										Chứa thông tin cá nhân
+									</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="reportReason" id="reason5" value="Đánh giá không chính xác / gây hiểu lầm">
+									<label class="form-check-label" for="reason5">
+										Đánh giá không chính xác / gây hiểu lầm
+									</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="reportReason" id="reason6" value="Vi phạm khác">
+									<label class="form-check-label" for="reason6">
+										Vi phạm khác
+									</label>
+								</div>
+								<textarea class="form-control mt-3 d-none" id="message-text" placeholder="Vui lòng mô tả chi tiết vi phạm (bắt buộc)"></textarea>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+						<button type="button" class="btn btn-primary" id="sendReportButton">Gửi báo cáo</button>
+					</div>
 				</div>
-			</form>
+			</div>
 		</div>
 	</div>
 
@@ -689,6 +855,91 @@
 			nextEl: '.swiper-button-next',
 			prevEl: '.swiper-button-prev',
 		},
-								});
+						});
+	</script>
+	<script>
+		$(document).ready(function () {
+			$('#reportForm input[name="reportReason"]').change(function () {
+				if ($('#reason6').is(':checked')) {
+					$('#message-text').removeClass('d-none');
+				} else {
+					$('#message-text').addClass('d-none');
+				}
+			});
+
+			$('.btn-report').click((e) => {
+				var postId = $('.btn-report').data('post');
+				var commentId = $('.btn-report').data('comment');
+
+				$('#reportForm').data('postid', postId);
+				$('#reportForm').data('commentid', commentId);
+			});
+
+			$('#sendReportButton').click(function () {
+				var reason = $('input[name="reportReason"]:checked').val();
+
+				var additionalComments = $('#message-text').val();
+
+				if (!reason) {
+					alert("Vui lòng chọn vi phạm");
+					return;
+				}
+				if ($('#reason6').is(':checked')) {
+					if (!additionalComments) {
+						Swal.fire({
+							icon: 'error',
+							text: 'Vui lòng nhập mô tả chi tiết vi phạm',
+							showConfirmButton: false,
+						});
+						return;
+					} else {
+						reason += `: ${additionalComments}`;
+					}
+				}
+
+				// Get the bound data
+				var postId = $('#reportForm').data('postid');
+				var commentId = $('#reportForm').data('commentid');
+				var token = $('input[name="__RequestVerificationToken"]').val();
+
+				var reportData = {
+					idPost: postId,
+					idComment: commentId,
+					content: reason
+				};
+
+				fetch('/Post/ReportComment', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'RequestVerificationToken': token
+					},
+					body: JSON.stringify(reportData)
+				})
+					.then(response => {
+						if (!response.ok) {
+							throw new Error('Network response was not ok');
+						}
+					})
+					.then(data => {
+						Swal.fire({
+							icon: 'success',
+							title: 'Báo cáo đã được gửi!',
+							text: 'Cảm ơn bạn đã báo cáo, chúng tôi sẽ xem xét bình luận này.',
+							showConfirmButton: false,
+						});
+						$('#reportComment').modal('hide');
+						$('#message-text').val('');
+					})
+					.catch(error => {
+						Swal.fire({
+							icon: 'error',
+							text: 'Bạn đã báo cáo bình luận này',
+							showConfirmButton: false,
+						});
+					});
+			});
+
+		});
 	</script>
 </body>

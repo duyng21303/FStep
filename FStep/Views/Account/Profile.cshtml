@@ -3,18 +3,8 @@
 	ViewData["Title"] = "Profile";
 }
 
-<div>
-
-	included, to get the result that you can see in the preview selection
-
+<div class="information">
 	<div class="container-xl px-4 mt-4">
-		<!-- Account page navigation-->
-		<nav class="nav nav-borders">
-			<a class="nav-link active ms-0" href="https://www.bootdey.com/snippets/view/bs5-edit-profile-account-details" target="__blank">Profile</a>
-			<a class="nav-link" href="https://www.bootdey.com/snippets/view/bs5-profile-billing-page" target="__blank">Billing</a>
-			<a class="nav-link" href="https://www.bootdey.com/snippets/view/bs5-profile-security-page" target="__blank">Security</a>
-			<a class="nav-link" href="https://www.bootdey.com/snippets/view/bs5-edit-notifications-page" target="__blank">Notifications</a>
-		</nav>
 		<hr class="mt-0 mb-4">
 		<div class="row">
 			<div class="col-xl-4">
@@ -83,4 +73,159 @@
 		</div>
 	</div>
 </div>
+@{
+	var successMessage = TempData["SuccessMessage"] as string;
+	var errorMessage = TempData["ErrorMessage"] as string;
+}
 
+@if (!string.IsNullOrEmpty(successMessage))
+{
+	<div id="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+		@successMessage
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+	<div id="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+		@errorMessage
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+}
+
+<div class="your-post">
+	<div class="container-xl px-4 mt-4">
+		<h3>Your Posts</h3>
+		<div class="row">
+			@foreach (var post in Model.Posts)
+			{
+				<div class="col-md-6 col-lg-4 col-xl-3 mb-4">
+					<!-- Added mb-4 for spacing between rows -->
+					<div class="rounded position-relative fruit-item">
+						<div class="post-img-wrapper">
+							<img src="@Url.Content("~/img/postPic/" + post.Img)" class="img-fluid w-100 rounded-top" alt="Post Image">
+							@if (post.Status != "finish")
+							{
+								<div class="post-actions">
+									<button class="btn btn-sm btn-secondary btn-open-actions">
+										...
+									</button>
+									<div class="post-actions-dropdown">
+										<ul class="list-unstyled">
+											<li><a asp-action="UpdatePost" asp-controller="Account" asp-route-id="@post.IdPost" asp-route-type="@post.Type" class="dropdown-item">Sửa</a></li>
+											<li><a asp-action="FinishPost" asp-controller="Account" asp-route-id="@post.IdPost" class="dropdown-item">Xóa</a></li>
+										</ul>
+									</div>
+								</div>
+							}
+							else
+							{
+								<div class="completed-label">
+									<span class="badge bg-success">Hoàn thành</span>
+								</div>
+							}
+						</div>
+						<div class="p-4 border border-secondary border-top-0 rounded-bottom">
+							<h4 class="title">@Html.Raw(post.Title)</h4>
+
+							<div class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(post.Description)</div>
+							<p class="text-end mb-0 mt-2">Created on: <span>@Html.Raw(post.CreateDate?.ToString("dd/MM/yyyy"))</span></p>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+</div>
+
+<style>
+	.your-post {
+		margin-top: 40px;
+		padding: 20px;
+		border: 1px solid #e3e3e3;
+		border-radius: 10px;
+		background-color: #f9f9f9;
+		box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+	}
+
+	.post-img-wrapper {
+		position: relative;
+		overflow: hidden;
+	}
+
+	.post-actions {
+		position: absolute;
+		top: 10px;
+		right: 10px; /* Điều chỉnh vị trí sang phải */
+		z-index: 1;
+	}
+
+		.post-actions .btn-open-actions {
+			background: none;
+			border: none;
+			color: #000;
+			font-size: 1.5rem;
+			padding: 0;
+			cursor: pointer;
+		}
+
+			.post-actions .btn-open-actions strong {
+				font-weight: bold;
+			}
+
+	.post-actions-dropdown {
+		display: none;
+		position: absolute;
+		top: 0;
+		right: 0; /* Điều chỉnh vị trí sang phải */
+		background-color: #fff;
+		border: 1px solid #ccc;
+		padding: 5px;
+		border-radius: 5px;
+		z-index: 2;
+	}
+
+		.post-actions-dropdown ul {
+			list-style-type: none;
+			padding: 0;
+			margin: 0;
+		}
+
+			.post-actions-dropdown ul li {
+				margin-bottom: 5px;
+			}
+
+				.post-actions-dropdown ul li a {
+					color: #333;
+					text-decoration: none;
+					display: block;
+					padding: 5px;
+				}
+
+					.post-actions-dropdown ul li a:hover {
+						background-color: #f0f0f0;
+					}
+
+	/* Hiển thị dropdown khi hover vào button */
+	.post-actions:hover .post-actions-dropdown {
+		display: block;
+	}
+
+	/* CSS cho nhãn Hoàn thành */
+	.completed-label {
+		position: absolute;
+		top: 10px;
+		right: 10px; /* Điều chỉnh vị trí sang phải */
+		z-index: 1;
+	}
+
+		.completed-label .badge {
+			background-color: #28a745;
+			color: #fff;
+			padding: 5px 10px;
+			border-radius: 5px;
+			font-size: 0.875rem;
+		}
+
+</style>

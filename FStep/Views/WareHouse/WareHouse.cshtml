@@ -335,3 +335,41 @@
 	</div>
 
 </div>
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		// Lấy tất cả các thẻ <tr> có thuộc tính data-id
+		var trs = document.querySelectorAll('tr[data-id][data-type]');
+
+		// Thêm sự kiện click vào mỗi thẻ <tr>
+		trs.forEach(function (tr) {
+			tr.addEventListener('click', function () {
+				if (event.target.tagName.toLowerCase() !== 'input' && event.target.tagName.toLowerCase() !== 'button') {
+
+					// Lấy giá trị của thuộc tính data-id của thẻ <tr> được bấm
+					var itemId = tr.getAttribute('data-id');
+					var itemType = tr.getAttribute('data-type');
+
+					// Gửi yêu cầu AJAX để lấy nội dung view từ server
+					fetch('/WareHouse/DetailTransaction', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify({ id: itemId, type: itemType })  // Chuyển đổi itemId thành một đối tượng JSON
+					})
+						.then(response => response.text())
+						.then(data => {
+							// Điền nội dung vào modal
+							document.getElementById('modal-body-content').innerHTML = data;
+
+							// Hiển thị modal
+							var modal = new bootstrap.Modal(document.getElementById('infoModal'));
+							modal.show();
+						})
+						.catch(error => console.error('Error:', error));
+				}
+			});
+		});
+	});
+
+</script>
