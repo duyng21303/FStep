@@ -14,7 +14,7 @@ namespace FStep.Controllers.Admin
 		private readonly IMapper _mapper;
 		private static readonly string[] defaultRole = new[] { "Customer", "Moderator", "Administrator" };
 
-		public AdminController(FstepDBContext context, IMapper mapper)
+		public AdminController(FstepDbContext context, IMapper mapper)
 
 
 		{
