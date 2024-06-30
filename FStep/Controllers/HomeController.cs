@@ -52,6 +52,18 @@ namespace FStep.Controllers
 			var pageList = result.ToPagedList(pageNumber, pageSize);
 
 			ViewBag.Query = query;
+			string checkInfo;
+			string id = User.FindFirst("UserID")?.Value;
+			if (id != null)
+			{
+				var user = db.Users.FirstOrDefault(p => p.IdUser == id);
+				checkInfo = (user.StudentId != null /*&& user.BankAccountNumber != null && user.BankName != null*/).ToString();
+			}
+			else
+			{
+				checkInfo = "notLogin";
+			}
+			ViewBag.checkInfo = checkInfo;
 			return View(pageList);
 		}
 
@@ -81,6 +93,18 @@ namespace FStep.Controllers
 			var pageList = result.ToPagedList(pageNumber, pageSize);
 
 			ViewBag.Query = query;
+			string checkInfo;
+			string id = User.FindFirst("UserID")?.Value;
+			if (id != null)
+			{
+				var user = db.Users.FirstOrDefault(p => p.IdUser == id);
+				checkInfo = (user.StudentId != null /*&& user.BankAccountNumber != null && user.BankName != null*/).ToString();
+			}
+			else
+			{
+				checkInfo = "notLogin";
+			}
+			ViewBag.checkInfo = checkInfo;
 			return View(pageList);
 		}
 
@@ -91,7 +115,7 @@ namespace FStep.Controllers
 		}
 		[Authorize]
 		[HttpPost]
-		public ActionResult Create(PostVM model, IFormFile img)
+		public async Task<IActionResult> Create(PostVM model, IFormFile img)
 		{
 			try
 			{
@@ -117,11 +141,13 @@ namespace FStep.Controllers
 				db.SaveChanges();
 				return Redirect("/");
 			}
+
 			catch (Exception ex)
 			{
 				Console.WriteLine(ex);
+				ModelState.AddModelError("Error", "Đã xảy ra một số lỗi khi phản hồi yêu cầu của bạn");
 			}
-			return PartialView("Create");
+			return View("Create");
 		}
 
 		[Authorize]
@@ -138,14 +164,13 @@ namespace FStep.Controllers
 				transaction = transaction.Where(p => p.IdPostNavigation.Content.Contains(query));
 				//db.Posts.FirstOrDefault(x => x.Content.Contains(query)).IdPost
 			}
-
 			foreach (var x in transaction)
 			{
 				if (DateTime.Now.CompareTo(x.Date?.AddDays(7)) >= 0 && x.Status == "Processing")
 				{
 					x.Status = "Canceled";
 					db.Update(x);
-					var payment = new Payment(); 
+					var payment = new Payment();
 					payment.PayTime = DateTime.Now;
 					payment.IdTransaction = x.IdTransaction;
 					payment.Type = "Seller";

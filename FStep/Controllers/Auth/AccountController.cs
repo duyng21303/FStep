@@ -396,5 +396,46 @@ namespace FStep.Controllers.Auth
 			}
 			return View(model);
 		}
+
+		// GET: Account/VerifyInfo
+		[HttpGet]
+		[Authorize]
+		public ActionResult VerifyInfo()
+		{
+			return View();
+		}
+
+		// POST: Account/VerifyInfo
+		[HttpPost]
+		public async Task<IActionResult> VerifyInfo(VerifyInfoVM model)
+		{
+			if (ModelState.IsValid)
+			{
+				try
+				{
+					var userId = User.FindFirst("UserID")?.Value;
+					var user = db.Users.FirstOrDefault(p => p.IdUser == userId);
+					if (db.Users.Any(p => p.StudentId == model.StudentId))
+					{
+						ModelState.AddModelError("Error", "MSSV đã được sử dụng");
+					}
+					else
+					{
+						user.StudentId = model.StudentId;
+						//user.BankName = model.BankName;
+						//user.AccountHolderName = model.AccountHolderName;
+						//user.BankAccountNumber = model.AccountNumber;
+						db.Update(user);
+						db.SaveChanges();
+						return RedirectToAction("Profile", "Account");
+					}
+				}
+				catch (Exception ex)
+				{
+					ModelState.AddModelError("Error", "An error occurred while processing your request.");
+				}
+			}
+			return View(model);
+		}
 	}
 }

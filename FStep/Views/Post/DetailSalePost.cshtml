@@ -517,12 +517,18 @@
 					<input name="quantity" class="form-control text-center" id="inputQuantity" value="1" disabled style="max-width: 7.5rem; " />
 				</div>
 				<div style="min-height:10px;"></div>
-				@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser))
+				@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser) && Model.Quantity != 0)
 				{
 					<button type="submit" class="btn btn-outline-secondary text-bg-primary">
-						<div class="mx-4 text-white">Buy now</div>
+						<div class="mx-4 text-white">Mua ngay</div>
 					</button>
 				}
+				else
+				{
+					<button disabled class="btn btn-sm mt-2 bg-dark text-light bg-opacity-50">Mua ngay</button>
+					
+				}
+
 			</form>
 		</div>
 	</div>
@@ -572,6 +578,28 @@
 			</div>
 		</div>
 	</div>
+	<!-- Chat Button -->
+	<div class="mt-2 btn border-secondary text-uppercase text-primary"
+		 style="background-color: gray; text-align: center;">
+		Chat
+	</div>
+	<style>
+		.recommend-post {
+			height: 300px !important;
+			width: 300px !important;
+		}
+
+		.recommend-post-body {
+		}
+
+		.recommend-post-content {
+			display: inline-block;
+			width: 250px;
+			white-space: nowrap;
+			overflow: hidden !important;
+			text-overflow: ellipsis;
+		}
+	</style>
 	<!-- Recommended Posts -->
 	@if (recommendedSales.Count > 0)
 	{

@@ -35,7 +35,7 @@ namespace FStep.Controllers.Auth
             {
                 try
                 {
-                    //sử dụng Anyđể kiểm tra sự tồn tại.
+                    //sử dụng Any để kiểm tra sự tồn tại.
                     if (db.Users.Any(user => user.IdUser == model.username))
                     {
                         ModelState.AddModelError("Error", "Tên đăng nhập đã tồn tại");
@@ -77,7 +77,7 @@ namespace FStep.Controllers.Auth
                     ModelState.AddModelError("Error", "An error occurred while processing your request.");
                 }
             }
-            return View(model); ;
+            return View(model);
         }
         public static string GenerateToken()
         {
