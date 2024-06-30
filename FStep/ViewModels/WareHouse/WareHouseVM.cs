@@ -1,4 +1,5 @@
 ﻿using FStep.Data;
+using X.PagedList;
 
 namespace FStep.ViewModels.WareHouse
 {
@@ -13,5 +14,14 @@ namespace FStep.ViewModels.WareHouse
 		public User? UserSeller { get; set; }
 		public string? Type { get; set; }
 		public string? Location { get; set; }
+	}
+	public class WareHouseServiceVM
+	{
+		public IPagedList<WareHouseVM> ExchangeList { get; set; }
+		public IPagedList<WareHouseVM> SaleList { get; set; }
+
+		public int ProcessCount { get; set; }
+		public int FinishCount { get; set; }
+		public int CancelCount { get; set; }
 	}
 }

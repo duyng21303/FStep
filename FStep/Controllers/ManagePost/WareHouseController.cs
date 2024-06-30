@@ -25,57 +25,59 @@ namespace FStep.Controllers.ManagePost
 		}
 
 		[HttpGet]
-		public IActionResult WareHouse(int? query, int? page)
+		public IActionResult WareHouse(int? page, string searchString, string activeTab = "exchange")
 		{
-			int pageSize = 30;
+			int pageSize = 20;
 			int pageNumber = page ?? 1;
 
-			// Start with transactions
-			var ListTransaction = db.Transactions.AsQueryable();
-
-			// Filter out transactions with null CodeTransaction
-			ListTransaction = ListTransaction.Where(p => p.CodeTransaction != null);
-
-			// Apply additional filtering if query parameter is provided
-			if (query.HasValue && query != 0)
+			try
 			{
-				ListTransaction = ListTransaction.Where(p => p.IdPost == query.Value);
-			}
-			var transactionList = ListTransaction.OrderByDescending(p => p.Date).ToList(); // Load data into memory
-																						   // Create a list to hold the projected ViewModel results
-			List<WareHouseVM> result = new List<WareHouseVM>();
+				// Base query for transactions
+				var listTransactions = db.Transactions.ToList();
 
-			// Project to ViewModel
-			foreach (var item in transactionList)
-			{
-				var post = db.Posts.SingleOrDefault(post => post.IdPost == item.IdPost);
-				var comment = db.Comments.SingleOrDefault(comment => comment.IdComment == item.IdComment);
-				var userBuyer = db.Users.SingleOrDefault(user => user.IdUser == item.IdUserBuyer);
-				var userSeller = db.Users.SingleOrDefault(user => user.IdUser == item.IdUserSeller);
+				// Create separate queries for Exchange and Sale
+				var exchangeTransactions = listTransactions.Where(t => t.Type == "Exchange");
+				var saleTransactions = listTransactions.Where(t => t.Type == "Sale");
 
-				if (post == null)
+				// Apply search filter if searchString is provided
+				if (!string.IsNullOrEmpty(searchString))
 				{
-					continue; // Skip if post is not found
+					searchString = searchString.ToLower();
+					exchangeTransactions = exchangeTransactions.Where(t =>
+						t.IdPostNavigation.Location.ToLower().Contains(searchString) ||
+						t.CodeTransaction.ToLower().Contains(searchString) ||
+						t.IdUserBuyerNavigation.StudentId.ToLower().Contains(searchString) ||
+						t.IdPostNavigation.Content.ToLower().Contains(searchString)
+					);
+
+					saleTransactions = saleTransactions.Where(t =>
+						t.IdPostNavigation.Location.ToLower().Contains(searchString) ||
+						t.CodeTransaction.ToLower().Contains(searchString) ||
+						t.IdUserBuyerNavigation.StudentId.ToLower().Contains(searchString) ||
+						t.IdPostNavigation.Content.ToLower().Contains(searchString)
+					);
 				}
 
-				var postVM = new PostVM
-				{
-					Type = post.Type,
-					Img = post.Img,
-					IdUser = post.IdUser,
-					CreateDate = post.Date,
-					Title = post.Content,
-					DetailProduct = post.Detail,
-					FeedbackNum = post.Feedbacks.Count
-				};
+				// Project to ViewModels
+				var viewModel = new WareHouseServiceVM();
 
-				if (item.Type != "Sale")
+				List<WareHouseVM> exchangeList = new List<WareHouseVM>();
+				foreach (var item in exchangeTransactions)
 				{
-					if (comment == null)
+					var post = db.Posts.SingleOrDefault(post => post.IdPost == item.IdPost);
+					var comment = db.Comments.SingleOrDefault(comment => comment.IdComment == item.IdComment);
+					var userBuyer = db.Users.SingleOrDefault(user => user.IdUser == item.IdUserBuyer);
+					var userSeller = db.Users.SingleOrDefault(user => user.IdUser == item.IdUserSeller);
+					var postVM = new PostVM
 					{
-						continue; // Skip if comment is not found
-					}
-
+						Type = post.Type,
+						Img = post.Img,
+						IdUser = post.IdUser,
+						CreateDate = post.Date,
+						Title = post.Content,
+						DetailProduct = post.Detail,
+						FeedbackNum = post.Feedbacks.Count
+					};
 					var commentExchangeVM = new CommentExchangeVM
 					{
 						Content = comment.Content,
@@ -84,8 +86,7 @@ namespace FStep.Controllers.ManagePost
 						Img = comment.Img,
 						Type = comment.Type
 					};
-
-					result.Add(new WareHouseVM
+					exchangeList.Add(new WareHouseVM()
 					{
 						CommentExchangeVM = commentExchangeVM,
 						PostVM = postVM,
@@ -95,28 +96,52 @@ namespace FStep.Controllers.ManagePost
 						UserSeller = userSeller
 					});
 				}
-				else
+				viewModel.ExchangeList = exchangeList.ToPagedList(pageNumber, pageSize);
+				List<WareHouseVM> saleList = new List<WareHouseVM>();
+				foreach (var item in saleTransactions)
 				{
-					result.Add(new WareHouseVM
+					var post = db.Posts.SingleOrDefault(post => post.IdPost == item.IdPost);
+					var userBuyer = db.Users.SingleOrDefault(user => user.IdUser == item.IdUserBuyer);
+					var userSeller = db.Users.SingleOrDefault(user => user.IdUser == item.IdUserSeller);
+					var postVM = new PostVM
 					{
+						Type = post.Type,
+						Img = post.Img,
+						IdUser = post.IdUser,
+						CreateDate = post.Date,
+						Title = post.Content,
+						DetailProduct = post.Detail,
+						FeedbackNum = post.Feedbacks.Count
+					};
+					saleList.Add(new WareHouseVM()
+					{
+						PostVM = postVM,
 						TransactionVM = _mapper.Map<TransactionVM>(item),
 						Type = item.Type,
-						PostVM = postVM,
 						UserBuyer = userBuyer,
 						UserSeller = userSeller
 					});
 				}
+				viewModel.SaleList = saleList.ToPagedList(pageNumber, pageSize);
+				// Calculate counts for different statuses
+				viewModel.ProcessCount = listTransactions.Count(t => t.Status == "Processing");
+				viewModel.FinishCount = listTransactions.Count(t => t.Status == "Finished");
+				viewModel.CancelCount = listTransactions.Count(t => t.Status == "Cancel");
+
+				// Pass query parameters, searchString, and activeTab to view
+				ViewBag.SearchString = searchString;
+				ViewBag.ActiveTab = activeTab;
+
+				return View(viewModel);
 			}
-
-			// Pagination using PagedList (assuming you have this implementation)
-			var pageList = result.ToPagedList(pageNumber, pageSize);
-
-			// Pass query parameter to view
-			ViewBag.Query = query;
-
-			return View(pageList);
+			catch (Exception ex)
+			{
+				// Log the exception
+				Console.WriteLine("An error occurred: " + ex.Message);
+				Console.WriteLine("Stack Trace: " + ex.StackTrace);
+				return View(new WareHouseServiceVM()); // Return an empty view model in case of error
+			}
 		}
-
 		[HttpGet]
 		public IActionResult CompleteTransaction(string code)
 		{
