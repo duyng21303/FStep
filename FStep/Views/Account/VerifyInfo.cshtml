@@ -1,0 +1,56 @@
+﻿@model FStep.ViewModels.VerifyInfoVM
+@{
+
+}
+<div class="container-contentboby">
+	<div class="container py-5">
+		<h1 class="mb-4">Xác thực thông tin</h1>
+		<form asp-controller="Account" asp-action="VerifyInfo">
+			<div class="row">
+				<div class="col-md-12 col-lg-6 col-xl-12">
+					<div class="row">
+						<div class="form-item">
+							<div class="form-item w-100">
+								<label asp-for="@Model.StudentId" class="form-label my-3"></label><sup>*</sup>
+								<textarea asp-for="@Model.StudentId" type="text" class="form-control" placeholder="Ví dụ: SE123456"></textarea>
+								<span asp-validation-for="@Model.StudentId" class="text-danger"></span>
+							</div>
+							<div class="text-danger">
+								@Html.ValidationMessage("Error")
+							</div>
+						</div>
+						@* <div class="form-item">
+							<div class="form-item w-100">
+								<label asp-for="@Model.BankName" class="form-label my-3"></label><sup>*</sup>
+								<select asp-for="@Model.BankName" class="form-select" aria-label="Default select example">
+									<option selected>TPBANK - Ngân hàng Tiên phong</option>
+									<option value="1">VIETCOMBANK - Ngân hàng TMCP Ngoại Thương Việt Nam</option>
+									<option value="2">VIETINBANK - Ngân hàng Công Thương Việt Nam</option>
+									<option value="3">TECHCOMBANK - Ngân hàng Kỹ thương Việt Nam</option>
+									<option value="4">MB BANK- Ngân hàng Quân Đội</option>
+								</select>	
+							</div>
+						</div>
+						<div class="form-item">
+							<div class="form-item w-100">
+								<label asp-for="@Model.AccountNumber" class="form-label my-3"></label><sup>*</sup>
+								<textarea asp-for="@Model.AccountNumber" type="text" class="form-control"></textarea>
+								<span asp-validation-for="@Model.AccountNumber" class="text-danger"></span>
+							</div>
+						</div>
+						<div class="form-item">
+							<div class="form-item w-100">
+								<label asp-for="@Model.AccountHolderName" class="form-label my-3"></label><sup>*</sup>
+								<textarea asp-for="@Model.AccountHolderName" type="text" class="form-control"></textarea>
+								<span asp-validation-for="@Model.AccountHolderName" class="text-danger"></span>
+							</div>
+						</div> *@
+						<div class="mt-4">
+							<button type="submit" class="btn btn-primary border-secondary py-3 px-4 text-uppercase w-100 text-light">Xác thực</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

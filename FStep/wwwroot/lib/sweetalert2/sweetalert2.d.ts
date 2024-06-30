@@ -1079,7 +1079,7 @@ declare module 'sweetalert2' {
      *
      * @default {}
      */
-    inputOptions?: SyncOrAsync<ReadonlyMap<string, string> | Record<string, any>> | undefined
+
 
     /**
      * Automatically focus the input when popup is shown.
