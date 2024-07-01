@@ -2,6 +2,7 @@
 using Azure.Identity;
 using FStep.Data;
 using FStep.Helpers;
+using FStep.Repostory.Interface;
 using FStep.Services;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +12,7 @@ using Microsoft.CodeAnalysis.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using NuGet.Protocol.Plugins;
+using System.Transactions;
 
 namespace FStep.Controllers.Customer
 {
@@ -19,13 +21,15 @@ namespace FStep.Controllers.Customer
 
 		private readonly FstepDbContext db;
 		private readonly IMapper _mapper;
+		private readonly IEmailSender emailSender;
 		private readonly IVnPayService _vnPayService;
 
-		public PayController(FstepDbContext context, IMapper mapper, IVnPayService vnPayService)
+		public PayController(FstepDbContext context, IMapper mapper, IVnPayService vnPayService, IEmailSender emailSender)
 		{
 			db = context;
 			_mapper = mapper;
 			_vnPayService = vnPayService;
+			this.emailSender = emailSender;
 		}
 		public IActionResult Index()
 		{
@@ -98,7 +102,7 @@ namespace FStep.Controllers.Customer
 			CheckoutVM info = HttpContext.Session.Get<CheckoutVM>("CHECKOUT_INFO");
 
 
-			var transaction = new Transaction();
+			var transaction = new FStep.Data.Transaction();
 			transaction.Date = DateTime.Now;
 			transaction.Status = "Processing";
 			transaction.Quantity = info.Quantity;
@@ -118,27 +122,62 @@ namespace FStep.Controllers.Customer
 			payment.Amount = transaction.Amount;
 			payment.VnpayTransactionCode = transaction.CodeTransaction;
 			payment.Type = "Buyer";
+			payment.Status = "True";
 			payment.IdTransaction = db.Transactions.SingleOrDefault(p => p.CodeTransaction == transaction.CodeTransaction).IdTransaction;
 			db.Add(payment);
 			db.SaveChanges();
 
-			var product = db.Products.SingleOrDefault(p => p.IdProduct == db.Posts.SingleOrDefault(p => p.IdPost == info.IdPost).IdProduct);
 			var post = db.Posts.SingleOrDefault(p => p.IdPost == info.IdPost);
-			product.Quantity -= info.Quantity;
+			var product = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct);
 
 
 			if (product.Quantity <= 0)
 			{
-				post.Status = "hidden";
-				product.Status = "false";
-
+				post.Status = "Trading";
+				product.Status = "False";
 			}
 			db.Update(product);
 			db.SaveChanges();
 
+			var buyer = db.Users.SingleOrDefault(p => p.IdUser == info.IdUserBuyer);
+			var seller = db.Users.SingleOrDefault(p => p.IdUser == info.IdUserSeller);
+
+			//sent email
+			emailSender.EmailSendAsync(buyer.Email, "Đơn hàng của bạn đã được tạo", "Thông tin chi tiết đơn hàng");
+			emailSender.EmailSendAsync(seller.Email, "Sản phẩm của của bạn đã được mua", "Thôn tin chi tiết đơn hàng");
 
 			TempData["Message"] = $"VnPay success";
 			return RedirectToAction("PaymentSuccess");
+		}
+
+		[Authorize]
+		[HttpPost]
+		public IActionResult Cancel(CancelVM model)
+		{
+			var transaction = db.Transactions.SingleOrDefault(p => p.IdTransaction == model.TransactionId);
+			transaction.Status = "Canceled";
+			db.Update(transaction);
+
+			var post = db.Posts.SingleOrDefault(p => p.IdPost == transaction.IdPost);
+			post.Status = "True";
+			db.Update(post);
+
+			var product = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct);
+			product.Status = "True";
+			db.Update(product);
+
+			var payment = new Payment();
+			payment.VnpayTransactionCode = transaction.CodeTransaction;
+			payment.PayTime = DateTime.Now;
+			payment.Type = "Buyer";
+			payment.Status = "False";
+			payment.Note = model.Note;
+			payment.IdTransaction = transaction.IdTransaction;
+			db.Add(payment);
+
+			db.SaveChanges();
+
+			return RedirectToAction("TransactionHistory","Home");
 		}
 
 	}

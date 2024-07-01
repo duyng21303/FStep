@@ -1,10 +1,8 @@
 ﻿@model FStep.ViewModels.TransactionVM
 @{
 	var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+
 }
-
-
-
 <div class="d-flex justify-content-center align-items-center">
 	<div class="card" style="border-radius: 10px;">
 		<div class="card-header px-3 py-3">
@@ -17,19 +15,32 @@
 				{
 					<h5 class="text-muted">Cảm ơn, <span style="color: #3572EF;">@Model.IdUserSeller</span>!</h5>
 				}
-
-				@if (DateTime.Now.CompareTo(Model.DeliveryDate?.AddDays(7)) <= 0)
-				{
-					<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm px-5 py-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@Model.IdPost" asp-route-idTransaction="@Model.TransactionId">
-						Đánh giá
-					</a>
-				}
-				else
-				{
-					<button disabled data-mdb-button-init data-mdb-ripple-init class="btn btn-sm mt-2 bg-dark text-light bg-opacity-50" type="button">
-						Đánh giá
-					</button>
-				}
+				<div>
+					@if (DateTime.Now.CompareTo(Model.DeliveryDate?.AddDays(7)) <= 0 && Model.Status == "Completed")
+					{
+						<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm px-5 py-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@Model.IdPost" asp-route-idTransaction="@Model.TransactionId">
+							Đánh giá
+						</a>
+					}
+					else
+					{
+						<button disabled data-mdb-button-init data-mdb-ripple-init class="btn btn-sm px-5 py-2 bg-dark text-light bg-opacity-50" type="button">
+							Đánh giá
+						</button>
+					}
+					@if (DateTime.Now.CompareTo(Model.CreateDate?.AddDays(3)) <= 0 && Model.Status == "Processing")
+					{
+						<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm px-4 py-2" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" asp-action="Cancel" asp-controller="Feedback" asp-route-idPost="@Model.IdPost" asp-route-idTransaction="@Model.TransactionId">
+							Huỷ đơn hàng
+						</a>
+					}
+					else
+					{
+						<button disabled data-mdb-button-init data-mdb-ripple-init class="btn btn-sm px-4 py-2 bg-dark text-light bg-opacity-50" type="button">
+							Huỷ đơn hàng
+						</button>
+					}
+				</div>
 			</div>
 		</div>
 		<div class="card-body row p-4">
@@ -86,10 +97,14 @@
 			</h5>
 		</div>
 	</div>
-
-
 </div>
 
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	@await Html.PartialAsync("Cancel", new CancelVM()
+	{
+		TransactionId = Model.TransactionId
+	})
+</div>
 
 
 

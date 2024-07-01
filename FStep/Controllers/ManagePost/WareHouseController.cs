@@ -148,14 +148,23 @@ namespace FStep.Controllers.ManagePost
 			var transaction = db.Transactions.FirstOrDefault(p => p.CodeTransaction == code);
 			transaction.Status = "Completed";
 			db.Update(transaction);
-			db.SaveChanges();
 
 			var payment = new Payment();
 			payment.IdTransaction = transaction.IdTransaction;
 			payment.PayTime = DateTime.Now;
 			payment.Amount = transaction.Amount;
+			payment.Status = "True";
 			payment.Type = "Seller";
 			db.Add(payment);
+
+			var post = db.Posts.FirstOrDefault(p => p.IdPost == transaction.IdPost);
+			post.Status = "False";
+			db.Update(post);
+
+			var product = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct);
+			product.Status = "False";
+			db.Update(product);
+
 			db.SaveChanges();
 
 			return RedirectToAction("WareHouse");

@@ -101,28 +101,54 @@
 								<!-- Start of post item column -->
 								@foreach (var item in Model)
 								{
-									<div class="col-md-6 col-lg-6 col-xl-3">
-										<div class="rounded position-relative fruit-item">
-											<div class="fruit-img">
-												<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost">
-													<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded-top" alt="Laptop">
-												</a>
-											</div>
-											<div class="p-4 border border-secondary border-top-0 rounded-bottom">
-												<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost" style="text-decoration:none">
-													<h4 class="title">@Html.Raw(item.Title)</h4>
-												</a>
-												@if (item.Type == "sale")
-												{
-													<div class="post-price">Price: @item.Price</div>
-													<div class="post-quantity">Quantity: @item.Quantity</div>
-												}
-												<div class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Description)</div>
-												<p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate?.ToString("dd/MM/yyyy")</span></p>
-
+									@if (ViewBag.checkInfo != "notLogin")
+									{
+										<div class="col-md-6 col-lg-6 col-xl-3">
+											<div class="rounded position-relative fruit-item">
+												<div class="fruit-img">
+													<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost">
+														<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded-top" alt="Laptop">
+													</a>
+												</div>
+												<div class="p-4 border border-secondary border-top-0 rounded-bottom">
+													<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost" style="text-decoration:none">
+														<h4 class="title">@Html.Raw(item.Title)</h4>
+													</a>
+													@if (item.Type == "Sale")
+													{
+														<div class="post-price">Price: @item.Price</div>
+														<div class="post-quantity">Quantity: @item.ProductStatus</div>
+													}
+													<div class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Description)</div>
+													<p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate?.ToString("dd/MM/yyyy")</span></p>
+												</div>
 											</div>
 										</div>
-									</div>
+									}
+									else
+									{
+										<div class="col-md-6 col-lg-6 col-xl-3">
+											<div class="rounded position-relative fruit-item">
+												<div class="fruit-img">
+													<a data-bs-toggle="modal" data-bs-target="#exampleModal">
+														<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded-top" alt="Laptop">
+													</a>
+												</div>
+												<div class="p-4 border border-secondary border-top-0 rounded-bottom">
+													<a style="text-decoration:none" data-bs-toggle="modal" data-bs-target="#exampleModal">
+														<h4 class="title">@Html.Raw(item.Title)</h4>
+													</a>
+													@if (item.Type == "Sale")
+													{
+														<div class="post-price">Price: @item.Price</div>
+														<div class="post-quantity">Quantity: @item.ProductStatus</div>
+													}
+													<div class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Description)</div>
+													<p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate?.ToString("dd/MM/yyyy")</span></p>
+												</div>
+											</div>
+										</div>
+									}
 								}
 							</div>
 						</div>

@@ -40,7 +40,7 @@ namespace FStep.Controllers.Customer
 			try
 			{
 				var product = _mapper.Map<Product>(model);
-				product.Quantity = model.Quantity;
+				product.Quantity = model.ProductStatus;
 				product.Price = model.Price;
 				product.Status = "true";
 				db.Add(product);
@@ -73,7 +73,7 @@ namespace FStep.Controllers.Customer
 			var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
 
 			ViewData["USER_CREATE"] = user;
-			if(post.Status == "WaitingExchange")
+			if (post.Status == "WaitingExchange")
 			{
 				return Redirect("/");
 			}
@@ -121,7 +121,7 @@ namespace FStep.Controllers.Customer
 			{
 				IdPost = post.IdPost,
 				Title = post.Content,
-				Quantity = post.IdProductNavigation?.Quantity,
+				Status = post.Status,
 				Img = post.Img,
 				Description = post.Detail,
 				CreateDate = post.Date,

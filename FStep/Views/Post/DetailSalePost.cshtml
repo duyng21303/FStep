@@ -517,7 +517,7 @@
 					<input name="quantity" class="form-control text-center" id="inputQuantity" value="1" disabled style="max-width: 7.5rem; " />
 				</div>
 				<div style="min-height:10px;"></div>
-				@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser) && Model.Quantity != 0)
+				@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser) && Model.Status == "True")
 				{
 					<button type="submit" class="btn btn-outline-secondary text-bg-primary">
 						<div class="mx-4 text-white">Mua ngay</div>
@@ -526,7 +526,6 @@
 				else
 				{
 					<button disabled class="btn btn-sm mt-2 bg-dark text-light bg-opacity-50">Mua ngay</button>
-					
 				}
 
 			</form>
@@ -797,7 +796,7 @@
 		document.addEventListener('DOMContentLoaded', function () {
 			var inputQuantity = document.getElementById('inputQuantity');
 			var increaseButton = document.getElementById('increase');
-			var maxValue = @Model.Quantity; // Lấy giá trị max từ model
+			var maxValue = @Model.ProductStatus; // Lấy giá trị max từ model
 
 			var clicked = false; // Biến để kiểm tra xem đã click lần đầu tiên hay chưa
 

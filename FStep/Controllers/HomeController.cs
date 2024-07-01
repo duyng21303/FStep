@@ -33,7 +33,7 @@ namespace FStep.Controllers
 			int pageSize = 12; // số lượng sản phẩm mỗi trang 
 			int pageNumber = (page ?? 1);   // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
 			var ExchangePost = db.Posts.AsQueryable();
-			ExchangePost = ExchangePost.Where(p => p.Type == "Exchange" && p.Status == "true");    //check exchangePost là những post thuộc type "exhcange" và có status = 1
+			ExchangePost = ExchangePost.Where(p => p.Type == "Exchange" && p.Status == "True");    //check exchangePost là những post thuộc type "exhcange" và có status = 1
 
 			if (!string.IsNullOrEmpty(query))
 			{
@@ -72,7 +72,7 @@ namespace FStep.Controllers
 			int pageSize = 12; // số lượng sản phẩm mỗi trang 
 			int pageNumber = (page ?? 1);  // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
 			var SalePost = db.Posts.AsQueryable();
-			SalePost = SalePost.Where(p => p.Type == "Sale" && p.Status == "true");
+			SalePost = SalePost.Where(p => p.Type == "Sale" && p.Status == "True");
 
 			if (!string.IsNullOrEmpty(query))
 			{
@@ -85,7 +85,7 @@ namespace FStep.Controllers
 				Title = s.Content,
 				Img = s.Img,
 				Description = s.Detail,
-				Quantity = (int)s.IdProductNavigation.Quantity,
+				ProductStatus = (int)s.IdProductNavigation.Quantity,
 				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now,
 				Price = s.IdProductNavigation.Price ?? 0
 			}).OrderByDescending(o => o.IdPost);
@@ -122,7 +122,7 @@ namespace FStep.Controllers
 				var product = _mapper.Map<Product>(model);
 				product.Quantity = 1;
 				product.Price = model.Price;
-				product.Status = "true";
+				product.Status = "True";
 				db.Add(product);
 				db.SaveChanges();
 
@@ -131,7 +131,7 @@ namespace FStep.Controllers
 				post.Date = DateTime.Now;
 				//Helpers.Util.UpLoadImg(model.Img, "")
 				post.Img = Util.UpLoadImg(img, "postPic");
-				post.Status = "false";
+				post.Status = "False";
 				post.Type = model.Type;
 				post.Detail = model.Description;
 				post.IdUser = User.FindFirst("UserID").Value;
@@ -216,7 +216,9 @@ namespace FStep.Controllers
 				Content = db.Posts.FirstOrDefault(p => p.IdPost == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdPost).Content,
 				Detail = db.Posts.FirstOrDefault(p => p.IdPost == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdPost).Detail,
 				TypePost = db.Posts.FirstOrDefault(p => p.IdPost == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdPost).Type,
-				DeliveryDate = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).Date,
+				DeliveryDate = db.Payments.FirstOrDefault(p => p.IdTransaction == id && p.Type == "Seller")?.PayTime,
+				CreateDate = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).Date,
+				Status = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).Status,
 				Img = db.Posts.FirstOrDefault(p => p.IdPost == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdPost).Img,
 				UnitPrice = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).UnitPrice,
 				Quantity = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).Quantity,

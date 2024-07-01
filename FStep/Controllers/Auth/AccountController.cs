@@ -345,7 +345,7 @@ namespace FStep.Controllers.Auth
 				Img = post.Img,
 				Description = post.Detail,
 				Type = post.Type,
-				Quantity = post.IdProductNavigation.Quantity ?? 1,
+				ProductStatus = post.IdProductNavigation.Quantity ?? 1,
 				Price = post.IdProductNavigation.Price ?? 0
 			};
 
@@ -377,7 +377,7 @@ namespace FStep.Controllers.Auth
 					}
 					if (post.Type == "Sale" && post.IdProductNavigation != null)
 					{
-						post.IdProductNavigation.Quantity = model.Quantity;
+						post.IdProductNavigation.Quantity = model.ProductStatus;
 						post.IdProductNavigation.Price = model.Price;
 					}
 					post.Detail = model.Description;
