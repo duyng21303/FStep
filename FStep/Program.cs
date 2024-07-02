@@ -28,19 +28,14 @@ public class Program
 		builder.Services.AddControllersWithViews();
 
 		// Register DbContext
-		builder.Services.AddDbContext<FstepDbContext>(options =>
+		builder.Services.AddDbContext<FstepDBContext>(options =>
 		{
 			options.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
 		});
 
-			// Add services to the container.
-			builder.Services.AddControllersWithViews();
-			builder.Services.AddDbContext<FstepDbContext>(option =>
-			{
-				option.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
-			});
-			builder.Services.AddTransient<IEmailSender, EmailSender>();
-			builder.Services.AddHostedService<PostExpirationService>();
+
+		builder.Services.AddTransient<IEmailSender, EmailSender>();
+		builder.Services.AddHostedService<PostExpirationService>();
 
 		builder.Services.AddSignalR();
 		builder.Services.AddSession(options =>

@@ -10,15 +10,16 @@ using X.PagedList;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text.Json;
 using FStep.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FStep.Controllers.ManagePost
 {
 	public class WareHouseController : Controller
 	{
-		private readonly FstepDbContext db;
+		private readonly FstepDBContext db;
 		private readonly IMapper _mapper;
 
-		public WareHouseController(FstepDbContext context, IMapper mapper)
+		public WareHouseController(FstepDBContext context, IMapper mapper)
 		{
 			db = context;
 			_mapper = mapper;
@@ -244,7 +245,76 @@ namespace FStep.Controllers.ManagePost
 				return BadRequest("Invalid data");
 			}
 		}
+		[Authorize]
+		[HttpPost]
+		public async Task<IActionResult> RecieveImg(IFormFile img, string type, string id)
+		{
+			try
+			{
+				var trans = db.Transactions.SingleOrDefault(trans => trans.IdTransaction == int.Parse(id));
+				switch (type)
+				{
+					case "SellerSent":
+						if (img != null)
+						{
+							FileInfo fileInfo = new FileInfo("wwwroot/img/postPic/" + trans.SentImg);
+							if (fileInfo.Exists)
+							{
+								fileInfo.Delete();
+							}
+							trans.SentImg = Util.UpLoadImg(img, "postPic");
+							trans.SentSellerDate = DateTime.Now;
+						}
+						break;
 
+					case "SellerReceive":
+						if (img != null)
+						{
+							FileInfo fileInfo = new FileInfo("wwwroot/img/postPic/" + trans.RecieveImg);
+							if (fileInfo.Exists)
+							{
+								fileInfo.Delete();
+							}
+							trans.RecieveImg = Util.UpLoadImg(img, "postPic");
+							trans.ReceivedSellerDate = DateTime.Now;
+						}
+						break;
 
+					case "BuyerSent":
+						if (img != null)
+						{
+							FileInfo fileInfo = new FileInfo("wwwroot/img/postPic/" + trans.SentBuyerImg);
+							if (fileInfo.Exists)
+							{
+								fileInfo.Delete();
+							}
+							trans.SentBuyerImg = Util.UpLoadImg(img, "postPic");
+							trans.SentBuyerDate = DateTime.Now;
+						}
+						break;
+
+					case "BuyerReceive":
+						if (img != null)
+						{
+							FileInfo fileInfo = new FileInfo("wwwroot/img/postPic/" + trans.RecieveBuyerImg);
+							if (fileInfo.Exists)
+							{
+								fileInfo.Delete();
+							}
+							trans.RecieveBuyerImg = Util.UpLoadImg(img, "postPic");
+							trans.ReceivedBuyerDate	= DateTime.Now;
+						}
+						break;
+
+					default:
+						break;
+				}
+				db.Update(trans);
+				db.SaveChanges();
+				return RedirectToAction("WareHouse", "WareHouse", new { idTrans = id, activeTab = "exchange" });
+			}
+			catch (Exception ex) { }
+			return Json(new { transactionId = id });
+		}
 	}
 }
