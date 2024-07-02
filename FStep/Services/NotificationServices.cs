@@ -8,9 +8,9 @@ namespace FStep.Services
 {
 	public class NotificationServices
 	{
-		private FstepDbContext _context;
+		private FstepDBContext _context;
 
-		public NotificationServices(FstepDbContext context) 
+		public NotificationServices(FstepDBContext context) 
 		{
 			_context = context;
 		}

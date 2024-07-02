@@ -31,11 +31,21 @@ public partial class Transaction
 
     public string? RecieveImg { get; set; }
 
+    public string? RecieveBuyerImg { get; set; }
+
     public string? SentImg { get; set; }
+
+    public string? SentBuyerImg { get; set; }
 
     public DateTime? ReceivedSellerDate { get; set; }
 
+    public DateTime? ReceivedBuyerDate { get; set; }
+
+    public DateTime? SentSellerDate { get; set; }
+
     public DateTime? SentBuyerDate { get; set; }
+
+    public int ReportidReport { get; set; }
 
     public virtual Comment? IdCommentNavigation { get; set; }
 

@@ -10,15 +10,19 @@ using X.PagedList;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text.Json;
 using FStep.Helpers;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace FStep.Controllers.ManagePost
 {
 	public class WareHouseController : Controller
 	{
-		private readonly FstepDbContext db;
+		private readonly FstepDBContext db;
 		private readonly IMapper _mapper;
 
-		public WareHouseController(FstepDbContext context, IMapper mapper)
+		public WareHouseController(FstepDBContext context, IMapper mapper)
 		{
 			db = context;
 			_mapper = mapper;
@@ -145,7 +149,7 @@ namespace FStep.Controllers.ManagePost
 		[HttpGet]
 		public IActionResult CompleteTransaction(string code)
 		{
-			var transaction = db.Transactions.FirstOrDefault(p => p.CodeTransaction == code);
+			var transaction = db.Transactions.FirstOrDefault(p => p.IdTransaction == int.Parse(code));
 			transaction.Status = "Completed";
 			db.Update(transaction);
 			db.SaveChanges();
@@ -245,6 +249,43 @@ namespace FStep.Controllers.ManagePost
 			}
 		}
 
-
+		[Authorize]
+		[HttpPost]
+		public async Task<IActionResult> RecieveImg(IFormFile img, string type, string id)
+		{
+			try
+			{
+				var trans = db.Transactions.SingleOrDefault(trans => trans.IdTransaction == int.Parse(id));
+				if (type == "Seller")
+				{
+					if (img != null)
+					{
+						FileInfo fileInfo = new FileInfo("wwwroot/img/userAvar/" + trans.SentImg);
+						if (fileInfo.Exists)
+						{
+							fileInfo.Delete();
+						}
+						trans.SentImg = Util.UpLoadImg(img, "userAvar");
+					}
+				}
+				else
+				{
+					if (img != null)
+					{
+						FileInfo fileInfo = new FileInfo("wwwroot/img/userAvar/" + trans.RecieveImg);
+						if (fileInfo.Exists)
+						{
+							fileInfo.Delete();
+						}
+						trans.RecieveImg = Util.UpLoadImg(img, "userAvar");
+					}
+				}
+				db.Update(trans);
+				db.SaveChanges();
+				return RedirectToAction("Profile");
+			}
+			catch (Exception ex) { }
+			return View();
+		}
 	}
 }
