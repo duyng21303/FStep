@@ -15,7 +15,6 @@ using X.PagedList;
 
 namespace FStep.Controllers
 {
-
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
@@ -62,17 +61,17 @@ namespace FStep.Controllers
 			string id = User.FindFirst("UserID")?.Value;
 			if (id != null)
 			{
-				var user = db.Users.FirstOrDefault(p => p.IdUser == id);
-				checkInfo = (user.StudentId != null /*&& user.BankAccountNumber != null && user.BankName != null*/).ToString();
+				//var user = db.Users.FirstOrDefault(p => p.IdUser == id);
+				//checkInfo = (user.StudentId != null /*&& user.BankAccountNumber != null && user.BankName != null*/).ToString();
 			}
 			else
 			{
 				checkInfo = "notLogin";
 			}
-			ViewBag.checkInfo = checkInfo;
+			//ViewBag.checkInfo = checkInfo;
 			return View(pageList);
 		}
-
+		
 		public IActionResult Sale(String? query, int? page)
 		{
 			int pageSize = 12; // số lượng sản phẩm mỗi trang 
