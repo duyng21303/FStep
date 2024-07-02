@@ -45,31 +45,6 @@ namespace FStep.Controllers.ManagePost
 
 			return View("UserManager", pagingModel);
 		}
-		[Authorize(Roles = "Moderator")]
-		public IActionResult UserDetail(string id)
-		{
-			// Lấy thông tin người dùng
-			var user = _context.Users.FirstOrDefault(user => user.IdUser == id);
-
-			if (user != null)
-			{
-				// Đếm số bài đăng của người dùng có type là Sale
-				var saleCount = _context.Posts.Count(post => post.IdUser == id && post.Type == "Sale");
-
-				// Đếm số bài đăng của người dùng có type là Exchange
-				var exchangeCount = _context.Posts.Count(post => post.IdUser == id && post.Type == "Exchange");
-
-				// Map thông tin người dùng sang ProfileVM
-				var profileVM = _mapper.Map<ProfileVM>(user);
-
-				// Truyền số bài đăng vào ViewModel hoặc ViewData
-				ViewBag.SalePostCount = saleCount;
-				ViewBag.ExchangePostCount = exchangeCount;
-
-				return View("UserDetail", profileVM);
-			}
-
-			return View("UserDetail");
-		}
+	
 	}
 }
