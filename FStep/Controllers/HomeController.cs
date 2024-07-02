@@ -18,10 +18,10 @@ namespace FStep.Controllers
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
-		private readonly FstepDBContext db;
+		private readonly FstepDbContext db;
 		private readonly IMapper _mapper;
 
-		public HomeController(FstepDBContext context, IMapper mapper)
+		public HomeController(FstepDbContext context, IMapper mapper)
 		{
 			db = context;
 			_mapper = mapper;

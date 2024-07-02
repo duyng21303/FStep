@@ -19,10 +19,10 @@ namespace FStep
 {
 	public class ChatHub : Hub
 	{
-		private readonly FstepDBContext _context;
+		private readonly FstepDbContext _context;
 		private static Dictionary<string, string> userConnections = new Dictionary<string, string>();
 		private readonly NotificationServices notificationServices;
-		public ChatHub(FstepDBContext context)
+		public ChatHub(FstepDbContext context)
 
 		{
 			_context = context;
