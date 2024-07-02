@@ -27,9 +27,15 @@ namespace FStep.Controllers
 			db = context;
 			_mapper = mapper;
 		}
-
 		public IActionResult Index(String? query, int? page)
 		{
+			if (User.IsInRole("Moderator"))
+			{
+				return Redirect("/ModeManagePost/ManagePosts");
+			} else if (User.IsInRole("Admin"))
+			{
+                return Redirect("/Admin/Index");
+            }
 			int pageSize = 12; // số lượng sản phẩm mỗi trang 
 			int pageNumber = (page ?? 1);   // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
 			var ExchangePost = db.Posts.AsQueryable();
@@ -56,14 +62,14 @@ namespace FStep.Controllers
 			string id = User.FindFirst("UserID")?.Value;
 			if (id != null)
 			{
-				var user = db.Users.FirstOrDefault(p => p.IdUser == id);
-				checkInfo = (user.StudentId != null /*&& user.BankAccountNumber != null && user.BankName != null*/).ToString();
+				//var user = db.Users.FirstOrDefault(p => p.IdUser == id);
+				//checkInfo = (user.StudentId != null /*&& user.BankAccountNumber != null && user.BankName != null*/).ToString();
 			}
 			else
 			{
 				checkInfo = "notLogin";
 			}
-			ViewBag.checkInfo = checkInfo;
+			//ViewBag.checkInfo = checkInfo;
 			return View(pageList);
 		}
 

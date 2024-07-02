@@ -2,6 +2,7 @@
 using FStep.Data;
 using FStep.Models;
 using FStep.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -21,19 +22,20 @@ namespace FStep.Controllers.Admin
 			_context = context;
 			_mapper = mapper;
 		}
-
 		public IActionResult Index()
 		{
 			return View();
 		}
 
-		/// <summary>
-		/// This method is used to manage users
-		/// </summary>
-		/// <param name="page">The page number</param>
-		/// <param name="pageSize">The number of items per page</param>
-		/// <param name="search">The search string: Name, Email</param>
-		public IActionResult UserManager(int page = 1, int pageSize = 10, string? search = null)
+        /// <summary>
+        /// This method is used to manage users
+        /// </summary>
+        /// <param name="page">The page number</param>
+        /// <param name="pageSize">The number of items per page</param>
+        /// <param name="search">The search string: Name, Email</param>
+        /// 
+        [Authorize(Roles = "Admin")]
+        public IActionResult UserManager(int page = 1, int pageSize = 10, string? search = null)
 		{
 			var query = _context.Users.AsQueryable();
 			if (!string.IsNullOrEmpty(search))
@@ -56,8 +58,8 @@ namespace FStep.Controllers.Admin
 
 			return View("UserManager", pagingModel);
 		}
-
-		public IActionResult UserDetail(string id)
+        [Authorize(Roles = "Admin")]
+        public IActionResult UserDetail(string id)
 		{
 			// Lấy thông tin người dùng
 			var user = _context.Users.FirstOrDefault(user => user.IdUser == id);
@@ -82,8 +84,8 @@ namespace FStep.Controllers.Admin
 
 			return View("UserDetail");
 		}
-
-		public IActionResult CommentManager(int page = 1, int pageSize = 10, string? search = null)
+        [Authorize(Roles = "Admin")]
+        public IActionResult CommentManager(int page = 1, int pageSize = 10, string? search = null)
 		{
 			var query = _context.Comments.Include(x => x.IdUserNavigation).Include(x => x.IdPostNavigation).AsQueryable();
 			if (!string.IsNullOrEmpty(search))
@@ -119,8 +121,8 @@ namespace FStep.Controllers.Admin
 
 			return View("CommentManager", pagingModel);
 		}
-
-		[HttpPost]
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
 		public IActionResult LockUnlock([FromBody] ProfileVM user)
 		{
 			var userFound = _context.Users.FirstOrDefault(x => x.IdUser == user.IdUser);
@@ -134,8 +136,8 @@ namespace FStep.Controllers.Admin
 			}
 			return BadRequest();
 		}
-
-		[HttpPost]
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
 		public IActionResult ChangeRole([FromBody] ProfileVM user)
 		{
 			var userFound = _context.Users.FirstOrDefault(x => x.IdUser == user.IdUser);
@@ -148,8 +150,8 @@ namespace FStep.Controllers.Admin
 			}
 			return BadRequest();
 		}
-
-		[HttpPost]
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
 		public IActionResult DeleteComment([FromBody] CommentVM comment)
 		{
 			var commentExisted = _context.Comments.FirstOrDefault(x => x.IdComment == comment.IdComment);
