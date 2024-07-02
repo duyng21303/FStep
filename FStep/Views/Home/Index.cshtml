@@ -112,7 +112,7 @@
 												<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost" style="text-decoration:none">
 													<h4 class="title">@Html.Raw(item.Title)</h4>
 												</a>
-												@if (item.Type == "sale")
+												@if (item.Type == "Sale")
 												{
 													<div class="post-price">Price: @item.Price</div>
 													<div class="post-quantity">Quantity: @item.Quantity</div>
@@ -136,7 +136,6 @@
 			</div>
 		</div>
 	</div>
-
 
 	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
