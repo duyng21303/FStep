@@ -10,6 +10,8 @@ using X.PagedList;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text.Json;
 using FStep.Helpers;
+
+
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -150,7 +152,8 @@ namespace FStep.Controllers.ManagePost
 		[HttpGet]
 		public IActionResult CompleteTransaction(string code)
 		{
-			var transaction = db.Transactions.FirstOrDefault(p => p.IdTransaction == int.Parse(code));
+			var transaction = db.Transactions.FirstOrDefault(p => p.CodeTransaction == code);
+
 			transaction.Status = "Completed";
 			db.Update(transaction);
 			db.SaveChanges();
@@ -299,6 +302,7 @@ namespace FStep.Controllers.ManagePost
 							activeTab = "exchange";
 						}
 						break;
+
 
 		[Authorize]
 		[HttpPost]
