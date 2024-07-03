@@ -10,8 +10,13 @@ using X.PagedList;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text.Json;
 using FStep.Helpers;
+
+
+
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using FStep.Services;
+using System.Security.Claims;
 
 namespace FStep.Controllers.ManagePost
 {
@@ -149,6 +154,7 @@ namespace FStep.Controllers.ManagePost
 		public IActionResult CompleteTransaction(string code)
 		{
 			var transaction = db.Transactions.FirstOrDefault(p => p.CodeTransaction == code);
+
 			transaction.Status = "Completed";
 			db.Update(transaction);
 			db.SaveChanges();
@@ -265,6 +271,7 @@ namespace FStep.Controllers.ManagePost
 						if (img != null)
 						{
 							if (trans.SentImg != null)
+
 							{
 								await notificationServices.CreateNotification(userBuyer.IdUser, "TransactionExchangeAlready", "Transaction", userSeller.Name, trans.IdTransaction);
 								await notificationServices.CreateNotification(userSeller.IdUser, "TransactionRecieveGoods", "Transaction", userBuyer.Name, trans.IdTransaction);
@@ -377,6 +384,7 @@ namespace FStep.Controllers.ManagePost
 			}
 			catch (Exception ex) { }
 			return Json(new { transactionId = id });
+
 		}
 	}
 }

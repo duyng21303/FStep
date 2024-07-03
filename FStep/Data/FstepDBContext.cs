@@ -11,6 +11,7 @@ public partial class FstepDBContext : DbContext
     }
 
 	public FstepDBContext(DbContextOptions<FstepDBContext> options)
+
 		: base(options)
 	{
 	}

@@ -1,46 +1,56 @@
-﻿  <!-- Content Start -->
+
 <div class="content">
     <!-- Sale & Revenue Start -->
     <div class="container-fluid pt-4 px-4">
         <div class="row g-4">
             <div class="col-sm-6 col-xl-3">
                 <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                    <i class="fa fa-chart-line fa-3x text-primary"></i>
+
+                    <i class="bi bi-file-post fa-3x text-primary"></i>
                     <div class="ms-3">
-                        <p class="mb-2">Today Sale</p>
-                        <h6 class="mb-0">$1234</h6>
+                        <p class="mb-2">Bài Đăng</p>
+                        <h6 class="mb-0">@ViewData["TotalPost"]</h6>
+
                     </div>
                 </div>
             </div>
             <div class="col-sm-6 col-xl-3">
                 <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                    <i class="fa fa-chart-bar fa-3x text-primary"></i>
+
+                    <i class="fa fa-users fa-3x text-primary"></i>
                     <div class="ms-3">
-                        <p class="mb-2">Total Sale</p>
-                        <h6 class="mb-0">$1234</h6>
+                        <p class="mb-2">Người Dùng</p>
+                        <h6 class="mb-0">@ViewData["TotalUser"]</h6>
+
                     </div>
                 </div>
             </div>
             <div class="col-sm-6 col-xl-3">
                 <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                    <i class="fa fa-chart-area fa-3x text-primary"></i>
+
+                    <i class="fa fa-exchange-alt fa-3x text-primary"></i>
                     <div class="ms-3">
-                        <p class="mb-2">Today Revenue</p>
-                        <h6 class="mb-0">$1234</h6>
+                        <p class="mb-2">Giao Dịch</p>
+                        <h6 class="mb-0">@ViewData["TotalTransaction"]</h6>
+
                     </div>
                 </div>
             </div>
             <div class="col-sm-6 col-xl-3">
                 <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                    <i class="fa fa-chart-pie fa-3x text-primary"></i>
+
+                    <i class="fa fa-dollar-sign fa-3x text-primary"></i>
                     <div class="ms-3">
-                        <p class="mb-2">Total Revenue</p>
-                        <h6 class="mb-0">$1234</h6>
+                        <p class="mb-2">Doanh Thu</p>
+                        <h6 class="mb-0">@ViewData["TotalRevenue"]</h6>
+
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+
+    </div> 
+
     <!-- Sale & Revenue End -->
     <!-- Sales Chart Start -->
     <div class="container-fluid pt-4 px-4">
@@ -276,4 +286,12 @@
     </div>
     <!-- Footer End -->
 </div>
+
 <!-- Content End -->
+
+<style>
+    .icon-custom-size {
+        font-size: 2.5rem; /* Adjust the size as needed */
+    }
+</style>
+
