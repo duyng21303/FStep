@@ -44,17 +44,16 @@ namespace FStep.Controllers.ManagePost
 				{
 					searchString = searchString.ToLower();
 					exchangeTransactions = exchangeTransactions.Where(t =>
-						t.IdPostNavigation.Location.ToLower().Contains(searchString) ||
-						t.CodeTransaction.ToLower().Contains(searchString) ||
-						t.IdUserBuyerNavigation.StudentId.ToLower().Contains(searchString) ||
-						t.IdPostNavigation.Content.ToLower().Contains(searchString)
+				(t.IdPostNavigation?.Location?.ToLower().Contains(searchString) ?? false) ||
+				(t.CodeTransaction?.ToLower().Contains(searchString) ?? false) ||
+				(t.IdUserBuyerNavigation?.StudentId?.ToLower().Contains(searchString) ?? false) ||
+				(t.IdPostNavigation?.Content?.ToLower().Contains(searchString) ?? false)
 					);
-
 					saleTransactions = saleTransactions.Where(t =>
-						t.IdPostNavigation.Location.ToLower().Contains(searchString) ||
-						t.CodeTransaction.ToLower().Contains(searchString) ||
-						t.IdUserBuyerNavigation.StudentId.ToLower().Contains(searchString) ||
-						t.IdPostNavigation.Content.ToLower().Contains(searchString)
+						(t.IdPostNavigation?.Location?.ToLower().Contains(searchString) ?? false) ||
+				(t.CodeTransaction?.ToLower().Contains(searchString) ?? false) ||
+				(t.IdUserBuyerNavigation?.StudentId?.ToLower().Contains(searchString) ?? false) ||
+				(t.IdPostNavigation?.Content?.ToLower().Contains(searchString) ?? false)
 					);
 				}
 

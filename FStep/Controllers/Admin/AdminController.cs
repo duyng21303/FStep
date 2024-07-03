@@ -24,7 +24,7 @@ namespace FStep.Controllers.Admin
 		}
 		public IActionResult Index()
 		{
-			var totalPost = _context.Posts.Count(p => p.Status == "true" || p.Status == "finish");
+			var totalPost = _context.Posts.Count(p => p.Status == "True" || p.Status == "Finish");
 
 			var totalUser = _context.Users.Count(u => u.Status == true);
 

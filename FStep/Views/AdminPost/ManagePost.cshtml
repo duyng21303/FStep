@@ -1,6 +1,8 @@
-﻿@model X.PagedList.IPagedList<FStep.ViewModels.ListPostVM>
-@using X.PagedList.Mvc.Core;
-
+﻿
+@{
+    ViewData["Title"] = "";
+}
+<h1>Quản lí bài đăng</h1>
 @{
 	var successMessage = TempData["SuccessMessage"] as string;
 	var errorMessage = TempData["ErrorMessage"] as string;
@@ -28,7 +30,7 @@
 		<div>
 			<div class="row">
 				<div class="col-md-5 d-flex justify-content-between align-items-center">
-					<p class="mb-0">Tổng Số Bài Chờ Duyệt: @ViewBag.PendingPostsCount</p>
+					<p class="mb-0">Tổng Số Bài Đã Duyệt: @ViewBag.ApprovedPostsCount</p>
 				</div>
 			</div>
 		</div>
@@ -42,12 +44,12 @@
 								<tr>
 									<th scope="col">Ảnh</th>
 									<th scope="col">Tên</th>
+									<th scope="col">Loại SP</th>
 									<th scope="col">MSSV</th>
 									<th scope="col">Số Lượng</th>
-									<th scope="col">Giá</th>
 									<th scope="col">Ngày Tạo</th>
-									<th scope="col">Duyệt Bài</th>
-									<th scope="col">Xóa Bài</th>
+									<th scope="col">Còn Lại</th>
+
 								</tr>
 							</thead>
 							<tbody>
@@ -56,21 +58,20 @@
 								{
 									<tr>
 										<td><img src="@Url.Content("~/img/postPic/" + item.Image)" class="img-fluid small-rounded-image" alt="Post Image"></td>
-										<td class="post-title" data-id="@item.PostId" data-bs-toggle="tooltip" data-bs-html="true" title="Type: @item.Type<br>Detail: @Html.Raw(item.Description)">
-											@Html.Raw(item.PostTitle)
-										</td>
+										<td class="post-title">@Html.Raw(item.PostTitle)</td>
+										<td>@Html.Raw(item.Category)</td>
 										<td class="post-studentid">@Html.Raw(item.StudentId)</td>
 										<td>@Html.Raw(item.Quantity)</td>
-										<td>@Html.Raw(item.Price)</td>
 										<td>@Html.Raw(item.CreateDate.ToString("yyyy-MM-dd"))</td>
+										<td>@Html.Raw(item.DaysRemaining)</td>
 										<td>
-											<form asp-controller="ModeManagePost" asp-action="UpdateStatus" method="post" onsubmit="return confirmApprove()">
+											<form asp-controller="ModeManagePost" asp-action="UpdateStatusAgain" method="post" onsubmit="return confirmApprove()">
 												<input type="hidden" name="id" value="@item.PostId" /> <!-- Ensure the input name matches your action parameter -->
 												<button type="submit" class="btn btn-success">Duyệt</button>
 											</form>
 										</td>
 										<td>
-											<form asp-controller="ModeManagePost" asp-action="DeletePost" method="post" onsubmit="return confirmDelete()">
+											<form asp-controller="ModeManagePost" asp-action="FinishPost" method="post" onsubmit="return confirmDelete()">
 												<input type="hidden" name="id" value="@item.PostId" />
 												<button type="submit" class="btn btn-danger btn-sm">Xóa</button>
 											</form>
@@ -83,9 +84,12 @@
 					</div>
 				</div>
 			</div>
-			@Html.PagedListPager(Model, page => Url.Action("ManagePosts", new { pendingQuery = ViewBag.PendingQuery, currentTab = "pendingPosts", pendingPage = page, approvedPage = ViewBag.ApprovedPage }))
+		@* 	@Html.PagedListPager(Model, page => Url.Action("ManagePosts", new { approvedQuery = ViewBag.ApprovedQuery, currentTab = "approvedPosts", approvedPage = page, pendingPage = ViewBag.PendingPage })) *@
 			<!-- End Content Body -->
 		</div>
 	</div>
 </div>
+<style>
+
+</style>
 

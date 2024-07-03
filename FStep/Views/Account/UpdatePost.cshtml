@@ -25,24 +25,24 @@
 			<div class="form-box-right">
 				<div class="form-item">
 					<label asp-for="Title" class="form-label my-3">Tiêu đề</label><sup style="color: red">*</sup>
-					<textarea asp-for="Title" class="form-control"></textarea>
+					<textarea asp-for="Title" class="form-control" required></textarea>
 					<span asp-validation-for="Title" class="text-danger"></span>
 				</div>
 				<div class="form-item">
 					<label asp-for="Description" class="form-label my-3">Mô tả</label><sup style="color: red">*</sup>
-					<textarea asp-for="Description" class="form-control" id="summernoteDescription"></textarea>
+					<textarea asp-for="Description" class="form-control" required></textarea>
 					<span asp-validation-for="Description" class="text-danger"></span>
 				</div>
 				@if (Model.Type == "Sale")
 				{
 					<div class="form-item">
 						<label asp-for="Quantity" class="form-label my-3">Số lượng</label><sup style="color: red">*</sup>
-						<input asp-for="Quantity" class="form-control">
+						<input asp-for="Quantity" class="form-control" required>
 						<span asp-validation-for="Quantity" class="text-danger"></span>
 					</div>
 					<div class="form-item">
 						<label asp-for="Price" class="form-label my-3">Giá (VND)</label><sup style="color: red">*</sup>
-						<input asp-for="Price" class="form-control">
+						<input asp-for="Price" class="form-control" required>
 						<span asp-validation-for="Price" class="text-danger"></span>
 					</div>
 				}

@@ -171,6 +171,7 @@ namespace FStep.Controllers.Auth
 					Description = p.Detail,
 					Img = p.Img,
 					Type = p.Type,
+					Price = p.IdProductNavigation != null && p.IdProductNavigation.Price.HasValue ? p.IdProductNavigation.Price.Value : 0f,
 					CreateDate = p.Date.HasValue ? p.Date.Value : DateTime.Now
 				}).ToList()
 
@@ -183,10 +184,26 @@ namespace FStep.Controllers.Auth
 			var post = db.Posts.FirstOrDefault(p => p.IdPost == id);
 			if (post != null)
 			{
-				post.Status = "finish";
+				post.Status = "Finish";
 				db.Posts.Update(post);
 				db.SaveChanges();
 				TempData["SuccessMessage"] = $"Bài đăng {post.Content} đã được xóa thành công.";
+			}
+			else
+			{
+				TempData["ErrorMessage"] = $"Bài đăng {post.Content} không được tìm thấy.";
+			}
+			return RedirectToAction("Profile");
+		}
+		public IActionResult HiddenPost(int id)
+		{
+			var post = db.Posts.FirstOrDefault(p => p.IdPost == id);
+			if (post != null)
+			{
+				post.Status = "Hidden";
+				db.Posts.Update(post);
+				db.SaveChanges();
+				TempData["SuccessMessage"] = $"Bài đăng {post.Content} đã được ẩn thành công.";
 			}
 			else
 			{
@@ -325,7 +342,6 @@ namespace FStep.Controllers.Auth
 		}
 
 
-
 		[HttpGet]
 		[Authorize]
 		public IActionResult UpdatePost(int id)
@@ -382,7 +398,7 @@ namespace FStep.Controllers.Auth
 						post.IdProductNavigation.Price = model.Price;
 					}
 					post.Detail = model.Description;
-					post.Status = "false";
+					post.Status = "False";
 
 					db.SaveChanges();
 					TempData["SuccessMessage"] = $"Bài đăng của bạn đã được sửa thành công.Chúng tôi sẽ xem duyệt và duyệt!";
