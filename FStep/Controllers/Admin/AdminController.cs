@@ -24,6 +24,21 @@ namespace FStep.Controllers.Admin
 		}
 		public IActionResult Index()
 		{
+			var totalPost = _context.Posts.Count(p => p.Status == "true" || p.Status == "finish");
+
+			var totalUser = _context.Users.Count(u => u.Status == true);
+
+			var totalTransaction = _context.Transactions.Count(t => t.Status == "Finish" || t.Status == "Processing");
+
+			var totalRevenue = _context.Transactions
+				.Where(t => t.Status == "Finish")
+				.Sum(t => t.Amount);
+
+			
+			ViewBag.TotalPost = totalPost;
+			ViewBag.TotalTransaction = totalTransaction;
+			ViewBag.TotalUser = totalUser;
+			ViewBag.TotalRevenue = totalRevenue;
 			return View();
 		}
 
@@ -72,12 +87,15 @@ namespace FStep.Controllers.Admin
 				// Đếm số bài đăng của người dùng có type là Exchange
 				var exchangeCount = _context.Posts.Count(post => post.IdUser == id && post.Type == "Exchange");
 
+				var totalPost = saleCount + exchangeCount;
+
+				var totalTransaction = _context.Transactions.Count(t => t.IdUserBuyer == id && t.Status != "Processing");
 				// Map thông tin người dùng sang ProfileVM
 				var profileVM = _mapper.Map<ProfileVM>(user);
 
 				// Truyền số bài đăng vào ViewModel hoặc ViewData
-				ViewBag.SalePostCount = saleCount;
-				ViewBag.ExchangePostCount = exchangeCount;
+				ViewBag.TotalPost = totalPost;
+				ViewBag.TotalTransaction = totalTransaction;
 
 				return View("UserDetail", profileVM);
 			}
