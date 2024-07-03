@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FStep.Data;
 
-public partial class FstepDBContext : DbContext
+public partial class FstepDbContext : DbContext
 {
-    public FstepDBContext()
+    public FstepDbContext()
     {
     }
 
-	public FstepDBContext(DbContextOptions<FstepDBContext> options)
+	public FstepDbContext(DbContextOptions<FstepDbContext> options)
 
 		: base(options)
 	{

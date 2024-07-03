@@ -17,15 +17,16 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using FStep.Services;
 
 namespace FStep.Controllers.ManagePost
 {
 	public class WareHouseController : Controller
 	{
-		private readonly FstepDBContext db;
+		private readonly FstepDbContext db;
 		private readonly IMapper _mapper;
 		private readonly NotificationServices notificationServices;
-		public WareHouseController(FstepDBContext context, IMapper mapper)
+		public WareHouseController(FstepDbContext context, IMapper mapper)
 		{
 			db = context;
 			_mapper = mapper;

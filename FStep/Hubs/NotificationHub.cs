@@ -9,9 +9,9 @@ namespace FStep.Hubs
 {
 	public class NotificationHub : Hub
 	{
-		private FstepDBContext _context;
+		private FstepDbContext _context;
 		private static Dictionary<string, string> userConnections = new Dictionary<string, string>();
-		public NotificationHub(FstepDBContext context)
+		public NotificationHub(FstepDbContext context)
 		{
 			_context = context;
 		}

@@ -1,5 +1,5 @@
-@model X.PagedList.IPagedList<FStep.ViewModels.WareHouse.WareHouseVM>
-@using X.PagedList.Mvc.Core;
+@model FStep.ViewModels.WareHouse.WareHouseServiceVM
+@using X.PagedList.Mvc.Core
 @{
 	ViewData["Title"] = "Kho Hàng";
 }
@@ -306,17 +306,11 @@
 			<div class="modal-body" id="modal-body-content">
 				<!-- Nội dung sẽ được tải từ view khác -->
 			</div>
-			<!-- End Show -->
-			@* <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered modal-lg">
-
-			@await Html.PartialAsync("Feedback", new FeedbackVM())
-
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
 			</div>
-			</div> *@
 		</div>
 	</div>
-
 </div>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
