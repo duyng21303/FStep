@@ -1,14 +1,7 @@
-﻿@using Microsoft.AspNetCore.Http.Extensions
+﻿
 @{
-    string fullUrl = Context.Request.GetDisplayUrl();
-    string baseUrl = $"{Context.Request.Scheme}://{Context.Request.Host}";
-    string path = Context.Request.Path;
-    string queryString = Context.Request.QueryString.ToString();
+    ViewData["Title"] = "AdminLayout";
 }
 
-<h2>URL Information</h2>
-<p>Full URL: @fullUrl</p>
-<p>Base URL: @baseUrl</p>
-<p>Path: @path</p>
-<p>Query String: @queryString</p>
+<h1>AdminLayout</h1>
 
