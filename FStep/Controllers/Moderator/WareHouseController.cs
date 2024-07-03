@@ -266,8 +266,7 @@ namespace FStep.Controllers.ManagePost
 				var trans = db.Transactions.SingleOrDefault(trans => trans.IdTransaction == int.Parse(id));
 				var userBuyer = db.Users.SingleOrDefault(user => user.IdUser == trans.IdUserBuyer);
 				var userSeller = db.Users.SingleOrDefault(user => user.IdUser == trans.IdUserSeller);
-				userBuyer.AvatarImg = Util.ConvertImgUser(userBuyer);
-				userSeller.AvatarImg = Util.ConvertImgUser(userSeller);
+				
 				switch (type)
 				{
 					case "SellerSent":

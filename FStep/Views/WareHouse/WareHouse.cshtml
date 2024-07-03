@@ -73,9 +73,9 @@
 											<td>@Html.DisplayFor(modelItem => item.TransactionVM.CodeTransaction)</td>
 											<td>@Html.DisplayFor(modelItem => item.Location)</td>
 											<td>@item.TransactionVM.CreateDate</td>
-											<td>@Html.DisplayFor(moderItem => item.UserBuyer.IdUser)</td>
+											<td>@Html.DisplayFor(moderItem => item.UserSeller.IdUser)</td>
 
-											<td>@Html.DisplayFor(modelItem => item.UserSeller.IdUser)</td>
+											<td>@Html.DisplayFor(modelItem => item.UserBuyer.IdUser)</td>
 
 											<td>@Html.DisplayFor(modelItem => item.PostVM.Title)</td>
 											<td>
@@ -99,16 +99,21 @@
 														</thead>
 														<tbody>
 															<tr>
+																@{
+																	var userBuyerImg = @item.UserBuyer.AvatarImg == null ? "nullAvar/149071.png" : "userAvar/" + @item.UserBuyer.AvatarImg;
+																	var userSellerImg = @item.UserSeller.AvatarImg == null ? "nullAvar/149071.png" : "userAvar/" + @item.UserSeller.AvatarImg;
+																}
 																<td>
 																	<div class="user-info">
-																		<img src="/img/@item.UserBuyer.AvatarImg" alt="User 1 Avatar" class="avatar">
-																		<p>@item.UserBuyer.Name</p>
+																		<img src="~/img/@userSellerImg" alt="User 2 Avatar" class="avatar">
+																		<p>@item.UserSeller.Name</p>
 																	</div>
 																</td>
 																<td>
+																	
 																	<div class="user-info">
-																		<img src="/img/@item.UserSeller.AvatarImg" alt="User 2 Avatar" class="avatar">
-																		<p>@item.UserSeller.Name</p>
+																		<img src="/img/@userBuyerImg" alt="User 1 Avatar" class="avatar">
+																		<p>@item.UserBuyer.Name</p>
 																	</div>
 																</td>
 															</tr>
@@ -117,28 +122,34 @@
 																	<div class="action-info">
 																		<form asp-action="RecieveImg" enctype="multipart/form-data">
 																			<label class="btn btn-primary">
-																				Upload new image
+																				Xác nhận đã gửi hàng
 																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
 																				<input type="hidden" name="type" value="SellerSent" />
 																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
 																			</label>
 																		</form>
-																		<img src="@item.UserSeller.AvatarImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px;">
-																		<p style="margin: 0;">Date: @item.UserBuyer.CreateDate</p>
+																		@if (item.TransactionVM.SentImg != null)
+																		{
+																			<img src="/img/postPic/@item.TransactionVM.SentImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px; height: 250px; width: 250px;">
+																			<p style="margin: 0;">Date: @item.TransactionVM.SentSellerDate</p>
+																		}
 																	</div>
 																</td>
 																<td>
 																	<div class="action-info">
 																		<form asp-action="RecieveImg" enctype="multipart/form-data">
 																			<label class="btn btn-primary">
-																				Upload new image
+																				Xác nhận đã nhận hàng
 																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
-																				<input type="hidden" name="type" value="SellerReceive" />
+																				<input type="hidden" name="type" value="BuyerSent" />
 																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
 																			</label>
 																		</form>
-																		<img src="@item.UserSeller.AvatarImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px;">
-																		<p style="margin: 0;">Date: @item.UserBuyer.CreateDate</p>
+																		@if (item.TransactionVM.SentBuyerImg != null)
+																		{
+																			<img src="/img/postPic/@item.TransactionVM.SentBuyerImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px; height: 250px; width: 250px;">
+																			<p style="margin: 0;">Date: @item.TransactionVM.SentBuyerDate</p>
+																		}
 																	</div>
 																</td>
 															</tr>
@@ -147,28 +158,34 @@
 																	<div class="action-info">
 																		<form asp-action="RecieveImg" enctype="multipart/form-data">
 																			<label class="btn btn-primary">
-																				Upload new image
+																				Xác nhận đã gửi hàng
 																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
-																				<input type="hidden" name="type" value="BuyerSent" />
+																				<input type="hidden" name="type" value="SellerReceive" />
 																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
 																			</label>
 																		</form>
-																		<img src="@item.UserSeller.AvatarImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px;">
-																		<p style="margin: 0;">Date: @item.UserBuyer.CreateDate</p>
+																		@if (item.TransactionVM.RecieveImg != null)
+																		{
+																			<img src="/img/postPic/@item.TransactionVM.RecieveImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px; height: 250px; width: 250px;">
+																			<p style="margin: 0;">Date: @item.TransactionVM.ReceivedSellerDate</p>
+																		}
 																	</div>
 																</td>
 																<td>
 																	<div class="action-info">
 																		<form asp-action="RecieveImg" enctype="multipart/form-data">
 																			<label class="btn btn-primary">
-																				Upload new image
+																				Xác nhận đã nhận hàng
 																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
 																				<input type="hidden" name="type" value="BuyerReceive" />
 																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
 																			</label>
 																		</form>
-																		<img src="@item.UserSeller.AvatarImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px;">
-																		<p style="margin: 0;">Date: @item.UserBuyer.CreateDate</p>
+																		@if (item.TransactionVM.RecieveBuyerImg != null)
+																		{
+																			<img src="/img/postPic/@item.TransactionVM.RecieveBuyerImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px; height: 250px; width: 250px;">
+																			<p style="margin: 0;">Date: @item.TransactionVM.ReceivedBuyerDate</p>
+																		}
 																	</div>
 																</td>
 															</tr>
@@ -234,14 +251,18 @@
 														<tbody>
 															<tr>
 																<td>
+																	@{
+																		var userBuyerImg = @item.UserBuyer.AvatarImg == null ? "nullAvar/149071.png" : "userAvar/" + @item.UserBuyer.AvatarImg;
+																		var userSellerImg = @item.UserSeller.AvatarImg == null ? "nullAvar/149071.png" : "userAvar/" + @item.UserSeller.AvatarImg;
+																	}
 																	<div class="user-info">
-																		<img src="@item.UserBuyer.AvatarImg" alt="User 1 Avatar" class="avatar">
+																		<img src="/img/@userBuyerImg" alt="User 1 Avatar" class="avatar">
 																		<p>@item.UserBuyer.Name</p>
 																	</div>
 																</td>
 																<td>
 																	<div class="user-info">
-																		<img src="@item.UserSeller.AvatarImg" alt="User 2 Avatar" class="avatar">
+																		<img src="~/img/@userSellerImg" alt="User 2 Avatar" class="avatar">
 																		<p>@item.UserSeller.Name</p>
 																	</div>
 																</td>
@@ -251,28 +272,34 @@
 																	<div class="action-info">
 																		<form asp-action="RecieveImg" enctype="multipart/form-data">
 																			<label class="btn btn-primary">
-																				Upload new image
+																				Xác nhận người bán mang hàng tới
 																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
 																				<input type="hidden" name="type" value="SellerSent-Sell" />
 																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
 																			</label>
 																		</form>
-																		<img src="@item.UserSeller.AvatarImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px;">
-																		<p style="margin: 0;">Date: @item.UserBuyer.CreateDate</p>
+																		@if (item.TransactionVM.SentImg != null)
+																		{
+																			<img src="/img/postPic/@item.TransactionVM.SentImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px; height: 250px; width: 250px;">
+																			<p style="margin: 0;">Date: @item.TransactionVM.SentSellerDate</p>
+																		}
 																	</div>
 																</td>
 																<td>
 																	<div class="action-info">
 																		<form asp-action="RecieveImg" enctype="multipart/form-data">
 																			<label class="btn btn-primary">
-																				Upload new image
+																				Xác nhận người mua nhận hàng
 																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
 																				<input type="hidden" name="type" value="SellerRevieve-Sell" />
 																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
 																			</label>
 																		</form>
-																		<img src="@item.UserSeller.AvatarImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px;">
-																		<p style="margin: 0;">Date: @item.UserBuyer.CreateDate</p>
+																		@if (item.TransactionVM.RecieveBuyerImg != null)
+																		{
+																			<img src="/img/postPic/@item.TransactionVM.RecieveBuyerImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px; height: 250px; width: 250px;">
+																			<p style="margin: 0;">Date: @item.TransactionVM.ReceivedBuyerDate</p>
+																		}
 																	</div>
 																</td>
 															</tr>
