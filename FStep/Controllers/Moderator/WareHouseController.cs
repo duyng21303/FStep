@@ -13,6 +13,14 @@ using FStep.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using FStep.Services;
 
+
+
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using FStep.Services;
+
 namespace FStep.Controllers.ManagePost
 {
 	public class WareHouseController : Controller
@@ -149,6 +157,7 @@ namespace FStep.Controllers.ManagePost
 		public IActionResult CompleteTransaction(string code)
 		{
 			var transaction = db.Transactions.FirstOrDefault(p => p.CodeTransaction == code);
+
 			transaction.Status = "Completed";
 			db.Update(transaction);
 			db.SaveChanges();

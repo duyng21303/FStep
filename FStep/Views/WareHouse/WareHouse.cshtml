@@ -1,7 +1,7 @@
 @model FStep.ViewModels.WareHouse.WareHouseServiceVM
 @using X.PagedList.Mvc.Core
 @{
-	ViewData["Title"] = "WareHouse";
+	ViewData["Title"] = "Kho Hàng";
 }
 <div class="row align-items-center mb-8 search-header">
 	<div class="custom-container">
@@ -10,9 +10,9 @@
 				<div class="col">
 					<!-- Display counts -->
 					<div class="mb-3">
-						<span class="badge bg-primary">Process: @Model.ProcessCount</span>
-						<span class="badge bg-success">Finish: @Model.FinishCount</span>
-						<span class="badge bg-danger">Cancel: @Model.CancelCount</span>
+						<span class="badge bg-primary">Đang chờ: @Model.ProcessCount</span>
+						<span class="badge bg-success">Đã xong: @Model.FinishCount</span>
+						<span class="badge bg-danger">Hủy bỏ: @Model.CancelCount</span>
 					</div>
 
 					<form asp-controller="WareHouse" asp-action="WareHouse" method="get" class="mb-3">
@@ -356,5 +356,4 @@
 			});
 		});
 	});
-
 </script>

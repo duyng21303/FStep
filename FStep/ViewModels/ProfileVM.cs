@@ -20,6 +20,8 @@
         public string? Role { get; set; }
         public bool? Status { get; set; }
         public DateTime? CreateDate { get; set; }
+        public int? Total { get; set; }
+        public int? TotalEx {  get; set; }
 
        public List<PostVM> Posts { get; set; }
     }

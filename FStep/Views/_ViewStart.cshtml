@@ -3,10 +3,11 @@
     {
         Layout = "_LayoutAdmin";
     }
-    // else if (User.IsInRole("Moderator")){
-    //     Layout = "_LayoutModer";
-    //     System.Diagnostics.Debug.WriteLine("moder"); // Ghi thông điệp debug
-    // }
+
+    else if (User.IsInRole("Moderator")){
+        Layout = "_LayoutModer";
+    }
+
     else
     {
         Layout = "_LayoutCustomer";
