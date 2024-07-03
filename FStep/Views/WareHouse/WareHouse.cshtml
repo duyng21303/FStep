@@ -60,8 +60,8 @@
 										<th scope="col">Code Transaction</th>
 										<th scope="col">Location</th>
 										<th scope="col">Date</th>
-										<th scope="col">Id UserB</th>
-										<th scope="col">Id UserE</th>
+										<th scope="col">Chủ sở hửu bài đăng</th>
+										<th scope="col">Người trao đổi</th>
 										<th scope="col">Name Product</th>
 										<th scope="col">Action</th>
 									</tr>
@@ -120,7 +120,6 @@
 									}
 								</tbody>
 							</table>
-
 							@Html.PagedListPager(Model.ExchangeList, page => Url.Action("WareHouse", new { page, searchString = ViewBag.SearchString, activeTab = "exchange" }))
 						</div>
 
@@ -187,6 +186,16 @@
 </div>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
+	$(document).ready(function () {
+		// Lấy tham số từ URL query string
+		var urlParams = new URLSearchParams(window.location.search);
+		var id = urlParams.get('idTrans');
+		// Nếu có id và type từ query string
+		if (id) {
+			var target = "#confirmCollapse-" + id;
+			$(target).collapse('show');
+		}
+	});
 	document.addEventListener('DOMContentLoaded', function () {
 		// Lấy tất cả các thẻ <tr> có thuộc tính data-id
 		var trs = document.querySelectorAll('tr[data-id][data-type]');
@@ -194,7 +203,7 @@
 		// Thêm sự kiện click vào mỗi thẻ <tr>
 		trs.forEach(function (tr) {
 			tr.addEventListener('click', function () {
-				if (event.target.tagName.toLowerCase() !== 'input' && event.target.tagName.toLowerCase() !== 'button') {
+				if (event.target.tagName.toLowerCase() !== 'input' && event.target.tagName.toLowerCase() !== 'button' && event.target.tagName.toLowerCase() !== 'i') {
 
 					// Lấy giá trị của thuộc tính data-id của thẻ <tr> được bấm
 					var itemId = tr.getAttribute('data-id');
