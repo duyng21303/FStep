@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +10,8 @@ public partial class FstepDBContext : DbContext
     {
     }
 
-	public FstepDbContext(DbContextOptions<FstepDbContext> options)
+	public FstepDBContext(DbContextOptions<FstepDBContext> options)
+
 		: base(options)
 	{
 	}
