@@ -252,7 +252,7 @@ namespace FStep
 			var confirmsToRemove = await _context.Confirms
 											.Where(c => c.IdPost == int.Parse(postID))
 											.ToListAsync();
-			if (postDto.Status != "WaitingExchange")
+			if (postDto.Status != "Trading")
 			{
 				var idBuyer = "";
 				var idSeller = "";
@@ -290,7 +290,7 @@ namespace FStep
 								IdPost = int.Parse(postID),
 								IdUserBuyer = idBuyer,
 								IdUserSeller = idSeller,
-								Status = "Waiting",
+								Status = "Processing",
 								CodeTransaction = Util.GenerateRandomKey(10).ToUpper(),
 								Type = "Exchange",
 								IdComment = int.Parse(commentID)
@@ -303,7 +303,7 @@ namespace FStep
 							
 							_context.Confirms.RemoveRange(confirmsToRemove);
 							//ẩn bài post ------------------------
-							postDto.Status = "WaitingExchange";
+							postDto.Status = "Trading";
 							_context.Posts.Update(postDto);
 							//-------------------------------------
 						}
