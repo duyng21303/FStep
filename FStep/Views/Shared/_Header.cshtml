@@ -32,8 +32,8 @@
 				{
 					<a class="nav-link text-dark" asp-area="" asp-action="ManagePosts" asp-controller="ModeManagePost">Quản lý bài đăng</a>
 					<a class="nav-link text-dark" asp-area="" asp-action="WareHouse" asp-controller="Warehouse">Kho hàng</a>
-					<a class="nav-link text-dark" asp-area="" asp-action="UserManager" asp-controller="Admin">Quản lý người dùng</a>
-					<a class="nav-link text-dark" asp-area="" asp-action="CommentManager" asp-controller="Admin">Quản lý bình luận</a>
+					<a class="nav-link text-dark" asp-area="" asp-action="UserManager" asp-controller="ModeManageUser">Quản lý người dùng</a>
+
 				}
 				else
 				{
@@ -50,12 +50,13 @@
 				{
 					<div class="navbar-nav align-items-center ms-auto">
 						<div class="nav-item dropdown">
+							<i class="fa fa-bell me-lg-2"></i>
 							<a href="#" class="nav-link dropdown-toggle notification-toggle" data-bs-toggle="dropdown">
+								<i class="fa fa-bell me-lg-2"></i>
 								Thông báo
 								<span class="badge bg-danger">@ViewBag.NotificationCount</span>
 							</a>
 							<div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0 notification" id="notification">
-									
 							</div>
 
 						</div>
@@ -76,7 +77,6 @@
 							</a>
 							<div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
 								<a asp-action="Profile" asp-controller="Account" class="dropdown-item">Trang cá nhân</a>
-								<a href="#" class="dropdown-item">Settings</a>
 								<a asp-action="Logout" asp-controller="Account" class="dropdown-item">Đăng xuất</a>
 
 							</div>

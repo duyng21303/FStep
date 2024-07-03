@@ -1,6 +1,7 @@
 ﻿@model X.PagedList.IPagedList<FStep.ViewModels.PostVM>
 @using X.PagedList.Mvc.Core;
 @{
+	Layout = "Views/Shared/LayoutAdmin.cshtml";
 	ViewData["Title"] = "Sale Posts";
 	var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
