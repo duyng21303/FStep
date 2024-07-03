@@ -10,8 +10,6 @@ using X.PagedList;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text.Json;
 using FStep.Helpers;
-using Microsoft.AspNetCore.Authorization;
-using FStep.Services;
 
 
 
@@ -273,6 +271,7 @@ namespace FStep.Controllers.ManagePost
 						if (img != null)
 						{
 							if (trans.SentImg != null)
+
 							{
 								await notificationServices.CreateNotification(userBuyer.IdUser, "TransactionExchangeAlready", "Transaction", userSeller.Name, trans.IdTransaction);
 								await notificationServices.CreateNotification(userSeller.IdUser, "TransactionRecieveGoods", "Transaction", userBuyer.Name, trans.IdTransaction);
@@ -385,6 +384,7 @@ namespace FStep.Controllers.ManagePost
 			}
 			catch (Exception ex) { }
 			return Json(new { transactionId = id });
+
 		}
 	}
 }
