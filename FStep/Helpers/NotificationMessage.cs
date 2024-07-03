@@ -22,9 +22,16 @@ namespace FStep.Helpers
 			public static string TransactionFailed(string storeName) =>
 				$"Giao dịch mua hàng tại {storeName} đã bị hủy.";
 
-			public static string TransactionRefunded() =>
-				"Giao dịch nạp tiền vào tài khoản đã được hoàn tiền.";
-
+			public static string TransactionExchangeAlready(string transactionID) =>
+				$"Người trao đổi với bạn trong giao dịch #{transactionID} đã mang hàng tới, mời bạn tới lấy hàng.";
+			public static string TransactionRecieveGoods(string transactionID) =>
+				$"Chúng tôi đã nhận được hàng từ giao dịch #{transactionID} của bạn.";
+			public static string TransactionExchangeRecieveSuccess(string transactionID) =>
+				$"Bạn đã nhận hàng thành công từ giao dịch #{transactionID}";
+			public static string TransactionSellSent(string transactionID) =>
+				$"Bạn đã gửi hàng thành công cho đơn hàng #{transactionID}";
+			public static string TransactionSellRecieve(string transactionID) =>
+				$"Bạn đã nhận hàng thành công #{transactionID}";
 			// Payment Notifications
 			public static string PaymentConfirmed(string invoiceNumber) =>
 				$"Thanh toán hóa đơn #{invoiceNumber} của bạn đã được xác nhận.";
@@ -81,8 +88,11 @@ namespace FStep.Helpers
 					"TransactionReceived" => TransactionReceived(parameters),
 					"TransactionPending" => TransactionPending(),
 					"TransactionFailed" => TransactionFailed(parameters),
-					"TransactionRefunded" => TransactionRefunded(),
-					"PaymentConfirmed" => PaymentConfirmed(parameters),
+					"TransactionExchangeAlready" => TransactionExchangeAlready(parameters),
+					"TransactionRecieveGoods" => TransactionRecieveGoods(parameters),
+					"TransactionExchangeRecieveSuccess" => TransactionExchangeRecieveSuccess(parameters),
+					"TransactionSellSent" => TransactionSellSent(parameters),
+					"TransactionSellRecieve" => TransactionSellRecieve(parameters),
 					"PaymentReceived" => PaymentReceived(parameters),
 					"PaymentFailed" => PaymentFailed(parameters),
 					"PaymentProcessing" => PaymentProcessing(),
@@ -96,9 +106,9 @@ namespace FStep.Helpers
 					"ReportRejected" => ReportRejected(parameters),
 					"NewReportOnContent" => NewReportOnContent(parameters),
 					_ => "Unknown notification type."
-				};
+				} ;
 			}
-			public static User? UserOther(FstepDbContext context, Notification notif)
+			public static User? UserOther(FstepDBContext context, Notification notif)
 			{
 				string type = notif.Type;
 				return type switch
@@ -120,7 +130,7 @@ namespace FStep.Helpers
 					_ => null
 				};
 			}
-			public static T EventEntity<T>(FstepDbContext context, Notification notif)
+			public static T EventEntity<T>(FstepDBContext context, Notification notif)
 			{
 				string type = notif.Type;
 
