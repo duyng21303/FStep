@@ -57,7 +57,7 @@ namespace FStep.Controllers
 			if (id != null)
 			{
 				var user = db.Users.FirstOrDefault(p => p.IdUser == id);
-				checkInfo = (user.StudentId != null /*&& user.BankAccountNumber != null && user.BankName != null*/).ToString();
+				checkInfo = (user?.StudentId != null /*&& user.BankAccountNumber != null && user.BankName != null*/).ToString();
 			}
 			else
 			{
@@ -209,23 +209,27 @@ namespace FStep.Controllers
 		[HttpGet]
 		public ActionResult TransactionDetail(int id)
 		{
+			var transaction = db.Transactions.FirstOrDefault(p => p.IdTransaction == id);
+			var post = db.Posts.FirstOrDefault(p => p.IdPost == transaction.IdPost);
+
 			return View(new TransactionVM()
 			{
 				TransactionId = id,
-				IdPost = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdPost,
-				Content = db.Posts.FirstOrDefault(p => p.IdPost == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdPost).Content,
-				Detail = db.Posts.FirstOrDefault(p => p.IdPost == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdPost).Detail,
-				TypePost = db.Posts.FirstOrDefault(p => p.IdPost == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdPost).Type,
+				IdPost = transaction.IdPost,
+				Content = post.Content,
+				Detail = post.Detail,
+				TypePost = post.Type,
 				DeliveryDate = db.Payments.FirstOrDefault(p => p.IdTransaction == id && p.Type == "Seller")?.PayTime,
-				CreateDate = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).Date,
-				Status = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).Status,
-				Img = db.Posts.FirstOrDefault(p => p.IdPost == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdPost).Img,
-				UnitPrice = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).UnitPrice,
-				Quantity = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).Quantity,
-				Amount = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).Amount,
-				IdUserSeller = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdUserSeller,
-				CodeTransaction = db.Transactions.FirstOrDefault(p => p.IdTransaction == id).CodeTransaction,
+				CreateDate = transaction.Date,
+				Status = transaction.Status,
+				Img = post.Img,
+				UnitPrice = transaction.UnitPrice,
+				Quantity = transaction.Quantity,
+				Amount = transaction.Amount,
+				IdUserSeller = transaction.IdUserSeller,
+				CodeTransaction = transaction.CodeTransaction,
 				UserName = db.Users.FirstOrDefault(p => p.IdUser == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdUserBuyer).Name ?? null,
+				CancelDate = db.Payments.FirstOrDefault(p => p.IdTransaction == id).CancelDate,
 			});
 		}
 	}

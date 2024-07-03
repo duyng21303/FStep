@@ -81,12 +81,24 @@
 			</div>
 
 			<div class="d-flex justify-content-between pt-2">
-				<h5 class="small text-muted mb-0">Ngày đặt hàng: <span>@Model.DeliveryDate?.ToString("MM/dd/yyyy hh:mm tt")</span></h5>
+				<h5 class="small text-muted mb-0">Ngày đặt hàng: <span>@Model.CreateDate?.ToString("MM/dd/yyyy hh:mm tt")</span></h5>
 				<h5 class="text-muted mb-0"><span class="fw-bold me-4">Tổng</span> @String.Format(format, "{0:0,0 VND}", Model.Amount)</h5>
 			</div>
 
 			<div class="d-flex justify-content-between">
-				<h5 class="small text-muted mb-0">Ngày nhận hàng: <span>@Model.DeliveryDate?.ToString("MM/dd/yyyy hh:mm tt")</span></h5>
+				@if (Model.Status == "Completed")
+				{
+					<h5 class="small text-muted mb-0">Ngày nhận hàng: <span>@Model.DeliveryDate?.ToString("MM/dd/yyyy hh:mm tt")</span></h5>
+				}
+				else
+				@if (Model.Status == "Canceled")
+				{
+					<h5 class="small text-muted mb-0">Ngày huỷ: <span>@Model.CancelDate?.ToString("MM/dd/yyyy hh:mm tt")</span></h5>
+				}
+				else
+				{
+					<h5 class="small text-muted mb-0">-----</h5>
+				}
 				<h5 class="text-muted mb-0"><span class="fw-bold me-4">Giảm giá</span>@String.Format(format, "{0:0,0 VND}", 0)</h5>
 			</div>
 		</div>
@@ -101,9 +113,9 @@
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	@await Html.PartialAsync("Cancel", new CancelVM()
-	{
-		TransactionId = Model.TransactionId
-	})
+{
+	TransactionId = Model.TransactionId
+})
 </div>
 
 

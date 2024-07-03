@@ -36,7 +36,7 @@ namespace FStep.Repostory.Service
                     From = new MailAddress(getEmailSetting.From),
                     Subject = Subject,
                     Body = message,
-                    BodyEncoding = System.Text.Encoding.ASCII,
+                    BodyEncoding = System.Text.Encoding.UTF8,
                     IsBodyHtml = true
                 };
                 mailMessage.To.Add(email);

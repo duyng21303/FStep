@@ -5,6 +5,7 @@
 		public int TransactionId { get; set; }
 		public DateTime? DeliveryDate { get; set; }
 		public DateTime? CreateDate { get; set; }
+		public DateTime? CancelDate { get; set; }
 		public string Img { get; set; }
 		public string Status { get; set; }
 		public float? UnitPrice { get; set; }

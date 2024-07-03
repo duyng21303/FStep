@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Azure.Identity;
+using FStep.Controllers.Auth;
 using FStep.Data;
 using FStep.Helpers;
 using FStep.Repostory.Interface;
@@ -8,11 +9,20 @@ using FStep.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using NuGet.Protocol.Plugins;
+using System;
+using System.Net.Mail;
+using System.Text;
 using System.Transactions;
+
 
 namespace FStep.Controllers.Customer
 {
@@ -23,13 +33,21 @@ namespace FStep.Controllers.Customer
 		private readonly IMapper _mapper;
 		private readonly IEmailSender emailSender;
 		private readonly IVnPayService _vnPayService;
+		private readonly IRazorViewEngine _viewEngine;
+		private readonly ITempDataProvider _tempDataProvider;
+		private readonly IServiceProvider _serviceProvider;
+		private readonly ILogger<RegistrationController> _logger;
 
-		public PayController(FstepDbContext context, IMapper mapper, IVnPayService vnPayService, IEmailSender emailSender)
+		public PayController(FstepDbContext context, IMapper mapper, IVnPayService vnPayService, IEmailSender emailSender, IRazorViewEngine viewEngine, ITempDataProvider tempDataProvider, IServiceProvider serviceProvider, ILogger<RegistrationController> logger)
 		{
 			db = context;
 			_mapper = mapper;
 			_vnPayService = vnPayService;
 			this.emailSender = emailSender;
+			_viewEngine = viewEngine;
+			_tempDataProvider = tempDataProvider;
+			_serviceProvider = serviceProvider;
+			_logger = logger;
 		}
 		public IActionResult Index()
 		{
@@ -90,95 +108,199 @@ namespace FStep.Controllers.Customer
 		}
 
 		[Authorize]
-		public IActionResult PaymentCallBack()
+		public async Task<IActionResult> PaymentCallBack()
 		{
-			var response = _vnPayService.PaymentExecute(Request.Query);
-
-			if (response == null || response.VnPayResponseCode != "00")
+			try
 			{
-				TempData["Message"] = $"VnPay fail: {response.VnPayResponseCode}";
-				return RedirectToAction("PaymentFail");
-			}
-			CheckoutVM info = HttpContext.Session.Get<CheckoutVM>("CHECKOUT_INFO");
+				var response = _vnPayService.PaymentExecute(Request.Query);
 
+				if (response == null || response.VnPayResponseCode != "00")
+				{
+					TempData["Message"] = $"VnPay fail: {response.VnPayResponseCode}";
+					return RedirectToAction("PaymentFail");
+				}
+				CheckoutVM info = HttpContext.Session.Get<CheckoutVM>("CHECKOUT_INFO");
 
-			var transaction = new FStep.Data.Transaction();
-			transaction.Date = DateTime.Now;
-			transaction.Status = "Processing";
-			transaction.Quantity = info.Quantity;
-			transaction.UnitPrice = info.UnitPrice;
-			transaction.Amount = float.Parse(response.Amount.ToString()) / 100;
+				var transaction = new FStep.Data.Transaction();
+				transaction.Date = DateTime.Now;
+				transaction.Status = "Processing";
+				transaction.Quantity = info.Quantity;
+				transaction.UnitPrice = info.UnitPrice;
+				transaction.Amount = float.Parse(response.Amount.ToString()) / 100;
 
-			transaction.IdPost = info.IdPost;
-			transaction.IdUserBuyer = info.IdUserBuyer;
-			transaction.IdUserSeller = info.IdUserSeller;
-			transaction.Type = info.Type;
-			transaction.CodeTransaction = response.TransactionCode;
-			db.Add(transaction);
-			db.SaveChanges();
+				transaction.IdPost = info.IdPost;
+				transaction.IdUserBuyer = info.IdUserBuyer;
+				transaction.IdUserSeller = info.IdUserSeller;
+				transaction.Type = info.Type;
+				transaction.CodeTransaction = response.TransactionCode;
+				db.Add(transaction);
+				db.SaveChanges();
 
-			var payment = new Payment();
-			payment.PayTime = transaction.Date;
-			payment.Amount = transaction.Amount;
-			payment.VnpayTransactionCode = transaction.CodeTransaction;
-			payment.Type = "Buyer";
-			payment.Status = "True";
-			payment.IdTransaction = db.Transactions.SingleOrDefault(p => p.CodeTransaction == transaction.CodeTransaction).IdTransaction;
-			db.Add(payment);
-			db.SaveChanges();
+				var payment = new Payment();
+				payment.PayTime = transaction.Date;
+				payment.Amount = transaction.Amount;
+				payment.VnpayTransactionCode = transaction.CodeTransaction;
+				payment.Type = "Buyer";
+				payment.Status = "True";
+				payment.IdTransaction = db.Transactions.SingleOrDefault(p => p.CodeTransaction == transaction.CodeTransaction).IdTransaction;
+				db.Add(payment);
+				db.SaveChanges();
 
-			var post = db.Posts.SingleOrDefault(p => p.IdPost == info.IdPost);
-			var product = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct);
-
-
-			if (product.Quantity <= 0)
-			{
+				var post = db.Posts.SingleOrDefault(p => p.IdPost == info.IdPost);
+				var product = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct);
 				post.Status = "Trading";
 				product.Status = "False";
+
+				db.Update(product);
+				db.SaveChanges();
+
+				var buyer = db.Users.SingleOrDefault(p => p.IdUser == info.IdUserBuyer);
+				var seller = db.Users.SingleOrDefault(p => p.IdUser == info.IdUserSeller);
+
+				//lấy thông tin transaction
+
+				var invoice = GetInvoiceById(db.Transactions.FirstOrDefault(p => p.CodeTransaction == transaction.CodeTransaction).IdTransaction);
+				string emailBody = await RenderViewToStringAsync("Invoice", invoice);
+
+				//sent email
+				bool sentBuyer = await emailSender.EmailSendAsync(buyer.Email, "Đơn hàng của bạn đã được tạo", emailBody);
+				bool sentSeller = await emailSender.EmailSendAsync(seller.Email, "Sản phẩm của của bạn đã được mua", emailBody);
+
+				if (!sentBuyer || !sentSeller)
+				{
+					return RedirectToAction("Error", "Home");
+				}
+
+				TempData["Message"] = $"VnPay success";
+				return RedirectToAction("PaymentSuccess");
 			}
-			db.Update(product);
-			db.SaveChanges();
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Can't send your email ");
+				return RedirectToAction("Error", "Home");
+			}
+		}
 
-			var buyer = db.Users.SingleOrDefault(p => p.IdUser == info.IdUserBuyer);
-			var seller = db.Users.SingleOrDefault(p => p.IdUser == info.IdUserSeller);
+		//public string GenerateInvoiceHtml(TransactionVM invoice)
+		//{
+		//	var html = new StringBuilder();
+		//	html.Append("<html>");
+		//	html.Append("<head>");
+		//	html.Append("<meta charset='utf-8'/>"); // Đảm bảo mã hóa UTF-8
+		//	html.Append("<title>Hóa đơn</title>");
+		//	html.Append("</head>");
+		//	html.Append("<body>");
+		//	html.Append("<h1>Hóa đơn</h1>");
+		//	html.Append($"<p>Mã hóa đơn: {invoice.CodeTransaction}</p>");
+		//	html.Append($"<p>Tên khách hàng: {invoice.UserName}</p>");
+		//	html.Append($"<p>Tổng số tiền: {invoice.Amount}</p>");
+		//	// Thêm các thông tin khác của hóa đơn
+		//	html.Append("</body>");
+		//	html.Append("</html>");
+		//	return html.ToString();
+		//}
 
-			//sent email
-			emailSender.EmailSendAsync(buyer.Email, "Đơn hàng của bạn đã được tạo", "Thông tin chi tiết đơn hàng");
-			emailSender.EmailSendAsync(seller.Email, "Sản phẩm của của bạn đã được mua", "Thôn tin chi tiết đơn hàng");
+		private async Task<string> RenderViewToStringAsync(string viewName, object model)
+		{
+			var actionContext = new ActionContext(HttpContext, RouteData, ControllerContext.ActionDescriptor, ModelState);
+			using (var sw = new StringWriter())
+			{
+				var viewResult = _viewEngine.FindView(actionContext, viewName, false);
+				if (viewResult.View == null)
+				{
+					throw new ArgumentNullException($"{viewName} does not match any available view");
+				}
 
-			TempData["Message"] = $"VnPay success";
-			return RedirectToAction("PaymentSuccess");
+				var viewDictionary = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
+				{
+					Model = model
+				};
+
+				var viewContext = new ViewContext(
+				actionContext,
+				viewResult.View,
+					viewDictionary,
+					new TempDataDictionary(actionContext.HttpContext, _tempDataProvider),
+					sw,
+					new HtmlHelperOptions()
+				);
+
+				await viewResult.View.RenderAsync(viewContext);
+				return sw.ToString();
+			}
+		}
+
+		private TransactionVM GetInvoiceById(int id)
+		{
+			var transaction = db.Transactions.FirstOrDefault(p => p.IdTransaction == id);
+			var post = db.Posts.FirstOrDefault(p => p.IdPost == transaction.IdPost);
+			// Lấy thông tin hóa đơn từ database
+			return new TransactionVM
+			{
+				TransactionId = id,
+				IdPost = transaction.IdPost,
+				Content = post.Content,
+				Detail = post.Detail,
+				TypePost = post.Type,
+				DeliveryDate = db.Payments.FirstOrDefault(p => p.IdTransaction == id && p.Type == "Seller")?.PayTime,
+				CreateDate = transaction.Date,
+				Status = transaction.Status,
+				Img = post.Img,
+				UnitPrice = transaction.UnitPrice,
+				Quantity = transaction.Quantity,
+				Amount = transaction.Amount,
+				IdUserSeller = transaction.IdUserSeller,
+				CodeTransaction = transaction.CodeTransaction,
+				UserName = db.Users.FirstOrDefault(p => p.IdUser == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdUserBuyer).Name ?? null,
+				CancelDate = db.Payments.FirstOrDefault(p => p.IdTransaction == id).CancelDate,
+				// Thêm các thông tin khác của hóa đơn
+			};
 		}
 
 		[Authorize]
 		[HttpPost]
-		public IActionResult Cancel(CancelVM model)
+		public async Task<IActionResult> Cancel(CancelVM model)
 		{
-			var transaction = db.Transactions.SingleOrDefault(p => p.IdTransaction == model.TransactionId);
-			transaction.Status = "Canceled";
-			db.Update(transaction);
+			try
+			{
+				var transaction = db.Transactions.SingleOrDefault(p => p.IdTransaction == model.TransactionId);
+				transaction.Status = "Canceled";
+				db.Update(transaction);
 
-			var post = db.Posts.SingleOrDefault(p => p.IdPost == transaction.IdPost);
-			post.Status = "True";
-			db.Update(post);
+				var post = db.Posts.SingleOrDefault(p => p.IdPost == transaction.IdPost);
+				post.Status = "True";
+				db.Update(post);
 
-			var product = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct);
-			product.Status = "True";
-			db.Update(product);
+				var product = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct);
+				product.Status = "True";
+				db.Update(product);
 
-			var payment = new Payment();
-			payment.VnpayTransactionCode = transaction.CodeTransaction;
-			payment.PayTime = DateTime.Now;
-			payment.Type = "Buyer";
-			payment.Status = "False";
-			payment.Note = model.Note;
-			payment.IdTransaction = transaction.IdTransaction;
-			db.Add(payment);
+				var payment = db.Payments.FirstOrDefault(p => p.IdTransaction == model.TransactionId);
+				payment.Status = "False";
+				payment.CancelDate = DateTime.Now;
+				payment.Note = model.Note;
+				db.Update(payment);
 
-			db.SaveChanges();
+				//tạo invoice
+				var invoice = GetInvoiceById(db.Transactions.FirstOrDefault(p => p.CodeTransaction == transaction.CodeTransaction).IdTransaction);
+				string emailBody = await RenderViewToStringAsync("Invoice", invoice);
 
-			return RedirectToAction("TransactionHistory","Home");
+				var buyer = db.Users.SingleOrDefault(p => p.IdUser == transaction.IdUserBuyer);
+				var seller = db.Users.SingleOrDefault(p => p.IdUser == transaction.IdUserSeller);
+				//sent email
+				bool sentSeller = await emailSender.EmailSendAsync(seller.Email, "Sản phẩm của của bạn đã bị huỷ bởi người mua", emailBody);
+				bool sentBuyer = await emailSender.EmailSendAsync(buyer.Email, "Sản phẩm của của bạn đã được huỷ", emailBody);
+
+				db.SaveChanges();
+
+				return RedirectToAction("TransactionHistory", "Home");
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Can't send your email ");
+				return RedirectToAction("Error", "Home");
+			}
+
 		}
-
 	}
 }

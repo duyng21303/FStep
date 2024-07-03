@@ -21,6 +21,8 @@ public partial class Payment
 
     public string? Note { get; set; }
 
+    public DateTime? CancelDate { get; set; }
+
     public virtual Transaction IdTransactionNavigation { get; set; } = null!;
 
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
