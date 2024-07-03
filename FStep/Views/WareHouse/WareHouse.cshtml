@@ -60,8 +60,8 @@
 										<th scope="col">Code Transaction</th>
 										<th scope="col">Location</th>
 										<th scope="col">Date</th>
-										<th scope="col">Id UserB</th>
-										<th scope="col">Id UserE</th>
+										<th scope="col">Chủ sở hửu bài đăng</th>
+										<th scope="col">Người trao đổi</th>
 										<th scope="col">Name Product</th>
 										<th scope="col">Action</th>
 									</tr>
@@ -72,32 +72,20 @@
 										<tr data-id="@item.TransactionVM.TransactionId" data-type="@item.Type">
 											<td>@Html.DisplayFor(modelItem => item.TransactionVM.CodeTransaction)</td>
 											<td>@Html.DisplayFor(modelItem => item.Location)</td>
-											<td>@Html.DisplayFor(modelItem => item.TransactionVM.CreateDate)</td>
+											<td>@item.TransactionVM.CreateDate</td>
 											<td>@Html.DisplayFor(moderItem => item.UserBuyer.IdUser)</td>
-											<form asp-action="RecieveImg" enctype="multipart/form-data">
-											<td>
-												<label class="btn btn-primary">
-													Upload new image
-													<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
-													<input type="hidden" name="type" value="Buyer" />
-													<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
-												</label>
-											</td>
-											</form>
+											
 											<td>@Html.DisplayFor(modelItem => item.UserSeller.IdUser)</td>
-											<form asp-action="RecieveImg" enctype="multipart/form-data">
-												<label class="btn btn-primary">
-													Upload new image
-													<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
-													<input type="hidden" name="type" value="Seller" />
-													<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
-												</label>
-											</form>
+											
 											<td>@Html.DisplayFor(modelItem => item.PostVM.Title)</td>
 											<td>
-												<button type="button" class="btn btn-danger btn-sm submit-img" data-toggle="collapse" data-target="#confirmCollapse-@item.TransactionVM.TransactionId">Confirm</button>
+												<button type="button" class="btn btn-danger btn-sm submit-img" data-toggle="collapse" data-target="#confirmCollapse-@item.TransactionVM.TransactionId">
+													<i class="fas fa-chevron-down"></i>
+												</button>
 											</td>
-
+											<td>
+												<button type="button" class="btn btn-danger btn-sm" >Hoàn thành</button>
+											</td>
 										</tr>
 										<tr id="confirmCollapse-@item.TransactionVM.TransactionId" class="collapse">
 											<td colspan="9">
@@ -105,21 +93,21 @@
 													<table class="table table-bordered">
 														<thead>
 															<tr>
-																<th>User 1</th>
-																<th>User 2</th>
+																<th>Chủ sở hửu bài đăng</th>
+																<th>Người trao đổi</th>
 															</tr>
 														</thead>
 														<tbody>
 															<tr>
 																<td>
 																	<div class="user-info">
-																		<img src="@item.UserBuyer.AvatarImg" alt="User 1 Avatar" class="avatar">
+																		<img src="/img/@item.UserBuyer.AvatarImg" alt="User 1 Avatar" class="avatar">
 																		<p>@item.UserBuyer.Name</p>
 																	</div>
 																</td>
 																<td>
 																	<div class="user-info">
-																		<img src="@item.UserSeller.AvatarImg" alt="User 2 Avatar" class="avatar">
+																		<img src="/img/@item.UserSeller.AvatarImg" alt="User 2 Avatar" class="avatar">
 																		<p>@item.UserSeller.Name</p>
 																	</div>
 																</td>
@@ -131,7 +119,7 @@
 																			<label class="btn btn-primary">
 																				Upload new image
 																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
-																				<input type="hidden" name="type" value="Seller" />
+																				<input type="hidden" name="type" value="SellerSent" />
 																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
 																			</label>
 																		</form>
@@ -145,7 +133,7 @@
 																			<label class="btn btn-primary">
 																				Upload new image
 																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
-																				<input type="hidden" name="type" value="Seller" />
+																				<input type="hidden" name="type" value="SellerReceive" />
 																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
 																			</label>
 																		</form>
@@ -161,7 +149,7 @@
 																			<label class="btn btn-primary">
 																				Upload new image
 																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
-																				<input type="hidden" name="type" value="Seller" />
+																				<input type="hidden" name="type" value="BuyerSent" />
 																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
 																			</label>
 																		</form>
@@ -175,7 +163,7 @@
 																			<label class="btn btn-primary">
 																				Upload new image
 																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
-																				<input type="hidden" name="type" value="Seller" />
+																				<input type="hidden" name="type" value="BuyerReceive" />
 																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
 																			</label>
 																		</form>
@@ -225,7 +213,72 @@
 											<td>@Html.DisplayFor(modelItem => item.TransactionVM.Quantity)</td>
 											<td>@Html.DisplayFor(modelItem => item.TransactionVM.Amount)</td>
 											<td>
-												<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmModal" data-id="@item.PostVM.IdPost">Confirm</button>
+												<button type="button" class="btn btn-danger btn-sm submit-img" data-toggle="collapse" data-target="#confirmCollapse-@item.TransactionVM.TransactionId">
+													<i class="fas fa-chevron-down"></i>
+												</button>
+											</td>
+											<td>
+												<button type="button" class="btn btn-danger btn-sm">Hoàn thành</button>
+											</td>
+										</tr>
+										<tr id="confirmCollapse-@item.TransactionVM.TransactionId" class="collapse">
+											<td colspan="9">
+												<div class="card card-body">
+													<table class="table table-bordered">
+														<thead>
+															<tr>
+																<th>Người bán</th>
+																<th>Người mua</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr>
+																<td>
+																	<div class="user-info">
+																		<img src="@item.UserBuyer.AvatarImg" alt="User 1 Avatar" class="avatar">
+																		<p>@item.UserBuyer.Name</p>
+																	</div>
+																</td>
+																<td>
+																	<div class="user-info">
+																		<img src="@item.UserSeller.AvatarImg" alt="User 2 Avatar" class="avatar">
+																		<p>@item.UserSeller.Name</p>
+																	</div>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<div class="action-info">
+																		<form asp-action="RecieveImg" enctype="multipart/form-data">
+																			<label class="btn btn-primary">
+																				Upload new image
+																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
+																				<input type="hidden" name="type" value="SellerSent-Sell" />
+																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
+																			</label>
+																		</form>
+																		<img src="@item.UserSeller.AvatarImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px;">
+																		<p style="margin: 0;">Date: @item.UserBuyer.CreateDate</p>
+																	</div>
+																</td>
+																<td>
+																	<div class="action-info">
+																		<form asp-action="RecieveImg" enctype="multipart/form-data">
+																			<label class="btn btn-primary">
+																				Upload new image
+																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
+																				<input type="hidden" name="type" value="SellerRevieve-Sell" />
+																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
+																			</label>
+																		</form>
+																		<img src="@item.UserSeller.AvatarImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px;">
+																		<p style="margin: 0;">Date: @item.UserBuyer.CreateDate</p>
+																	</div>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
 											</td>
 										</tr>
 									}
@@ -275,7 +328,7 @@
 		// Thêm sự kiện click vào mỗi thẻ <tr>
 		trs.forEach(function (tr) {
 			tr.addEventListener('click', function () {
-				if (event.target.tagName.toLowerCase() !== 'input' && event.target.tagName.toLowerCase() !== 'button') {
+				if (event.target.tagName.toLowerCase() !== 'input' && event.target.tagName.toLowerCase() !== 'button' && event.target.tagName.toLowerCase() !== 'i') {
 
 					// Lấy giá trị của thuộc tính data-id của thẻ <tr> được bấm
 					var itemId = tr.getAttribute('data-id');
