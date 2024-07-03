@@ -140,7 +140,7 @@
 																	<div class="action-info">
 																		<form asp-action="RecieveImg" enctype="multipart/form-data">
 																			<label class="btn btn-primary">
-																				Xác nhận đã nhận hàng
+																				Xác nhận đã gửi hàng
 																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
 																				<input type="hidden" name="type" value="BuyerSent" />
 																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
@@ -159,7 +159,7 @@
 																	<div class="action-info">
 																		<form asp-action="RecieveImg" enctype="multipart/form-data">
 																			<label class="btn btn-primary">
-																				Xác nhận đã gửi hàng
+																				Xác nhận đã nhận hàng
 																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
 																				<input type="hidden" name="type" value="SellerReceive" />
 																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
