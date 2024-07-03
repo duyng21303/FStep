@@ -33,7 +33,7 @@ public class Program
 			options.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
 		});
 
-
+		// Add services to the container.
 		builder.Services.AddTransient<IEmailSender, EmailSender>();
 		builder.Services.AddHostedService<PostExpirationService>();
 
@@ -92,11 +92,12 @@ public class Program
 		{
 			endpoints.MapHub<ChatHub>("chatHub");
 			endpoints.MapHub<NotificationHub>("notificationhub");
+			
 		});
+		// Fallback default route
 		app.MapControllerRoute(
 			name: "default",
 			pattern: "{controller=Home}/{action=Index}/{id?}");
-
 		app.Run();
 
 	}
