@@ -106,7 +106,7 @@ namespace FStep.Helpers
 					"ReportRejected" => ReportRejected(parameters),
 					"NewReportOnContent" => NewReportOnContent(parameters),
 					_ => "Unknown notification type."
-				} ;
+				};
 			}
 			public static User? UserOther(FstepDBContext context, Notification notif)
 			{

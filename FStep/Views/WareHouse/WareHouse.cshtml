@@ -1,4 +1,4 @@
-﻿@model FStep.ViewModels.WareHouse.WareHouseServiceVM
+@model FStep.ViewModels.WareHouse.WareHouseServiceVM
 @using X.PagedList.Mvc.Core
 @{
 	ViewData["Title"] = "WareHouse";
@@ -74,9 +74,9 @@
 											<td>@Html.DisplayFor(modelItem => item.Location)</td>
 											<td>@item.TransactionVM.CreateDate</td>
 											<td>@Html.DisplayFor(moderItem => item.UserBuyer.IdUser)</td>
-											
+
 											<td>@Html.DisplayFor(modelItem => item.UserSeller.IdUser)</td>
-											
+
 											<td>@Html.DisplayFor(modelItem => item.PostVM.Title)</td>
 											<td>
 												<button type="button" class="btn btn-danger btn-sm submit-img" data-toggle="collapse" data-target="#confirmCollapse-@item.TransactionVM.TransactionId">
@@ -84,7 +84,7 @@
 												</button>
 											</td>
 											<td>
-												<button type="button" class="btn btn-danger btn-sm" >Hoàn thành</button>
+												<button type="button" class="btn btn-danger btn-sm">Hoàn thành</button>
 											</td>
 										</tr>
 										<tr id="confirmCollapse-@item.TransactionVM.TransactionId" class="collapse">
