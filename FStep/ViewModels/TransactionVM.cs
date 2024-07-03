@@ -18,7 +18,6 @@
 		public int? IdPost { get; set; }
 		public string? TypePost { get; set; }
 		public string IdSeller { get; set; }
-		public string? SellerImg { get; set; }
 		public string? SellerName { get; set; }
 		public string? UserName {  get; set; }
 		public bool CheckFeedback { get; set; }

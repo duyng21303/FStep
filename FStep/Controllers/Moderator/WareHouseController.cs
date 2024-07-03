@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using FStep.Services;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace FStep.Controllers.ManagePost
 {
@@ -73,69 +74,75 @@ namespace FStep.Controllers.ManagePost
 				List<WareHouseVM> exchangeList = new List<WareHouseVM>();
 				foreach (var item in exchangeTransactions)
 				{
-					var post = db.Posts.SingleOrDefault(post => post.IdPost == item.IdPost);
-					var comment = db.Comments.SingleOrDefault(comment => comment.IdComment == item.IdComment);
-					var userBuyer = db.Users.SingleOrDefault(user => user.IdUser == item.IdUserBuyer);
-					var userSeller = db.Users.SingleOrDefault(user => user.IdUser == item.IdUserSeller);
-					var postVM = new PostVM
+					if (item.Status == "Processing")
 					{
-						Type = post.Type,
-						Img = post.Img,
-						IdUser = post.IdUser,
-						CreateDate = post.Date,
-						Title = post.Content,
-						DetailProduct = post.Detail,
-						FeedbackNum = post.Feedbacks.Count
-					};
-					var commentExchangeVM = new CommentExchangeVM
-					{
-						Content = comment.Content,
-						IdPost = comment.IdPost.ToString(), // Convert int to string
-						IdUser = comment.IdUser,
-						Img = comment.Img,
-						Type = comment.Type
-					};
-					exchangeList.Add(new WareHouseVM()
-					{
-						CommentExchangeVM = commentExchangeVM,
-						PostVM = postVM,
-						TransactionVM = _mapper.Map<TransactionVM>(item),
-						Type = item.Type,
-						UserBuyer = userBuyer,
-						UserSeller = userSeller
-					});
+						var post = db.Posts.SingleOrDefault(post => post.IdPost == item.IdPost);
+						var comment = db.Comments.SingleOrDefault(comment => comment.IdComment == item.IdComment);
+						var userBuyer = db.Users.SingleOrDefault(user => user.IdUser == item.IdUserBuyer);
+						var userSeller = db.Users.SingleOrDefault(user => user.IdUser == item.IdUserSeller);
+						var postVM = new PostVM
+						{
+							Type = post.Type,
+							Img = post.Img,
+							IdUser = post.IdUser,
+							CreateDate = post.Date,
+							Title = post.Content,
+							DetailProduct = post.Detail,
+							FeedbackNum = post.Feedbacks.Count
+						};
+						var commentExchangeVM = new CommentExchangeVM
+						{
+							Content = comment.Content,
+							IdPost = comment.IdPost.ToString(), // Convert int to string
+							IdUser = comment.IdUser,
+							Img = comment.Img,
+							Type = comment.Type
+						};
+						exchangeList.Add(new WareHouseVM()
+						{
+							CommentExchangeVM = commentExchangeVM,
+							PostVM = postVM,
+							TransactionVM = _mapper.Map<TransactionVM>(item),
+							Type = item.Type,
+							UserBuyer = userBuyer,
+							UserSeller = userSeller
+						});
+					}
 				}
 				viewModel.ExchangeList = exchangeList.ToPagedList(pageNumber, pageSize);
 				List<WareHouseVM> saleList = new List<WareHouseVM>();
 				foreach (var item in saleTransactions)
 				{
-					var post = db.Posts.SingleOrDefault(post => post.IdPost == item.IdPost);
-					var userBuyer = db.Users.SingleOrDefault(user => user.IdUser == item.IdUserBuyer);
-					var userSeller = db.Users.SingleOrDefault(user => user.IdUser == item.IdUserSeller);
-					var postVM = new PostVM
+					if (item.Status == "Processing")
 					{
-						Type = post.Type,
-						Img = post.Img,
-						IdUser = post.IdUser,
-						CreateDate = post.Date,
-						Title = post.Content,
-						DetailProduct = post.Detail,
-						FeedbackNum = post.Feedbacks.Count
-					};
-					saleList.Add(new WareHouseVM()
-					{
-						PostVM = postVM,
-						TransactionVM = _mapper.Map<TransactionVM>(item),
-						Type = item.Type,
-						UserBuyer = userBuyer,
-						UserSeller = userSeller
-					});
+						var post = db.Posts.SingleOrDefault(post => post.IdPost == item.IdPost);
+						var userBuyer = db.Users.SingleOrDefault(user => user.IdUser == item.IdUserBuyer);
+						var userSeller = db.Users.SingleOrDefault(user => user.IdUser == item.IdUserSeller);
+						var postVM = new PostVM
+						{
+							Type = post.Type,
+							Img = post.Img,
+							IdUser = post.IdUser,
+							CreateDate = post.Date,
+							Title = post.Content,
+							DetailProduct = post.Detail,
+							FeedbackNum = post.Feedbacks.Count
+						};
+						saleList.Add(new WareHouseVM()
+						{
+							PostVM = postVM,
+							TransactionVM = _mapper.Map<TransactionVM>(item),
+							Type = item.Type,
+							UserBuyer = userBuyer,
+							UserSeller = userSeller
+						});
+					}
 				}
 				viewModel.SaleList = saleList.ToPagedList(pageNumber, pageSize);
 				// Calculate counts for different statuses
 				viewModel.ProcessCount = listTransactions.Count(t => t.Status == "Processing");
-				viewModel.FinishCount = listTransactions.Count(t => t.Status == "Finished");
-				viewModel.CancelCount = listTransactions.Count(t => t.Status == "Cancel");
+				viewModel.FinishCount = listTransactions.Count(t => t.Status == "Completed");
+				viewModel.CancelCount = listTransactions.Count(t => t.Status == "Canceled");
 
 				// Pass query parameters, searchString, and activeTab to view
 				ViewBag.SearchString = searchString;
@@ -152,8 +159,9 @@ namespace FStep.Controllers.ManagePost
 			}
 		}
 		[HttpGet]
-		public IActionResult CompleteTransaction(string code)
+		public IActionResult CompleteTransaction(string code, string url)
 		{
+			string fullUrl = HttpContext.Request.GetDisplayUrl();
 			var transaction = db.Transactions.FirstOrDefault(p => p.CodeTransaction == code);
 
 			transaction.Status = "Completed";
@@ -177,7 +185,7 @@ namespace FStep.Controllers.ManagePost
 
 			db.SaveChanges();
 
-			return RedirectToAction("WareHouse");
+			return Redirect(url);
 		}
 
 		public IActionResult UpdateLocation(string code, string location)

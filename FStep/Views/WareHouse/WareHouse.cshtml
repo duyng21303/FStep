@@ -1,7 +1,9 @@
 @model FStep.ViewModels.WareHouse.WareHouseServiceVM
+@using Microsoft.AspNetCore.Http.Extensions
 @using X.PagedList.Mvc.Core
 @{
 	ViewData["Title"] = "Kho Hàng";
+	string fullUrl = Context.Request.GetDisplayUrl();
 }
 <div class="row align-items-center mb-8 search-header">
 	<div class="custom-container">
@@ -50,7 +52,6 @@
 					</ul>
 
 					<!-- Tab panes -->
-					<!-- Tab panes -->
 					<div class="tab-content" id="myTabContent">
 						<div class="tab-pane fade @(ViewBag.ActiveTab == "exchange" ? "show active" : "")" id="exchange" role="tabpanel" aria-labelledby="exchange-tab">
 							<h3>Exchange</h3>
@@ -84,7 +85,7 @@
 												</button>
 											</td>
 											<td>
-												<button type="button" class="btn btn-danger btn-sm">Hoàn thành</button>
+												<a asp-action="CompleteTransaction" asp-controller="WareHouse" asp-route-code="@item.TransactionVM.CodeTransaction" type="button" class="btn btn-danger btn-sm">Hoàn thành</a>
 											</td>
 
 										</tr>
@@ -220,7 +221,7 @@
 												</button>
 											</td>
 											<td>
-												<button type="button" class="btn btn-danger btn-sm">Hoàn thành</button>
+												<a asp-action="CompleteTransaction" asp-controller="WareHouse" asp-route-code="@item.TransactionVM.CodeTransaction" asp-route-url="@fullUrl" type="button" class="btn btn-danger btn-sm">Hoàn thành</a>
 											</td>
 										</tr>
 										<tr id="confirmCollapse-@item.TransactionVM.TransactionId" class="collapse">

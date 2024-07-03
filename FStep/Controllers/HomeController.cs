@@ -136,7 +136,7 @@ namespace FStep.Controllers
 				post.Date = DateTime.Now;
 				//Helpers.Util.UpLoadImg(model.Img, "")
 				post.Img = Util.UpLoadImg(img, "postPic");
-				post.Status = "False";
+				post.Status = "Waiting";
 				post.Type = model.Type;
 				post.Detail = model.Description;
 				post.IdUser = User.FindFirst("UserID").Value;
@@ -200,7 +200,6 @@ namespace FStep.Controllers
 				CodeTransaction = s.CodeTransaction,
 				UserName = db.Users.FirstOrDefault(p => p.IdUser == s.IdUserBuyer).Name ?? null,
 				IdSeller = s.IdUserSeller,
-				SellerImg = db.Users.SingleOrDefault(p => p.IdUser == s.IdUserSeller).AvatarImg,
 				SellerName = db.Users.SingleOrDefault(p => p.IdUser == s.IdUserSeller).Name,
 				CheckFeedback = (db.Feedbacks.FirstOrDefault(p => p.IdPost == s.IdPost) != null),
 			}).OrderByDescending(o => o.TransactionId);
