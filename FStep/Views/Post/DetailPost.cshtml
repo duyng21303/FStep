@@ -780,14 +780,13 @@
 		</div>
 	</div>
 	<script src="~/js/site.js"></script>
-	<script
+	<script>
 		document.addEventListener('DOMContentLoaded', function () {
 			var productDescription = document.querySelector('.product-description');
 			var textContainer = productDescription.querySelector('.text');
 			var readMoreLink = productDescription.querySelector('.read-more');
 			var shrinkButton = productDescription.querySelector('.shrink-btn');
 
-			// Check if content overflows
 			if (textContainer.scrollHeight > textContainer.clientHeight) {
 				readMoreLink.style.display = 'inline-block'; // Show "Read more" link if content overflows
 				shrinkButton.style.display = 'none'; // Hide "Collapse" button initially
@@ -807,8 +806,7 @@
 				readMoreLink.style.display = 'none'; // Hide "Read more" link if content does not overflow
 			}
 		});
-	</script>
-	<script>
+
 		$(document).ready(function () {
 			$('#reportForm input[name="reportReason"]').change(function () {
 				if ($('#reason6').is(':checked')) {
@@ -818,9 +816,9 @@
 				}
 			});
 
-			$('.btn-report').click((e) => {
-				var postId = $('.btn-report').data('post');
-				var commentId = $('.btn-report').data('comment');
+			$('.btn-report').click(function () {
+				var postId = $(this).data('post');
+				var commentId = $(this).data('comment');
 
 				$('#reportForm').data('postid', postId);
 				$('#reportForm').data('commentid', commentId);
@@ -828,24 +826,21 @@
 
 			$('#sendReportButton').click(function () {
 				var reason = $('input[name="reportReason"]:checked').val();
-
 				var additionalComments = $('#message-text').val();
 
 				if (!reason) {
 					alert("Vui lòng chọn vi phạm");
 					return;
 				}
-				if ($('#reason6').is(':checked')) {
-					if (!additionalComments) {
-						Swal.fire({
-							icon: 'error',
-							text: 'Vui lòng nhập mô tả chi tiết vi phạm',
-							showConfirmButton: false,
-						});
-						return;
-					} else {
-						reason += `: ${additionalComments}`;
-					}
+				if ($('#reason6').is(':checked') && !additionalComments) {
+					Swal.fire({
+						icon: 'error',
+						text: 'Vui lòng nhập mô tả chi tiết vi phạm',
+						showConfirmButton: false,
+					});
+					return;
+				} else if ($('#reason6').is(':checked')) {
+					reason += `: ${additionalComments}`;
 				}
 
 				// Get the bound data
@@ -859,7 +854,7 @@
 					content: reason
 				};
 
-			    fetch('/Post/ReportComment', {
+				fetch('/Post/ReportComment', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -867,30 +862,30 @@
 					},
 					body: JSON.stringify(reportData)
 				})
-				.then(response => {
-					if (!response.ok) {
-						throw new Error('Network response was not ok');
-					}
-				})
-				.then(data => {
-					Swal.fire({
-						icon: 'success',
-						title: 'Báo cáo đã được gửi!',
-						text: 'Cảm ơn bạn đã báo cáo, chúng tôi sẽ xem xét bình luận này.',
-						showConfirmButton: false,
+					.then(response => {
+						if (!response.ok) {
+							throw new Error('Network response was not ok');
+						}
+						return response.json();
+					})
+					.then(data => {
+						Swal.fire({
+							icon: 'success',
+							title: 'Báo cáo đã được gửi!',
+							text: 'Cảm ơn bạn đã báo cáo, chúng tôi sẽ xem xét bình luận này.',
+							showConfirmButton: false,
+						});
+						$('#reportComment').modal('hide');
+						$('#message-text').val('');
+					})
+					.catch(error => {
+						Swal.fire({
+							icon: 'error',
+							text: 'Bạn đã báo cáo bình luận này',
+							showConfirmButton: false,
+						});
 					});
-					$('#reportComment').modal('hide');
-					$('#message-text').val('');
-				})
-				.catch(error => {
-					Swal.fire({
-						icon: 'error',
-						text: 'Bạn đã báo cáo bình luận này',
-						showConfirmButton: false,
-					});
-				});
 			});
-
 		});
 	</script>
 

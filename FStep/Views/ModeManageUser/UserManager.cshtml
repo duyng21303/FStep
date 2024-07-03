@@ -2,6 +2,7 @@
 @model PagingModel<ProfileVM>
 @{
 	ViewData["Title"] = "Quản lí người dùng";
+
 }
 <style>
 	/* USER LIST TABLE */
@@ -260,6 +261,7 @@
 											<img class="rounded-circle me-lg-2 product-rating__avatar-img" src="~/img/userAvar/@user.AvatarImg" alt="" style="width: 40px; height: 40px;">
 											<a class="user-link">@user.Name</a>
 											<span class="user-subhead">@user.Role</span>
+
 										</td>
 										<td>
 											<span class="label label-default">@user.StudentId</span>

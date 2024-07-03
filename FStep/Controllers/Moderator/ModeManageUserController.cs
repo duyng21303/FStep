@@ -45,6 +45,6 @@ namespace FStep.Controllers.ManagePost
 
 			return View("UserManager", pagingModel);
 		}
-	
+
 	}
 }

@@ -19,7 +19,6 @@ namespace FStep.ViewModels.WareHouse
 	{
 		public IPagedList<WareHouseVM> ExchangeList { get; set; }
 		public IPagedList<WareHouseVM> SaleList { get; set; }
-
 		public int ProcessCount { get; set; }
 		public int FinishCount { get; set; }
 		public int CancelCount { get; set; }

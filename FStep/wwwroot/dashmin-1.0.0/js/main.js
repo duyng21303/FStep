@@ -60,11 +60,13 @@
 
 
      //Worldwide Sales Chart
+
     var ctx1 = $("#worldwide-sales").get(0).getContext("2d");
     var myChart1 = new Chart(ctx1, {
         type: "bar",
         data: {
             labels: ["20116", "2017", "2018", "2019", "2020", "2021", "2022"],
+
             datasets: [{
                     label: "USA",
                     data: [15, 30, 55, 65, 60, 80, 95],
