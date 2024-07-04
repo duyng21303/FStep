@@ -57,14 +57,14 @@
 							<table class="table table-striped table-bordered">
 								<thead class="thead-light">
 									<tr>
-										<th scope="col">Id Post</th>
-										<th scope="col">Location</th>
-										<th scope="col">Code Transaction</th>
-										<th scope="col">Date</th>
-										<th scope="col">Id UserB</th>
-										<th scope="col">Id UserE</th>
-										<th scope="col">Name Product</th>
-										<th scope="col">Action</th>
+										<th scope="col">Mã Bài</th>
+										<th scope="col">Vị Trí</th>
+										<th scope="col">Mã Giao Dịch</th>
+										<th scope="col">Ngày</th>
+										<th scope="col">Id A</th>
+										<th scope="col">Id B(Trao đổi)</th>
+										<th scope="col">Tên Sản phẩm</th>
+										<th scope="col">Tác vụ</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -72,9 +72,9 @@
 									{
 										<tr data-id="@item.TransactionVM.TransactionId" data-type="@item.Type">
 											<td>@Html.DisplayFor(modelItem => item.PostVM.IdPost)</td>
-											<td>@Html.DisplayFor(modelItem => item.Location)</td>
+											<td>@Html.DisplayFor(modelItem => item.PostVM.Location)</td>
 											<td>@Html.DisplayFor(modelItem => item.TransactionVM.CodeTransaction)</td>
-											<td>@Html.DisplayFor(modelItem => item.TransactionVM.CreateDate)</td>
+											<td>@Html.DisplayFor(modelItem => item.TransactionVM.Date)</td>
 											<td>@Html.DisplayFor(moderItem => item.UserBuyer.IdUser)</td>
 											<td>@Html.DisplayFor(modelItem => item.UserSeller.IdUser)</td>
 											<td>@Html.DisplayFor(modelItem => item.PostVM.Title)</td>
@@ -94,15 +94,15 @@
 							<table class="table table-striped table-bordered">
 								<thead class="thead-light">
 									<tr>
-										<th scope="col">Id Post</th>
-										<th scope="col">Location</th>
-										<th scope="col">Code Transaction</th>
-										<th scope="col">Date</th>
-										<th scope="col">Id User Buyer</th>
-										<th scope="col">Name Product</th>
-										<th scope="col">Quantity</th>
-										<th scope="col">Amount</th>
-										<th scope="col">Action</th>
+										<th scope="col">Mã Bài</th>
+										<th scope="col">Vị Trí</th>
+										<th scope="col">Mã Giao Dịch</th>
+										<th scope="col">Ngày</th>
+										<th scope="col">Id Người Mua</th>
+										<th scope="col">Tên Sản Phẩm</th>
+										<th scope="col">Số Lượng</th>
+										<th scope="col">Tổng Tiền</th>
+										<th scope="col">Tác Vụ</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -110,11 +110,10 @@
 									{
 										<tr data-id="@item.TransactionVM.TransactionId" data-type="@item.Type">
 											<td>@Html.DisplayFor(modelItem => item.PostVM.IdPost)</td>
-											<td>@Html.DisplayFor(modelItem => item.Location)</td>
+											<td>@Html.DisplayFor(modelItem => item.PostVM.Location)</td>
 											<td>@Html.DisplayFor(modelItem => item.TransactionVM.CodeTransaction)</td>
-											<td>@Html.DisplayFor(modelItem => item.TransactionVM.CreateDate)</td>
+											<td>@Html.DisplayFor(modelItem => item.TransactionVM.Date)</td>
 											<td>@Html.DisplayFor(moderItem => item.UserBuyer.IdUser)</td>
-											<td>@Html.DisplayFor(modelItem => item.UserSeller.IdUser)</td>
 											<td>@Html.DisplayFor(modelItem => item.PostVM.Title)</td>
 											<td>@Html.DisplayFor(modelItem => item.TransactionVM.Quantity)</td>
 											<td>@Html.DisplayFor(modelItem => item.TransactionVM.Amount)</td>

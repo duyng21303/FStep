@@ -161,7 +161,7 @@ namespace FStep.Controllers.Auth
 				AvatarImg = User.FindFirstValue("IMG"),
 				Email = user.Email,
 				Name = user.Name,
-				Rating = user.PointRating,
+				PointRating = user.PointRating,
 				StudentId = user.StudentId,
 				Posts = user.Posts.Select(p => new PostVM()
 				{
@@ -191,7 +191,7 @@ namespace FStep.Controllers.Auth
 				user.Address = model.Address;
 				user.Email = model.Email;
 				user.Name = model.Name;
-				user.PointRating = model.Rating;
+				user.PointRating = model.PointRating;
 				user.StudentId = model.StudentId;
 				db.Update(user);
 				db.SaveChanges();

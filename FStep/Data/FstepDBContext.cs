@@ -23,6 +23,8 @@ public partial class FstepDbContext : DbContext
 
     public virtual DbSet<Feedback> Feedbacks { get; set; }
 
+    public virtual DbSet<HistoryPoint> HistoryPoints { get; set; }
+
     public virtual DbSet<Notification> Notifications { get; set; }
 
     public virtual DbSet<Payment> Payments { get; set; }
@@ -45,7 +47,7 @@ public partial class FstepDbContext : DbContext
     {
         modelBuilder.Entity<Chat>(entity =>
         {
-            entity.HasKey(e => e.IdChat).HasName("PK__Chat__68D484D18F6BA8A9");
+            entity.HasKey(e => e.IdChat).HasName("PK__Chat__68D484D174364BD9");
 
             entity.ToTable("Chat");
 
@@ -76,7 +78,7 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.HasKey(e => e.IdComment).HasName("PK__Comment__7E14AC852576F745");
+            entity.HasKey(e => e.IdComment).HasName("PK__Comment__7E14AC851C129478");
 
             entity.ToTable("Comment");
 
@@ -111,7 +113,7 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<Confirm>(entity =>
         {
-            entity.HasKey(e => e.IdConfirm).HasName("PK__Confirm__DAF2DF8FD71CB11A");
+            entity.HasKey(e => e.IdConfirm).HasName("PK__Confirm__DAF2DF8F2B3A23F2");
 
             entity.ToTable("Confirm");
 
@@ -137,7 +139,7 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<Feedback>(entity =>
         {
-            entity.HasKey(e => e.IdFeedback).HasName("PK__Feedback__36BC86305A517DA9");
+            entity.HasKey(e => e.IdFeedback).HasName("PK__Feedback__36BC8630777C08C6");
 
             entity.ToTable("Feedback");
 
@@ -162,9 +164,34 @@ public partial class FstepDbContext : DbContext
                 .HasConstraintName("FKFeedback469931");
         });
 
+        modelBuilder.Entity<HistoryPoint>(entity =>
+        {
+            entity.HasKey(e => e.IdPoint).HasName("PK__HistoryP__0AD99761D16AF62A");
+
+            entity.ToTable("HistoryPoint");
+
+            entity.Property(e => e.IdPoint).HasColumnName("id_point");
+            entity.Property(e => e.AddPoint).HasColumnName("add_point");
+            entity.Property(e => e.Content)
+                .HasMaxLength(255)
+                .HasColumnName("content");
+            entity.Property(e => e.Date)
+                .HasColumnType("datetime")
+                .HasColumnName("date");
+            entity.Property(e => e.IdUser)
+                .HasMaxLength(50)
+                .HasColumnName("id_user");
+            entity.Property(e => e.MinusPoint).HasColumnName("minus_point");
+
+            entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.HistoryPoints)
+                .HasForeignKey(d => d.IdUser)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FKHistoryPoi586269");
+        });
+
         modelBuilder.Entity<Notification>(entity =>
         {
-            entity.HasKey(e => e.IdNotification).HasName("PK__Notifica__925C842F0056C278");
+            entity.HasKey(e => e.IdNotification).HasName("PK__Notifica__925C842F9246B93B");
 
             entity.ToTable("Notification");
 
@@ -213,7 +240,7 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.IdPayment).HasName("PK__Payment__862FEFE08290DCEE");
+            entity.HasKey(e => e.IdPayment).HasName("PK__Payment__862FEFE0C200786E");
 
             entity.ToTable("Payment");
 
@@ -247,7 +274,7 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<Post>(entity =>
         {
-            entity.HasKey(e => e.IdPost).HasName("PK__Post__3840C79D36C5595D");
+            entity.HasKey(e => e.IdPost).HasName("PK__Post__3840C79D60ACAACC");
 
             entity.ToTable("Post");
 
@@ -293,7 +320,7 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.IdProduct).HasName("PK__Product__BA39E84F65E9C13A");
+            entity.HasKey(e => e.IdProduct).HasName("PK__Product__BA39E84FD6F1A6DF");
 
             entity.ToTable("Product");
 
@@ -310,7 +337,7 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<Report>(entity =>
         {
-            entity.HasKey(e => e.IdReport).HasName("PK__Report__D8639F527962C119");
+            entity.HasKey(e => e.IdReport).HasName("PK__Report__D8639F52F646FE27");
 
             entity.ToTable("Report");
 
@@ -348,7 +375,7 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<Transaction>(entity =>
         {
-            entity.HasKey(e => e.IdTransaction).HasName("PK__Transact__E8E1732D31A2D45D");
+            entity.HasKey(e => e.IdTransaction).HasName("PK__Transact__E8E1732D1ECEDBA3");
 
             entity.ToTable("Transaction");
 
@@ -381,7 +408,6 @@ public partial class FstepDbContext : DbContext
             entity.Property(e => e.RecieveImg)
                 .HasMaxLength(255)
                 .HasColumnName("recieve_img");
-            entity.Property(e => e.ReportidReport).HasColumnName("Reportid_report");
             entity.Property(e => e.SentBuyerDate)
                 .HasColumnType("datetime")
                 .HasColumnName("sent_buyer_date");
@@ -419,7 +445,7 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.IdUser).HasName("PK__User__D2D14637C0C770CC");
+            entity.HasKey(e => e.IdUser).HasName("PK__User__D2D1463798BA4FBE");
 
             entity.ToTable("User");
 
@@ -470,6 +496,9 @@ public partial class FstepDbContext : DbContext
             entity.Property(e => e.StudentId)
                 .HasMaxLength(10)
                 .HasColumnName("student_id");
+            entity.Property(e => e.SwiftCode)
+                .HasMaxLength(255)
+                .HasColumnName("swiftCode");
             entity.Property(e => e.TokenGoogle)
                 .HasMaxLength(255)
                 .HasColumnName("token_google");
