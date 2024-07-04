@@ -42,7 +42,6 @@
 								<tr>
 									<th scope="col">Ảnh</th>
 									<th scope="col">Tên</th>
-									<th scope="col">Loại SP</th>
 									<th scope="col">MSSV</th>
 									<th scope="col">Số Lượng</th>
 									<th scope="col">Giá</th>
@@ -60,7 +59,6 @@
 										<td class="post-title" data-id="@item.PostId" data-bs-toggle="tooltip" data-bs-html="true" title="Type: @item.Type<br>Detail: @Html.Raw(item.Description)">
 											@Html.Raw(item.PostTitle)
 										</td>
-										<td>@Html.Raw(item.Category)</td>
 										<td class="post-studentid">@Html.Raw(item.StudentId)</td>
 										<td>@Html.Raw(item.Quantity)</td>
 										<td>@Html.Raw(item.Price)</td>

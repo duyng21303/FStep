@@ -21,10 +21,6 @@
 			@RenderBody()
 			<div id="alert-container"></div>
 		</main>
-		@if (User.Identity.IsAuthenticated && !Context.Request.Path.StartsWithSegments("/Post/DetailPost") && !Context.Request.Path.StartsWithSegments("/Post/DetailSalePost"))
-		{
-			@await Component.InvokeAsync("Chat")
-		}
 	</div>
 	<footer class="border-top footer text-muted">
 
