@@ -10,6 +10,7 @@ using X.PagedList;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text.Json;
 using FStep.Helpers;
+using FStep.Services;
 
 
 namespace FStep.Controllers.ManagePost
@@ -256,7 +257,6 @@ namespace FStep.Controllers.ManagePost
 			}
 		}
 
-		[Authorize]
 		[HttpPost]
 		public async Task<IActionResult> RecieveImg(IFormFile img, string type, string id)
 		{

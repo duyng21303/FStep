@@ -6,18 +6,18 @@ namespace FStep.Data;
 
 public partial class FstepDBContext : DbContext
 {
-    public FstepDbContext()
+    public FstepDBContext()
     {
     }
 
-    public FstepDbContext(DbContextOptions<FstepDbContext> options)
+    public FstepDBContext(DbContextOptions<FstepDBContext> options)
         : base(options)
     {
     }
 
     public virtual DbSet<Chat> Chats { get; set; }
 
-et<Comment> Comments { get; set; }
+    public virtual DbSet<Comment> Comments { get; set; }
 
     public virtual DbSet<Confirm> Confirms { get; set; }
 

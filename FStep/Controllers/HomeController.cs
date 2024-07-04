@@ -61,8 +61,8 @@ namespace FStep.Controllers
 			string id = User.FindFirst("UserID")?.Value;
 			if (id != null)
 			{
-				//var user = db.Users.FirstOrDefault(p => p.IdUser == id);
-				//checkInfo = (user.StudentId != null /*&& user.BankAccountNumber != null && user.BankName != null*/).ToString();
+				var user = db.Users.FirstOrDefault(p => p.IdUser == id);
+				checkInfo = (user.StudentId != null /*&& user.BankAccountNumber != null && user.BankName != null*/).ToString();
 			}
 			else
 			{
