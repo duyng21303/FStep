@@ -12,17 +12,11 @@ using System.Text.Json;
 using FStep.Helpers;
 
 
-
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
-using FStep.Services;
-
 namespace FStep.Controllers.ManagePost
 {
 	public class WareHouseController : Controller
 	{
+
 		private readonly FstepDBContext db;
 		private readonly IMapper _mapper;
 		private readonly NotificationServices notificationServices;
@@ -53,17 +47,17 @@ namespace FStep.Controllers.ManagePost
 				{
 					searchString = searchString.ToLower();
 					exchangeTransactions = exchangeTransactions.Where(t =>
-						t.IdPostNavigation.Location.ToLower().Contains(searchString) ||
-						t.CodeTransaction.ToLower().Contains(searchString) ||
-						t.IdUserBuyerNavigation.StudentId.ToLower().Contains(searchString) ||
-						t.IdPostNavigation.Content.ToLower().Contains(searchString)
+				(t.IdPostNavigation?.Location?.ToLower().Contains(searchString) ?? false) ||
+				(t.CodeTransaction?.ToLower().Contains(searchString) ?? false) ||
+				(t.IdUserBuyerNavigation?.StudentId?.ToLower().Contains(searchString) ?? false) ||
+				(t.IdPostNavigation?.Content?.ToLower().Contains(searchString) ?? false)
 					);
-
 					saleTransactions = saleTransactions.Where(t =>
-						t.IdPostNavigation.Location.ToLower().Contains(searchString) ||
-						t.CodeTransaction.ToLower().Contains(searchString) ||
-						t.IdUserBuyerNavigation.StudentId.ToLower().Contains(searchString) ||
-						t.IdPostNavigation.Content.ToLower().Contains(searchString)
+						(t.IdPostNavigation?.Location?.ToLower().Contains(searchString) ?? false) ||
+				(t.CodeTransaction?.ToLower().Contains(searchString) ?? false) ||
+				(t.IdUserBuyerNavigation?.StudentId?.ToLower().Contains(searchString) ?? false) ||
+				(t.IdPostNavigation?.Content?.ToLower().Contains(searchString) ?? false)
+
 					);
 				}
 
@@ -79,11 +73,12 @@ namespace FStep.Controllers.ManagePost
 					var userSeller = db.Users.SingleOrDefault(user => user.IdUser == item.IdUserSeller);
 					var postVM = new PostVM
 					{
-						Type = post.Type,
+						IdPost = post.IdPost,
 						Img = post.Img,
-						IdUser = post.IdUser,
-						CreateDate = post.Date,
+						Type = post.Type,
 						Title = post.Content,
+						Location = post.Location,
+
 						DetailProduct = post.Detail,
 						FeedbackNum = post.Feedbacks.Count
 					};
@@ -102,7 +97,8 @@ namespace FStep.Controllers.ManagePost
 						TransactionVM = _mapper.Map<TransactionVM>(item),
 						Type = item.Type,
 						UserBuyer = userBuyer,
-						UserSeller = userSeller
+						UserSeller = userSeller,
+
 					});
 				}
 				viewModel.ExchangeList = exchangeList.ToPagedList(pageNumber, pageSize);
@@ -114,12 +110,16 @@ namespace FStep.Controllers.ManagePost
 					var userSeller = db.Users.SingleOrDefault(user => user.IdUser == item.IdUserSeller);
 					var postVM = new PostVM
 					{
+						IdPost = post.IdPost,
+
 						Type = post.Type,
 						Img = post.Img,
 						IdUser = post.IdUser,
 						CreateDate = post.Date,
 						Title = post.Content,
 						DetailProduct = post.Detail,
+						Location = post.Location,
+
 						FeedbackNum = post.Feedbacks.Count
 					};
 					saleList.Add(new WareHouseVM()
@@ -128,7 +128,8 @@ namespace FStep.Controllers.ManagePost
 						TransactionVM = _mapper.Map<TransactionVM>(item),
 						Type = item.Type,
 						UserBuyer = userBuyer,
-						UserSeller = userSeller
+						UserSeller = userSeller,
+
 					});
 				}
 				viewModel.SaleList = saleList.ToPagedList(pageNumber, pageSize);
@@ -254,6 +255,7 @@ namespace FStep.Controllers.ManagePost
 				return BadRequest("Invalid data");
 			}
 		}
+
 		[Authorize]
 		[HttpPost]
 		public async Task<IActionResult> RecieveImg(IFormFile img, string type, string id)

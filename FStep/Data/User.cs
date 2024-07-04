@@ -41,11 +41,15 @@ public partial class User
 
     public string? BankAccountNumber { get; set; }
 
+    public string? SwiftCode { get; set; }
+
     public virtual ICollection<Chat> Chats { get; set; } = new List<Chat>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+
+    public virtual ICollection<HistoryPoint> HistoryPoints { get; set; } = new List<HistoryPoint>();
 
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 

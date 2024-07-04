@@ -44,6 +44,7 @@
 
   <ItemGroup>
     <Compile Include="Controllers\Admin\AdminController.cs" />
+    <Compile Include="Controllers\Admin\AdminPostController.cs" />
     <Compile Include="ViewComponents\ChatViewComponent.cs" />
     <Compile Include="ViewComponents\CreatePostViewComponent.cs" />
   </ItemGroup>
@@ -79,9 +80,6 @@
     <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.9.0" />
     <PackageReference Include="X.PagedList" Version="9.1.2" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="9.1.2" />
-
-
-	  <Folder Include="Controllers\Admin\" />
 	  <Folder Include="wwwroot\detail\css\" />
 	  <Folder Include="wwwroot\img\ReciveImage\" />
 	  <Folder Include="wwwroot\img\pic\" />
