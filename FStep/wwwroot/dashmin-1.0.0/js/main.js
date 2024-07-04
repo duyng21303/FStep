@@ -66,25 +66,25 @@
         type: "bar",
         data: {
 
-            labels: ["20116", "2017", "2018", "2019", "2020", "2021", "2022"],
+            labels: ["1", "2017", "2018", "2019", "2020", "2021", "2022"],
 
             datasets: [{
-                    label: "USA",
-                    data: [15, 30, 55, 65, 60, 80, 95],
-                    backgroundColor: "rgba(0, 156, 255, .7)"
-                },
-                {
-                    label: "UK",
-                    data: [8, 35, 40, 60, 70, 55, 75],
-                    backgroundColor: "rgba(0, 156, 255, .5)"
-                },
-                {
-                    label: "AU",
-                    data: [12, 25, 45, 55, 65, 70, 60],
-                    backgroundColor: "rgba(0, 156, 255, .3)"
-                }
-            ]
+                label: "USA",
+                data: [1, 3, 5, 6, 6, 8, 9],
+                backgroundColor: "rgba(0, 156, 255, .7)"
             },
+            {
+                label: "UK",
+                data: [8, 3, 4, 6, 7, 5, 5],
+                backgroundColor: "rgba(0, 156, 255, .5)"
+            },
+            {
+                label: "AU",
+                data: [1, 2, 4, 5, 6, 7, 6],
+                backgroundColor: "rgba(0, 156, 255, .3)"
+            }
+            ]
+        },
         options: {
             responsive: true
         }
@@ -98,19 +98,19 @@
         data: {
             labels: ["2016", "2017", "2018", "2019", "2020", "2021", "2022"],
             datasets: [{
-                    label: "Salse",
-                    data: [15, 30, 55, 45, 70, 65, 85],
-                    backgroundColor: "rgba(0, 156, 255, .5)",
-                    fill: true
-                },
-                {
-                    label: "Revenue",
-                    data: [99, 135, 170, 130, 190, 180, 270],
-                    backgroundColor: "rgba(0, 156, 255, .3)",
-                    fill: true
-                }
-            ]
+                label: "Salse",
+                data: [15, 30, 55, 45, 70, 65, 85],
+                backgroundColor: "rgba(0, 156, 255, .5)",
+                fill: true
             },
+            {
+                label: "Revenue",
+                data: [99, 135, 170, 130, 190, 180, 270],
+                backgroundColor: "rgba(0, 156, 255, .3)",
+                fill: true
+            }
+            ]
+        },
         options: {
             responsive: true
         }
