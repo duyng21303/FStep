@@ -11,17 +11,20 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text.Json;
 using FStep.Helpers;
 
+
 namespace FStep.Controllers.ManagePost
 {
 	public class WareHouseController : Controller
 	{
-		private readonly FstepDbContext db;
-		private readonly IMapper _mapper;
 
-		public WareHouseController(FstepDbContext context, IMapper mapper)
+		private readonly FstepDBContext db;
+		private readonly IMapper _mapper;
+		private readonly NotificationServices notificationServices;
+		public WareHouseController(FstepDBContext context, IMapper mapper)
 		{
 			db = context;
 			_mapper = mapper;
+			notificationServices = new NotificationServices(db);
 		}
 
 		[HttpGet]
@@ -54,6 +57,7 @@ namespace FStep.Controllers.ManagePost
 				(t.CodeTransaction?.ToLower().Contains(searchString) ?? false) ||
 				(t.IdUserBuyerNavigation?.StudentId?.ToLower().Contains(searchString) ?? false) ||
 				(t.IdPostNavigation?.Content?.ToLower().Contains(searchString) ?? false)
+
 					);
 				}
 
@@ -74,6 +78,7 @@ namespace FStep.Controllers.ManagePost
 						Type = post.Type,
 						Title = post.Content,
 						Location = post.Location,
+
 						DetailProduct = post.Detail,
 						FeedbackNum = post.Feedbacks.Count
 					};
@@ -93,6 +98,7 @@ namespace FStep.Controllers.ManagePost
 						Type = item.Type,
 						UserBuyer = userBuyer,
 						UserSeller = userSeller,
+
 					});
 				}
 				viewModel.ExchangeList = exchangeList.ToPagedList(pageNumber, pageSize);
@@ -105,6 +111,7 @@ namespace FStep.Controllers.ManagePost
 					var postVM = new PostVM
 					{
 						IdPost = post.IdPost,
+
 						Type = post.Type,
 						Img = post.Img,
 						IdUser = post.IdUser,
@@ -112,6 +119,7 @@ namespace FStep.Controllers.ManagePost
 						Title = post.Content,
 						DetailProduct = post.Detail,
 						Location = post.Location,
+
 						FeedbackNum = post.Feedbacks.Count
 					};
 					saleList.Add(new WareHouseVM()
@@ -121,6 +129,7 @@ namespace FStep.Controllers.ManagePost
 						Type = item.Type,
 						UserBuyer = userBuyer,
 						UserSeller = userSeller,
+
 					});
 				}
 				viewModel.SaleList = saleList.ToPagedList(pageNumber, pageSize);
@@ -147,6 +156,7 @@ namespace FStep.Controllers.ManagePost
 		public IActionResult CompleteTransaction(string code)
 		{
 			var transaction = db.Transactions.FirstOrDefault(p => p.CodeTransaction == code);
+
 			transaction.Status = "Completed";
 			db.Update(transaction);
 			db.SaveChanges();
@@ -246,6 +256,137 @@ namespace FStep.Controllers.ManagePost
 			}
 		}
 
+		[Authorize]
+		[HttpPost]
+		public async Task<IActionResult> RecieveImg(IFormFile img, string type, string id)
+		{
+			string activeTab = "";
+			try
+			{
+				var trans = db.Transactions.SingleOrDefault(trans => trans.IdTransaction == int.Parse(id));
+				var userBuyer = db.Users.SingleOrDefault(user => user.IdUser == trans.IdUserBuyer);
+				var userSeller = db.Users.SingleOrDefault(user => user.IdUser == trans.IdUserSeller);
+				
+				switch (type)
+				{
+					case "SellerSent":
+						if (img != null)
+						{
+							if (trans.SentImg != null)
 
+							{
+								await notificationServices.CreateNotification(userBuyer.IdUser, "TransactionExchangeAlready", "Transaction", userSeller.Name, trans.IdTransaction);
+								await notificationServices.CreateNotification(userSeller.IdUser, "TransactionRecieveGoods", "Transaction", userBuyer.Name, trans.IdTransaction);
+							}
+							FileInfo fileInfo = new FileInfo("wwwroot/img/postPic/" + trans.SentImg);
+							if (fileInfo.Exists)
+							{
+								fileInfo.Delete();
+							}
+							trans.SentImg = Util.UpLoadImg(img, "postPic");
+							trans.SentSellerDate = DateTime.Now;
+							activeTab = "exchange";
+						}
+						break;
+
+					case "SellerReceive":
+						if (img != null)
+						{
+							if (trans.RecieveImg != null)
+							{
+								await notificationServices.CreateNotification(userSeller.IdUser, "TransactionExchangeRecieveSuccess", "Transaction", userSeller.Name, trans.IdTransaction);
+							}
+							FileInfo fileInfo = new FileInfo("wwwroot/img/postPic/" + trans.RecieveImg);
+							if (fileInfo.Exists)
+							{
+								fileInfo.Delete();
+							}
+							trans.RecieveImg = Util.UpLoadImg(img, "postPic");
+							trans.ReceivedSellerDate = DateTime.Now;
+							activeTab = "exchange";
+						}
+						break;
+
+					case "BuyerSent":
+						if (img != null)
+						{
+							if (trans.SentBuyerImg != null)
+							{
+								await notificationServices.CreateNotification(userSeller.IdUser, "TransactionExchangeAlready", "Transaction", userBuyer.Name, trans.IdTransaction);
+								await notificationServices.CreateNotification(userBuyer.IdUser, "TransactionRecieveGoods", "Transaction", userSeller.Name, trans.IdTransaction);
+							}
+							FileInfo fileInfo = new FileInfo("wwwroot/img/postPic/" + trans.SentBuyerImg);
+							if (fileInfo.Exists)
+							{
+								fileInfo.Delete();
+							}
+							trans.SentBuyerImg = Util.UpLoadImg(img, "postPic");
+							trans.SentBuyerDate = DateTime.Now;
+							activeTab = "exchange";
+						}
+						break;
+
+					case "BuyerReceive":
+						if (img != null)
+						{
+							if (trans.RecieveBuyerImg != null)
+							{
+								await notificationServices.CreateNotification(userBuyer.IdUser, "TransactionExchangeRecieveSuccess", "Transaction", userBuyer.Name, trans.IdTransaction);
+							}
+							FileInfo fileInfo = new FileInfo("wwwroot/img/postPic/" + trans.RecieveBuyerImg);
+							if (fileInfo.Exists)
+							{
+								fileInfo.Delete();
+							}
+							trans.RecieveBuyerImg = Util.UpLoadImg(img, "postPic");
+							trans.ReceivedBuyerDate = DateTime.Now;
+							activeTab = "exchange";
+						}
+						break;
+					case "SellerSent-Sell":
+						if (img != null)
+						{
+							if (trans.SentImg != null)
+							{
+								await notificationServices.CreateNotification(userSeller.IdUser, "TransactionSellSent", "Transaction", userSeller.Name, trans.IdTransaction);
+							}
+							FileInfo fileInfo = new FileInfo("wwwroot/img/postPic/" + trans.SentImg);
+							if (fileInfo.Exists)
+							{
+								fileInfo.Delete();
+							}
+							trans.SentImg = Util.UpLoadImg(img, "postPic");
+							trans.SentSellerDate = DateTime.Now;
+							activeTab = "sell";
+						}
+						break;
+					case "SellerRevieve-Sell":
+						if (img != null)
+						{
+							if (trans.RecieveBuyerImg != null)
+							{
+								await notificationServices.CreateNotification(userBuyer.IdUser, "TransactionSellRecieve", "Transaction", userBuyer.Name, trans.IdTransaction);
+							}
+							FileInfo fileInfo = new FileInfo("wwwroot/img/postPic/" + trans.RecieveBuyerImg);
+							if (fileInfo.Exists)
+							{
+								fileInfo.Delete();
+							}
+							trans.RecieveBuyerImg = Util.UpLoadImg(img, "postPic");
+							trans.ReceivedBuyerDate = DateTime.Now;
+							activeTab = "sell";
+						}
+						break;
+					default:
+						break;
+				}
+				db.Update(trans);
+				db.SaveChanges();
+				return RedirectToAction("WareHouse", "WareHouse", new { idTrans = id, activeTab = activeTab });
+			}
+			catch (Exception ex) { }
+			return Json(new { transactionId = id });
+
+		}
 	}
 }

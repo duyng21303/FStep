@@ -61,10 +61,11 @@
 										<th scope="col">Vị Trí</th>
 										<th scope="col">Mã Giao Dịch</th>
 										<th scope="col">Ngày</th>
-										<th scope="col">Id A</th>
-										<th scope="col">Id B(Trao đổi)</th>
+										<th scope="col">Chủ sở hửu bài đăng</th>
+										<th scope="col">Người trao đổi</th>
 										<th scope="col">Tên Sản phẩm</th>
 										<th scope="col">Tác vụ</th>
+
 									</tr>
 								</thead>
 								<tbody>
@@ -77,15 +78,129 @@
 											<td>@Html.DisplayFor(modelItem => item.TransactionVM.Date)</td>
 											<td>@Html.DisplayFor(moderItem => item.UserBuyer.IdUser)</td>
 											<td>@Html.DisplayFor(modelItem => item.UserSeller.IdUser)</td>
+
 											<td>@Html.DisplayFor(modelItem => item.PostVM.Title)</td>
 											<td>
-												<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmModal" data-id="@item.PostVM.IdPost">Confirm</button>
+												<button type="button" class="btn btn-danger btn-sm submit-img" data-toggle="collapse" data-target="#confirmCollapse-@item.TransactionVM.TransactionId">
+													<i class="fas fa-chevron-down"></i>
+												</button>
+											</td>
+											<td>
+												<button type="button" class="btn btn-danger btn-sm">Hoàn thành</button>
+											</td>
+
+										</tr>
+										<tr id="confirmCollapse-@item.TransactionVM.TransactionId" class="collapse">
+											<td colspan="9">
+												<div class="card card-body">
+													<table class="table table-bordered">
+														<thead>
+															<tr>
+																<th>Chủ sở hửu bài đăng</th>
+																<th>Người trao đổi</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr>
+																@{
+																	var userBuyerImg = @item.UserBuyer.AvatarImg == null ? "nullAvar/149071.png" : "userAvar/" + @item.UserBuyer.AvatarImg;
+																	var userSellerImg = @item.UserSeller.AvatarImg == null ? "nullAvar/149071.png" : "userAvar/" + @item.UserSeller.AvatarImg;
+																}
+																<td>
+																	<div class="user-info">
+																		<img src="~/img/@userSellerImg" alt="User 2 Avatar" class="avatar">
+																		<p>@item.UserSeller.Name</p>
+																	</div>
+																</td>
+																<td>
+																	
+																	<div class="user-info">
+																		<img src="/img/@userBuyerImg" alt="User 1 Avatar" class="avatar">
+																		<p>@item.UserBuyer.Name</p>
+																	</div>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<div class="action-info">
+																		<form asp-action="RecieveImg" enctype="multipart/form-data">
+																			<label class="btn btn-primary">
+																				Xác nhận đã gửi hàng
+																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
+																				<input type="hidden" name="type" value="SellerSent" />
+																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
+																			</label>
+																		</form>
+																		@if (item.TransactionVM.SentImg != null)
+																		{
+																			<img src="/img/postPic/@item.TransactionVM.SentImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px; height: 250px; width: 250px;">
+																			<p style="margin: 0;">Date: @item.TransactionVM.SentSellerDate</p>
+																		}
+																	</div>
+																</td>
+																<td>
+																	<div class="action-info">
+																		<form asp-action="RecieveImg" enctype="multipart/form-data">
+																			<label class="btn btn-primary">
+																				Xác nhận đã gửi hàng
+																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
+																				<input type="hidden" name="type" value="BuyerSent" />
+																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
+																			</label>
+																		</form>
+																		@if (item.TransactionVM.SentBuyerImg != null)
+																		{
+																			<img src="/img/postPic/@item.TransactionVM.SentBuyerImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px; height: 250px; width: 250px;">
+																			<p style="margin: 0;">Date: @item.TransactionVM.SentBuyerDate</p>
+																		}
+																	</div>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<div class="action-info">
+																		<form asp-action="RecieveImg" enctype="multipart/form-data">
+																			<label class="btn btn-primary">
+																				Xác nhận đã nhận hàng
+																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
+																				<input type="hidden" name="type" value="SellerReceive" />
+																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
+																			</label>
+																		</form>
+																		@if (item.TransactionVM.RecieveImg != null)
+																		{
+																			<img src="/img/postPic/@item.TransactionVM.RecieveImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px; height: 250px; width: 250px;">
+																			<p style="margin: 0;">Date: @item.TransactionVM.ReceivedSellerDate</p>
+																		}
+																	</div>
+																</td>
+																<td>
+																	<div class="action-info">
+																		<form asp-action="RecieveImg" enctype="multipart/form-data">
+																			<label class="btn btn-primary">
+																				Xác nhận đã nhận hàng
+																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
+																				<input type="hidden" name="type" value="BuyerReceive" />
+																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
+																			</label>
+																		</form>
+																		@if (item.TransactionVM.RecieveBuyerImg != null)
+																		{
+																			<img src="/img/postPic/@item.TransactionVM.RecieveBuyerImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px; height: 250px; width: 250px;">
+																			<p style="margin: 0;">Date: @item.TransactionVM.ReceivedBuyerDate</p>
+																		}
+																	</div>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+
+												</div>
 											</td>
 										</tr>
 									}
 								</tbody>
 							</table>
-
 							@Html.PagedListPager(Model.ExchangeList, page => Url.Action("WareHouse", new { page, searchString = ViewBag.SearchString, activeTab = "exchange" }))
 						</div>
 
@@ -118,7 +233,83 @@
 											<td>@Html.DisplayFor(modelItem => item.TransactionVM.Quantity)</td>
 											<td>@Html.DisplayFor(modelItem => item.TransactionVM.Amount)</td>
 											<td>
-												<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmModal" data-id="@item.PostVM.IdPost">Confirm</button>
+												<button type="button" class="btn btn-danger btn-sm submit-img" data-toggle="collapse" data-target="#confirmCollapse-@item.TransactionVM.TransactionId">
+													<i class="fas fa-chevron-down"></i>
+												</button>
+											</td>
+											<td>
+												<button type="button" class="btn btn-danger btn-sm">Hoàn thành</button>
+											</td>
+										</tr>
+										<tr id="confirmCollapse-@item.TransactionVM.TransactionId" class="collapse">
+											<td colspan="9">
+												<div class="card card-body">
+													<table class="table table-bordered">
+														<thead>
+															<tr>
+																<th>Người bán</th>
+																<th>Người mua</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr>
+																<td>
+																	@{
+																		var userBuyerImg = @item.UserBuyer.AvatarImg == null ? "nullAvar/149071.png" : "userAvar/" + @item.UserBuyer.AvatarImg;
+																		var userSellerImg = @item.UserSeller.AvatarImg == null ? "nullAvar/149071.png" : "userAvar/" + @item.UserSeller.AvatarImg;
+																	}
+																	<div class="user-info">
+																		<img src="/img/@userBuyerImg" alt="User 1 Avatar" class="avatar">
+																		<p>@item.UserBuyer.Name</p>
+																	</div>
+																</td>
+																<td>
+																	<div class="user-info">
+																		<img src="~/img/@userSellerImg" alt="User 2 Avatar" class="avatar">
+																		<p>@item.UserSeller.Name</p>
+																	</div>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<div class="action-info">
+																		<form asp-action="RecieveImg" enctype="multipart/form-data">
+																			<label class="btn btn-primary">
+																				Xác nhận người bán mang hàng tới
+																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
+																				<input type="hidden" name="type" value="SellerSent-Sell" />
+																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
+																			</label>
+																		</form>
+																		@if (item.TransactionVM.SentImg != null)
+																		{
+																			<img src="/img/postPic/@item.TransactionVM.SentImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px; height: 250px; width: 250px;">
+																			<p style="margin: 0;">Date: @item.TransactionVM.SentSellerDate</p>
+																		}
+																	</div>
+																</td>
+																<td>
+																	<div class="action-info">
+																		<form asp-action="RecieveImg" enctype="multipart/form-data">
+																			<label class="btn btn-primary">
+																				Xác nhận người mua nhận hàng
+																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
+																				<input type="hidden" name="type" value="SellerRevieve-Sell" />
+																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
+																			</label>
+																		</form>
+																		@if (item.TransactionVM.RecieveBuyerImg != null)
+																		{
+																			<img src="/img/postPic/@item.TransactionVM.RecieveBuyerImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px; height: 250px; width: 250px;">
+																			<p style="margin: 0;">Date: @item.TransactionVM.ReceivedBuyerDate</p>
+																		}
+																	</div>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+
 											</td>
 										</tr>
 									}
@@ -149,7 +340,18 @@
 		</div>
 	</div>
 </div>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
+	$(document).ready(function () {
+		// Lấy tham số từ URL query string
+		var urlParams = new URLSearchParams(window.location.search);
+		var id = urlParams.get('idTrans');
+		// Nếu có id và type từ query string
+		if (id) {
+			var target = "#confirmCollapse-" + id;
+			$(target).collapse('show');
+		}
+	});
 	document.addEventListener('DOMContentLoaded', function () {
 		// Lấy tất cả các thẻ <tr> có thuộc tính data-id
 		var trs = document.querySelectorAll('tr[data-id][data-type]');
@@ -157,7 +359,7 @@
 		// Thêm sự kiện click vào mỗi thẻ <tr>
 		trs.forEach(function (tr) {
 			tr.addEventListener('click', function () {
-				if (event.target.tagName.toLowerCase() !== 'input' && event.target.tagName.toLowerCase() !== 'button') {
+				if (event.target.tagName.toLowerCase() !== 'input' && event.target.tagName.toLowerCase() !== 'button' && event.target.tagName.toLowerCase() !== 'i') {
 
 					// Lấy giá trị của thuộc tính data-id của thẻ <tr> được bấm
 					var itemId = tr.getAttribute('data-id');
@@ -185,5 +387,4 @@
 			});
 		});
 	});
-
 </script>

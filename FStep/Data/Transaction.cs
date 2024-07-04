@@ -45,6 +45,8 @@ public partial class Transaction
 
     public DateTime? SentBuyerDate { get; set; }
 
+    public int ReportidReport { get; set; }
+
     public virtual Comment? IdCommentNavigation { get; set; }
 
     public virtual Post IdPostNavigation { get; set; } = null!;

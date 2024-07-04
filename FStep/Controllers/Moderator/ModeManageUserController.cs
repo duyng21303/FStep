@@ -17,6 +17,7 @@ namespace FStep.Controllers.ManagePost
         public ModeManageUserController(FstepDbContext context, IMapper mapper)
 
 
+
         {
             _context = context;
             _mapper = mapper;
@@ -28,6 +29,7 @@ namespace FStep.Controllers.ManagePost
 			if (!string.IsNullOrEmpty(search))
 			{
 				query = query.Where(x => x.Email.ToLower().Contains(search.ToLower()) || x.StudentId.ToLower().Contains(search.ToLower()));
+
 			}
 
 			var users = query.Skip((page - 1) * pageSize).Take(pageSize).Select(x => _mapper.Map<ProfileVM>(x)).ToList();
@@ -56,5 +58,6 @@ namespace FStep.Controllers.ManagePost
 			}
 			return View();
 		}
+
 	}
 }

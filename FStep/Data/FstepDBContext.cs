@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FStep.Data;
 
-public partial class FstepDbContext : DbContext
+public partial class FstepDBContext : DbContext
 {
     public FstepDbContext()
     {
@@ -17,13 +17,14 @@ public partial class FstepDbContext : DbContext
 
     public virtual DbSet<Chat> Chats { get; set; }
 
-    public virtual DbSet<Comment> Comments { get; set; }
+et<Comment> Comments { get; set; }
 
     public virtual DbSet<Confirm> Confirms { get; set; }
 
     public virtual DbSet<Feedback> Feedbacks { get; set; }
 
     public virtual DbSet<HistoryPoint> HistoryPoints { get; set; }
+
 
     public virtual DbSet<Notification> Notifications { get; set; }
 
@@ -39,9 +40,6 @@ public partial class FstepDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=DUNGCAO\\DUNGCAO;Initial Catalog=FStepDB;User ID=sa;Password=832003;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -50,6 +48,7 @@ public partial class FstepDbContext : DbContext
             entity.HasKey(e => e.IdChat).HasName("PK__Chat__68D484D174364BD9");
 
             entity.ToTable("Chat");
+
 
             entity.Property(e => e.IdChat).HasColumnName("id_chat");
             entity.Property(e => e.ChatDate)
@@ -81,6 +80,7 @@ public partial class FstepDbContext : DbContext
             entity.HasKey(e => e.IdComment).HasName("PK__Comment__7E14AC851C129478");
 
             entity.ToTable("Comment");
+
 
             entity.Property(e => e.IdComment).HasColumnName("id_comment");
             entity.Property(e => e.Content)
@@ -117,6 +117,7 @@ public partial class FstepDbContext : DbContext
 
             entity.ToTable("Confirm");
 
+
             entity.Property(e => e.IdConfirm).HasColumnName("id_confirm");
             entity.Property(e => e.Confirm1).HasColumnName("confirm");
             entity.Property(e => e.IdComment).HasColumnName("id_comment");
@@ -142,6 +143,7 @@ public partial class FstepDbContext : DbContext
             entity.HasKey(e => e.IdFeedback).HasName("PK__Feedback__36BC8630777C08C6");
 
             entity.ToTable("Feedback");
+
 
             entity.Property(e => e.IdFeedback).HasColumnName("id_feedback");
             entity.Property(e => e.Content)
@@ -192,6 +194,7 @@ public partial class FstepDbContext : DbContext
         modelBuilder.Entity<Notification>(entity =>
         {
             entity.HasKey(e => e.IdNotification).HasName("PK__Notifica__925C842F9246B93B");
+
 
             entity.ToTable("Notification");
 
@@ -266,6 +269,7 @@ public partial class FstepDbContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("VNPay_transaction_code");
 
+
             entity.HasOne(d => d.IdTransactionNavigation).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.IdTransaction)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -277,6 +281,7 @@ public partial class FstepDbContext : DbContext
             entity.HasKey(e => e.IdPost).HasName("PK__Post__3840C79D60ACAACC");
 
             entity.ToTable("Post");
+
 
             entity.Property(e => e.IdPost).HasColumnName("id_post");
             entity.Property(e => e.Category)
@@ -324,6 +329,7 @@ public partial class FstepDbContext : DbContext
 
             entity.ToTable("Product");
 
+
             entity.Property(e => e.IdProduct).HasColumnName("id_product");
             entity.Property(e => e.ItemLocation)
                 .HasMaxLength(255)
@@ -354,6 +360,7 @@ public partial class FstepDbContext : DbContext
             entity.Property(e => e.IdUser)
                 .HasMaxLength(50)
                 .HasColumnName("id_user");
+
 
             entity.HasOne(d => d.IdCommentNavigation).WithMany(p => p.Reports)
                 .HasForeignKey(d => d.IdComment)
@@ -428,6 +435,7 @@ public partial class FstepDbContext : DbContext
                 .HasColumnName("type");
             entity.Property(e => e.UnitPrice).HasColumnName("unit_price");
 
+
             entity.HasOne(d => d.IdCommentNavigation).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.IdComment)
                 .HasConstraintName("FKTransactio709335");
@@ -499,6 +507,7 @@ public partial class FstepDbContext : DbContext
             entity.Property(e => e.SwiftCode)
                 .HasMaxLength(255)
                 .HasColumnName("swiftCode");
+
             entity.Property(e => e.TokenGoogle)
                 .HasMaxLength(255)
                 .HasColumnName("token_google");
@@ -509,3 +518,4 @@ public partial class FstepDbContext : DbContext
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
+
