@@ -179,39 +179,7 @@ namespace FStep.Controllers.Auth
 			return View(profile);
 		}
 
-		public IActionResult FinishPost(int id)
-		{
-			var post = db.Posts.FirstOrDefault(p => p.IdPost == id);
-			if (post != null)
-			{
-				post.Status = "Finish";
-				db.Posts.Update(post);
-				db.SaveChanges();
-				TempData["SuccessMessage"] = $"Bài đăng {post.Content} đã được xóa thành công.";
-			}
-			else
-			{
-				TempData["ErrorMessage"] = $"Bài đăng {post.Content} không được tìm thấy.";
-			}
-			return RedirectToAction("Profile");
-		}
-		public IActionResult HiddenPost(int id)
-		{
-			var post = db.Posts.FirstOrDefault(p => p.IdPost == id);
-			if (post != null)
-			{
-				post.Status = "Hidden";
-				db.Posts.Update(post);
-				db.SaveChanges();
-				TempData["SuccessMessage"] = $"Bài đăng {post.Content} đã được ẩn thành công.";
-			}
-			else
-			{
-				TempData["ErrorMessage"] = $"Bài đăng {post.Content} không được tìm thấy.";
-			}
-			return RedirectToAction("Profile");
-
-		}
+		
 		[Authorize]
 		[HttpPost]
 		public async Task<IActionResult> Profile(ProfileVM model)
@@ -413,6 +381,39 @@ namespace FStep.Controllers.Auth
 			return View(model);
 		}
 
+		public IActionResult FinishPost(int id)
+		{
+			var post = db.Posts.FirstOrDefault(p => p.IdPost == id);
+			if (post != null)
+			{
+				post.Status = "Finish";
+				db.Posts.Update(post);
+				db.SaveChanges();
+				TempData["SuccessMessage"] = $"Bài đăng {post.Content} đã được xóa thành công.";
+			}
+			else
+			{
+				TempData["ErrorMessage"] = $"Bài đăng {post.Content} không được tìm thấy.";
+			}
+			return RedirectToAction("Profile");
+		}
+		public IActionResult HiddenPost(int id)
+		{
+			var post = db.Posts.FirstOrDefault(p => p.IdPost == id);
+			if (post != null)
+			{
+				post.Status = "Hidden";
+				db.Posts.Update(post);
+				db.SaveChanges();
+				TempData["SuccessMessage"] = $"Bài đăng {post.Content} đã được ẩn thành công.";
+			}
+			else
+			{
+				TempData["ErrorMessage"] = $"Bài đăng {post.Content} không được tìm thấy.";
+			}
+			return RedirectToAction("Profile");
+
+		}
 		// GET: Account/VerifyInfo
 		[HttpGet]
 		[Authorize]

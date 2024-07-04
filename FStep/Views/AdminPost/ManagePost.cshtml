@@ -1,8 +1,12 @@
-﻿
+﻿@model X.PagedList.IPagedList<FStep.ViewModels.ListPostVM>
+@using X.PagedList.Mvc.Core;
+
 @{
-    ViewData["Title"] = "";
+	ViewData["Title"] = "Quản lí bài đăng";
 }
-<h1>Quản lí bài đăng</h1>
+
+<h1>@ViewData["Title"]</h1>
+
 @{
 	var successMessage = TempData["SuccessMessage"] as string;
 	var errorMessage = TempData["ErrorMessage"] as string;
@@ -23,73 +27,172 @@
 		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 	</div>
 }
+
 <div>
+	<form method="get" asp-controller="AdminPost" asp-action="ManagePost">
+		<div class="row mb-3">
+			<div class="col-md-3">
+				<input type="text" name="searchName" class="form-control" placeholder="Tìm kiếm theo tên" value="@ViewBag.SearchName" />
+			</div>
+			<div class="col-md-3">
+				@Html.DropDownList("searchType", (IEnumerable<SelectListItem>)ViewBag.TypeOptions, new { @class = "form-control" })
+			</div>
+			<div class="col-md-3">
+				@Html.DropDownList("searchStatus", (IEnumerable<SelectListItem>)ViewBag.StatusOptions, new { @class = "form-control" })
+			</div>
+			<div class="col-md-3">
+				<button type="submit" class="btn btn-primary">Tìm kiếm</button>
+			</div>
+		</div>
+	</form>
+
 	<!-- Header body  -->
 	<!-- Title header body  -->
 	<div class="row align-items-center mb-8 search-header">
-		<div>
-			<div class="row">
-				<div class="col-md-5 d-flex justify-content-between align-items-center">
-					<p class="mb-0">Tổng Số Bài Đã Duyệt: @ViewBag.ApprovedPostsCount</p>
-				</div>
-			</div>
-		</div>
-		<div class="custom-container">
-			<!-- Start Content Body-->
-			<div class="container">
-				<div class="row mt-3">
-					<div class="col">
-						<table class="table table-striped">
-							<thead class="thead-light">
-								<tr>
-									<th scope="col">Ảnh</th>
-									<th scope="col">Tên</th>
-									<th scope="col">Loại SP</th>
-									<th scope="col">MSSV</th>
-									<th scope="col">Số Lượng</th>
-									<th scope="col">Ngày Tạo</th>
-									<th scope="col">Còn Lại</th>
-
-								</tr>
-							</thead>
-							<tbody>
-								<!-- Loop through posts -->
-								@foreach (var item in Model)
-								{
-									<tr>
-										<td><img src="@Url.Content("~/img/postPic/" + item.Image)" class="img-fluid small-rounded-image" alt="Post Image"></td>
-										<td class="post-title">@Html.Raw(item.PostTitle)</td>
-										<td>@Html.Raw(item.Category)</td>
-										<td class="post-studentid">@Html.Raw(item.StudentId)</td>
-										<td>@Html.Raw(item.Quantity)</td>
-										<td>@Html.Raw(item.CreateDate.ToString("yyyy-MM-dd"))</td>
-										<td>@Html.Raw(item.DaysRemaining)</td>
-										<td>
-											<form asp-controller="ModeManagePost" asp-action="UpdateStatusAgain" method="post" onsubmit="return confirmApprove()">
-												<input type="hidden" name="id" value="@item.PostId" /> <!-- Ensure the input name matches your action parameter -->
-												<button type="submit" class="btn btn-success">Duyệt</button>
-											</form>
-										</td>
-										<td>
-											<form asp-controller="ModeManagePost" asp-action="FinishPost" method="post" onsubmit="return confirmDelete()">
-												<input type="hidden" name="id" value="@item.PostId" />
-												<button type="submit" class="btn btn-danger btn-sm">Xóa</button>
-											</form>
-										</td>
-									</tr>
-								}
-								<!-- End loop -->
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		@* 	@Html.PagedListPager(Model, page => Url.Action("ManagePosts", new { approvedQuery = ViewBag.ApprovedQuery, currentTab = "approvedPosts", approvedPage = page, pendingPage = ViewBag.PendingPage })) *@
-			<!-- End Content Body -->
+		<div class="col-md-5">
+			<p class="mb-0">Tổng Số Bài : @ViewBag.Count</p>
 		</div>
 	</div>
+
+	<!-- Start Content Body-->
+	<div class="container">
+		<div class="row mt-3">
+			<div class="col">
+				<table class="table table-striped">
+					<thead class="thead-light">
+						<tr>
+							<th scope="col">Mã</th>
+							<th scope="col">Ảnh</th>
+							<th scope="col">Tên</th>
+							<th scope="col">Loại</th>
+							<th scope="col">Số Lượng</th>
+							<th scope="col">Giá(VND)</th>
+							<th scope="col">Ngày Tạo</th>
+							<th scope="col">Trạng thái</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- Loop through posts -->
+						@foreach (var item in Model)
+						{
+							@if (item.Status != "Hidden")
+							{
+								<tr>
+									<td>@Html.Raw(item.PostId)</td>
+									<td><img src="@Url.Content("~/img/postPic/" + item.Image)" class="fixed-size-image" alt="Post Image"></td>
+									<td class="post-title">@Html.Raw(item.PostTitle)</td>
+									<td>
+										@if (item.Type == "Exchange")
+										{
+											<span>Trao đổi</span>
+										}
+										else
+										{
+											<span>Bán</span>
+										}
+									</td>
+									<td>@Html.Raw(item.Quantity)</td>
+									<td>@Html.Raw(item.Price)</td>
+									<td>@Html.Raw(item.CreateDate.ToString("yyyy-MM-dd"))</td>
+									<td>
+										@switch (item.Status.ToLower())
+										{
+											case "true":
+												<span class="badge bg-primary badge-custom badge-dark-text">Đã Duyệt</span>
+												break;
+											case "false":
+												<span class="badge bg-danger badge-custom badge-dark-text">Chờ Duyệt</span>
+												break;
+											case "rejected":
+												<span class="badge bg-warning text-dark badge-custom badge-dark-text">Từ Chối</span>
+												break;
+											case "finish":
+												<span class="badge bg-success badge-custom badge-dark-text">Hoàn Thành</span>
+												break;
+											case "trading":
+												<span class="badge bg-info text-dark badge-custom badge-dark-text">Giao Dịch</span>
+												break;
+											default:
+												<span class="badge bg-secondary badge-custom badge-dark-text">Đã Ẩn</span>
+												break;
+										}
+									</td>
+									<td>
+										<div class="post-details d-flex justify-content-between align-items-center">
+											<div class="post-actions">
+												<button class="btn btn-sm btn-secondary btn-open-actions">
+													...
+												</button>
+												<div class="post-actions-dropdown">
+													<ul class="list-unstyled">
+														<li><a asp-action="UpdatePost" asp-controller="AdminPost" asp-route-id="@Html.Raw(item.PostId)" class="dropdown-item">Sửa</a></li>
+														<li><a asp-action="HiddenPost" asp-controller="AdminPost" asp-route-id="@Html.Raw(item.PostId)" class="dropdown-item">Xóa</a></li>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</td>
+								</tr>
+							}
+						}
+						<!-- End loop -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<!-- Pagination -->
+	@Html.PagedListPager(Model, page => Url.Action("ManagePost", new { searchName = ViewBag.SearchName, searchType = ViewBag.SearchType, searchStatus = ViewBag.SearchStatus, page = page }))
+	<!-- End Content Body -->
 </div>
+
 <style>
+	.badge-custom {
+		width: 100px; /* Đặt chiều rộng cố định cho tất cả các nhãn dán */
+		height: 40px; /* Đặt chiều cao cố định cho tất cả các nhãn dán */
+		display: flex; /* Sử dụng flexbox để căn giữa */
+		align-items: center; /* Căn giữa theo chiều dọc */
+		justify-content: center; /* Căn giữa theo chiều ngang */
+		white-space: nowrap; /* Ngăn ngắt dòng chữ */
+	}
 
+	.fixed-size-image {
+		width: 50px; /* Đặt chiều rộng cố định */
+		height: 45px; /* Đặt chiều cao cố định */
+		object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+	}
+
+	.post-actions {
+		position: relative;
+		display: inline-block;
+	}
+
+	.post-actions-dropdown {
+		display: none;
+		position: absolute;
+		top: 0; /* Align with the button */
+		left: 0;
+		z-index: 1;
+		background-color: #fff;
+		border: 1px solid #ddd;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		padding: 10px;
+		min-width: 100px;
+	}
+
+		.btn-open-actions:hover + .post-actions-dropdown,
+		.post-actions-dropdown:hover {
+			display: block;
+		}
+
+	.dropdown-item {
+		display: block;
+		padding: 5px 10px;
+		color: #333;
+		text-decoration: none;
+	}
+
+		.dropdown-item:hover {
+			background-color: #f1f1f1;
+		}
 </style>
-

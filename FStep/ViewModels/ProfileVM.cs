@@ -23,6 +23,7 @@
         public int? Total { get; set; }
         public int? TotalEx {  get; set; }
 
+        public int? PointRating { get; set; }
        public List<PostVM> Posts { get; set; }
     }
 }
