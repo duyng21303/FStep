@@ -29,7 +29,7 @@ namespace FStep.ViewModels
 
 		[Display(Name = "Số lượng")]
 		[Required(ErrorMessage = "Bắt buộc")]
-		public int? Quantity { get; set; }
+		public int? ProductStatus { get; set; }
 
 		[Display(Name = "Giá")]
 		[DataType(DataType.Currency)]
@@ -38,11 +38,10 @@ namespace FStep.ViewModels
 		[Display(Name = "Thông tin chi tiết sản phẩm")]
 		public string? DetailProduct { get; set; }
 		public string IdUser { get; set; }
-		public int? SoldQuantity { get; set; }
 		public int? FeedbackNum { get; set; }
 
 		public string? Status { get; set; }
-
+		public int? Quantity { get; set; }
 		public string? Location { get; set; }
 	}
 }

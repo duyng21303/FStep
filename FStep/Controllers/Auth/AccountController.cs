@@ -21,17 +21,16 @@ using X.PagedList;
 using System.Data;
 
 
-
 namespace FStep.Controllers.Auth
 {
 	public class AccountController : Controller
 	{
 
 		private readonly IMapper _mapper;
-		private readonly FstepDBContext db;
+		private readonly FstepDbContext db;
 		private const string PASSWORD_GOOGLE = "KJDHF";
 		private readonly IEmailSender emailSender;
-		public AccountController(FstepDBContext context, IMapper mapper, IEmailSender emailSender)
+		public AccountController(FstepDbContext context, IMapper mapper, IEmailSender emailSender)
 
 		{
 			db = context;
@@ -81,6 +80,8 @@ namespace FStep.Controllers.Auth
 							{
 								return Redirect("/");
 							}
+
+
 						}
 					}
 				}
@@ -330,7 +331,7 @@ namespace FStep.Controllers.Auth
 				Img = post.Img,
 				Description = post.Detail,
 				Type = post.Type,
-				Quantity = post.IdProductNavigation.Quantity ?? 1,
+				ProductStatus = post.IdProductNavigation.Quantity ?? 1,
 				Price = post.IdProductNavigation.Price ?? 0
 			};
 
@@ -362,7 +363,7 @@ namespace FStep.Controllers.Auth
 					}
 					if (post.Type == "Sale" && post.IdProductNavigation != null)
 					{
-						post.IdProductNavigation.Quantity = model.Quantity;
+						post.IdProductNavigation.Quantity = model.ProductStatus;
 						post.IdProductNavigation.Price = model.Price;
 					}
 					post.Detail = model.Description;
@@ -417,14 +418,15 @@ namespace FStep.Controllers.Auth
 		// GET: Account/VerifyInfo
 		[HttpGet]
 		[Authorize]
-		public ActionResult VerifyInfo()
+		public IActionResult VerifyInfo()
 		{
 			return View();
 		}
 
 		// POST: Account/VerifyInfo
 		[HttpPost]
-		public async Task<IActionResult> VerifyInfo(VerifyInfoVM model)
+		[Authorize]
+		public IActionResult VerifyInfo(VerifyInfoVM model)
 		{
 			if (ModelState.IsValid)
 			{
@@ -439,9 +441,30 @@ namespace FStep.Controllers.Auth
 					else
 					{
 						user.StudentId = model.StudentId;
-						//user.BankName = model.BankName;
-						//user.AccountHolderName = model.AccountHolderName;
-						//user.BankAccountNumber = model.AccountNumber;
+						user.BankName = model.BankName;
+						user.AccountHolderName = model.AccountHolderName;
+						user.BankAccountNumber = model.AccountNumber;
+						switch (model.BankName)
+						{
+							case "TPBANK":
+								user.SwiftCode = "TPBVVNVX";
+								break;
+							case "VIETCOMBANK":
+								user.SwiftCode = "BFTVVNVX";
+								break;
+							case "VIETINBANK":
+								user.SwiftCode = "ICBVVNVX";
+								break;
+							case "TECHCOMBANK":
+								user.SwiftCode = "VTCBVNVX";
+								break;
+							case "MB BANK":
+								user.SwiftCode = "MSCBVNVX";
+								break;
+							case "BIDV":
+								user.SwiftCode = "BIDVVNVX";
+								break;
+						}
 						db.Update(user);
 						db.SaveChanges();
 						return RedirectToAction("Profile", "Account");
@@ -450,6 +473,7 @@ namespace FStep.Controllers.Auth
 				catch (Exception ex)
 				{
 					ModelState.AddModelError("Error", "An error occurred while processing your request.");
+
 				}
 			}
 			return View(model);

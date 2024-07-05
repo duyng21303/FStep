@@ -12,10 +12,10 @@ namespace FStep.Controllers.Customer
 {
 	public class PostController : Controller
 	{
-		private readonly FstepDBContext db;
+		private readonly FstepDbContext db;
 		private readonly IMapper _mapper;
 
-		public PostController(FstepDBContext context, IMapper mapper)
+		public PostController(FstepDbContext context, IMapper mapper)
 		{
 			db = context;
 			_mapper = mapper;
@@ -26,54 +26,13 @@ namespace FStep.Controllers.Customer
 			return View();
 		}
 
-		[HttpGet]
-		public IActionResult CreatePost()
-		{
-			return View();
-		}
-
-		//Create post
-		[Authorize]
-		[HttpPost]
-		public IActionResult CreatePost(PostVM model, IFormFile img)
-		{
-			try
-			{
-				var product = _mapper.Map<Product>(model);
-				product.Quantity = model.Quantity;
-				product.Price = model.Price;
-				product.Status = "True";
-				db.Add(product);
-				db.SaveChanges();
-
-				var post = _mapper.Map<Post>(model);
-				post.Content = model.Title;
-				post.Date = DateTime.Now;
-				post.Img = Util.UpLoadImg(img, "postPic");
-				post.Status = "False";
-				post.Type = model.Type;
-				post.Detail = model.Description;
-				post.IdUser = User.FindFirst("UserID").Value;
-				//get IdProduct from database map to Post
-				post.IdProduct = db.Products.Max(p => p.IdProduct);
-				db.Add(post);
-				db.SaveChanges();
-				return Redirect("/");
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex);
-			}
-
-			return View();
-		}
 		public IActionResult DetailPost(int id)
 		{
 			var post = db.Posts.Include(x => x.IdProductNavigation).Include(x => x.IdUserNavigation).SingleOrDefault(p => p.IdPost == id);
 			var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
 
 			ViewData["USER_CREATE"] = user;
-			if(post.Status == "WaitingExchange")
+			if (post.Status == "WaitingExchange")
 			{
 				return Redirect("/");
 			}
@@ -121,7 +80,7 @@ namespace FStep.Controllers.Customer
 			{
 				IdPost = post.IdPost,
 				Title = post.Content,
-				Quantity = post.IdProductNavigation?.Quantity,
+				Status = post.Status,
 				Img = post.Img,
 				Description = post.Detail,
 				CreateDate = post.Date,

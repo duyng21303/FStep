@@ -1,0 +1,128 @@
+﻿@model FStep.ViewModels.TransactionVM
+@{
+	ViewData["Title"] = "TransactionSaleDetail";
+	var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+}
+
+<!--Detail Sale-->
+<div class="d-flex justify-content-center align-items-center mx-5">
+	<div class="card" style="border-radius: 10px;">
+		<div class="card-header px-3 py-3">
+			<div class="d-flex justify-content-between align-items-center">
+				@if (Model.UserBuyer.Name != null)
+				{
+					<h5 class="text-muted">Cảm ơn, <span style="color: #3572EF;">@Model.UserBuyer.Name</span>!</h5>
+				}
+				else
+				{
+					<h5 class="text-muted">Cảm ơn, <span style="color: #3572EF;">@Model.UserBuyer.IdUser</span>!</h5>
+				}
+				<div>
+					@if (DateTime.Now.CompareTo(Model.DeliveryDate?.AddDays(7)) <= 0 && Model.Transaction.Status == "Completed")
+					{
+						<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm px-5 py-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@Model.Post.IdPost" asp-route-idTransaction="@Model.TransactionId">
+							Đánh giá
+						</a>
+					}
+					else
+					{
+						<button disabled data-mdb-button-init data-mdb-ripple-init class="btn btn-sm px-5 py-2 bg-dark text-light bg-opacity-50" type="button">
+							Đánh giá
+						</button>
+					}
+					@if (DateTime.Now.CompareTo(Model.CreateDate?.AddDays(3)) <= 0 && Model.Transaction.Status == "Processing")
+					{
+						<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm px-4 py-2" type="button" data-bs-toggle="modal" data-bs-target="#cancelModal" asp-action="Cancel" asp-controller="Feedback" asp-route-idPost="@Model.Post.IdPost" asp-route-idTransaction="@Model.TransactionId">
+							Huỷ đơn hàng
+						</a>
+					}
+					else
+					{
+						<button disabled data-mdb-button-init data-mdb-ripple-init class="btn btn-sm px-4 py-2 bg-dark text-light bg-opacity-50" type="button">
+							Huỷ đơn hàng
+						</button>
+					}
+				</div>
+			</div>
+		</div>
+		<div class="card-body row p-4">
+			<div class="d-flex justify-content-between align-items-center mb-4">
+				<h4 class="lead fw-bold mb-0" style="color: #3572EF;">Giao dịch</h4>
+				<h4 class="small mb-0">Mã giao dịch : <span class="text-danger">@Model.Transaction.CodeTransaction</span></h4>
+			</div>
+			<div class="card shadow-0 border mb-4">
+				<div class="card-body">
+					<div class="row">
+						<div class="col-md-4 mb-4">
+							<div class="container-md">
+								<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@Model.Post.IdPost">
+									<img src="@Url.Content("~/img/postPic/" + Model.Post.Img)" class="img-fluid rounded mh-100" alt="Product">
+								</a>
+							</div>
+						</div>
+						<div class="col-md-8">
+							<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@Model.Post.IdPost" style="text-decoration:none">
+								<h4 class="title text-dark">@Html.Raw(Model.Post.Content)</h4>
+							</a>
+							@if (Model.Post.Type == "Sale")
+							{
+								<h5 class="badge bg-danger text-white fw-bold rounded">@Model.Post.Type</h5>
+							}
+							else
+							{
+								<h5 class="badge bg-success text-white fw-bold rounded">@Model.Post.Type</h5>
+							}
+							<h4 class="mb-1 me-1">@String.Format(format, "{0:0,0 VND}", Model.Transaction.UnitPrice)</h4>
+							<h4 class="text-success"><span>x</span>@Model.Transaction.Quantity</h4>
+							<p class="text-truncate mb-4 mb-md-0">@Html.Raw(Model.Post.Detail)</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="d-flex justify-content-between pt-2">
+				<h4 class="fw-bold mb-0">Chi tiết</h4>
+			</div>
+
+			<div class="d-flex justify-content-between pt-2">
+				<h5 class="small text-muted mb-0">Ngày đặt hàng: <span>@Model.CreateDate?.ToString("MM/dd/yyyy hh:mm tt")</span></h5>
+				<h5 class="text-muted mb-0"><span class="fw-bold me-4">Tổng</span> @String.Format(format, "{0:0,0 VND}", Model.Transaction.Amount)</h5>
+			</div>
+
+			<div class="d-flex justify-content-between">
+				@if (Model.Transaction.Status == "Completed")
+				{
+					<h5 class="small text-muted mb-0">Ngày nhận hàng: <span>@Model.DeliveryDate?.ToString("MM/dd/yyyy hh:mm tt")</span></h5>
+				}
+				else
+				@if (Model.Transaction.Status == "Canceled")
+				{
+					<h5 class="small text-muted mb-0">Ngày huỷ: <span>@Model.CancelDate?.ToString("MM/dd/yyyy hh:mm tt")</span></h5>
+				}
+				else
+				{
+					<h5 class="small text-muted mb-0">-----</h5>
+				}
+				<h5 class="text-muted mb-0"><span class="fw-bold me-4">Giảm giá</span>@String.Format(format, "{0:0,0 VND}", 0)</h5>
+			</div>
+		</div>
+		<div class="card-footer border-0 px-3 py-3"
+			 style="background-color: #3572EF; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+			<h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">
+				Tổng tiền: @String.Format(format, "{0:0,0 VND}", Model.Transaction.Amount)
+			</h5>
+		</div>
+	</div>
+</div>
+
+
+
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	@await Html.PartialAsync("Cancel", new CancelVM()
+{
+	TransactionId = Model.TransactionId
+})
+</div>
+
+
+

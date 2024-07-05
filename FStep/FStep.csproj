@@ -43,6 +43,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Feedback\Cancel.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="Controllers\Admin\AdminController.cs" />
     <Compile Include="Controllers\Admin\AdminPostController.cs" />
     <Compile Include="ViewComponents\ChatViewComponent.cs" />
@@ -89,6 +93,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\Home\Cancel.cshtml" />
     <None Include="Views\Shared\_Pagination.cshtml" />
     <None Include="wwwroot\dashmin-1.0.0\js\main.js" />
     <None Include="wwwroot\dashmin-1.0.0\lib\chart\chart.min.js" />
@@ -197,6 +202,14 @@
     <None Include="wwwroot\webfonts\fa-regular-400.woff2" />
     <None Include="wwwroot\webfonts\fa-solid-900.woff2" />
     <None Include="wwwroot\webfonts\fa-v4compatibility.woff2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Feedback\Cancel.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Feedback\Cancel.cshtml" />
   </ItemGroup>
 
 </Project>

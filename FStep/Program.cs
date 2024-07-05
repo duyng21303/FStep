@@ -28,7 +28,7 @@ public class Program
 		builder.Services.AddControllersWithViews();
 
 		// Register DbContext
-		builder.Services.AddDbContext<FstepDBContext>(options =>
+		builder.Services.AddDbContext<FstepDbContext>(options =>
 		{
 			options.UseSqlServer(builder.Configuration.GetConnectionString("FStep"));
 		});

@@ -14,9 +14,9 @@ namespace FStep.Controllers.Admin
 {
     public class AdminPostController : Controller
     {
-        private readonly FstepDBContext _db;
+        private readonly FstepDbContext _db;
 
-        public AdminPostController(FstepDBContext context)
+        public AdminPostController(FstepDbContext context)
         {
             _db = context;
         }
