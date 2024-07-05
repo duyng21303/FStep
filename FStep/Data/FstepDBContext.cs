@@ -10,11 +10,10 @@ public partial class FstepDbContext : DbContext
     {
     }
 
-	public FstepDbContext(DbContextOptions<FstepDbContext> options)
-
-		: base(options)
-	{
-	}
+    public FstepDbContext(DbContextOptions<FstepDbContext> options)
+        : base(options)
+    {
+    }
 
     public virtual DbSet<Chat> Chats { get; set; }
 
@@ -23,6 +22,8 @@ public partial class FstepDbContext : DbContext
     public virtual DbSet<Confirm> Confirms { get; set; }
 
     public virtual DbSet<Feedback> Feedbacks { get; set; }
+
+    public virtual DbSet<HistoryPoint> HistoryPoints { get; set; }
 
     public virtual DbSet<Notification> Notifications { get; set; }
 
@@ -38,13 +39,13 @@ public partial class FstepDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-	protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Chat>(entity =>
         {
-            entity.HasKey(e => e.IdChat).HasName("PK__Chat__68D484D1BF7C828B");
+            entity.HasKey(e => e.IdChat).HasName("PK__Chat__68D484D17E975C7A");
 
-			entity.ToTable("Chat");
+            entity.ToTable("Chat");
 
             entity.Property(e => e.IdChat).HasColumnName("id_chat");
             entity.Property(e => e.ChatDate)
@@ -73,9 +74,9 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.HasKey(e => e.IdComment).HasName("PK__Comment__7E14AC8595B4A077");
+            entity.HasKey(e => e.IdComment).HasName("PK__Comment__7E14AC85D39BACE8");
 
-			entity.ToTable("Comment");
+            entity.ToTable("Comment");
 
             entity.Property(e => e.IdComment).HasColumnName("id_comment");
             entity.Property(e => e.Content)
@@ -108,9 +109,9 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<Confirm>(entity =>
         {
-            entity.HasKey(e => e.IdConfirm).HasName("PK__Confirm__DAF2DF8F2DD93F1D");
+            entity.HasKey(e => e.IdConfirm).HasName("PK__Confirm__DAF2DF8F1871C718");
 
-			entity.ToTable("Confirm");
+            entity.ToTable("Confirm");
 
             entity.Property(e => e.IdConfirm).HasColumnName("id_confirm");
             entity.Property(e => e.Confirm1).HasColumnName("confirm");
@@ -134,9 +135,9 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<Feedback>(entity =>
         {
-            entity.HasKey(e => e.IdFeedback).HasName("PK__Feedback__36BC863055B99B63");
+            entity.HasKey(e => e.IdFeedback).HasName("PK__Feedback__36BC86302B9FAB78");
 
-			entity.ToTable("Feedback");
+            entity.ToTable("Feedback");
 
             entity.Property(e => e.IdFeedback).HasColumnName("id_feedback");
             entity.Property(e => e.Content)
@@ -159,9 +160,34 @@ public partial class FstepDbContext : DbContext
                 .HasConstraintName("FKFeedback469931");
         });
 
+        modelBuilder.Entity<HistoryPoint>(entity =>
+        {
+            entity.HasKey(e => e.IdPoint).HasName("PK__HistoryP__0AD99761697DBFD0");
+
+            entity.ToTable("HistoryPoint");
+
+            entity.Property(e => e.IdPoint).HasColumnName("id_point");
+            entity.Property(e => e.AddPoint).HasColumnName("add_point");
+            entity.Property(e => e.Content)
+                .HasMaxLength(255)
+                .HasColumnName("content");
+            entity.Property(e => e.Date)
+                .HasColumnType("datetime")
+                .HasColumnName("date");
+            entity.Property(e => e.IdUser)
+                .HasMaxLength(50)
+                .HasColumnName("id_user");
+            entity.Property(e => e.MinusPoint).HasColumnName("minus_point");
+
+            entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.HistoryPoints)
+                .HasForeignKey(d => d.IdUser)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FKHistoryPoi586269");
+        });
+
         modelBuilder.Entity<Notification>(entity =>
         {
-            entity.HasKey(e => e.IdNotification).HasName("PK__Notifica__925C842F81417539");
+            entity.HasKey(e => e.IdNotification).HasName("PK__Notifica__925C842F1AF1747E");
 
             entity.ToTable("Notification");
 
@@ -210,31 +236,31 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.IdPayment).HasName("PK__Payment__862FEFE0C10CCE37");
+            entity.HasKey(e => e.IdPayment).HasName("PK__Payment__862FEFE098728BA8");
 
             entity.ToTable("Payment");
 
-			entity.Property(e => e.IdPayment).HasColumnName("id_payment");
-			entity.Property(e => e.Amount).HasColumnName("amount");
-			entity.Property(e => e.CancelDate)
-				.HasColumnType("datetime")
-				.HasColumnName("cancel_date");
-			entity.Property(e => e.IdTransaction).HasColumnName("id_transaction");
-			entity.Property(e => e.Note)
-				.HasMaxLength(255)
-				.HasColumnName("note");
-			entity.Property(e => e.PayTime)
-				.HasColumnType("datetime")
-				.HasColumnName("pay_time");
-			entity.Property(e => e.Status)
-				.HasMaxLength(255)
-				.HasColumnName("status");
-			entity.Property(e => e.Type)
-				.HasMaxLength(255)
-				.HasColumnName("type");
-			entity.Property(e => e.VnpayTransactionCode)
-				.HasMaxLength(255)
-				.HasColumnName("VNPay_transaction_code");
+            entity.Property(e => e.IdPayment).HasColumnName("id_payment");
+            entity.Property(e => e.Amount).HasColumnName("amount");
+            entity.Property(e => e.CancelDate)
+                .HasColumnType("datetime")
+                .HasColumnName("cancel_date");
+            entity.Property(e => e.IdTransaction).HasColumnName("id_transaction");
+            entity.Property(e => e.Note)
+                .HasMaxLength(255)
+                .HasColumnName("note");
+            entity.Property(e => e.PayTime)
+                .HasColumnType("datetime")
+                .HasColumnName("pay_time");
+            entity.Property(e => e.Status)
+                .HasMaxLength(255)
+                .HasColumnName("status");
+            entity.Property(e => e.Type)
+                .HasMaxLength(255)
+                .HasColumnName("type");
+            entity.Property(e => e.VnpayTransactionCode)
+                .HasMaxLength(255)
+                .HasColumnName("VNPay_transaction_code");
 
             entity.HasOne(d => d.IdTransactionNavigation).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.IdTransaction)
@@ -244,9 +270,9 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<Post>(entity =>
         {
-            entity.HasKey(e => e.IdPost).HasName("PK__Post__3840C79DE4D01A29");
+            entity.HasKey(e => e.IdPost).HasName("PK__Post__3840C79D141C44EE");
 
-			entity.ToTable("Post");
+            entity.ToTable("Post");
 
             entity.Property(e => e.IdPost).HasColumnName("id_post");
             entity.Property(e => e.Category)
@@ -290,9 +316,9 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.IdProduct).HasName("PK__Product__BA39E84FEB3E903A");
+            entity.HasKey(e => e.IdProduct).HasName("PK__Product__BA39E84F3339BE3C");
 
-			entity.ToTable("Product");
+            entity.ToTable("Product");
 
             entity.Property(e => e.IdProduct).HasColumnName("id_product");
             entity.Property(e => e.ItemLocation)
@@ -307,23 +333,23 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<Report>(entity =>
         {
-            entity.HasKey(e => e.IdReport).HasName("PK__Report__D8639F52EF92C681");
+            entity.HasKey(e => e.IdReport).HasName("PK__Report__D8639F5286DB2479");
 
-			entity.ToTable("Report");
+            entity.ToTable("Report");
 
-			entity.Property(e => e.IdReport).HasColumnName("id_report");
-			entity.Property(e => e.Content)
-				.HasMaxLength(255)
-				.HasColumnName("content");
-			entity.Property(e => e.Date)
-				.HasColumnType("datetime")
-				.HasColumnName("date");
-			entity.Property(e => e.IdComment).HasColumnName("id_comment");
-			entity.Property(e => e.IdPost).HasColumnName("id_post");
-			entity.Property(e => e.IdTransaction).HasColumnName("id_transaction");
-			entity.Property(e => e.IdUser)
-				.HasMaxLength(50)
-				.HasColumnName("id_user");
+            entity.Property(e => e.IdReport).HasColumnName("id_report");
+            entity.Property(e => e.Content)
+                .HasMaxLength(255)
+                .HasColumnName("content");
+            entity.Property(e => e.Date)
+                .HasColumnType("datetime")
+                .HasColumnName("date");
+            entity.Property(e => e.IdComment).HasColumnName("id_comment");
+            entity.Property(e => e.IdPost).HasColumnName("id_post");
+            entity.Property(e => e.IdTransaction).HasColumnName("id_transaction");
+            entity.Property(e => e.IdUser)
+                .HasMaxLength(50)
+                .HasColumnName("id_user");
 
             entity.HasOne(d => d.IdCommentNavigation).WithMany(p => p.Reports)
                 .HasForeignKey(d => d.IdComment)
@@ -333,71 +359,70 @@ public partial class FstepDbContext : DbContext
                 .HasForeignKey(d => d.IdPost)
                 .HasConstraintName("FKReport245773");
 
-			entity.HasOne(d => d.IdTransactionNavigation).WithMany(p => p.Reports)
-				.HasForeignKey(d => d.IdTransaction)
-				.OnDelete(DeleteBehavior.ClientSetNull)
-				.HasConstraintName("FKReport258019");
+            entity.HasOne(d => d.IdTransactionNavigation).WithMany(p => p.Reports)
+                .HasForeignKey(d => d.IdTransaction)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FKReport258019");
 
-			entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.Reports)
-				.HasForeignKey(d => d.IdUser)
-				.HasConstraintName("FKReport702862");
-		});
+            entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.Reports)
+                .HasForeignKey(d => d.IdUser)
+                .HasConstraintName("FKReport702862");
+        });
 
         modelBuilder.Entity<Transaction>(entity =>
         {
-            entity.HasKey(e => e.IdTransaction).HasName("PK__Transact__E8E1732DF890EE3B");
+            entity.HasKey(e => e.IdTransaction).HasName("PK__Transact__E8E1732DF7E87BC5");
 
-			entity.ToTable("Transaction");
+            entity.ToTable("Transaction");
 
-			entity.Property(e => e.IdTransaction).HasColumnName("id_transaction");
-			entity.Property(e => e.Amount).HasColumnName("amount");
-			entity.Property(e => e.CodeTransaction)
-				.HasMaxLength(255)
-				.HasColumnName("code_transaction");
-			entity.Property(e => e.Date)
-				.HasColumnType("datetime")
-				.HasColumnName("date");
-			entity.Property(e => e.IdComment).HasColumnName("id_comment");
-			entity.Property(e => e.IdPost).HasColumnName("id_post");
-			entity.Property(e => e.IdUserBuyer)
-				.HasMaxLength(50)
-				.HasColumnName("id_user_buyer");
-			entity.Property(e => e.IdUserSeller)
-				.HasMaxLength(50)
-				.HasColumnName("id_user_seller");
-			entity.Property(e => e.Quantity).HasColumnName("quantity");
-			entity.Property(e => e.ReceivedBuyerDate)
-				.HasColumnType("datetime")
-				.HasColumnName("received_buyer_date");
-			entity.Property(e => e.ReceivedSellerDate)
-				.HasColumnType("datetime")
-				.HasColumnName("received_seller_date");
-			entity.Property(e => e.RecieveBuyerImg)
-				.HasMaxLength(255)
-				.HasColumnName("recieve_buyer_img");
-			entity.Property(e => e.RecieveImg)
-				.HasMaxLength(255)
-				.HasColumnName("recieve_img");
-			entity.Property(e => e.ReportidReport).HasColumnName("Reportid_report");
-			entity.Property(e => e.SentBuyerDate)
-				.HasColumnType("datetime")
-				.HasColumnName("sent_buyer_date");
-			entity.Property(e => e.SentBuyerImg)
-				.HasMaxLength(255)
-				.HasColumnName("sent_buyer_img");
-			entity.Property(e => e.SentImg)
-				.HasMaxLength(255)
-				.HasColumnName("sent_img");
-			entity.Property(e => e.SentSellerDate)
-				.HasColumnType("datetime")
-				.HasColumnName("sent_seller_date");
-			entity.Property(e => e.Status)
-				.HasMaxLength(255)
-				.HasColumnName("status");
-			entity.Property(e => e.Type)
-				.HasMaxLength(255)
-				.HasColumnName("type");
-			entity.Property(e => e.UnitPrice).HasColumnName("unit_price");
+            entity.Property(e => e.IdTransaction).HasColumnName("id_transaction");
+            entity.Property(e => e.Amount).HasColumnName("amount");
+            entity.Property(e => e.CodeTransaction)
+                .HasMaxLength(255)
+                .HasColumnName("code_transaction");
+            entity.Property(e => e.Date)
+                .HasColumnType("datetime")
+                .HasColumnName("date");
+            entity.Property(e => e.IdComment).HasColumnName("id_comment");
+            entity.Property(e => e.IdPost).HasColumnName("id_post");
+            entity.Property(e => e.IdUserBuyer)
+                .HasMaxLength(50)
+                .HasColumnName("id_user_buyer");
+            entity.Property(e => e.IdUserSeller)
+                .HasMaxLength(50)
+                .HasColumnName("id_user_seller");
+            entity.Property(e => e.Quantity).HasColumnName("quantity");
+            entity.Property(e => e.ReceivedBuyerDate)
+                .HasColumnType("datetime")
+                .HasColumnName("received_buyer_date");
+            entity.Property(e => e.ReceivedSellerDate)
+                .HasColumnType("datetime")
+                .HasColumnName("received_seller_date");
+            entity.Property(e => e.RecieveBuyerImg)
+                .HasMaxLength(255)
+                .HasColumnName("recieve_buyer_img");
+            entity.Property(e => e.RecieveImg)
+                .HasMaxLength(255)
+                .HasColumnName("recieve_img");
+            entity.Property(e => e.SentBuyerDate)
+                .HasColumnType("datetime")
+                .HasColumnName("sent_buyer_date");
+            entity.Property(e => e.SentBuyerImg)
+                .HasMaxLength(255)
+                .HasColumnName("sent_buyer_img");
+            entity.Property(e => e.SentImg)
+                .HasMaxLength(255)
+                .HasColumnName("sent_img");
+            entity.Property(e => e.SentSellerDate)
+                .HasColumnType("datetime")
+                .HasColumnName("sent_seller_date");
+            entity.Property(e => e.Status)
+                .HasMaxLength(255)
+                .HasColumnName("status");
+            entity.Property(e => e.Type)
+                .HasMaxLength(255)
+                .HasColumnName("type");
+            entity.Property(e => e.UnitPrice).HasColumnName("unit_price");
 
             entity.HasOne(d => d.IdCommentNavigation).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.IdComment)
@@ -416,7 +441,7 @@ public partial class FstepDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.IdUser).HasName("PK__User__D2D14637620D0F9B");
+            entity.HasKey(e => e.IdUser).HasName("PK__User__D2D14637C250E6E5");
 
             entity.ToTable("User");
 
@@ -467,6 +492,9 @@ public partial class FstepDbContext : DbContext
             entity.Property(e => e.StudentId)
                 .HasMaxLength(10)
                 .HasColumnName("student_id");
+            entity.Property(e => e.SwiftCode)
+                .HasMaxLength(255)
+                .HasColumnName("swiftCode");
             entity.Property(e => e.TokenGoogle)
                 .HasMaxLength(255)
                 .HasColumnName("token_google");
@@ -475,5 +503,5 @@ public partial class FstepDbContext : DbContext
         OnModelCreatingPartial(modelBuilder);
     }
 
-	partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

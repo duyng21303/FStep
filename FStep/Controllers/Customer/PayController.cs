@@ -234,26 +234,19 @@ namespace FStep.Controllers.Customer
 		{
 			var transaction = db.Transactions.FirstOrDefault(p => p.IdTransaction == id);
 			var post = db.Posts.FirstOrDefault(p => p.IdPost == transaction.IdPost);
+			var seller = db.Users.FirstOrDefault(p => p.IdUser == transaction.IdUserSeller);
+			var buyer = db.Users.FirstOrDefault(p => p.IdUser == transaction.IdUserBuyer);
 			// Lấy thông tin hóa đơn từ database
 			return new TransactionVM
 			{
 				TransactionId = id,
-				IdPost = transaction.IdPost,
-				Content = post.Content,
-				Detail = post.Detail,
-				TypePost = post.Type,
+				Transaction = transaction,
+				Post = post,
+				UserBuyer = buyer,
+				UserSeller = seller,
 				DeliveryDate = db.Payments.FirstOrDefault(p => p.IdTransaction == id && p.Type == "Seller")?.PayTime,
 				CreateDate = transaction.Date,
-				Status = transaction.Status,
-				Img = post.Img,
-				UnitPrice = transaction.UnitPrice,
-				Quantity = transaction.Quantity,
-				Amount = transaction.Amount,
-				IdUserSeller = transaction.IdUserSeller,
-				CodeTransaction = transaction.CodeTransaction,
-				UserName = db.Users.FirstOrDefault(p => p.IdUser == db.Transactions.FirstOrDefault(p => p.IdTransaction == id).IdUserBuyer).Name ?? null,
 				CancelDate = db.Payments.FirstOrDefault(p => p.IdTransaction == id).CancelDate,
-				// Thêm các thông tin khác của hóa đơn
 			};
 		}
 

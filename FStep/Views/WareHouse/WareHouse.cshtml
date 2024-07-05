@@ -3,6 +3,7 @@
 @using X.PagedList.Mvc.Core
 @{
 	ViewData["Title"] = "Kho Hàng";
+	var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 	string fullUrl = Context.Request.GetDisplayUrl();
 }
 <div class="row align-items-center mb-8 search-header">
@@ -70,26 +71,26 @@
 								<tbody>
 									@foreach (var item in Model.ExchangeList)
 									{
-										<tr data-id="@item.TransactionVM.TransactionId" data-type="@item.Type">
+										<tr data-id="@item.TransactionVM.IdTransaction" data-type="@item.Type">
 											<td>@Html.DisplayFor(modelItem => item.TransactionVM.CodeTransaction)</td>
 											<td>@Html.DisplayFor(modelItem => item.Location)</td>
-											<td>@item.TransactionVM.CreateDate</td>
+											<td>@item.TransactionVM.Date</td>
 											<td>@Html.DisplayFor(moderItem => item.UserSeller.IdUser)</td>
 
 											<td>@Html.DisplayFor(modelItem => item.UserBuyer.IdUser)</td>
 
 											<td>@Html.DisplayFor(modelItem => item.PostVM.Title)</td>
 											<td>
-												<button type="button" class="btn btn-danger btn-sm submit-img" data-toggle="collapse" data-target="#confirmCollapse-@item.TransactionVM.TransactionId">
+												<button type="button" class="btn btn-danger btn-sm submit-img" data-toggle="collapse" data-target="#confirmCollapse-@item.TransactionVM.IdTransaction">
 													<i class="fas fa-chevron-down"></i>
 												</button>
 											</td>
 											<td>
-												<a asp-action="CompleteTransaction" asp-controller="WareHouse" asp-route-code="@item.TransactionVM.CodeTransaction" type="button" class="btn btn-danger btn-sm">Hoàn thành</a>
+												<i data-bs-toggle="modal" data-bs-target="#confirm-@item.TransactionVM.IdTransaction" type="button" class="btn btn-danger btn-sm">Hoàn thành</i>
 											</td>
 
 										</tr>
-										<tr id="confirmCollapse-@item.TransactionVM.TransactionId" class="collapse">
+										<tr id="confirmCollapse-@item.TransactionVM.IdTransaction" class="collapse">
 											<td colspan="9">
 												<div class="card card-body">
 													<table class="table table-bordered">
@@ -112,7 +113,7 @@
 																	</div>
 																</td>
 																<td>
-																	
+
 																	<div class="user-info">
 																		<img src="/img/@userBuyerImg" alt="User 1 Avatar" class="avatar">
 																		<p>@item.UserBuyer.Name</p>
@@ -127,7 +128,7 @@
 																				Xác nhận đã gửi hàng
 																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
 																				<input type="hidden" name="type" value="SellerSent" />
-																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
+																				<input type="hidden" name="id" value="@item.TransactionVM.IdTransaction" />
 																			</label>
 																		</form>
 																		@if (item.TransactionVM.SentImg != null)
@@ -144,7 +145,7 @@
 																				Xác nhận đã gửi hàng
 																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
 																				<input type="hidden" name="type" value="BuyerSent" />
-																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
+																				<input type="hidden" name="id" value="@item.TransactionVM.IdTransaction" />
 																			</label>
 																		</form>
 																		@if (item.TransactionVM.SentBuyerImg != null)
@@ -163,7 +164,7 @@
 																				Xác nhận đã nhận hàng
 																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
 																				<input type="hidden" name="type" value="SellerReceive" />
-																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
+																				<input type="hidden" name="id" value="@item.TransactionVM.IdTransaction" />
 																			</label>
 																		</form>
 																		@if (item.TransactionVM.RecieveImg != null)
@@ -180,7 +181,7 @@
 																				Xác nhận đã nhận hàng
 																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
 																				<input type="hidden" name="type" value="BuyerReceive" />
-																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
+																				<input type="hidden" name="id" value="@item.TransactionVM.IdTransaction" />
 																			</label>
 																		</form>
 																		@if (item.TransactionVM.RecieveBuyerImg != null)
@@ -197,6 +198,29 @@
 												</div>
 											</td>
 										</tr>
+
+										<!-- Model complete button -->
+										<div class="modal fade" id="confirm-@item.TransactionVM.IdTransaction" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+											<div class="modal-dialog modal-dialog-centered">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title" id="exampleModalLongTitle">Xác nhận hoàn thành</h5>
+														<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+															<span aria-hidden="true">&times;</span>
+														</button>
+													</div>
+													<div class="modal-body">
+														<h5>Xác nhận thông tin đơn hàng số <span class="text-danger">@item.TransactionVM.IdTransaction</span></h5>
+														<h6>Mã đơn hàng: <span class="text-danger">@item.TransactionVM.CodeTransaction</span></h6>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+														<a asp-action="CompleteTransaction" asp-controller="WareHouse" asp-route-id="@item.TransactionVM.IdTransaction" asp-route-url="@fullUrl" type="button" class="btn btn-primary">Xác nhận</a>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!--End modal-->
 									}
 								</tbody>
 							</table>
@@ -222,26 +246,25 @@
 								<tbody>
 									@foreach (var item in Model.SaleList)
 									{
-										<tr data-id="@item.TransactionVM.TransactionId" data-type="@item.Type">
+										<tr data-id="@item.TransactionVM.IdTransaction" data-type="@item.Type">
 											<td>@Html.DisplayFor(modelItem => item.PostVM.IdPost)</td>
 											<td>@Html.DisplayFor(modelItem => item.Location)</td>
 											<td>@Html.DisplayFor(modelItem => item.TransactionVM.CodeTransaction)</td>
-											<td>@Html.DisplayFor(modelItem => item.TransactionVM.CreateDate)</td>
+											<td>@Html.DisplayFor(modelItem => item.TransactionVM.Date)</td>
 											<td>@Html.DisplayFor(moderItem => item.UserBuyer.IdUser)</td>
 											<td>@Html.DisplayFor(modelItem => item.UserSeller.IdUser)</td>
-											<td>@Html.DisplayFor(modelItem => item.PostVM.Title)</td>
 											<td>@Html.DisplayFor(modelItem => item.TransactionVM.Quantity)</td>
-											<td>@Html.DisplayFor(modelItem => item.TransactionVM.Amount)</td>
+											<td>@String.Format(format, "{0:0,0 VND}", item.TransactionVM.Amount)</td>
 											<td>
-												<button type="button" class="btn btn-danger btn-sm submit-img" data-toggle="collapse" data-target="#confirmCollapse-@item.TransactionVM.TransactionId">
+												<button type="button" class="btn btn-danger btn-sm submit-img" data-toggle="collapse" data-target="#confirmCollapse-@item.TransactionVM.IdTransaction">
 													<i class="fas fa-chevron-down"></i>
 												</button>
 											</td>
 											<td>
-												<a asp-action="CompleteTransaction" asp-controller="WareHouse" asp-route-code="@item.TransactionVM.CodeTransaction" asp-route-url="@fullUrl" type="button" class="btn btn-danger btn-sm">Hoàn thành</a>
+												<i data-bs-toggle="modal" data-bs-target="#confirm-@item.TransactionVM.IdTransaction" type="button" class="btn btn-danger btn-sm">Hoàn thành</i>
 											</td>
 										</tr>
-										<tr id="confirmCollapse-@item.TransactionVM.TransactionId" class="collapse">
+										<tr id="confirmCollapse-@item.TransactionVM.IdTransaction" class="collapse">
 											<td colspan="9">
 												<div class="card card-body">
 													<table class="table table-bordered">
@@ -278,7 +301,7 @@
 																				Xác nhận người bán mang hàng tới
 																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
 																				<input type="hidden" name="type" value="SellerSent-Sell" />
-																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
+																				<input type="hidden" name="id" value="@item.TransactionVM.IdTransaction" />
 																			</label>
 																		</form>
 																		@if (item.TransactionVM.SentImg != null)
@@ -295,7 +318,7 @@
 																				Xác nhận người mua nhận hàng
 																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
 																				<input type="hidden" name="type" value="SellerRevieve-Sell" />
-																				<input type="hidden" name="id" value="@item.TransactionVM.TransactionId" />
+																				<input type="hidden" name="id" value="@item.TransactionVM.IdTransaction" />
 																			</label>
 																		</form>
 																		@if (item.TransactionVM.RecieveBuyerImg != null)
@@ -312,6 +335,29 @@
 
 											</td>
 										</tr>
+
+										<!-- Model complete button -->
+										<div class="modal fade" id="confirm-@item.TransactionVM.IdTransaction" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+											<div class="modal-dialog modal-dialog-centered">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title" id="exampleModalLongTitle">Xác nhận hoàn thành</h5>
+														<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+															<span aria-hidden="true">&times;</span>
+														</button>
+													</div>
+													<div class="modal-body">
+														<h5>Xác nhận thông tin đơn hàng số <span class="text-danger">@item.TransactionVM.IdTransaction</span></h5>
+														<h6>Mã đơn hàng: <span class="text-danger">@item.TransactionVM.CodeTransaction</span></h6>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+														<a asp-action="CompleteTransaction" asp-controller="WareHouse" asp-route-id="@item.TransactionVM.IdTransaction" asp-route-url="@fullUrl" type="button" class="btn btn-primary">Xác nhận</a>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!--End modal-->
 									}
 								</tbody>
 							</table>

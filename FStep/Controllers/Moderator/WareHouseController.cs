@@ -10,9 +10,6 @@ using X.PagedList;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text.Json;
 using FStep.Helpers;
-
-
-
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -102,7 +99,7 @@ namespace FStep.Controllers.ManagePost
 						{
 							CommentExchangeVM = commentExchangeVM,
 							PostVM = postVM,
-							TransactionVM = _mapper.Map<TransactionVM>(item),
+							TransactionVM = item,
 							Type = item.Type,
 							UserBuyer = userBuyer,
 							UserSeller = userSeller
@@ -131,7 +128,7 @@ namespace FStep.Controllers.ManagePost
 						saleList.Add(new WareHouseVM()
 						{
 							PostVM = postVM,
-							TransactionVM = _mapper.Map<TransactionVM>(item),
+							TransactionVM = item,
 							Type = item.Type,
 							UserBuyer = userBuyer,
 							UserSeller = userSeller
@@ -159,14 +156,17 @@ namespace FStep.Controllers.ManagePost
 			}
 		}
 		[HttpGet]
-		public IActionResult CompleteTransaction(string code, string url)
+		public IActionResult CompleteTransaction(int id, string url)
 		{
 			string fullUrl = HttpContext.Request.GetDisplayUrl();
-			var transaction = db.Transactions.FirstOrDefault(p => p.CodeTransaction == code);
+			var transaction = db.Transactions.FirstOrDefault(p => p.IdTransaction == id);
 
 			transaction.Status = "Completed";
 			db.Update(transaction);
 
+			//Pay money for Seller
+
+			//Create Payment
 			var payment = new Payment();
 			payment.IdTransaction = transaction.IdTransaction;
 			payment.PayTime = DateTime.Now;
@@ -234,7 +234,7 @@ namespace FStep.Controllers.ManagePost
 						{
 							CommentExchangeVM = commentExchangeVM,
 							PostVM = postVM,
-							TransactionVM = _mapper.Map<TransactionVM>(transaction),
+							TransactionVM = transaction,
 							Type = transaction.Type,
 							UserBuyer = userBuyer,
 							UserSeller = userSeller
@@ -256,7 +256,7 @@ namespace FStep.Controllers.ManagePost
 						WareHouseVM wareHouse = new WareHouseVM()
 						{
 							PostVM = postVM,
-							TransactionVM = _mapper.Map<TransactionVM>(transaction),
+							TransactionVM = transaction,
 							Type = transaction.Type,
 							UserBuyer = userBuyer,
 							UserSeller = userSeller

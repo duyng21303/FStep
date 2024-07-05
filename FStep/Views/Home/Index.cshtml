@@ -101,13 +101,13 @@
 								<!-- Start of post item column -->
 								@foreach (var item in Model)
 								{
-									@if (ViewBag.checkInfo != "notLogin")
+									@if (ViewBag.checkInfo == "True")
 									{
 										<div class="col-md-6 col-lg-6 col-xl-3">
 											<div class="rounded position-relative fruit-item">
 												<div class="fruit-img">
 													<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost">
-														<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded-top" alt="Laptop">
+														<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded-top" alt="Product">
 													</a>
 												</div>
 												<div class="p-4 border border-secondary border-top-0 rounded-bottom">
@@ -130,12 +130,12 @@
 										<div class="col-md-6 col-lg-6 col-xl-3">
 											<div class="rounded position-relative fruit-item">
 												<div class="fruit-img">
-													<a data-bs-toggle="modal" data-bs-target="#exampleModal">
+													<a data-bs-toggle="modal" data-bs-target="#popupModal">
 														<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded-top" alt="Laptop">
 													</a>
 												</div>
 												<div class="p-4 border border-secondary border-top-0 rounded-bottom">
-													<a style="text-decoration:none" data-bs-toggle="modal" data-bs-target="#exampleModal">
+													<a style="text-decoration:none" data-bs-toggle="modal" data-bs-target="#popupModal">
 														<h4 class="title">@Html.Raw(item.Title)</h4>
 													</a>
 													@if (item.Type == "Sale")
