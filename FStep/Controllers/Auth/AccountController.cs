@@ -162,7 +162,7 @@ namespace FStep.Controllers.Auth
 				AvatarImg = User.FindFirstValue("IMG"),
 				Email = user.Email,
 				Name = user.Name,
-				Rating = user.PointRating,
+				PointRating = user.PointRating,
 				StudentId = user.StudentId,
 				Posts = user.Posts.Select(p => new PostVM()
 				{
@@ -172,6 +172,7 @@ namespace FStep.Controllers.Auth
 					Description = p.Detail,
 					Img = p.Img,
 					Type = p.Type,
+					Price = p.IdProductNavigation != null && p.IdProductNavigation.Price.HasValue ? p.IdProductNavigation.Price.Value : 0f,
 					CreateDate = p.Date.HasValue ? p.Date.Value : DateTime.Now
 				}).ToList()
 
@@ -179,23 +180,7 @@ namespace FStep.Controllers.Auth
 			return View(profile);
 		}
 
-		public IActionResult FinishPost(int id)
-		{
-			var post = db.Posts.FirstOrDefault(p => p.IdPost == id);
-			if (post != null)
-			{
-				post.Status = "finish";
-				db.Posts.Update(post);
-				db.SaveChanges();
-				TempData["SuccessMessage"] = $"Bài đăng {post.Content} đã được xóa thành công.";
-			}
-			else
-			{
-				TempData["ErrorMessage"] = $"Bài đăng {post.Content} không được tìm thấy.";
-			}
-			return RedirectToAction("Profile");
-
-		}
+		
 		[Authorize]
 		[HttpPost]
 		public async Task<IActionResult> Profile(ProfileVM model)
@@ -207,7 +192,7 @@ namespace FStep.Controllers.Auth
 				user.Address = model.Address;
 				user.Email = model.Email;
 				user.Name = model.Name;
-				user.PointRating = model.Rating;
+				user.PointRating = model.PointRating;
 				user.StudentId = model.StudentId;
 				db.Update(user);
 				db.SaveChanges();
@@ -326,7 +311,6 @@ namespace FStep.Controllers.Auth
 		}
 
 
-
 		[HttpGet]
 		[Authorize]
 		public IActionResult UpdatePost(int id)
@@ -383,7 +367,7 @@ namespace FStep.Controllers.Auth
 						post.IdProductNavigation.Price = model.Price;
 					}
 					post.Detail = model.Description;
-					post.Status = "false";
+					post.Status = "False";
 
 					db.SaveChanges();
 					TempData["SuccessMessage"] = $"Bài đăng của bạn đã được sửa thành công.Chúng tôi sẽ xem duyệt và duyệt!";
@@ -398,6 +382,39 @@ namespace FStep.Controllers.Auth
 			return View(model);
 		}
 
+		public IActionResult FinishPost(int id)
+		{
+			var post = db.Posts.FirstOrDefault(p => p.IdPost == id);
+			if (post != null)
+			{
+				post.Status = "Finish";
+				db.Posts.Update(post);
+				db.SaveChanges();
+				TempData["SuccessMessage"] = $"Bài đăng {post.Content} đã được xóa thành công.";
+			}
+			else
+			{
+				TempData["ErrorMessage"] = $"Bài đăng {post.Content} không được tìm thấy.";
+			}
+			return RedirectToAction("Profile");
+		}
+		public IActionResult HiddenPost(int id)
+		{
+			var post = db.Posts.FirstOrDefault(p => p.IdPost == id);
+			if (post != null)
+			{
+				post.Status = "Hidden";
+				db.Posts.Update(post);
+				db.SaveChanges();
+				TempData["SuccessMessage"] = $"Bài đăng {post.Content} đã được ẩn thành công.";
+			}
+			else
+			{
+				TempData["ErrorMessage"] = $"Bài đăng {post.Content} không được tìm thấy.";
+			}
+			return RedirectToAction("Profile");
+
+		}
 		// GET: Account/VerifyInfo
 		[HttpGet]
 		[Authorize]

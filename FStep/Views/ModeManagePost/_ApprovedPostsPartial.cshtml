@@ -42,13 +42,13 @@
 								<tr>
 									<th scope="col">Ảnh</th>
 									<th scope="col">Tên</th>
-									<th scope="col">Loại SP</th>
 									<th scope="col">MSSV</th>
 									<th scope="col">Số Lượng</th>
 									<th scope="col">Ngày Tạo</th>
 									<th scope="col">Còn Lại</th>
 									<th scope="col">Duyệt Lại</th>
 									<th scope="col">Xóa Bài</th>
+									<th scope="col">Vị trí</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -58,7 +58,6 @@
 									<tr>
 										<td><img src="@Url.Content("~/img/postPic/" + item.Image)" class="img-fluid small-rounded-image" alt="Post Image"></td>
 										<td class="post-title">@Html.Raw(item.PostTitle)</td>
-										<td>@Html.Raw(item.Category)</td>
 										<td class="post-studentid">@Html.Raw(item.StudentId)</td>
 										<td>@Html.Raw(item.Quantity)</td>
 										<td>@Html.Raw(item.CreateDate.ToString("yyyy-MM-dd"))</td>
@@ -75,6 +74,18 @@
 												<button type="submit" class="btn btn-danger btn-sm">Xóa</button>
 											</form>
 										</td>
+										@if (string.IsNullOrEmpty(@item.Location)) //checks if the Location is either null or an empty string.
+										{
+											<td>
+												<form asp-controller="ModeManagePost" asp-action="AddLocation" method="post">
+													<div class="input-group input-group-sm compact-form">
+														<input type="text" name="location" class="form-control" placeholder="Vị trí" aria-label="Location" required style="max-width: 80px;">
+														<input type="hidden" name="id" value="@item.PostId" />
+														<button class="btn btn-primary" type="submit">Thêm</button>
+													</div>
+												</form>
+											</td>
+										}
 									</tr>
 								}
 								<!-- End loop -->
@@ -88,3 +99,6 @@
 		</div>
 	</div>
 </div>
+<style>
+	
+</style>

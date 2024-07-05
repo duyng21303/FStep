@@ -39,7 +39,7 @@ namespace FStep.ViewModels
 
 		public String Category { get; set; }
 
-		public float Price { get; set; }
+		public float? Price { get; set; }
 
 		public String Type { get; set; } = default!;
 
@@ -57,6 +57,7 @@ namespace FStep.ViewModels
 		public string Description { get; set; }
 
 		public String Email { get; set; }
+
 
 		// Thuộc tính tính toán DaysRemaining cho Pending
 		public int DaysRemaining => (Status == "false") ? (7 - (DateTime.Now.Date - CreateDate.Date).Days) : (30 - (DateTime.Now.Date - CreateDate.Date).Days);

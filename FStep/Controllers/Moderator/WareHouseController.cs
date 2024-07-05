@@ -17,6 +17,7 @@ using System.Security.Claims;
 using FStep.Services;
 using Microsoft.AspNetCore.Http.Extensions;
 
+
 namespace FStep.Controllers.ManagePost
 {
 	public class WareHouseController : Controller
@@ -51,17 +52,17 @@ namespace FStep.Controllers.ManagePost
 				{
 					searchString = searchString.ToLower();
 					exchangeTransactions = exchangeTransactions.Where(t =>
-						t.IdPostNavigation.Location.ToLower().Contains(searchString) ||
-						t.CodeTransaction.ToLower().Contains(searchString) ||
-						t.IdUserBuyerNavigation.StudentId.ToLower().Contains(searchString) ||
-						t.IdPostNavigation.Content.ToLower().Contains(searchString)
+				(t.IdPostNavigation?.Location?.ToLower().Contains(searchString) ?? false) ||
+				(t.CodeTransaction?.ToLower().Contains(searchString) ?? false) ||
+				(t.IdUserBuyerNavigation?.StudentId?.ToLower().Contains(searchString) ?? false) ||
+				(t.IdPostNavigation?.Content?.ToLower().Contains(searchString) ?? false)
 					);
-
 					saleTransactions = saleTransactions.Where(t =>
-						t.IdPostNavigation.Location.ToLower().Contains(searchString) ||
-						t.CodeTransaction.ToLower().Contains(searchString) ||
-						t.IdUserBuyerNavigation.StudentId.ToLower().Contains(searchString) ||
-						t.IdPostNavigation.Content.ToLower().Contains(searchString)
+						(t.IdPostNavigation?.Location?.ToLower().Contains(searchString) ?? false) ||
+				(t.CodeTransaction?.ToLower().Contains(searchString) ?? false) ||
+				(t.IdUserBuyerNavigation?.StudentId?.ToLower().Contains(searchString) ?? false) ||
+				(t.IdPostNavigation?.Content?.ToLower().Contains(searchString) ?? false)
+
 					);
 				}
 
@@ -271,7 +272,7 @@ namespace FStep.Controllers.ManagePost
 				return BadRequest("Invalid data");
 			}
 		}
-		[Authorize]
+
 		[HttpPost]
 		public async Task<IActionResult> RecieveImg(IFormFile img, string type, string id)
 		{

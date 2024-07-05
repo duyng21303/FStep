@@ -1,7 +1,7 @@
 ﻿@using FStep.ViewModels
 @model ProfileVM
 @{
-	int rating = (int)(Model.Rating ?? 0);
+	int rating = (int)(Model.PointRating ?? 0);
 	var roles = new List<string> { "Customer", "Moderator", "Administrator" };
 	roles = roles.Where(role => !role.Equals(Model.Role, StringComparison.OrdinalIgnoreCase)).ToList();
 }

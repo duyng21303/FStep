@@ -12,7 +12,7 @@ using X.PagedList;
 
 namespace FStep.Controllers.ManagePost
 {
-    public class ModeManagePostController : Controller
+	public class ModeManagePostController : Controller
 	{
 		private readonly FstepDbContext _db;
 
@@ -22,7 +22,8 @@ namespace FStep.Controllers.ManagePost
 		}
 		[Authorize(Roles = "Moderator")]
 		[HttpGet]
-		public IActionResult ManagePosts(string pendingQuery, string approvedQuery,String currentTab, int pendingPage = 1, int approvedPage = 1, int pageSize = 30)
+		public IActionResult ManagePosts(string pendingQuery, string approvedQuery, String currentTab, int pendingPage = 1, int approvedPage = 1, int pageSize = 30)
+
 		{
 			var pendingPostsResult = GetPendingPosts(pendingQuery, pendingPage, pageSize);
 			var approvedPostsResult = GetApprovedPosts(approvedQuery, approvedPage, pageSize);
@@ -54,7 +55,8 @@ namespace FStep.Controllers.ManagePost
 			var queryable = _db.Posts
 				.Include(p => p.IdUserNavigation)
 				.Include(p => p.IdProductNavigation)
-				.Where(p => p.Status == "false");
+				.Where(p => p.Status == "False");
+
 
 			if (!string.IsNullOrEmpty(query))
 			{
@@ -76,7 +78,9 @@ namespace FStep.Controllers.ManagePost
 					CreateDate = s.Date ?? DateTime.Now,
 					Status = s.Status ?? string.Empty,
 					Category = s.Category ?? string.Empty,
-					Description = s.Detail ?? string.Empty
+					Description = s.Detail ?? string.Empty,
+					
+
 				})
 				.ToPagedList(pageNumber, pageSize);
 
@@ -94,7 +98,8 @@ namespace FStep.Controllers.ManagePost
 			var queryable = _db.Posts
 				.Include(p => p.IdUserNavigation)
 				.Include(p => p.IdProductNavigation)
-				.Where(p => p.Status == "true");
+				.Where(p => p.Status == "True");
+
 
 			if (!string.IsNullOrEmpty(query))
 			{
@@ -130,7 +135,8 @@ namespace FStep.Controllers.ManagePost
 			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
 			if (post != null)
 			{
-				post.Status = "true";
+				post.Status = "True";
+
 				post.Date = DateTime.Now;
 
 				_db.Posts.Update(post);
@@ -144,7 +150,8 @@ namespace FStep.Controllers.ManagePost
 			string encodedUrl = Url.Action("ManagePosts", new { currentTab = "pendingPosts" });
 			return Redirect(encodedUrl);
 
-	}
+		}
+
 
 		[Authorize(Roles = "Moderator")]
 		[HttpPost]
@@ -153,7 +160,8 @@ namespace FStep.Controllers.ManagePost
 			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
 			if (post != null)
 			{
-				post.Status = "reCheck";
+				post.Status = "Rejected";
+
 				_db.Posts.Update(post);
 				_db.SaveChanges();
 				TempData["SuccessMessage"] = $"Bài đăng {id} đã được xóa thành công.";
@@ -174,7 +182,8 @@ namespace FStep.Controllers.ManagePost
 			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
 			if (post != null)
 			{
-				post.Status = "true";
+				post.Status = "True";
+
 				post.Date = DateTime.Now;
 
 				_db.Posts.Update(post);
@@ -197,7 +206,8 @@ namespace FStep.Controllers.ManagePost
 			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
 			if (post != null)
 			{
-				post.Status = "finish";
+				post.Status = "Finish";
+
 				_db.Posts.Update(post);
 				_db.SaveChanges();
 				TempData["SuccessMessage"] = $"Bài đăng {id} đã được xóa thành công.";
@@ -210,5 +220,28 @@ namespace FStep.Controllers.ManagePost
 			return Redirect(encodedUrl);
 
 		}
+		[Authorize]
+		[HttpPost]
+		public IActionResult AddLocation(string location, int id)
+		{
+			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
+			if (post != null && location != null)
+			{
+				post.Location = location;
+				_db.Posts.Update(post);
+				_db.SaveChanges();
+				TempData["SuccessMessage"] = "Location added successfully!";
+			}
+			else
+			{
+				TempData["ErrorMessage"] = "Location cannot be empty.";
+			}
+
+			string encodedUrl = Url.Action("ManagePosts", new { currentTab = "approvedPosts" });
+			return Redirect(encodedUrl);
+		}
+
 	}
+
 }
+

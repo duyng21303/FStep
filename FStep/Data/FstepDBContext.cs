@@ -47,6 +47,7 @@ public partial class FstepDbContext : DbContext
 
             entity.ToTable("Chat");
 
+
             entity.Property(e => e.IdChat).HasColumnName("id_chat");
             entity.Property(e => e.ChatDate)
                 .HasColumnType("datetime")
@@ -77,6 +78,7 @@ public partial class FstepDbContext : DbContext
             entity.HasKey(e => e.IdComment).HasName("PK__Comment__7E14AC85D39BACE8");
 
             entity.ToTable("Comment");
+
 
             entity.Property(e => e.IdComment).HasColumnName("id_comment");
             entity.Property(e => e.Content)
@@ -113,6 +115,7 @@ public partial class FstepDbContext : DbContext
 
             entity.ToTable("Confirm");
 
+
             entity.Property(e => e.IdConfirm).HasColumnName("id_confirm");
             entity.Property(e => e.Confirm1).HasColumnName("confirm");
             entity.Property(e => e.IdComment).HasColumnName("id_comment");
@@ -138,6 +141,7 @@ public partial class FstepDbContext : DbContext
             entity.HasKey(e => e.IdFeedback).HasName("PK__Feedback__36BC86302B9FAB78");
 
             entity.ToTable("Feedback");
+
 
             entity.Property(e => e.IdFeedback).HasColumnName("id_feedback");
             entity.Property(e => e.Content)
@@ -188,6 +192,7 @@ public partial class FstepDbContext : DbContext
         modelBuilder.Entity<Notification>(entity =>
         {
             entity.HasKey(e => e.IdNotification).HasName("PK__Notifica__925C842F1AF1747E");
+
 
             entity.ToTable("Notification");
 
@@ -262,6 +267,7 @@ public partial class FstepDbContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("VNPay_transaction_code");
 
+
             entity.HasOne(d => d.IdTransactionNavigation).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.IdTransaction)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -273,6 +279,7 @@ public partial class FstepDbContext : DbContext
             entity.HasKey(e => e.IdPost).HasName("PK__Post__3840C79D141C44EE");
 
             entity.ToTable("Post");
+
 
             entity.Property(e => e.IdPost).HasColumnName("id_post");
             entity.Property(e => e.Category)
@@ -320,6 +327,7 @@ public partial class FstepDbContext : DbContext
 
             entity.ToTable("Product");
 
+
             entity.Property(e => e.IdProduct).HasColumnName("id_product");
             entity.Property(e => e.ItemLocation)
                 .HasMaxLength(255)
@@ -350,6 +358,7 @@ public partial class FstepDbContext : DbContext
             entity.Property(e => e.IdUser)
                 .HasMaxLength(50)
                 .HasColumnName("id_user");
+
 
             entity.HasOne(d => d.IdCommentNavigation).WithMany(p => p.Reports)
                 .HasForeignKey(d => d.IdComment)
@@ -423,6 +432,7 @@ public partial class FstepDbContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("type");
             entity.Property(e => e.UnitPrice).HasColumnName("unit_price");
+
 
             entity.HasOne(d => d.IdCommentNavigation).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.IdComment)

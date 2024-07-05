@@ -1,7 +1,6 @@
 ﻿@model FStep.ViewModels.PostVM
-
 @{
-	ViewData["Title"] = "Sửa Bài Đăng";
+    ViewData["Title"] = "UpdatePost";
 }
 
 <div class="container mt-5">
@@ -9,7 +8,7 @@
 	<form asp-action="UpdatePost" method="post" enctype="multipart/form-data" class="update-post-form">
 		<input asp-for="IdPost" type="hidden" />
 		<input asp-for="IdProduct" type="hidden" />
-		
+
 		<div class="form-box">
 			<div class="form-box-left">
 				<div class="form-item">
@@ -66,6 +65,7 @@
 		margin: 0 auto; /* Center the image if needed */
 		display: block; /* Center the image if needed */
 	}
+
 	.form-box {
 		display: flex;
 		gap: 20px;
