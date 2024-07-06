@@ -58,14 +58,20 @@ namespace FStep.Controllers.Admin
                             .CountAsync();
 
                 var totalCompletedTransactionCount = await _context.Transactions
-                            .Where(o => o.Date != null && o.Date.Value.Month == month.Month && o.Date.Value.Year == month.Year)
+                            .Where(o => o.Date != null && o.Date.Value.Month == month.Month && o.Date.Value.Year == month.Year && o.Type == "Completed")
                             .CountAsync();
                 // Thêm số lượng giao dịch hoặc giá trị 0 vào danh sách kết quả
                 resultListTotal.Add(totalTransactionCount);
+                resultListTotalCompleted.Add(totalCompletedTransactionCount);
+                resultListTotalPost.Add(totalPostCount);
             }
 
             // Chuẩn bị dữ liệu cho biểu đồ
             var labels = months.Select(g => "Tháng " + g.Month).ToList();
+            ViewBag.Labels = labels;
+            ViewBag.TotalTransactionDash = resultListTotal;
+            ViewBag.TotalPostDash = resultListTotalPost;
+            ViewBag.TotalCompleted = resultListTotalCompleted;
 
             ViewBag.TotalPost = totalPost;
             ViewBag.TotalTransaction = totalTransaction;

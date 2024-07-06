@@ -58,28 +58,39 @@
         nav : false
     });
 
+    var dataListElement = document.getElementById('dataList');
+    var dataListElementTrans = document.getElementById('dataListTransaction');
+    var dataListElementPost = document.getElementById('dataListPost');
+    var dataListElementComp = document.getElementById('dataListCompleted');
 
-     //Worldwide Sales Chart
+    var dataList = $(dataListElement).data("list");
+    var dataListTrans = $(dataListElementTrans).data("list");
+    var dataListPost = $(dataListElementPost).data("list");
+    var dataListComp = $(dataListElementComp).data("list");
+
+    var dataListTransName = $(dataListElementTrans).data("name");
+    var dataListPostName = $(dataListElementPost).data("name");
+    var dataListCompName = $(dataListElementComp).data("name");
 
     var ctx1 = $("#worldwide-sales").get(0).getContext("2d");
     var myChart1 = new Chart(ctx1, {
         type: "bar",
         data: {
-            labels: ["20116", "2017", "2018", "2019", "2020", "2021", "2022"],
+            labels: dataList,
 
             datasets: [{
-                label: "USA",
-                data: [1, 3, 5, 6, 6, 8, 9],
+                label: dataListPostName,
+                data: dataListPost,
                 backgroundColor: "rgba(0, 156, 255, .7)"
             },
             {
-                label: "UK",
-                data: [8, 3, 4, 6, 7, 5, 5],
+                label: dataListTransName,
+                data:  dataListTrans,
                 backgroundColor: "rgba(0, 156, 255, .5)"
             },
             {
-                label: "AU",
-                data: [1, 2, 4, 5, 6, 7, 6],
+                label: dataListCompName,
+                data: dataListComp,
                 backgroundColor: "rgba(0, 156, 255, .3)"
             }
             ]

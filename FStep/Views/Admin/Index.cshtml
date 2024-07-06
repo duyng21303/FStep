@@ -73,7 +73,6 @@
                 <div class="bg-light text-center rounded p-4">
                     <div class="d-flex align-items-center justify-content-between mb-4">
                         <h6 class="mb-0">Worldwide Sales</h6>
-                        <a href="">Show All</a>
                     </div>
                     <canvas id="worldwide-sales"></canvas>
                 </div>
@@ -82,9 +81,13 @@
                 <div class="bg-light text-center rounded p-4">
                     <div class="d-flex align-items-center justify-content-between mb-4">
                         <h6 class="mb-0">Salse & Revenue</h6>
-                        <a href="">Show All</a>
                     </div>
                     <canvas id="salse-revenue"></canvas>
+                    <ul id="dataList" data-list='@Json.Serialize(ViewBag.Labels)' data-name=""></ul>
+                    <ul id="dataListTransaction" data-list='@Json.Serialize(ViewBag.TotalTransactionDash)' data-name="Số lượng giao dịch"></ul>
+                    <ul id="dataListPost" data-list='@Json.Serialize(ViewBag.TotalPostDash)' data-name="Tổng số bài đăng"></ul>
+                    <ul id="dataListCompleted" data-list='@Json.Serialize(ViewBag.TotalCompleted)' data-name="Số lượng giao dịch thành công"></ul>
+
                 </div>
             </div>
         </div>
