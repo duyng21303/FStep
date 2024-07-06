@@ -22,6 +22,7 @@ using System;
 using System.Net.Mail;
 using System.Text;
 using System.Transactions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 
 namespace FStep.Controllers.Customer
@@ -52,6 +53,61 @@ namespace FStep.Controllers.Customer
 		public IActionResult Index()
 		{
 			return View();
+		}
+
+		public async Task<IActionResult> AutoCheckTransaction()
+		{
+			var transaction = db.Transactions.AsQueryable();
+			foreach (var x in transaction)
+			{
+				if (DateTime.Now.CompareTo(x.Date?.AddHours(1)) <= 0 && x.Type == "Exchange" && x.Status == "Processing")
+				{
+					var buyer = db.Users.SingleOrDefault(p => p.IdUser == x.IdUserBuyer);
+					var seller = db.Users.SingleOrDefault(p => p.IdUser == x.IdUserSeller);
+					TransactionVM invoice;
+					//lấy thông tin transaction
+					invoice = GetInvoiceExchangeById(db.Transactions.FirstOrDefault(p => p.CodeTransaction == x.CodeTransaction).IdTransaction);
+					string emailBody = await RenderViewToStringAsync($"Invoice{x.Type}", invoice);
+
+					//sent email
+					bool sentBuyer = await emailSender.EmailSendAsync(buyer.Email, "Đơn hàng của bạn đã được tạo", emailBody);
+					bool sentSeller = await emailSender.EmailSendAsync(seller.Email, "Sản phẩm của của bạn đã được tiến hành giao dịch", emailBody);
+				}
+
+				if (DateTime.Now.CompareTo(x.Date?.AddDays(3)) > 0 && x.Status == "Processing")
+				{
+					x.Status = "Canceled";
+					db.Update(x);
+					var payment = new Payment();
+					payment.CancelDate = DateTime.Now;
+					payment.IdTransaction = x.IdTransaction;
+					payment.Type = "Seller";
+					payment.Note = "Huỷ bởi người đăng, người đăng không giao đơn hàng";
+					db.SaveChanges();
+
+					//Refund operating here
+					//End refund
+					var buyer = db.Users.SingleOrDefault(p => p.IdUser == x.IdUserBuyer);
+					var seller = db.Users.SingleOrDefault(p => p.IdUser == x.IdUserSeller);
+					TransactionVM invoice;
+					//lấy thông tin transaction
+					if (x.Type == "Exchange")
+					{
+						invoice = GetInvoiceExchangeById(db.Transactions.FirstOrDefault(p => p.CodeTransaction == x.CodeTransaction).IdTransaction);
+					}
+					else
+					{
+						invoice = GetInvoiceSaleById(db.Transactions.FirstOrDefault(p => p.CodeTransaction == x.CodeTransaction).IdTransaction);
+					}
+					string emailBody = await RenderViewToStringAsync($"Invoice{x.Type}", invoice);
+
+					//sent email
+					bool sentBuyer = await emailSender.EmailSendAsync(buyer.Email, "Đơn hàng của bạn đã được huỷ", emailBody);
+					bool sentSeller = await emailSender.EmailSendAsync(seller.Email, "Sản phẩm của bạn đã bị huỷ giao dịch", emailBody);
+				}
+			}
+			return RedirectToAction("Index","Home");
+
 		}
 
 		[Authorize]
@@ -157,14 +213,21 @@ namespace FStep.Controllers.Customer
 				var buyer = db.Users.SingleOrDefault(p => p.IdUser == info.IdUserBuyer);
 				var seller = db.Users.SingleOrDefault(p => p.IdUser == info.IdUserSeller);
 
+				TransactionVM invoice;
 				//lấy thông tin transaction
-
-				var invoice = GetInvoiceById(db.Transactions.FirstOrDefault(p => p.CodeTransaction == transaction.CodeTransaction).IdTransaction);
-				string emailBody = await RenderViewToStringAsync("Invoice", invoice);
+				if (transaction.Type == "Exchange")
+				{
+					invoice = GetInvoiceExchangeById(db.Transactions.FirstOrDefault(p => p.CodeTransaction == transaction.CodeTransaction).IdTransaction);
+				}
+				else
+				{
+					invoice = GetInvoiceSaleById(db.Transactions.FirstOrDefault(p => p.CodeTransaction == transaction.CodeTransaction).IdTransaction);
+				}
+				string emailBody = await RenderViewToStringAsync($"Invoice{transaction.Type}", invoice);
 
 				//sent email
 				bool sentBuyer = await emailSender.EmailSendAsync(buyer.Email, "Đơn hàng của bạn đã được tạo", emailBody);
-				bool sentSeller = await emailSender.EmailSendAsync(seller.Email, "Sản phẩm của của bạn đã được mua", emailBody);
+				bool sentSeller = await emailSender.EmailSendAsync(seller.Email, "Sản phẩm của của bạn đã được tiến hành giao dịch", emailBody);
 
 				if (!sentBuyer || !sentSeller)
 				{
@@ -181,25 +244,82 @@ namespace FStep.Controllers.Customer
 			}
 		}
 
-		//public string GenerateInvoiceHtml(TransactionVM invoice)
-		//{
-		//	var html = new StringBuilder();
-		//	html.Append("<html>");
-		//	html.Append("<head>");
-		//	html.Append("<meta charset='utf-8'/>"); // Đảm bảo mã hóa UTF-8
-		//	html.Append("<title>Hóa đơn</title>");
-		//	html.Append("</head>");
-		//	html.Append("<body>");
-		//	html.Append("<h1>Hóa đơn</h1>");
-		//	html.Append($"<p>Mã hóa đơn: {invoice.CodeTransaction}</p>");
-		//	html.Append($"<p>Tên khách hàng: {invoice.UserName}</p>");
-		//	html.Append($"<p>Tổng số tiền: {invoice.Amount}</p>");
-		//	// Thêm các thông tin khác của hóa đơn
-		//	html.Append("</body>");
-		//	html.Append("</html>");
-		//	return html.ToString();
-		//}
+		[Authorize]
+		[HttpPost]
+		public async Task<IActionResult> Cancel(CancelVM model)
+		{
+			try
+			{
+				var transaction = db.Transactions.SingleOrDefault(p => p.IdTransaction == model.TransactionId);
+				transaction.Status = "Canceled";
+				db.Update(transaction);
 
+				var post = db.Posts.SingleOrDefault(p => p.IdPost == transaction.IdPost);
+				post.Status = "True";
+				db.Update(post);
+
+				var product = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct);
+				product.Status = "True";
+				db.Update(product);
+
+				var payment = db.Payments.FirstOrDefault(p => p.IdTransaction == model.TransactionId);
+				payment.Status = "False";
+				payment.CancelDate = DateTime.Now;
+				payment.Note = model.Note;
+				db.Update(payment);
+
+				TransactionVM invoice;
+				//tạo invoice
+				if (transaction.Type == "Exchange")
+				{
+					invoice = GetInvoiceExchangeById(db.Transactions.FirstOrDefault(p => p.CodeTransaction == transaction.CodeTransaction).IdTransaction);
+				}
+				else
+				{
+					invoice = GetInvoiceSaleById(db.Transactions.FirstOrDefault(p => p.CodeTransaction == transaction.CodeTransaction).IdTransaction);
+				}
+				string emailBody = await RenderViewToStringAsync($"Invoice{transaction.Type}", invoice);
+
+				var buyer = db.Users.SingleOrDefault(p => p.IdUser == transaction.IdUserBuyer);
+				var seller = db.Users.SingleOrDefault(p => p.IdUser == transaction.IdUserSeller);
+				//sent email
+				bool sentSeller = await emailSender.EmailSendAsync(seller.Email, "Sản phẩm của bạn đã bị huỷ giao dịch", emailBody);
+				bool sentBuyer = await emailSender.EmailSendAsync(buyer.Email, "Đơn hàng của bạn đã được huỷ", emailBody);
+
+				db.SaveChanges();
+
+				return Redirect(model.ReturnUrl);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Can't send your email ");
+				return RedirectToAction("Error", "Home");
+			}
+
+		}
+
+		public async Task SendExchangeMail(int id)
+		{
+			try
+			{
+				var transaction = db.Transactions.FirstOrDefault(p => p.IdTransaction == id);
+				var buyer = db.Users.SingleOrDefault(p => p.IdUser == transaction.IdUserBuyer);
+				var seller = db.Users.SingleOrDefault(p => p.IdUser == transaction.IdUserSeller);
+
+				TransactionVM invoice;
+				//lấy thông tin transaction
+				invoice = GetInvoiceExchangeById(id);
+				string emailBody = await RenderViewToStringAsync($"Invoice{transaction.Type}", invoice);
+
+				//sent email
+				bool sentBuyer = await emailSender.EmailSendAsync(buyer.Email, "Đơn hàng của bạn đã được tạo", emailBody);
+				bool sentSeller = await emailSender.EmailSendAsync(seller.Email, "Sản phẩm của của bạn đã được tiến hành giao dịch", emailBody);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Can't send your email ");
+			}
+		}
 		private async Task<string> RenderViewToStringAsync(string viewName, object model)
 		{
 			var actionContext = new ActionContext(HttpContext, RouteData, ControllerContext.ActionDescriptor, ModelState);
@@ -229,13 +349,41 @@ namespace FStep.Controllers.Customer
 				return sw.ToString();
 			}
 		}
-
-		private TransactionVM GetInvoiceById(int id)
+		private TransactionVM GetInvoiceExchangeById(int id)
 		{
 			var transaction = db.Transactions.FirstOrDefault(p => p.IdTransaction == id);
 			var post = db.Posts.FirstOrDefault(p => p.IdPost == transaction.IdPost);
 			var seller = db.Users.FirstOrDefault(p => p.IdUser == transaction.IdUserSeller);
 			var buyer = db.Users.FirstOrDefault(p => p.IdUser == transaction.IdUserBuyer);
+			var comment = db.Comments.SingleOrDefault(comment => comment.IdComment == transaction.IdComment) ?? null;
+			// Lấy thông tin hóa đơn từ database
+			return new TransactionVM
+			{
+				TransactionId = id,
+				Transaction = transaction,
+				Post = post,
+				UserBuyer = buyer,
+				UserSeller = seller,
+				CommentExchangeVM = new CommentExchangeVM()
+				{
+					Content = comment.Content,
+					IdPost = comment.IdPost.ToString(), // Convert int to string
+					IdUser = comment.IdUser,
+					Img = comment.Img,
+					Type = comment.Type
+				} ?? null,
+				DeliveryDate = db.Payments.FirstOrDefault(p => p.IdTransaction == id && p.Type == "Seller")?.PayTime,
+				CreateDate = transaction.Date,
+				CancelDate = db.Payments.FirstOrDefault(p => p.IdTransaction == id).CancelDate,
+			};
+		}
+		private TransactionVM GetInvoiceSaleById(int id)
+		{
+			var transaction = db.Transactions.FirstOrDefault(p => p.IdTransaction == id);
+			var post = db.Posts.FirstOrDefault(p => p.IdPost == transaction.IdPost);
+			var seller = db.Users.FirstOrDefault(p => p.IdUser == transaction.IdUserSeller);
+			var buyer = db.Users.FirstOrDefault(p => p.IdUser == transaction.IdUserBuyer);
+			var comment = db.Comments.SingleOrDefault(comment => comment.IdComment == transaction.IdComment) ?? null;
 			// Lấy thông tin hóa đơn từ database
 			return new TransactionVM
 			{
@@ -248,52 +396,6 @@ namespace FStep.Controllers.Customer
 				CreateDate = transaction.Date,
 				CancelDate = db.Payments.FirstOrDefault(p => p.IdTransaction == id).CancelDate,
 			};
-		}
-
-		[Authorize]
-		[HttpPost]
-		public async Task<IActionResult> Cancel(CancelVM model)
-		{
-			try
-			{
-				var transaction = db.Transactions.SingleOrDefault(p => p.IdTransaction == model.TransactionId);
-				transaction.Status = "Canceled";
-				db.Update(transaction);
-
-				var post = db.Posts.SingleOrDefault(p => p.IdPost == transaction.IdPost);
-				post.Status = "True";
-				db.Update(post);
-
-				var product = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct);
-				product.Status = "True";
-				db.Update(product);
-
-				var payment = db.Payments.FirstOrDefault(p => p.IdTransaction == model.TransactionId);
-				payment.Status = "False";
-				payment.CancelDate = DateTime.Now;
-				payment.Note = model.Note;
-				db.Update(payment);
-
-				//tạo invoice
-				var invoice = GetInvoiceById(db.Transactions.FirstOrDefault(p => p.CodeTransaction == transaction.CodeTransaction).IdTransaction);
-				string emailBody = await RenderViewToStringAsync("Invoice", invoice);
-
-				var buyer = db.Users.SingleOrDefault(p => p.IdUser == transaction.IdUserBuyer);
-				var seller = db.Users.SingleOrDefault(p => p.IdUser == transaction.IdUserSeller);
-				//sent email
-				bool sentSeller = await emailSender.EmailSendAsync(seller.Email, "Sản phẩm của của bạn đã bị huỷ bởi người mua", emailBody);
-				bool sentBuyer = await emailSender.EmailSendAsync(buyer.Email, "Sản phẩm của của bạn đã được huỷ", emailBody);
-
-				db.SaveChanges();
-
-				return RedirectToAction("TransactionHistory", "Home");
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex, "Can't send your email ");
-				return RedirectToAction("Error", "Home");
-			}
-
 		}
 	}
 }

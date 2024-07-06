@@ -67,6 +67,11 @@ public class Program
 			googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Email, "email", "string");
 		});
 
+		////AutoTriggerService
+		//builder.Services.AddControllersWithViews();
+		//builder.Services.AddHttpClient();
+		//builder.Services.AddHostedService<AutoTriggerService>();
+
 		// Add AutoMapper (if needed)
 		builder.Services.AddAutoMapper(typeof(Program));
 		builder.Services.AddSingleton<IVnPayService, VnPayService>();
@@ -92,7 +97,7 @@ public class Program
 		{
 			endpoints.MapHub<ChatHub>("chatHub");
 			endpoints.MapHub<NotificationHub>("notificationhub");
-			
+
 		});
 		// Fallback default route
 		app.MapControllerRoute(

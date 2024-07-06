@@ -178,36 +178,22 @@ namespace FStep.Controllers
 				if (!string.IsNullOrEmpty(query))
 				{
 					transaction = transaction.Where(p => p.IdPostNavigation.Content.Contains(query));
-
-					query = query.ToLower();
-					exchangeTransactions = exchangeTransactions.Where(t =>
-						t.CodeTransaction.ToLower().Contains(query) ||
-						t.IdPostNavigation.Content.ToLower().Contains(query)
-					);
-
-					saleTransactions = saleTransactions.Where(t =>
-						t.IdPostNavigation.Location.ToLower().Contains(query) ||
-						t.IdPostNavigation.Content.ToLower().Contains(query)
-					);
-				}
-
-				foreach (var x in transaction)
-				{
-					if (DateTime.Now.CompareTo(x.Date?.AddDays(7)) > 0 && x.Status == "Processing")
+					if (activeTab == "exchange")
 					{
-						x.Status = "Canceled";
-						db.Update(x);
-						var payment = new Payment();
-						payment.CancelDate = DateTime.Now;
-						payment.IdTransaction = x.IdTransaction;
-						payment.Type = "Seller";
-						payment.Note = "Huỷ bởi người bán, người bán không giao đơn hàng";
-						//Refund operating here
-
-						//End refund
+						query = query.ToLower();
+						exchangeTransactions = exchangeTransactions.Where(t =>
+							t.CodeTransaction.ToLower().Contains(query) ||
+							t.IdPostNavigation.Content.ToLower().Contains(query)
+						);
+					}
+					else
+					{
+						saleTransactions = saleTransactions.Where(t =>
+							t.IdPostNavigation.Location.ToLower().Contains(query) ||
+							t.IdPostNavigation.Content.ToLower().Contains(query)
+						);
 					}
 				}
-				db.SaveChanges();
 
 				var viewResult = new TransactionServiceVM();
 
@@ -229,7 +215,7 @@ namespace FStep.Controllers
 					CreateDate = s.Date,
 					DeliveryDate = db.Payments.FirstOrDefault(p => p.IdTransaction == s.IdTransaction && p.Type == "Seller").PayTime,
 					CancelDate = db.Payments.FirstOrDefault(p => p.IdTransaction == s.IdTransaction).CancelDate,
-					CheckFeedback = (db.Feedbacks.FirstOrDefault(p => p.IdPost == s.IdPost) != null),
+					CheckFeedback = db.Feedbacks.Any(p => p.IdPost == s.IdPost),
 				}).OrderByDescending(o => o.TransactionId);
 				viewResult.ExchangeList = exchangeList.ToPagedList(pageNumber, pageSize);
 
@@ -243,12 +229,15 @@ namespace FStep.Controllers
 					CreateDate = s.Date,
 					DeliveryDate = db.Payments.FirstOrDefault(p => p.IdTransaction == s.IdTransaction && p.Type == "Seller").PayTime,
 					CancelDate = db.Payments.FirstOrDefault(p => p.IdTransaction == s.IdTransaction).CancelDate,
-					CheckFeedback = (db.Feedbacks.FirstOrDefault(p => p.IdPost == s.IdPost) != null),
+					CheckFeedback = db.Feedbacks.Any(p => p.IdPost == s.IdPost),
 				}).OrderByDescending(o => o.TransactionId);
 				viewResult.SaleList = saleList.ToPagedList(pageNumber, pageSize);
 
+
+
 				ViewBag.Query = query;
 				ViewBag.ActiveTab = activeTab;
+
 				return View(viewResult);
 			}
 			catch (Exception ex)
@@ -276,6 +265,7 @@ namespace FStep.Controllers
 				DeliveryDate = db.Payments.FirstOrDefault(p => p.IdTransaction == id && p.Type == "Seller")?.PayTime,
 				CreateDate = transaction.Date,
 				CancelDate = db.Payments.FirstOrDefault(p => p.IdTransaction == id).CancelDate,
+				CheckFeedback = db.Feedbacks.Any(p => p.IdPost == transaction.IdPost)
 			});
 		}
 		[Authorize]
@@ -306,6 +296,7 @@ namespace FStep.Controllers
 				CreateDate = transaction.Date,
 				DeliveryDate = db.Payments.FirstOrDefault(p => p.IdTransaction == id && p.Type == "Seller")?.PayTime,
 				CancelDate = db.Payments.FirstOrDefault(p => p.IdTransaction == id)?.CancelDate,
+				CheckFeedback = db.Feedbacks.Any(p => p.IdPost == transaction.IdPost)
 			});
 		}
 	}

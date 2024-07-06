@@ -129,7 +129,18 @@
 												break;
 										}
 									</span>
-									<img src="@Url.Content("~/img/postPic/" + post.Img)" class="img-fluid w-100 rounded-top" alt="Post Image">
+									@if (post.Type == "Exchange")
+									{
+										<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@post.IdPost">
+											<img src="@Url.Content("~/img/postPic/" + post.Img)" class="img-fluid w-100 rounded-top" alt="Post Image">
+										</a>
+									}
+									else
+									{
+										<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@post.IdPost">
+											<img src="@Url.Content("~/img/postPic/" + post.Img)" class="img-fluid w-100 rounded-top" alt="Post Image">
+										</a>
+									}
 								</div>
 								<div class="post-details d-flex justify-content-between align-items-center">
 									<div class="post-actions">
@@ -153,13 +164,18 @@
 									</div>
 								</div>
 								<div class="p-4 border border-secondary border-top-0 rounded-bottom">
-									<h4 class="title">@Html.Raw(post.Title)</h4>
-									@if(post.Type == "Exchange")
+									@if (post.Type == "Exchange")
 									{
+										<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@post.IdPost" style="text-decoration:none">
+											<h4 class="title">@Html.Raw(post.Title)</h4>
+										</a>
 										<div class="post-price">Loại bài: Trao đổi</div>
 									}
 									else
 									{
+										<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@post.IdPost" style="text-decoration:none">
+											<h4 class="title">@Html.Raw(post.Title)</h4>
+										</a>
 										<div class="post-price">Loại bài: Bán</div>
 									}
 									<p class="text-end mb-0 mt-2">Created on: <span>@Html.Raw(post.CreateDate?.ToString("dd/MM/yyyy"))</span></p>

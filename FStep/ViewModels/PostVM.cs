@@ -18,15 +18,12 @@ namespace FStep.ViewModels
 		[FileExtensions(Extensions = "png,jgp,jpeg,gif")]
         public string Img { get; set; }
 
-
 		[Display(Name = "Mô tả")]
 		[Required(ErrorMessage = "Bắt buộc")]
 		[MaxLength(65500, ErrorMessage = "Vượt quá giới hạn ký tự cho phép")]
 		public string? Description { get; set; }
 		public DateTime? CreateDate { get; set; }
 		public string Type { get; set; }
-		
-
 		[Display(Name = "Số lượng")]
 		[Required(ErrorMessage = "Bắt buộc")]
 		public int? ProductStatus { get; set; }
