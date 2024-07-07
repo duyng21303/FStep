@@ -129,8 +129,8 @@ namespace FStep.Controllers.Customer
 
 			if (product.Quantity <= 0)
 			{
-				post.Status = "false";
-				product.Status = "false";
+				post.Status = "False";
+				product.Status = "False";
 
 			}
 			db.Update(product);

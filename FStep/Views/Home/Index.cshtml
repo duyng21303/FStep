@@ -9,7 +9,6 @@
 		<section id="slider">
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-12">
 						<div id="slider-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
 							<div class="carousel-inner">
 								<div class="carousel-item active bg-carousel-item">
@@ -66,23 +65,20 @@
 								<span class="visually-hidden">Next</span>
 							</button>
 						</div>
-					</div>
 				</div>
 			</div>
 		</section>
 	</div>
 	<!--/End slider-->
 	<!-- Header body  -->
-	<div class="container-fluid fruit py-5">
-		<div class="container py-5">
+	<div class="container-fluid fruit custom-padding">
+		<div class="container custom-padding">
 			<!-- Title header body  -->
 			<div class="row align-items-center mb-4 search-header">
-				<div class="col-md-6">
-					<h1 class="exchange-title">Exchange: Suggestion Today</h1>
-				</div>
+				<h2 class="col-md-6">Trao đổi</h2> <!-- Đặt lớp col-md-6 để căn chỉnh nội dung sang trái khi đủ kích thước màn hình -->
 				<div class="col-md-5">
 					<form asp-action="Index" asp-controller="Home" class="d-flex justify-content-end search-form">
-						<input type="search" class="form-control search-input" placeholder="keywords" name="query">
+						<input type="search" class="form-control search-input" placeholder="Nhập tên sản phẩm" name="query" value="@ViewBag.query">
 						<button class="btn btn-primary search-button" type="submit">
 							<i class="fa fa-search search-icon"></i>
 						</button>
@@ -91,73 +87,185 @@
 				<div class="col-md-1">
 					<i class="fa fa-plus-square" data-bs-toggle="modal" data-bs-target="#exampleModal" style="font-size:45px;"></i>
 				</div>
+			</div>
 				</>
 				<!-- End header body -->
 				<!-- Start Content Body-->
-				<div class="row g-4">
+				<div class="contain-main">
+					<div class="container content-no-margin">
+						<div class="text-center">
+							<h2 class="position-relative d-inline-block py-2 px-3">
+								GỢI Ý HÔM NAY
+							</h2>
+							<div class="underline"></div>
+						</div>
+					</div>
 					<div class="col-lg-12">
-						<div class="container-contentboby">
-							<div class="row g-4">
+							<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4">
 								<!-- Start of post item column -->
 								@foreach (var item in Model)
 								{
-									<div class="col-md-6 col-lg-6 col-xl-3">
-										<div class="rounded position-relative fruit-item">
+									<div class="col">
+										<div class="card h-100 rounded position-relative fruit-item">
 											<div class="fruit-img">
 												<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost">
-													<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid w-100 rounded-top" alt="Laptop">
+													<img src="@Url.Content("~/img/postPic/" + item.Img)" class="card-img-top img-fluid w-100 rounded-top" alt="@item.Title">
 												</a>
 											</div>
-											<div class="p-4 border border-secondary border-top-0 rounded-bottom">
-												<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost" style="text-decoration:none">
-													<h4 class="title">@Html.Raw(item.Title)</h4>
+											<div class="card-body p-4 rounded-bottom text-start">
+												<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost" class="text-decoration-none">
+													<h4 class="card-title">@Html.Raw(item.Title)</h4>
 												</a>
-												@if (item.Type == "Sale")
-												{
-													<div class="post-price">Price: @item.Price</div>
-													<div class="post-quantity">Quantity: @item.Quantity</div>
-												}
-												<div class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Description)</div>
-												<p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate?.ToString("dd/MM/yyyy")</span></p>
-
+												<p class="creation-date mb-0 mt-2">
+													<i class="bi bi-calendar"></i>: <span>@item.CreateDate?.ToString("dd/MM/yyyy")</span>
+												</p>
 											</div>
 										</div>
 									</div>
 								}
 							</div>
-						</div>
 						<!-- Start Content Body-->
 						<!-- Create relationship between page and page -->
 						@Html.PagedListPager(Model, page => Url.Action("Index", new { query = ViewBag.Query, page = page }))
 						<!-- End create -->
 					</div>
+					<!-- End Show -->
 				</div>
-				<!-- End Show -->
+			</div>
+			<div>
+				<section id="courses" class="padding-medium">
+					<div class="container">
+						<div class="text-center mb-5">
+							<p class="text-secondary">Một số bài đăng uy tín</p>
+							<h2 class="display-6 fw-semibold">Trao đổi sản phẩm với những người uy tín cao</h2>
+						</div>
+
+						<div class="row">
+							@foreach (var item in Model)
+							{
+								@if (@item.PointRating > 50)
+								{
+									<div class="col-sm-6 col-lg-4 col-xl-3 mb-5">
+										<div class="z-1 position-absolute m-4">
+											<span class="badge text-white bg-secondary">Tốt</span>
+										</div>
+										<div class="card rounded-4 border-0 shadow-sm p-3 position-relative">
+											<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost" class="text-decoration-none"><img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid rounded-3" alt="@item.Title"></a>
+											<div class="card-body p-0">
+
+												<div class="d-flex justify-content-between my-3">
+													<p class="text-black-50 fw-bold text-uppercase m-0"></p>
+													<div class="d-flex align-items-center">
+														<svg width="20" height="20">
+															<p class="text-black-50 fw-bold text-uppercase m-0">@item.CreateDate?.ToString("dd/MM/yyyy")</p>
+															<use xlink:href="#clock" class="text-black-50"></use>
+														</svg>
+													</div>
+												</div>
+
+												<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost" class="text-decoration-none">
+													<h5 class="course-title py-2 m-0">@Html.Raw(item.Title)</h5>
+												</a>
+
+												<div class="card-text">
+													<span class="rating d-flex align-items-center mt-3">
+														<p class="text-muted fw-semibold m-0 me-2">By: @Html.Raw(item.NameBoss.Length > 12 ? item.NameBoss.Substring(0, 12) + "..." : item.NameBoss)</p>
+														<iconify-icon icon="clarity:star-solid" class="text-primary" style="color: #ffc107 !important;"></iconify-icon>
+														<iconify-icon icon="clarity:star-solid" class="text-primary" style="color: #ffc107 !important;"></iconify-icon>
+														<iconify-icon icon="clarity:star-solid" class="text-primary" style="color: #ffc107 !important;"></iconify-icon>
+														<iconify-icon icon="clarity:star-solid" class="text-primary" style="color: #ffc107 !important;"></iconify-icon>
+														<iconify-icon icon="clarity:star-solid" class="text-primary" style="color: #ffc107 !important;"></iconify-icon>
+													</span>
+												</div>
+
+											</div>
+										</div>
+									</div>
+								}
+							}
+
+						</div>
+					</div>
+				</section>
+			</div>
+			<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+				@if (ViewBag.checkInfo == "False")
+				{
+					@await Html.PartialAsync("VerifyPopup", new PostVM())
+				}
+				else
+				@if (ViewBag.checkInfo == "True")
+				{
+					@await Html.PartialAsync("Create", new PostVM())
+				}
+				else
+				{
+					@await Html.PartialAsync("LoginPopup", new PostVM())
+				}
 			</div>
 		</div>
 	</div>
+<style>
+	.search-header h2 {
+		text-transform: uppercase;
+		font-weight: 500;
+		font-size: 2.0625rem;
+		line-height: 1.0625rem;
+		align-self: center;
+		color: #d0011b;
+	}
+	.underline {
+		width: 100%;
+		height: 4px;
+		background-color: #e74c3c;
+		margin-top: -5px;
+		position: relative;
+	}
 
-	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	.text-center h2 {
+		color: orange;
+	}
 
-		@if (ViewBag.checkInfo == "False")
-		{
-			@await Html.PartialAsync("VerifyPopup", new PostVM())
-		}
-		else
-		@if (ViewBag.checkInfo == "True")
-		{
-			@await Html.PartialAsync("Create", new PostVM())
-		}
-		else
-		{
-			@await Html.PartialAsync("LoginPopup", new PostVM())
-		}
-	</div>
-	@* <div class="modal-footer">
-	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-	<button type="button" class="btn btn-primary">Save changes</button>
-	</div> *@
-</div>
-		</div>
-	</div>
+	.product-card {
+		border: 1px solid #ddd;
+		border-radius: 5px;
+		padding: 15px;
+		margin-bottom: 20px;
+		transition: transform 0.2s;
+	}
 
+		.product-card:hover {
+			transform: scale(1.05);
+		}
+
+	.product-image {
+		height: 150px;
+		object-fit: cover;
+	}
+
+	.contain-main {
+		padding: 0 15px; /* Adjust the padding to remove extra margins */
+	}
+
+	.col {
+		padding: 5px !important;
+		margin: 0; /* Remove margins from the columns */
+		background-color: #eaecee;
+	}
+
+
+	.row.g-4 > .col {
+		margin: 0; /* Ensure no margins between columns */
+	}
+
+	.container.content-no-margin {
+		margin-top: 0 !important;
+		margin-bottom: 40px !important;
+	}
+
+	.custom-padding {
+		padding-top: 10px !important;
+		padding-bottom: 0 !important;
+	}
+</style>

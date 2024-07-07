@@ -27,7 +27,7 @@ namespace FStep.Controllers.ManagePost
 			var query = _context.Users.AsQueryable();
 			if (!string.IsNullOrEmpty(search))
 			{
-				query = query.Where(x => x.Name.ToLower().Contains(search.ToLower()) || x.Email.ToLower().Contains(search.ToLower()));
+				query = query.Where(x => x.Email.ToLower().Contains(search.ToLower()) || x.StudentId.ToLower().Contains(search.ToLower()));
 			}
 
 			var users = query.Skip((page - 1) * pageSize).Take(pageSize).Select(x => _mapper.Map<ProfileVM>(x)).ToList();
@@ -45,6 +45,16 @@ namespace FStep.Controllers.ManagePost
 
 			return View("UserManager", pagingModel);
 		}
-	
+
+		[Authorize(Roles = "Moderator")]
+		public IActionResult ProcessPoint(String? id)
+		{
+			var user = _context.Users.FirstOrDefault(user => user.IdUser == id);
+			if(user == null)
+			{
+				TempData["SuccessMessage"] = $"Người dùng {user.Name} không tồn tại.";
+			}
+			return View();
+		}
 	}
 }

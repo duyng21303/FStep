@@ -161,7 +161,7 @@ namespace FStep.Controllers.Auth
 				AvatarImg = User.FindFirstValue("IMG"),
 				Email = user.Email,
 				Name = user.Name,
-				Rating = user.PointRating,
+				PointRating = user.PointRating,
 				StudentId = user.StudentId,
 				Posts = user.Posts.Select(p => new PostVM()
 				{
@@ -191,7 +191,7 @@ namespace FStep.Controllers.Auth
 				user.Address = model.Address;
 				user.Email = model.Email;
 				user.Name = model.Name;
-				user.PointRating = model.Rating;
+				user.PointRating = model.PointRating;
 				user.StudentId = model.StudentId;
 				db.Update(user);
 				db.SaveChanges();
@@ -366,7 +366,7 @@ namespace FStep.Controllers.Auth
 						post.IdProductNavigation.Price = model.Price;
 					}
 					post.Detail = model.Description;
-					post.Status = "False";
+					post.Status = "Waiting";
 
 					db.SaveChanges();
 					TempData["SuccessMessage"] = $"Bài đăng của bạn đã được sửa thành công.Chúng tôi sẽ xem duyệt và duyệt!";
@@ -386,7 +386,7 @@ namespace FStep.Controllers.Auth
 			var post = db.Posts.FirstOrDefault(p => p.IdPost == id);
 			if (post != null)
 			{
-				post.Status = "Finish";
+				post.Status = "False";
 				db.Posts.Update(post);
 				db.SaveChanges();
 				TempData["SuccessMessage"] = $"Bài đăng {post.Content} đã được xóa thành công.";

@@ -42,5 +42,9 @@ namespace FStep.ViewModels
 		public int? FeedbackNum { get; set; }
 
 		public string? Status { get; set; }
+
+		public int? PointRating { get; set; }
+		public string? Location { get; set; }
+		public String? NameBoss { get; set; }
 	}
 }

@@ -13,7 +13,9 @@ namespace FStep.ViewModels.WareHouse
 		public User? UserSeller { get; set; }
 		
 		public string? Type { get; set; }
-		public string Location { get; set; }
+		public string? Location { get; set; }
+
+		public DateTime? CreateDate { get; set; }
 	}
 	public class WareHouseServiceVM
 	{

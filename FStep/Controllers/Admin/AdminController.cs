@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using FStep.Data;
+using FStep.Helpers;
 using FStep.Models;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
+using X.PagedList;
 
 namespace FStep.Controllers.Admin
 {
@@ -15,42 +16,97 @@ namespace FStep.Controllers.Admin
 		private readonly IMapper _mapper;
 		private static readonly string[] defaultRole = new[] { "Customer", "Moderator", "Administrator" };
 
+
 		public AdminController(FstepDbContext context, IMapper mapper)
-
-
 		{
 			_context = context;
 			_mapper = mapper;
 		}
-		public IActionResult Index()
+		[Authorize(Roles = "Admin")]
+		public IActionResult Index(string codeTransaction, int? page)
 		{
-			var totalPost = _context.Posts.Count(p => p.Status == "True" || p.Status == "Finish");
-
-			var totalUser = _context.Users.Count(u => u.Status == true);
-
-			var totalTransaction = _context.Transactions.Count(t => t.Status == "Finish" || t.Status == "Processing");
-
-			var totalRevenue = _context.Transactions
-				.Where(t => t.Status == "Finish")
+			var totalPost = _context.Posts.Count(p => p.Status != "Rejected");
+			var totalUser = _context.Users.Count(u => u.Status != false);
+			var totalTransaction = _context.Transactions.Count(t => t.Status == "Completed" || t.Status == "Processing" || t.Status == "Canceled");
+			var totalGMV = _context.Transactions
+				.Where(t => t.Status == "Completed")
 				.Sum(t => t.Amount);
 
-			
+			IQueryable<Transaction> query = _context.Transactions;
+
+			if (!string.IsNullOrEmpty(codeTransaction))
+			{
+				query = query.Where(t => t.CodeTransaction.Contains(codeTransaction));
+			}
+
+			var transactions = query.OrderByDescending(t => t.Date).ToList();
+			var transactionVMs = _mapper.Map<List<TransactionVM>>(transactions);
+
+			// Calculate revenues and assign to each transaction
+			foreach (var transaction in transactionVMs)
+			{
+				transaction.Revenues = CalculateDiscount(transaction.Amount);
+			}
+
+			float totalRevenues = 0;
+			foreach (var transaction in transactionVMs)
+			{
+				if (transaction.Status == "Completed")
+				{
+					totalRevenues += transaction.Revenues;
+				}
+			}
+
+			// Paginate transactions
+			int pageSize = 20;
+			int pageNumber = (page ?? 1);
+			var pagedTransactions = transactionVMs.ToPagedList(pageNumber, pageSize);
+
+			var transactionVM = new TransactionVM
+			{
+				PagedTransactions = pagedTransactions
+			};
+
 			ViewBag.TotalPost = totalPost;
 			ViewBag.TotalTransaction = totalTransaction;
 			ViewBag.TotalUser = totalUser;
-			ViewBag.TotalRevenue = totalRevenue;
-			return View();
-		}
+			ViewBag.TotalGMV = totalGMV;
+			ViewBag.TotalRevenues = totalRevenues;
+			ViewBag.CodeTransaction = codeTransaction;
 
-        /// <summary>
-        /// This method is used to manage users
-        /// </summary>
-        /// <param name="page">The page number</param>
-        /// <param name="pageSize">The number of items per page</param>
-        /// <param name="search">The search string: Name, Email</param>
-        /// 
-        [Authorize(Roles = "Admin")]
-        public IActionResult UserManager(int page = 1, int pageSize = 10, string? search = null)
+			return View(transactionVM);
+		}
+		public float CalculateDiscount(float? amount)
+		{
+			if (amount.HasValue && amount > 0)
+			{
+				return amount.Value * 0.1f; // 10% discount
+			}
+			else
+			{
+				return 5000; // Default discount if amount is null or <= 0
+			}
+		}
+		[Authorize(Roles = "Admin")]
+		[HttpPost]
+		public IActionResult ReferTransaction(int id)
+		{
+			var transaction = _context.Transactions.FirstOrDefault(t => t.IdTransaction == id);
+			if (transaction != null)
+			{
+				transaction.Status = "Processing";
+				_context.Transactions.Update(transaction);
+				_context.SaveChanges();
+				TempData["SuccessMessage"] = $"Giao dịch đã được hoàn trả thành công.";
+			}
+			else
+			{
+				TempData["ErrorMessage"] = $"Giao dịch hoàn trả thất bại.";
+			}
+			return RedirectToAction("Index", "Admin");
+		}
+		[Authorize(Roles = "Admin")]
+		public IActionResult UserManager(int page = 1, int pageSize = 10, string? search = null)
 		{
 			var query = _context.Users.AsQueryable();
 			if (!string.IsNullOrEmpty(search))
@@ -73,8 +129,8 @@ namespace FStep.Controllers.Admin
 
 			return View("UserManager", pagingModel);
 		}
-        [Authorize(Roles = "Admin")]
-        public IActionResult UserDetail(string id)
+		[Authorize(Roles = "Admin")]
+		public IActionResult UserDetail(string id)
 		{
 			// Lấy thông tin người dùng
 			var user = _context.Users.FirstOrDefault(user => user.IdUser == id);
@@ -102,8 +158,8 @@ namespace FStep.Controllers.Admin
 
 			return View("UserDetail");
 		}
-        [Authorize(Roles = "Admin")]
-        public IActionResult CommentManager(int page = 1, int pageSize = 10, string? search = null)
+		[Authorize(Roles = "Admin")]
+		public IActionResult CommentManager(int page = 1, int pageSize = 10, string? search = null)
 		{
 			var query = _context.Comments.Include(x => x.IdUserNavigation).Include(x => x.IdPostNavigation).AsQueryable();
 			if (!string.IsNullOrEmpty(search))
@@ -139,23 +195,61 @@ namespace FStep.Controllers.Admin
 
 			return View("CommentManager", pagingModel);
 		}
-        [Authorize(Roles = "Admin")]
-        [HttpPost]
-		public IActionResult LockUnlock([FromBody] ProfileVM user)
-		{
-			var userFound = _context.Users.FirstOrDefault(x => x.IdUser == user.IdUser);
-			if (userFound != null)
-			{
-				userFound.Status = user.Status;
-				_context.Users.Update(userFound);
-				_context.SaveChanges();
-				return Ok();
+		[HttpPost]
+		[Authorize(Roles = "Admin")]
+		public IActionResult EditAccount(string id)
+        {
+            var user = _context.Users.FirstOrDefault(p => p.IdUser == id);
 
-			}
-			return BadRequest();
-		}
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new ProfileVM
+            {
+                IdUser = user.IdUser,
+                Role = user.Role,
+                Status = user.Status ?? true, // Ensure status defaults to true if null
+                BankName = user.BankName,
+                BankAccountNumber = user.BankAccountNumber
+            };
+
+            return View(viewModel);
+        }
+		[Authorize(Roles = "Admin")]
+		[HttpPost]
+        public IActionResult UpdateAccount(ProfileVM viewModel)
+        {
+            try
+            {
+                // Lưu thông tin bài đăng
+                var user = _context.Users
+                    .FirstOrDefault(p => p.IdUser == viewModel.IdUser);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+					user.Role = viewModel.Role;
+                    user.Status = viewModel.Status;
+					user.BankName = viewModel.BankName;
+					user.BankAccountNumber = viewModel.BankAccountNumber;
+                    _context.SaveChanges();
+                    TempData["SuccessMessage"] = $"Tài khoản {user.Name} đã được cập nhật lại thành công";
+                    return RedirectToAction("UserManager", "Admin");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "Đã xảy ra lỗi khi cập nhật lại tài khoản {user.Name}.";
+            }
+            return View(viewModel);
+        }
         [Authorize(Roles = "Admin")]
-        [HttpPost]
+		[HttpPost]
 		public IActionResult ChangeRole([FromBody] ProfileVM user)
 		{
 			var userFound = _context.Users.FirstOrDefault(x => x.IdUser == user.IdUser);
@@ -168,8 +262,8 @@ namespace FStep.Controllers.Admin
 			}
 			return BadRequest();
 		}
-        [Authorize(Roles = "Admin")]
-        [HttpPost]
+		[Authorize(Roles = "Admin")]
+		[HttpPost]
 		public IActionResult DeleteComment([FromBody] CommentVM comment)
 		{
 			var commentExisted = _context.Comments.FirstOrDefault(x => x.IdComment == comment.IdComment);

@@ -37,10 +37,7 @@ public partial class FstepDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=DUNGCAO\\DUNGCAO;Initial Catalog=FStepDB;User ID=sa;Password=832003;Trust Server Certificate=True");
-
+  
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Chat>(entity =>
@@ -381,7 +378,6 @@ public partial class FstepDbContext : DbContext
             entity.Property(e => e.RecieveImg)
                 .HasMaxLength(255)
                 .HasColumnName("recieve_img");
-            entity.Property(e => e.ReportidReport).HasColumnName("Reportid_report");
             entity.Property(e => e.SentBuyerDate)
                 .HasColumnType("datetime")
                 .HasColumnName("sent_buyer_date");

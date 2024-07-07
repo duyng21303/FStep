@@ -71,9 +71,9 @@ namespace FStep.Controllers.Admin
     {
         new SelectListItem { Value = "", Text = "Tất cả" },
         new SelectListItem { Value = "True", Text = "Đã Duyệt" },
-        new SelectListItem { Value = "False", Text = "Chờ Duyệt" },
+        new SelectListItem { Value = "Waiting", Text = "Chờ Duyệt" },
         new SelectListItem { Value = "Rejected", Text = "Từ Chối" },
-        new SelectListItem { Value = "Finish", Text = "Hoàn Thành" },
+        new SelectListItem { Value = "False", Text = "Hoàn Thành" },
         new SelectListItem { Value = "Trading", Text = "Giao Dịch" },
         new SelectListItem { Value = "Hidden", Text = "Đã Ẩn" }
     };
@@ -136,17 +136,17 @@ namespace FStep.Controllers.Admin
 						post.IdProductNavigation.Price = model.Price;
 					}
 					post.Detail = model.Description;
-					post.Status = "False";
+					post.Status = "Waiting";
 
 					_db.SaveChanges();
-					TempData["SuccessMessage"] = $"Bài đăng của bạn đã được sửa thành công.Chúng tôi sẽ xem duyệt và duyệt!";
+					TempData["SuccessMessage"] = $"Bài đăng của bạn đã được sửa thành công.";
 					return RedirectToAction("ManagePost", "AdminPost");
 				}
 			}
 			catch (Exception ex)
 			{
 				Console.WriteLine(ex);
-				TempData["ErrorMessage"] = "Đã xảy ra lỗi khi cập nhật bài đăng của bạn.";
+				TempData["ErrorMessage"] = "Đã xảy ra lỗi khi cập nhật bài đăng.";
 			}
 			return View(model);
 		}
