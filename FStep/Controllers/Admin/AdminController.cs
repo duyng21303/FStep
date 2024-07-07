@@ -58,7 +58,7 @@ namespace FStep.Controllers.Admin
                             .CountAsync();
 
                 var totalCompletedTransactionCount = await _context.Transactions
-                            .Where(o => o.Date != null && o.Date.Value.Month == month.Month && o.Date.Value.Year == month.Year && o.Type == "Completed")
+                            .Where(o => o.Date != null && o.Date.Value.Month == month.Month && o.Date.Value.Year == month.Year && o.Status == "Completed")
                             .CountAsync();
                 // Thêm số lượng giao dịch hoặc giá trị 0 vào danh sách kết quả
                 resultListTotal.Add(totalTransactionCount);
