@@ -29,19 +29,21 @@ namespace FStep.Controllers
 			db = context;
 			_mapper = mapper;
 		}
+
 		public IActionResult Index(String? query, int? page)
 		{
 			if (User.IsInRole("Moderator"))
 			{
 				return Redirect("/ModeManagePost/ManagePosts");
-			}
-			else if (User.IsInRole("Admin"))
+			} else if (User.IsInRole("Admin"))
 			{
-				return Redirect("/Admin/Index");
-			}
+                return Redirect("/Admin/Index");
+            }
 			int pageSize = 12; // số lượng sản phẩm mỗi trang 
 			int pageNumber = (page ?? 1);   // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
-			var ExchangePost = db.Posts.AsQueryable();
+			var ExchangePost = db.Posts
+				.Include(t => t.IdUserNavigation)
+				.AsQueryable();
 			ExchangePost = ExchangePost.Where(p => p.Type == "Exchange" && p.Status == "True");    //check exchangePost là những post thuộc type "exhcange" và có status = 1
 
 			if (!string.IsNullOrEmpty(query))
@@ -54,12 +56,13 @@ namespace FStep.Controllers
 				IdPost = s.IdPost,
 				Title = s.Content,
 				Description = s.Detail,
+				PointRating = s.IdUserNavigation.PointRating,
 				Img = s.Img,
+				NameBoss = s.IdUserNavigation.Name,
 				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now
 			}).OrderByDescending(o => o.IdPost);
 
 			var pageList = result.ToPagedList(pageNumber, pageSize);
-
 			ViewBag.Query = query;
 			string checkInfo;
 			string id = User.FindFirst("UserID")?.Value;

@@ -1,46 +1,46 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Areas\**" />
-    <Compile Remove="Area\**" />
-    <Compile Remove="Controllers\Admin\**" />
-    <Compile Remove="Controllers\Moder\**" />
-    <Compile Remove="ViewComponents\**" />
-    <Compile Remove="Views\Shared\Components\**" />
-    <Compile Remove="wwwroot\admin_template_dep\**" />
-    <Compile Remove="wwwroot\car-repair-html-template\**" />
-    <Content Remove="Areas\**" />
-    <Content Remove="Area\**" />
-    <Content Remove="Controllers\Admin\**" />
-    <Content Remove="Controllers\Moder\**" />
-    <Content Remove="ViewComponents\**" />
-    <Content Remove="Views\Shared\Components\**" />
-    <Content Remove="wwwroot\admin_template_dep\**" />
-    <Content Remove="wwwroot\car-repair-html-template\**" />
-    <EmbeddedResource Remove="Areas\**" />
-    <EmbeddedResource Remove="Area\**" />
-    <EmbeddedResource Remove="Controllers\Admin\**" />
-    <EmbeddedResource Remove="Controllers\Moder\**" />
-    <EmbeddedResource Remove="ViewComponents\**" />
-    <EmbeddedResource Remove="Views\Shared\Components\**" />
-    <EmbeddedResource Remove="wwwroot\admin_template_dep\**" />
-    <EmbeddedResource Remove="wwwroot\car-repair-html-template\**" />
-    <None Remove="Areas\**" />
-    <None Remove="Area\**" />
-    <None Remove="Controllers\Admin\**" />
-    <None Remove="Controllers\Moder\**" />
-    <None Remove="ViewComponents\**" />
-    <None Remove="Views\Shared\Components\**" />
-    <None Remove="wwwroot\admin_template_dep\**" />
-    <None Remove="wwwroot\car-repair-html-template\**" />
-    <TypeScriptCompile Remove="wwwroot\admin_template_dep\**" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Areas\**" />
+		<Compile Remove="Area\**" />
+		<Compile Remove="Controllers\Admin\**" />
+		<Compile Remove="Controllers\Moder\**" />
+		<Compile Remove="ViewComponents\**" />
+		<Compile Remove="Views\Shared\Components\**" />
+		<Compile Remove="wwwroot\admin_template_dep\**" />
+		<Compile Remove="wwwroot\car-repair-html-template\**" />
+		<Content Remove="Areas\**" />
+		<Content Remove="Area\**" />
+		<Content Remove="Controllers\Admin\**" />
+		<Content Remove="Controllers\Moder\**" />
+		<Content Remove="ViewComponents\**" />
+		<Content Remove="Views\Shared\Components\**" />
+		<Content Remove="wwwroot\admin_template_dep\**" />
+		<Content Remove="wwwroot\car-repair-html-template\**" />
+		<EmbeddedResource Remove="Areas\**" />
+		<EmbeddedResource Remove="Area\**" />
+		<EmbeddedResource Remove="Controllers\Admin\**" />
+		<EmbeddedResource Remove="Controllers\Moder\**" />
+		<EmbeddedResource Remove="ViewComponents\**" />
+		<EmbeddedResource Remove="Views\Shared\Components\**" />
+		<EmbeddedResource Remove="wwwroot\admin_template_dep\**" />
+		<EmbeddedResource Remove="wwwroot\car-repair-html-template\**" />
+		<None Remove="Areas\**" />
+		<None Remove="Area\**" />
+		<None Remove="Controllers\Admin\**" />
+		<None Remove="Controllers\Moder\**" />
+		<None Remove="ViewComponents\**" />
+		<None Remove="Views\Shared\Components\**" />
+		<None Remove="wwwroot\admin_template_dep\**" />
+		<None Remove="wwwroot\car-repair-html-template\**" />
+		<TypeScriptCompile Remove="wwwroot\admin_template_dep\**" />
+	</ItemGroup>
 
   <ItemGroup>
     <Content Remove="Views\Feedback\Cancel.cshtml" />
@@ -53,9 +53,9 @@
     <Compile Include="ViewComponents\CreatePostViewComponent.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="Views\Shared\Components\Chat\Default.cshtml" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="Views\Shared\Components\Chat\Default.cshtml" />
+	</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
@@ -91,7 +91,7 @@
 	  <Folder Include="wwwroot\img\userAvar\" />
 	  <Folder Include="wwwroot\img\nullAvar\" />
   </ItemGroup>
-
+	  <Folder Include="wwwroot\img\userAvar\" />
   <ItemGroup>
     <None Include="Views\Home\Cancel.cshtml" />
     <None Include="Views\Shared\_Pagination.cshtml" />
@@ -210,6 +210,9 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Views\Feedback\Cancel.cshtml" />
+  </ItemGroup>
+
+    <None Include="wwwroot\webfonts\fa-v4compatibility.woff2" />
   </ItemGroup>
 
 </Project>

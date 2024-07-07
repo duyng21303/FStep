@@ -363,11 +363,11 @@ namespace FStep.Controllers.Auth
 					}
 					if (post.Type == "Sale" && post.IdProductNavigation != null)
 					{
-						post.IdProductNavigation.Quantity = model.ProductStatus;
+						post.IdProductNavigation.Quantity = model.Quantity;
 						post.IdProductNavigation.Price = model.Price;
 					}
 					post.Detail = model.Description;
-					post.Status = "False";
+					post.Status = "Waiting";
 
 					db.SaveChanges();
 					TempData["SuccessMessage"] = $"Bài đăng của bạn đã được sửa thành công.Chúng tôi sẽ xem duyệt và duyệt!";
@@ -387,7 +387,7 @@ namespace FStep.Controllers.Auth
 			var post = db.Posts.FirstOrDefault(p => p.IdPost == id);
 			if (post != null)
 			{
-				post.Status = "Finish";
+				post.Status = "False";
 				db.Posts.Update(post);
 				db.SaveChanges();
 				TempData["SuccessMessage"] = $"Bài đăng {post.Content} đã được xóa thành công.";

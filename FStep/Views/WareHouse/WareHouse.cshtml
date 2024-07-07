@@ -21,14 +21,14 @@
 					<form asp-controller="WareHouse" asp-action="WareHouse" method="get" class="mb-3">
 						<div class="row g-3 align-items-center">
 							<div class="col-auto">
-								<label for="searchString" class="col-form-label">Search:</label>
+								<label for="searchString" class="col-form-label">Tìm kiếm:</label>
 							</div>
 							<div class="col-auto">
-								<input type="text" class="form-control" id="searchString" name="searchString" value="@ViewBag.SearchString" placeholder="Enter search term...">
+								<input type="text" class="form-control" id="searchString" name="searchString" value="@ViewBag.SearchString" placeholder="Nhập mã giao dịch...">
 							</div>
 							<div class="col-auto">
 								<input type="hidden" name="activeTab" value="@ViewBag.ActiveTab" />
-								<button type="submit" class="btn btn-primary">Search</button>
+								<button type="submit" class="btn btn-primary">Tìm</button>
 							</div>
 						</div>
 					</form>
@@ -40,7 +40,7 @@
 							   id="exchange-tab"
 							   role="tab"
 							   aria-controls="exchange"
-							   aria-selected="true">Exchange</a>
+							   aria-selected="true">Trao đổi</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link @(ViewBag.ActiveTab == "sale" ? "active" : "")"
@@ -48,14 +48,14 @@
 							   id="sale-tab"
 							   role="tab"
 							   aria-controls="sale"
-							   aria-selected="false">Sale</a>
+							   aria-selected="false">Mua bán</a>
 						</li>
 					</ul>
 
 					<!-- Tab panes -->
 					<div class="tab-content" id="myTabContent">
 						<div class="tab-pane fade @(ViewBag.ActiveTab == "exchange" ? "show active" : "")" id="exchange" role="tabpanel" aria-labelledby="exchange-tab">
-							<h3>Exchange</h3>
+							<h3>Trao đổi</h3>
 							<table class="table table-striped table-bordered">
 								<thead class="thead-light">
 									<tr>
@@ -230,7 +230,7 @@
 						</div>
 
 						<div class="tab-pane fade @(ViewBag.ActiveTab == "sale" ? "show active" : "")" id="sale" role="tabpanel" aria-labelledby="sale-tab">
-							<h3>Sale</h3>
+							<h3>Mua bán</h3>
 							<table class="table table-striped table-bordered">
 								<thead class="thead-light">
 									<tr>

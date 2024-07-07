@@ -22,7 +22,8 @@
         public DateTime? CreateDate { get; set; }
         public int? Total { get; set; }
         public int? TotalEx {  get; set; }
-
-       public List<PostVM> Posts { get; set; }
+        public string? BankName { get; set; }
+        public string? BankAccountNumber { get; set; }
+        public List<PostVM> Posts { get; set; }
     }
 }
