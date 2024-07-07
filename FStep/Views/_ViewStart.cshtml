@@ -1,4 +1,4 @@
-﻿﻿@{
+﻿ @{
     if (User.IsInRole("Admin"))
     {
         Layout = "_LayoutAdmin";
@@ -7,11 +7,9 @@
     {
         Layout = "_LayoutModer";
     }
-
     else
     {
         Layout = "_LayoutCustomer";
         System.Diagnostics.Debug.WriteLine("customer"); // Ghi thông điệp debug
-
     }
-}
+} 

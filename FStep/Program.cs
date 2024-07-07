@@ -67,11 +67,6 @@ public class Program
 			googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Email, "email", "string");
 		});
 
-		////AutoTriggerService
-		//builder.Services.AddControllersWithViews();
-		//builder.Services.AddHttpClient();
-		//builder.Services.AddHostedService<AutoTriggerService>();
-
 		// Add AutoMapper (if needed)
 		builder.Services.AddAutoMapper(typeof(Program));
 		builder.Services.AddSingleton<IVnPayService, VnPayService>();

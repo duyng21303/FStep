@@ -26,11 +26,11 @@
     });
 
 
-    // Sidebar Toggler
-    $('.sidebar-toggler').click(function () {
-        $('.sidebar, .content').toggleClass("open");
-        return false;
-    });
+    //// Sidebar Toggler
+    //$('.sidebar-toggler').click(function () {
+    //    $('.sidebar, .content').toggleClass("open");
+    //    return false;
+    //});
 
 
     // Progress Bar
@@ -58,28 +58,39 @@
         nav : false
     });
 
+    var dataListElement = document.getElementById('dataList');
+    var dataListElementTrans = document.getElementById('dataListTransaction');
+    var dataListElementPost = document.getElementById('dataListPost');
+    var dataListElementComp = document.getElementById('dataListCompleted');
 
-     //Worldwide Sales Chart
+    var dataList = $(dataListElement).data("list");
+    var dataListTrans = $(dataListElementTrans).data("list");
+    var dataListPost = $(dataListElementPost).data("list");
+    var dataListComp = $(dataListElementComp).data("list");
+
+    var dataListTransName = $(dataListElementTrans).data("name");
+    var dataListPostName = $(dataListElementPost).data("name");
+    var dataListCompName = $(dataListElementComp).data("name");
 
     var ctx1 = $("#worldwide-sales").get(0).getContext("2d");
     var myChart1 = new Chart(ctx1, {
         type: "bar",
         data: {
-            labels: ["20116", "2017", "2018", "2019", "2020", "2021", "2022"],
+            labels: dataList,
 
             datasets: [{
-                label: "USA",
-                data: [1, 3, 5, 6, 6, 8, 9],
+                label: dataListPostName,
+                data: dataListPost,
                 backgroundColor: "rgba(0, 156, 255, .7)"
             },
             {
-                label: "UK",
-                data: [8, 3, 4, 6, 7, 5, 5],
+                label: dataListTransName,
+                data:  dataListTrans,
                 backgroundColor: "rgba(0, 156, 255, .5)"
             },
             {
-                label: "AU",
-                data: [1, 2, 4, 5, 6, 7, 6],
+                label: dataListCompName,
+                data: dataListComp,
                 backgroundColor: "rgba(0, 156, 255, .3)"
             }
             ]
@@ -114,96 +125,5 @@
             responsive: true
         }
     });
-    
-
-
-    // Single Line Chart
-    var ctx3 = $("#line-chart").get(0).getContext("2d");
-    var myChart3 = new Chart(ctx3, {
-        type: "line",
-        data: {
-            labels: [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150],
-            datasets: [{
-                label: "Salse",
-                fill: false,
-                backgroundColor: "rgba(0, 156, 255, .3)",
-                data: [7, 8, 8, 9, 9, 9, 10, 11, 14, 14, 15]
-            }]
-        },
-        options: {
-            responsive: true
-        }
-    });
-
-
-    // Single Bar Chart
-    var ctx4 = $("#bar-chart").get(0).getContext("2d");
-    var myChart4 = new Chart(ctx4, {
-        type: "bar",
-        data: {
-            labels: ["Italy", "France", "Spain", "USA", "Argentina"],
-            datasets: [{
-                backgroundColor: [
-                    "rgba(0, 156, 255, .7)",
-                    "rgba(0, 156, 255, .6)",
-                    "rgba(0, 156, 255, .5)",
-                    "rgba(0, 156, 255, .4)",
-                    "rgba(0, 156, 255, .3)"
-                ],
-                data: [55, 49, 44, 24, 15]
-            }]
-        },
-        options: {
-            responsive: true
-        }
-    });
-
-
-    // Pie Chart
-    var ctx5 = $("#pie-chart").get(0).getContext("2d");
-    var myChart5 = new Chart(ctx5, {
-        type: "pie",
-        data: {
-            labels: ["Italy", "France", "Spain", "USA", "Argentina"],
-            datasets: [{
-                backgroundColor: [
-                    "rgba(0, 156, 255, .7)",
-                    "rgba(0, 156, 255, .6)",
-                    "rgba(0, 156, 255, .5)",
-                    "rgba(0, 156, 255, .4)",
-                    "rgba(0, 156, 255, .3)"
-                ],
-                data: [55, 49, 44, 24, 15]
-            }]
-        },
-        options: {
-            responsive: true
-        }
-    });
-
-
-    // Doughnut Chart
-    var ctx6 = $("#doughnut-chart").get(0).getContext("2d");
-    var myChart6 = new Chart(ctx6, {
-        type: "doughnut",
-        data: {
-            labels: ["Italy", "France", "Spain", "USA", "Argentina"],
-            datasets: [{
-                backgroundColor: [
-                    "rgba(0, 156, 255, .7)",
-                    "rgba(0, 156, 255, .6)",
-                    "rgba(0, 156, 255, .5)",
-                    "rgba(0, 156, 255, .4)",
-                    "rgba(0, 156, 255, .3)"
-                ],
-                data: [55, 49, 44, 24, 15]
-            }]
-        },
-        options: {
-            responsive: true
-        }
-    });
-
-    
 })(jQuery);
 
