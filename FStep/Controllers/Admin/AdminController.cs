@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using X.PagedList;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace FStep.Controllers.Admin
 {
@@ -17,36 +18,61 @@ namespace FStep.Controllers.Admin
         private static readonly string[] defaultRole = new[] { "Customer", "Moderator", "Administrator" };
 
 		public AdminController(FstepDbContext context, IMapper mapper)
-
-		public AdminController(FstepDbContext context, IMapper mapper)
 		{
 			_context = context;
 			_mapper = mapper;
 		}
 		[Authorize(Roles = "Admin")]
-		public IActionResult Index(string codeTransaction, int? page)
-		{
-			var totalPost = _context.Posts.Count(p => p.Status != "Rejected");
-			var totalUser = _context.Users.Count(u => u.Status != false);
-			var totalTransaction = _context.Transactions.Count(t => t.Status == "Completed" || t.Status == "Processing" || t.Status == "Canceled");
-			var totalGMV = _context.Transactions
-				.Where(t => t.Status == "Completed")
-				.Sum(t => t.Amount);
+        public async Task<IActionResult> Index(string codeTransaction, int? page)
+        {
+            var totalPost = _context.Posts.Count(p => p.Status != "Rejected");
+            var totalUser = _context.Users.Count(u => u.Status != false);
 
-			IQueryable<Transaction> query = _context.Transactions;
-
-			if (!string.IsNullOrEmpty(codeTransaction))
-			{
-				query = query.Where(t => t.CodeTransaction.Contains(codeTransaction));
-			}
-
-            var totalUser = _context.Users.Count(u => u.Status == true);
-
-            var totalTransaction = _context.Transactions.Count(t => t.Status == "Finish" || t.Status == "Processing");
-
-            var totalRevenue = _context.Transactions
-                .Where(t => t.Status == "Finish")
+            var totalTransaction = _context.Transactions.Count(t => t.Status == "Completed" || t.Status == "Processing" || t.Status == "Canceled");
+            var totalGMV = _context.Transactions
+                .Where(t => t.Status == "Completed")
                 .Sum(t => t.Amount);
+            IQueryable<Transaction> query = _context.Transactions;
+            if (!string.IsNullOrEmpty(codeTransaction))
+            {
+                query = query.Where(t => t.CodeTransaction.Contains(codeTransaction));
+            }
+
+            var transactions = query.OrderByDescending(t => t.Date).ToList();
+            List<TransactionVM> transactionVMs = new List<TransactionVM>();
+            foreach (var item in transactions)
+            {
+                transactionVMs.Add(new TransactionVM()
+                {
+                    Transaction = item
+                });
+            }
+
+            // Calculate revenues and assign to each transaction
+            foreach (var transaction in transactionVMs)
+            {
+                transaction.Revenues = CalculateDiscount(transaction.Transaction.Amount);
+            }
+
+            float totalRevenues = 0;
+            foreach (var transaction in transactionVMs)
+            {
+                if (transaction.Transaction.Status == "Completed")
+                {
+                    totalRevenues += transaction.Revenues;
+                }
+            }
+
+            // Paginate transactions
+            int pageSize = 20;
+            int pageNumber = (page ?? 1);
+            var pagedTransactions = transactionVMs.ToPagedList(pageNumber, pageSize);
+
+            var transactionVM = new TransactionVM
+            {
+                PagedTransactions = pagedTransactions
+            };
+            //----------------------------------------------------------------------------------------------------Dasboard
             var sevenMonthsAgo = DateTime.Now.AddMonths(-6);
 
             // Tạo danh sách các tháng trong 7 tháng gần nhất
@@ -85,52 +111,18 @@ namespace FStep.Controllers.Admin
             ViewBag.TotalTransactionDash = resultListTotal;
             ViewBag.TotalPostDash = resultListTotalPost;
             ViewBag.TotalCompleted = resultListTotalCompleted;
+            //----------------------------------------------------------------------------------------------------Dasboard
 
             ViewBag.TotalPost = totalPost;
             ViewBag.TotalTransaction = totalTransaction;
             ViewBag.TotalUser = totalUser;
-            ViewBag.TotalRevenue = totalRevenue;
-            return View();
+            ViewBag.TotalGMV = totalGMV;
+            ViewBag.TotalRevenues = totalRevenues;
+            ViewBag.CodeTransaction = codeTransaction;
+            return View(transactionVM);
         }
 
-			var transactions = query.OrderByDescending(t => t.Date).ToList();
-			var transactionVMs = _mapper.Map<List<TransactionVM>>(transactions);
-
-			// Calculate revenues and assign to each transaction
-			foreach (var transaction in transactionVMs)
-			{
-				transaction.Revenues = CalculateDiscount(transaction.Amount);
-			}
-
-			float totalRevenues = 0;
-			foreach (var transaction in transactionVMs)
-			{
-				if (transaction.Status == "Completed")
-				{
-					totalRevenues += transaction.Revenues;
-				}
-			}
-
-			// Paginate transactions
-			int pageSize = 20;
-			int pageNumber = (page ?? 1);
-			var pagedTransactions = transactionVMs.ToPagedList(pageNumber, pageSize);
-
-			var transactionVM = new TransactionVM
-			{
-				PagedTransactions = pagedTransactions
-			};
-
-			ViewBag.TotalPost = totalPost;
-			ViewBag.TotalTransaction = totalTransaction;
-			ViewBag.TotalUser = totalUser;
-			ViewBag.TotalGMV = totalGMV;
-			ViewBag.TotalRevenues = totalRevenues;
-			ViewBag.CodeTransaction = codeTransaction;
-
-			return View(transactionVM);
-		}
-		public float CalculateDiscount(float? amount)
+        public float CalculateDiscount(float? amount)
 		{
 			if (amount.HasValue && amount > 0)
 			{

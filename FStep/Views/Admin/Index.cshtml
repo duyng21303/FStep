@@ -67,7 +67,6 @@
 				<div class="bg-light text-center rounded p-4">
 					<div class="d-flex align-items-center justify-content-between mb-4">
 						<h6 class="mb-0">Worldwide Sales</h6>
-						<a href="">Show All</a>
 					</div>
 					<canvas id="worldwide-sales"></canvas>
 				</div>
@@ -76,7 +75,6 @@
 				<div class="bg-light text-center rounded p-4">
 					<div class="d-flex align-items-center justify-content-between mb-4">
 						<h6 class="mb-0">Salse & Revenue</h6>
-						<a href="">Show All</a>
 					</div>
 					<canvas id="salse-revenue"></canvas>
                     <ul id="dataList" data-list='@Json.Serialize(ViewBag.Labels)' data-name=""></ul>
@@ -133,9 +131,9 @@
 						@foreach (var transaction in Model.PagedTransactions)
 						{
 							<tr>
-								<td>@transaction.Date</td>
+								<td>@transaction.Transaction.Date</td>
 								<td>
-									@if (@transaction.Amount > 0)
+									@if (@transaction.Transaction.Amount > 0)
 									{
 										<span>Mua bán</span>
 									}
@@ -144,11 +142,11 @@
 										<span>Trao đổi</span>
 									}
 								</td>
-								<td>@transaction.CodeTransaction</td>
+								<td>@transaction.Transaction.CodeTransaction</td>
 								<td>
-									@if (@transaction.Amount > 0)
+									@if (@transaction.Transaction.Amount > 0)
 									{
-										<span>@String.Format(format, "{0:0,0 VND}", transaction.Amount)</span>
+										<span>@String.Format(format, "{0:0,0 VND}", transaction.Transaction.Amount)</span>
 									}
 									else
 									{
@@ -156,10 +154,10 @@
 									}
 								</td>
 								<td>
-									@if (@transaction.Status == "Processing")
+									@if (@transaction.Transaction.Status == "Processing")
 									{
 										<span class="font-weight-bold text-warning" style="font-weight: 600;">Đang chờ</span>
-									}else if(transaction.Status == "Cancel")
+									}else if(transaction.Transaction.Status == "Cancel")
 									{
 										<span class="font-weight-bold text-danger" style="font-weight: 600;">Thất bại</span>
 									}else
@@ -170,7 +168,7 @@
 								</td>
 
 								<td>
-									@if (@transaction.Status == "Completed")
+									@if (@transaction.Transaction.Status == "Completed")
 									{
 										<span>@String.Format(format, "{0:0,0 VND}", @transaction.Revenues)</span>
 									}
