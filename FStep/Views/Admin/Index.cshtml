@@ -77,10 +77,10 @@
 						<h6 class="mb-0">Salse & Revenue</h6>
 					</div>
 					<canvas id="salse-revenue"></canvas>
-                    <ul id="dataList" data-list='@Json.Serialize(ViewBag.Labels)' data-name=""></ul>
-                    <ul id="dataListTransaction" data-list='@Json.Serialize(ViewBag.TotalTransactionDash)' data-name="Số lượng giao dịch"></ul>
-                    <ul id="dataListPost" data-list='@Json.Serialize(ViewBag.TotalPostDash)' data-name="Tổng số bài đăng"></ul>
-                    <ul id="dataListCompleted" data-list='@Json.Serialize(ViewBag.TotalCompleted)' data-name="Số lượng giao dịch thành công"></ul>
+					<ul id="dataList" data-list='@Json.Serialize(ViewBag.Labels)' data-name=""></ul>
+					<ul id="dataListTransaction" data-list='@Json.Serialize(ViewBag.TotalTransactionDash)' data-name="Số lượng giao dịch"></ul>
+					<ul id="dataListPost" data-list='@Json.Serialize(ViewBag.TotalPostDash)' data-name="Tổng số bài đăng"></ul>
+					<ul id="dataListCompleted" data-list='@Json.Serialize(ViewBag.TotalCompleted)' data-name="Số lượng giao dịch thành công"></ul>
 
 				</div>
 			</div>
@@ -157,10 +157,12 @@
 									@if (@transaction.Transaction.Status == "Processing")
 									{
 										<span class="font-weight-bold text-warning" style="font-weight: 600;">Đang chờ</span>
-									}else if(transaction.Transaction.Status == "Cancel")
+									}
+									else if (transaction.Transaction.Status == "Cancel")
 									{
 										<span class="font-weight-bold text-danger" style="font-weight: 600;">Thất bại</span>
-									}else
+									}
+									else
 									{
 										<span class="font-weight-bold text-success" style="font-weight: 600;">Thành công</span>
 									}
@@ -174,10 +176,14 @@
 									}
 								</td>
 								<td>
-									<form asp-controller="Admin" asp-action="ReferTransaction" method="post" onsubmit="return confirmDelete()">
-										<input type="hidden" name="id" value="@transaction.TransactionId" />
-										<button type="submit" class="btn btn-danger btn-sm">Trả lại</button>
-									</form>
+									@if (transaction.Transaction.Status != "Processing")
+									{
+
+										<form asp-controller="Admin" asp-action="ReferTransaction" method="post" onsubmit="return confirmDelete()">
+											<input type="hidden" name="id" value="@transaction.Transaction.IdTransaction" />
+											<button type="submit" class="btn btn-danger btn-sm">Hoàn trả</button>
+										</form>
+									}
 								</td>
 							</tr>
 						}

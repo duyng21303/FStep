@@ -78,7 +78,7 @@ namespace FStep.Controllers.ManagePost
 					Status = s.Status ?? string.Empty,
 					Category = s.Category ?? string.Empty,
 					Description = s.Detail ?? string.Empty,
-					
+
 				})
 				.ToPagedList(pageNumber, pageSize);
 
