@@ -149,20 +149,23 @@
 										</button>
 										<div class="post-actions-dropdown">
 											<ul class="list-unstyled">
-												@if (post.Status == "True" || post.Status == "False" || post.Status == "Rejected")
+												@if (post.Status == "True" || post.Status == "Waiting" || post.Status == "Rejected")
 												{
 													<li><a asp-action="UpdatePost" asp-controller="Account" asp-route-id="@post.IdPost" asp-route-type="@post.Type" class="dropdown-item">Sửa</a></li>
-													<li><a asp-action="FinishPost" asp-controller="Account" asp-route-id="@post.IdPost" class="dropdown-item">Xóa</a></li>
+													<li><a asp-action="HiddenPost" asp-controller="Account" asp-route-id="@post.IdPost" class="dropdown-item">Xóa</a></li>
 												}
-												else if (post.Status == "Finish")
+												@if (post.Status == "False")
 												{
-													<li><a asp-action="HiddenPost" asp-controller="Account" asp-route-id="@post.IdPost" class="dropdown-item">Ẩn</a></li>
+													<li><a asp-action="HiddenPost" asp-controller="Account" asp-route-id="@post.IdPost" class="dropdown-item">Xóa</a></li>
 												}
 											</ul>
 										</div>
 									</div>
 								</div>
 								<div class="p-4 border border-secondary border-top-0 rounded-bottom">
+
+									<h4 class="title">@Html.Raw(post.Title)</h4>
+
 									@if (post.Type == "Exchange")
 									{
 										<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@post.IdPost" style="text-decoration:none">

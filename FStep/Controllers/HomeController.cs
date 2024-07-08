@@ -273,6 +273,7 @@ namespace FStep.Controllers
 					transaction = transaction.Where(p => p.IdPostNavigation.Content.Contains(query));
 					if (activeTab == "exchange")
 					{
+
 						query = query.ToLower();
 						exchangeTransactions = exchangeTransactions.Where(t =>
 							t.CodeTransaction.ToLower().Contains(query) ||
@@ -325,6 +326,8 @@ namespace FStep.Controllers
 					CheckFeedback = db.Feedbacks.Any(p => p.IdPost == s.IdPost),
 				}).OrderByDescending(o => o.TransactionId);
 				viewResult.SaleList = saleList.ToPagedList(pageNumber, pageSize);
+
+
 
 				ViewBag.Query = query;
 				ViewBag.ActiveTab = activeTab;
