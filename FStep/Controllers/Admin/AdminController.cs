@@ -145,6 +145,7 @@ namespace FStep.Controllers.Admin
 		{
 			if (amount.HasValue && amount > 0)
 			{
+
 				return _configuration.GetValue<float>("Amount");
 				// 10% discount
 			}

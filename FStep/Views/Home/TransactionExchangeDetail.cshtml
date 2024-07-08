@@ -81,8 +81,12 @@
 										<h5>@Model.UserSeller.Name</h5>
 									</div>
 								</div>
-								<img src="/img/postPic/@Model.Post.Img" alt="Other Item" class="img-fluid rounded mh-100">
-								<p>@Html.Raw(Model.Post.Detail)</p>
+								<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@Model.Post.IdPost">
+									<img src="/img/postPic/@Model.Post.Img" alt="Other Item" class="img-fluid rounded mh-100">
+								</a>
+								<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@Model.Post.IdPost" style="text-decoration:none; color:black">
+									<p>@Html.Raw(Model.Post.Detail)</p>
+								</a>
 							</div>
 						</div>
 
