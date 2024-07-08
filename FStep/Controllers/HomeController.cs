@@ -14,6 +14,7 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using NuGet.Protocol.Plugins;
 using System;
 using System.Diagnostics;
+using System.Net;
 using X.PagedList;
 
 namespace FStep.Controllers
@@ -120,7 +121,8 @@ namespace FStep.Controllers
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
 		{
-			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+			var status = (int) HttpStatusCode.InternalServerError;
+			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier, StatusCode = ((int) HttpStatusCode.InternalServerError).ToString() });
 		}
 		[Authorize]
 		[HttpPost]
@@ -155,6 +157,7 @@ namespace FStep.Controllers
 			{
 				Console.WriteLine(ex);
 				ModelState.AddModelError("Error", "Đã xảy ra một số lỗi khi phản hồi yêu cầu của bạn");
+				return RedirectToAction("Error", "Home");
 			}
 			return View("Create");
 		}
@@ -244,7 +247,7 @@ namespace FStep.Controllers
 			{
 				Console.WriteLine("An error occurred: " + ex.Message);
 				Console.WriteLine("Stack Trace: " + ex.StackTrace);
-				return View(new TransactionServiceVM());
+				return View("Error", "Home");
 			}
 		}
 		[Authorize]

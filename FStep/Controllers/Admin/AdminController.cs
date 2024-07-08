@@ -14,14 +14,16 @@ namespace FStep.Controllers.Admin
         private readonly FstepDbContext _context;
         private readonly IMapper _mapper;
         private static readonly string[] defaultRole = new[] { "Customer", "Moderator", "Administrator" };
+		private readonly IConfiguration _configuration;
 
-        public AdminController(FstepDbContext context, IMapper mapper)
+		public AdminController(FstepDbContext context, IMapper mapper, IConfiguration configuration)
 
 
         {
             _context = context;
             _mapper = mapper;
-        }
+			_configuration = configuration;
+		}
         public async Task<IActionResult> Index()
         {
             var totalPost = _context.Posts.Count(p => p.Status == "True" || p.Status == "Finish");
@@ -218,6 +220,33 @@ namespace FStep.Controllers.Admin
                 return Ok();
             }
             return BadRequest();
+        }
+        [Authorize(Roles = "Admin")]
+        public IActionResult Payment(int page = 1, int pageSize = 10, string? search = null)
+        {
+            var query = _context.Payments.AsQueryable();
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(x => x.IdTransaction.ToString().ToLower().Contains(search.ToLower()));
+            }
+
+            var payment = query.Skip((page - 1) * pageSize).Take(pageSize).Select(x => _mapper.Map<PaymentVM>(x)).ToList();
+
+			var link = _configuration.GetValue<string>("VNPayMerchant");
+
+			PagingModel<PaymentVM> pagingModel = new()
+            {
+                Items = payment,
+                PagingInfo = new PagingInfo
+                {
+                    CurrentPage = page,
+                    ItemsPerPage = pageSize,
+                    TotalItems = query.Count(),
+                    Search = search
+                }
+            };
+            ViewBag.link = link;
+            return View("Payment",pagingModel);
         }
     }
 }

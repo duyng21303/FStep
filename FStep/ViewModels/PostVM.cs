@@ -28,7 +28,7 @@ namespace FStep.ViewModels
 		[Required(ErrorMessage = "Bắt buộc")]
 		public int? ProductStatus { get; set; }
 
-		[Display(Name = "Giá")]
+		[Display(Name = "Giá (VNĐ)")]
 		[DataType(DataType.Currency)]
 		[Required(ErrorMessage = "Bắt buộc")]
 		public float? Price { get; set; }
