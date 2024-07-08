@@ -187,7 +187,6 @@
 																			Đánh giá
 																		</button>
 																	}
-
 																	@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.Transaction.Status == "Completed")
 																	{
 																		<button type="button" data-bs-toggle="modal" data-bs-target="#reportComment" class="btn btn-outline-danger btn-sm mt-2 btn-report" style="float: inline-end;margin-left: 4px;" data-post="@item.Post.IdPost" data-transaction="@item.TransactionId">
@@ -570,48 +569,6 @@
 
 				</div>
 			</div>
-			<!--Modal report-->
-			<div class="modal fade" id="reportComment" tabindex="-1" aria-labelledby="reportCommentLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="reportCommentLabel">Báo cáo đơn hàng</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<form id="reportForm">
-								<div class="mb-3">
-									<label for="message-text" class="col-form-label">Lý do:</label>
-									<div class="form-check">
-										<input class="form-check-input" type="radio" name="reportReason" id="reason1" value="Sản phẩm kém chất lượng">
-										<label class="form-check-label" for="reason1">
-											Sản phẩm kém chất lượng
-										</label>
-									</div>
-									<div class="form-check">
-										<input class="form-check-input" type="radio" name="reportReason" id="reason2" value="Lừa đảo, sai với mô tả">
-										<label class="form-check-label" for="reason2">
-											Lừa đảo, sai với mô tả
-										</label>
-									</div>
-									<div class="form-check">
-										<input class="form-check-input" type="radio" name="reportReason" id="reason6" value="Vi phạm khác">
-										<label class="form-check-label" for="reason6">
-											Lý do khác
-										</label>
-									</div>
-									<textarea class="form-control mt-3 d-none" id="message-text" placeholder="Vui lòng mô tả chi tiết (bắt buộc)"></textarea>
-								</div>
-							</form>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-							<button type="button" class="btn btn-primary" id="sendReportButton">Gửi báo cáo</button>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!--End modal report-->
 		</div>
 
 		<!--Tab sale-->
@@ -746,12 +703,12 @@
 																		</button>
 																	}
 
-																	@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.Transaction.Status == "Completed")
-																	{
+																	@* @if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.Transaction.Status == "Completed")
+																	{ *@
 																		<button type="button" data-bs-toggle="modal" data-bs-target="#reportComment" class="btn btn-outline-danger btn-sm mt-2 btn-report" style="float: inline-end;margin-left: 4px;" data-post="@item.Post.IdPost" data-transaction="@item.TransactionId">
 																			Báo cáo
 																		</button>
-																	}
+																	@* } *@
 																</div>
 																@if (item.Transaction.Status == "Completed")
 																{
@@ -1082,50 +1039,50 @@
 
 				</div>
 			</div>
-			<!--Modal report-->
-			<div class="modal fade" id="reportComment" tabindex="-1" aria-labelledby="reportCommentLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="reportCommentLabel">Báo cáo đơn hàng</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<form id="reportForm">
-								<div class="mb-3">
-									<label for="message-text" class="col-form-label">Lý do:</label>
-									<div class="form-check">
-										<input class="form-check-input" type="radio" name="reportReason" id="reason1" value="Sản phẩm kém chất lượng">
-										<label class="form-check-label" for="reason1">
-											Sản phẩm kém chất lượng
-										</label>
-									</div>
-									<div class="form-check">
-										<input class="form-check-input" type="radio" name="reportReason" id="reason2" value="Lừa đảo, sai với mô tả">
-										<label class="form-check-label" for="reason2">
-											Lừa đảo, sai với mô tả
-										</label>
-									</div>
-									<div class="form-check">
-										<input class="form-check-input" type="radio" name="reportReason" id="reason6" value="Vi phạm khác">
-										<label class="form-check-label" for="reason6">
-											Lý do khác
-										</label>
-									</div>
-									<textarea class="form-control mt-3 d-none" id="message-text" placeholder="Vui lòng mô tả chi tiết (bắt buộc)"></textarea>
-								</div>
-							</form>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-							<button type="button" class="btn btn-primary" id="sendReportButton">Gửi báo cáo</button>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!--End modal report-->
 		</div>
 	</div>
+	<!--Modal report-->
+	<div class="modal fade" id="reportComment" tabindex="-1" aria-labelledby="reportCommentLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="reportCommentLabel">Báo cáo đơn hàng</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form id="reportForm">
+						<div class="mb-3">
+							<label for="message-text" class="col-form-label">Lý do:</label>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="reportReason" id="reason1" value="Sản phẩm kém chất lượng">
+								<label class="form-check-label" for="reason1">
+									Sản phẩm kém chất lượng
+								</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="reportReason" id="reason2" value="Lừa đảo, sai với mô tả">
+								<label class="form-check-label" for="reason2">
+									Lừa đảo, sai với mô tả
+								</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="reportReason" id="reason6" value="Vi phạm khác">
+								<label class="form-check-label" for="reason6">
+									Lý do khác
+								</label>
+							</div>
+							<textarea class="form-control mt-3 d-none" id="message-text" placeholder="Vui lòng mô tả chi tiết (bắt buộc)"></textarea>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+					<button type="button" class="btn btn-primary" id="sendReportButton">Gửi báo cáo</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--End modal report-->
 </div>
 <script>
 	$(document).ready(function () {
