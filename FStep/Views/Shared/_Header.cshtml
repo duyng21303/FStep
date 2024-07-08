@@ -8,6 +8,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
 
 
@@ -40,9 +41,7 @@
 					<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ </a>
 					<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Sale">Bán</a>
 					<a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">Trao đổi</a>
-					<div class="nav-item dropdown">
-						<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="TransactionHistory">Đã mua</a>
-					</div>
+					<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="TransactionHistory">Đã mua</a>
 				}
 			</div>
 			<div class="navbar-nav ms-auto align-items-center">
@@ -51,11 +50,11 @@
 					<div class="navbar-nav align-items-center ms-auto">
 						<div class="nav-item dropdown">
 							<a href="#" class="nav-link dropdown-toggle notification-toggle" data-bs-toggle="dropdown">
+								<i class="fa fa-bell me-lg-2"></i>
 								Thông báo
 								<span class="badge bg-danger">@ViewBag.NotificationCount</span>
 							</a>
 							<div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0 notification" id="notification">
-									
 							</div>
 
 						</div>
@@ -76,7 +75,6 @@
 							</a>
 							<div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
 								<a asp-action="Profile" asp-controller="Account" class="dropdown-item">Trang cá nhân</a>
-								<a href="#" class="dropdown-item">Settings</a>
 								<a asp-action="Logout" asp-controller="Account" class="dropdown-item">Đăng xuất</a>
 
 							</div>

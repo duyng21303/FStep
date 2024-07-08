@@ -1,0 +1,229 @@
+﻿@model FStep.ViewModels.TransactionVM
+@using X.PagedList.Mvc.Core
+
+@{
+	var successMessage = TempData["SuccessMessage"] as string;
+	var errorMessage = TempData["ErrorMessage"] as string;
+	var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+}
+<!-- Content Start -->
+<div class="content">
+	<!-- Sale & Revenue Start -->
+	<div class="container-fluid pt-4 px-4">
+		<div class="row g-4 justify-content-center">
+			<div class="col-sm-6 col-md-3">
+				<div class="card-custom bg-light rounded p-4 d-flex align-items-center justify-content-between">
+					<i class="bi bi-file-post fa-3x text-primary icon-custom-size"></i>
+					<div class="ms-3 text-center flex-grow-1">
+						<p class="mb-2" style="font-size: 1.25rem;">Bài Đăng</p>
+						<h6 class="mb-0" style="font-size: 1.5rem;">@ViewData["TotalPost"]</h6>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-3">
+				<div class="card-custom bg-light rounded p-4 d-flex align-items-center justify-content-between">
+					<i class="fa fa-users fa-3x text-primary icon-custom-size"></i>
+					<div class="ms-3 text-center flex-grow-1">
+						<p class="mb-2" style="font-size: 1.25rem;">Người Dùng</p>
+						<h6 class="mb-0" style="font-size: 1.5rem;">@ViewData["TotalUser"]</h6>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-3">
+				<div class="card-custom bg-light rounded p-4 d-flex align-items-center justify-content-between">
+					<i class="fa fa-exchange-alt fa-3x text-primary icon-custom-size"></i>
+					<div class="ms-3 text-center flex-grow-1">
+						<p class="mb-2" style="font-size: 1.25rem;">Giao Dịch</p>
+						<h6 class="mb-0" style="font-size: 1.5rem;">@ViewData["TotalTransaction"]</h6>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-3">
+				<div class="card-custom bg-light rounded p-4 d-flex align-items-center justify-content-between">
+					<i class="fa fa-shopping-cart fa-3x text-primary icon-custom-size"></i>
+					<div class="ms-3 text-center flex-grow-1">
+						<p class="mb-2" style="font-size: 1.25rem;">GMV</p>
+						<h6 class="mb-0" style="font-size: 1.5rem;">@String.Format(format, "{0:0,0 VND}", @ViewData["TotalGMV"])</h6>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-3">
+				<div class="card-custom bg-light rounded p-4 d-flex align-items-center justify-content-between">
+					<i class="fa fa-dollar-sign fa-3x text-primary icon-custom-size"></i>
+					<div class="ms-3 text-center flex-grow-1">
+						<p class="mb-2" style="font-size: 1.25rem;">Doanh thu</p>
+						<h6 class="mb-0" style="font-size: 1.5rem;">@String.Format(format, "{0:0,0 VND}", @ViewData["TotalRevenues"])</h6>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Sale & Revenue End -->
+	<!-- Sales Chart Start -->
+	<div class="container-fluid pt-4 px-4">
+		<div class="row g-4">
+			<div class="col-sm-12 col-xl-6">
+				<div class="bg-light text-center rounded p-4">
+					<div class="d-flex align-items-center justify-content-between mb-4">
+						<h6 class="mb-0">Số lượng giao dịch và trao đổi</h6>
+					</div>
+					<canvas id="worldwide-sales"></canvas>
+				</div>
+			</div>
+			<div class="col-sm-12 col-xl-6">
+				<div class="bg-light text-center rounded p-4">
+					<div class="d-flex align-items-center justify-content-between mb-4">
+						<h6 class="mb-0">Doanh thu</h6>
+					</div>
+					<canvas id="salse-revenue"></canvas>
+
+                    <ul id="dataList" data-list='@Json.Serialize(ViewBag.Labels)' data-name=""></ul>
+                    <ul id="dataListTransaction" data-list='@Json.Serialize(ViewBag.TotalTransactionDash)' data-name="Số lượng giao dịch"></ul>
+                    <ul id="dataListPost" data-list='@Json.Serialize(ViewBag.TotalPostDash)' data-name="Tổng số bài đăng"></ul>
+                    <ul id="dataListCompleted" data-list='@Json.Serialize(ViewBag.TotalCompleted)' data-name="Số lượng giao dịch thành công"></ul>
+					<ul id="dataListTotalPostExchange" data-list='@Json.Serialize(ViewBag.TotalPostExchange)' data-name="Doanh số mua bán"></ul>
+					<ul id="dataListTotalPostSale" data-list='@Json.Serialize(ViewBag.TotalPostSale)' data-name="Doanh số mua bán trao đổi"></ul>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Sales Chart End -->
+	<!-- Recent Sales Start -->
+	<div class="container-fluid pt-4 px-4">
+		<div class="bg-light text-center rounded p-4">
+			<div class="d-flex align-items-center justify-content-between mb-4">
+				<h6 class="mb-0">Giao Dịch</h6>
+				<form asp-action="Index" asp-controller="Admin" method="get" class="input-group w-auto">
+					<input type="text" class="form-control" placeholder="Mã Giao Dịch..." aria-label="Tìm kiếm" name="codeTransaction" value="@ViewBag.CodeTransaction">
+					<button type="submit" class="btn btn-outline-secondary">
+						<i class="bi bi-search"></i>
+					</button>
+				</form>
+			</div>
+			@if (!string.IsNullOrEmpty(successMessage))
+			{
+				<div id="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+					@successMessage
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			}
+
+			@if (!string.IsNullOrEmpty(errorMessage))
+			{
+				<div id="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+					@errorMessage
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			}
+			<div class="table-responsive">
+				<table class="table text-start align-middle table-bordered table-hover mb-0">
+					<thead>
+						<tr class="text-dark">
+							<th scope="col">Ngày</th>
+							<th scope="col">Loại</th>
+							<th scope="col">Mã Giao Dịch</th>
+							<th scope="col">Tổng Tiền</th>
+							<th scope="col">Trạng thái</th>
+							<th scope="col">Thu phí</th>
+							<th scope="col">Thao tác</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var transaction in Model.PagedTransactions)
+						{
+							<tr>
+								<td>@transaction.Transaction.Date</td>
+								<td>
+									@if (@transaction.Transaction.Amount > 0)
+									{
+										<span>Mua bán</span>
+									}
+									else
+									{
+										<span>Trao đổi</span>
+									}
+								</td>
+								<td>@transaction.Transaction.CodeTransaction</td>
+								<td>
+									@if (@transaction.Transaction.Amount > 0)
+									{
+										<span>@String.Format(format, "{0:0,0 VND}", transaction.Transaction.Amount)</span>
+									}
+									else
+									{
+										<span>0</span>
+									}
+								</td>
+								<td>
+									@if (@transaction.Transaction.Status == "Processing")
+									{
+										<span class="font-weight-bold text-warning" style="font-weight: 600;">Đang chờ</span>
+									}
+									else if (transaction.Transaction.Status == "Cancel")
+									{
+										<span class="font-weight-bold text-danger" style="font-weight: 600;">Thất bại</span>
+									}
+									else
+									{
+										<span class="font-weight-bold text-success" style="font-weight: 600;">Thành công</span>
+									}
+
+								</td>
+
+								<td>
+									@if (@transaction.Transaction.Status == "Completed")
+									{
+										<span>@String.Format(format, "{0:0,0 VND}", @transaction.Revenues)</span>
+									}
+								</td>
+								<td>
+									@if (transaction.Transaction.Status != "Processing")
+									{
+
+										<form asp-controller="Admin" asp-action="ReferTransaction" method="post" onsubmit="return confirmDelete()">
+											<input type="hidden" name="id" value="@transaction.Transaction.IdTransaction" />
+											<button type="submit" class="btn btn-danger btn-sm">Hoàn trả</button>
+										</form>
+									}
+
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+			@Html.PagedListPager(Model.PagedTransactions, page => Url.Action("Index", new { page, codeTransaction = ViewBag.CodeTransaction }))
+		</div>
+	</div>
+	<!-- Recent Sales End -->
+</div>
+
+<!-- Content End -->
+
+<style>
+	.card-custom {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: center;
+		text-align: center;
+		padding: 1.5rem; /* Tăng padding lên 1.5rem */
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	}
+
+		.card-custom .icon-custom-size {
+			font-size: 2.5rem; /* Tăng kích thước icon lên 2.5rem */
+		}
+
+		.card-custom .ms-3 {
+			flex-grow: 1;
+			max-width: 100%;
+		}
+
+		.card-custom p {
+			margin-bottom: 0.5rem;
+		}
+</style>

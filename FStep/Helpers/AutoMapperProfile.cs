@@ -21,6 +21,7 @@ namespace FStep.Helpers
 			CreateMap<CheckoutVM, Transaction>();
 
             CreateMap<TransactionVM, Transaction>();
+            CreateMap<PaymentVM, Payment>().ReverseMap();
 
 			CreateMap<Transaction, TransactionVM>().ForMember(trans => trans.TransactionId, option => option.MapFrom(RegisterVM => RegisterVM.IdTransaction));
 

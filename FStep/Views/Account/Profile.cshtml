@@ -73,11 +73,11 @@
 		</div>
 	</div>
 </div>
+
 @{
 	var successMessage = TempData["SuccessMessage"] as string;
 	var errorMessage = TempData["ErrorMessage"] as string;
 }
-
 @if (!string.IsNullOrEmpty(successMessage))
 {
 	<div id="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
@@ -93,53 +93,117 @@
 		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 	</div>
 }
-
-<div class="your-post">
-	<div class="container-xl px-4 mt-4">
-		<h3>Your Posts</h3>
-		<div class="row">
-			@foreach (var post in Model.Posts)
-			{
-				<div class="col-md-6 col-lg-4 col-xl-3 mb-4">
-					<!-- Added mb-4 for spacing between rows -->
-					<div class="rounded position-relative fruit-item">
-						<div class="post-img-wrapper">
-							<img src="@Url.Content("~/img/postPic/" + post.Img)" class="img-fluid w-100 rounded-top" alt="Post Image">
-							@if (post.Status != "finish")
-							{
-								<div class="post-actions">
-									<button class="btn btn-sm btn-secondary btn-open-actions">
-										...
-									</button>
-									<div class="post-actions-dropdown">
-										<ul class="list-unstyled">
-											<li><a asp-action="UpdatePost" asp-controller="Account" asp-route-id="@post.IdPost" asp-route-type="@post.Type" class="dropdown-item">Sửa</a></li>
-											<li><a asp-action="FinishPost" asp-controller="Account" asp-route-id="@post.IdPost" class="dropdown-item">Xóa</a></li>
-										</ul>
+@if (User.IsInRole("Customer"))
+{
+	<div class="your-post">
+		<div class="container-xl px-4 mt-4">
+			<h3>Your Posts</h3>
+			<div class="row">
+				@foreach (var post in Model.Posts)
+				{
+					@if (post.Status != "Hidden")
+					{
+						<div class="col-md-6 col-lg-4 col-xl-3 mb-4">
+							<div class="rounded position-relative fruit-item">
+								<div class="post-img-wrapper">
+									<span class="badge badge-label">
+										@switch (post.Status.ToLower())
+										{
+											case "true":
+												<span class="badge bg-primary">Đã duyệt</span>
+												break;
+											case "waiting":
+												<span class="badge bg-danger">Chờ duyệt</span>
+												break;
+											case "rejected":
+												<span class="badge bg-warning text-dark">Từ chối</span>
+												break;
+											case "false":
+												<span class="badge bg-success">Hoàn Thành</span>
+												break;
+											case "trading":
+												<span class="badge bg-info text-dark">Giao dịch</span>
+												break;
+											default:
+												<span class="badge bg-secondary">NULL</span>
+												break;
+										}
+									</span>
+									@if (post.Type == "Exchange")
+									{
+										<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@post.IdPost">
+											<img src="@Url.Content("~/img/postPic/" + post.Img)" class="img-fluid w-100 rounded-top" alt="Post Image">
+										</a>
+									}
+									else
+									{
+										<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@post.IdPost">
+											<img src="@Url.Content("~/img/postPic/" + post.Img)" class="img-fluid w-100 rounded-top" alt="Post Image">
+										</a>
+									}
+								</div>
+								<div class="post-details d-flex justify-content-between align-items-center">
+									<div class="post-actions">
+										<button class="btn btn-sm btn-secondary btn-open-actions">
+											...
+										</button>
+										<div class="post-actions-dropdown">
+											<ul class="list-unstyled">
+												@if (post.Status == "True" || post.Status == "Waiting" || post.Status == "Rejected")
+												{
+													<li><a asp-action="UpdatePost" asp-controller="Account" asp-route-id="@post.IdPost" asp-route-type="@post.Type" class="dropdown-item">Sửa</a></li>
+													<li><a asp-action="HiddenPost" asp-controller="Account" asp-route-id="@post.IdPost" class="dropdown-item">Xóa</a></li>
+												}
+												@if (post.Status == "False")
+												{
+													<li><a asp-action="HiddenPost" asp-controller="Account" asp-route-id="@post.IdPost" class="dropdown-item">Xóa</a></li>
+												}
+											</ul>
+										</div>
 									</div>
 								</div>
-							}
-							else
-							{
-								<div class="completed-label">
-									<span class="badge bg-success">Hoàn thành</span>
-								</div>
-							}
-						</div>
-						<div class="p-4 border border-secondary border-top-0 rounded-bottom">
-							<h4 class="title">@Html.Raw(post.Title)</h4>
+								<div class="p-4 border border-secondary border-top-0 rounded-bottom">
+									<h4 class="title">@Html.Raw(post.Title)</h4>
 
-							<div class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(post.Description)</div>
-							<p class="text-end mb-0 mt-2">Created on: <span>@Html.Raw(post.CreateDate?.ToString("dd/MM/yyyy"))</span></p>
+									@if (post.Type == "Exchange")
+									{
+										<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@post.IdPost" style="text-decoration:none">
+											<h4 class="title">@Html.Raw(post.Title)</h4>
+										</a>
+										<div class="post-price">Loại bài: Trao đổi</div>
+									}
+									else
+									{
+										<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@post.IdPost" style="text-decoration:none">
+											<h4 class="title">@Html.Raw(post.Title)</h4>
+										</a>
+										<div class="post-price">Loại bài: Bán</div>
+									}
+									<p class="text-end mb-0 mt-2">Created on: <span>@Html.Raw(post.CreateDate?.ToString("dd/MM/yyyy"))</span></p>
+								</div>
+							</div>
 						</div>
-					</div>
-				</div>
-			}
+					}
+				}
+			</div>
 		</div>
 	</div>
-</div>
-
+}
 <style>
+	.your-post .post-img-wrapper {
+		position: relative;
+	}
+
+	.your-post .badge-label {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 10;
+		padding: 0.5rem 1rem; /* Điều chỉnh khoảng cách bên trong nhãn dán */
+		font-size: 1.2rem; /* Điều chỉnh kích thước font chữ */
+		font-weight: bold; /* Điều chỉnh độ đậm của chữ */
+	}
+
 	.your-post {
 		margin-top: 40px;
 		padding: 20px;
@@ -227,5 +291,4 @@
 			border-radius: 5px;
 			font-size: 0.875rem;
 		}
-
 </style>

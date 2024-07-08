@@ -21,7 +21,6 @@ using X.PagedList;
 using System.Data;
 
 
-
 namespace FStep.Controllers.Auth
 {
 	public class AccountController : Controller
@@ -81,6 +80,8 @@ namespace FStep.Controllers.Auth
 							{
 								return Redirect("/");
 							}
+
+
 						}
 					}
 				}
@@ -161,7 +162,7 @@ namespace FStep.Controllers.Auth
 				AvatarImg = User.FindFirstValue("IMG"),
 				Email = user.Email,
 				Name = user.Name,
-				Rating = user.PointRating,
+				PointRating = user.PointRating,
 				StudentId = user.StudentId,
 				Posts = user.Posts.Select(p => new PostVM()
 				{
@@ -171,6 +172,7 @@ namespace FStep.Controllers.Auth
 					Description = p.Detail,
 					Img = p.Img,
 					Type = p.Type,
+					Price = p.IdProductNavigation != null && p.IdProductNavigation.Price.HasValue ? p.IdProductNavigation.Price.Value : 0f,
 					CreateDate = p.Date.HasValue ? p.Date.Value : DateTime.Now
 				}).ToList()
 
@@ -178,23 +180,7 @@ namespace FStep.Controllers.Auth
 			return View(profile);
 		}
 
-		public IActionResult FinishPost(int id)
-		{
-			var post = db.Posts.FirstOrDefault(p => p.IdPost == id);
-			if (post != null)
-			{
-				post.Status = "finish";
-				db.Posts.Update(post);
-				db.SaveChanges();
-				TempData["SuccessMessage"] = $"Bài đăng {post.Content} đã được xóa thành công.";
-			}
-			else
-			{
-				TempData["ErrorMessage"] = $"Bài đăng {post.Content} không được tìm thấy.";
-			}
-			return RedirectToAction("Profile");
 
-		}
 		[Authorize]
 		[HttpPost]
 		public async Task<IActionResult> Profile(ProfileVM model)
@@ -206,7 +192,7 @@ namespace FStep.Controllers.Auth
 				user.Address = model.Address;
 				user.Email = model.Email;
 				user.Name = model.Name;
-				user.PointRating = model.Rating;
+				user.PointRating = model.PointRating;
 				user.StudentId = model.StudentId;
 				db.Update(user);
 				db.SaveChanges();
@@ -325,7 +311,6 @@ namespace FStep.Controllers.Auth
 		}
 
 
-
 		[HttpGet]
 		[Authorize]
 		public IActionResult UpdatePost(int id)
@@ -346,7 +331,7 @@ namespace FStep.Controllers.Auth
 				Img = post.Img,
 				Description = post.Detail,
 				Type = post.Type,
-				Quantity = post.IdProductNavigation.Quantity ?? 1,
+				ProductStatus = post.IdProductNavigation.Quantity ?? 1,
 				Price = post.IdProductNavigation.Price ?? 0
 			};
 
@@ -382,7 +367,7 @@ namespace FStep.Controllers.Auth
 						post.IdProductNavigation.Price = model.Price;
 					}
 					post.Detail = model.Description;
-					post.Status = "false";
+					post.Status = "Waiting";
 
 					db.SaveChanges();
 					TempData["SuccessMessage"] = $"Bài đăng của bạn đã được sửa thành công.Chúng tôi sẽ xem duyệt và duyệt!";
@@ -397,17 +382,51 @@ namespace FStep.Controllers.Auth
 			return View(model);
 		}
 
+		public IActionResult FinishPost(int id)
+		{
+			var post = db.Posts.FirstOrDefault(p => p.IdPost == id);
+			if (post != null)
+			{
+				post.Status = "False";
+				db.Posts.Update(post);
+				db.SaveChanges();
+				TempData["SuccessMessage"] = $"Bài đăng {post.Content} đã được xóa thành công.";
+			}
+			else
+			{
+				TempData["ErrorMessage"] = $"Bài đăng {post.Content} không được tìm thấy.";
+			}
+			return RedirectToAction("Profile");
+		}
+		public IActionResult HiddenPost(int id)
+		{
+			var post = db.Posts.FirstOrDefault(p => p.IdPost == id);
+			if (post != null)
+			{
+				post.Status = "Hidden";
+				db.Posts.Update(post);
+				db.SaveChanges();
+				TempData["SuccessMessage"] = $"Bài đăng {post.Content} đã được ẩn thành công.";
+			}
+			else
+			{
+				TempData["ErrorMessage"] = $"Bài đăng {post.Content} không được tìm thấy.";
+			}
+			return RedirectToAction("Profile");
+
+		}
 		// GET: Account/VerifyInfo
 		[HttpGet]
 		[Authorize]
-		public ActionResult VerifyInfo()
+		public IActionResult VerifyInfo()
 		{
 			return View();
 		}
 
 		// POST: Account/VerifyInfo
 		[HttpPost]
-		public async Task<IActionResult> VerifyInfo(VerifyInfoVM model)
+		[Authorize]
+		public IActionResult VerifyInfo(VerifyInfoVM model)
 		{
 			if (ModelState.IsValid)
 			{
@@ -422,9 +441,30 @@ namespace FStep.Controllers.Auth
 					else
 					{
 						user.StudentId = model.StudentId;
-						//user.BankName = model.BankName;
-						//user.AccountHolderName = model.AccountHolderName;
-						//user.BankAccountNumber = model.AccountNumber;
+						user.BankName = model.BankName;
+						user.AccountHolderName = model.AccountHolderName;
+						user.BankAccountNumber = model.AccountNumber;
+						switch (model.BankName)
+						{
+							case "TPBANK":
+								user.SwiftCode = "TPBVVNVX";
+								break;
+							case "VIETCOMBANK":
+								user.SwiftCode = "BFTVVNVX";
+								break;
+							case "VIETINBANK":
+								user.SwiftCode = "ICBVVNVX";
+								break;
+							case "TECHCOMBANK":
+								user.SwiftCode = "VTCBVNVX";
+								break;
+							case "MB BANK":
+								user.SwiftCode = "MSCBVNVX";
+								break;
+							case "BIDV":
+								user.SwiftCode = "BIDVVNVX";
+								break;
+						}
 						db.Update(user);
 						db.SaveChanges();
 						return RedirectToAction("Profile", "Account");
@@ -433,6 +473,7 @@ namespace FStep.Controllers.Auth
 				catch (Exception ex)
 				{
 					ModelState.AddModelError("Error", "An error occurred while processing your request.");
+
 				}
 			}
 			return View(model);

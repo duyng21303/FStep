@@ -23,8 +23,7 @@ public partial class Report
 
     public virtual Post? IdPostNavigation { get; set; }
 
-    public virtual Transaction? IdTransactionNavigation { get; set; }
-
+    public virtual Transaction? IdTransactionNavigation { get; set; } = null!;
 
     public virtual User? IdUserNavigation { get; set; }
 

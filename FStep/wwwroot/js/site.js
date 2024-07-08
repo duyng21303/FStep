@@ -114,9 +114,8 @@ _notiConnection.on("LoadNotification", function (notification) {
 
     notification.forEach(notification => {
         var img = '';
-        console.log(notification);
-        if (notification.avatarImg != null) {
-            img = "userAvar/" + recieverUser.avatarImg;
+        if (notification.userOtherImg != null) {
+            img = "userAvar/" + notification.userOtherImg;
         } else {
             img = "nullAvar/149071.png";
         }
@@ -700,55 +699,23 @@ _notiConnection.start().catch(function (err) {
 //        });
 //    });
 //});
-$(".testimonial-carousel-1").owlCarousel({
-    loop: true,
-    dots: false,
-    margin: 25,
-    autoplay: true,
-    slideTransition: 'linear',
-    autoplayTimeout: 0,
-    autoplaySpeed: 10000,
-    autoplayHoverPause: false,
-    responsive: {
-        0: {
-            items: 1
-        },
-        575: {
-            items: 1
-        },
-        767: {
-            items: 2
-        },
-        991: {
-            items: 3
+$(document).ready(function () {
+    $(".owl-carousel").owlCarousel({
+        loop: true,
+        margin: 20,
+        responsiveClass: true,
+        responsive: {
+            0: {
+                items: 1,
+            },
+            600: {
+                items: 2,
+            },
+            1000: {
+                items: 3,
+            }
         }
-    }
+    });
 });
 
-$(".testimonial-carousel-2").owlCarousel({
-    loop: true,
-    dots: false,
-    rtl: true,
-    margin: 25,
-    autoplay: true,
-    slideTransition: 'linear',
-    autoplayTimeout: 0,
-    autoplaySpeed: 10000,
-    autoplayHoverPause: false,
-    responsive: {
-        0: {
-            items: 1
-        },
-        575: {
-            items: 1
-        },
-        767: {
-            items: 2
-        },
-        991: {
-            items: 3
-        }
-    }
-
-});
 

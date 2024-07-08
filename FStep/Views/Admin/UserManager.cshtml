@@ -2,8 +2,117 @@
 @model PagingModel<ProfileVM>
 @{
 	Layout = "_LayoutAdmin";
+	var successMessage = TempData["SuccessMessage"] as string;
+	var errorMessage = TempData["ErrorMessage"] as string;
 }
+@if (!string.IsNullOrEmpty(successMessage))
+{
+	<div id="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+		@successMessage
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+	<div id="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+		@errorMessage
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+}
+<div class="container py-5">
+	<div class="row">
+		<div class="col-lg-12">
+			<h2 class="page-header">Quản lý người dùng</h2>
+		</div>
+		<!--  tìm kiếm phía bên phải -->
+		<div class="col-lg-12">
+			<form asp-action="UserManager" asp-controller="Admin" method="get" class="d-flex justify-content-end" id="searchUserForm">
+				<div class="input-group mb-3 w-25">
+					<input type="text" class="form-control" name="search" placeholder="Tìm kiếm theo tên hoặc email" value="@Model.PagingInfo.Search">
+					<button class="btn btn-outline-secondary" type="submit">Tìm kiếm</button>
+				</div>
+			</form>
+		</div>
+		<div class="col-lg-12">
+			<div class="main-box clearfix">
+				<div class="table-responsive table-max-height">
+					<table class="table user-list">
+						<thead>
+							<tr>
+								<th scope="col"><span>Người dùng</span></th>
+								<th><span>Mã Số</span></th>
+								<th><span>Email</span></th>
+								<th><span>Trạng thái</span></th>
+								<th><span>Điểm</span></th>
+								<th><span>Tùy chỉnh</span></th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var user in Model.Items)
+							{
+								<tr>
+									<td>
+										<a asp-action="UserDetail" asp-controller="Admin" asp-route-id="@user.IdUser" style="float: left;">
+											<img class="rounded-circle me-lg-2 product-rating__avatar-img" src="~/img/userAvar/@user.AvatarImg" alt="" style="width: 40px; height: 40px;">
+										</a>
+										<a asp-action="UserDetail" asp-controller="Admin" asp-route-id="@user.IdUser" class="user-link">@user.Name</a>
+										<span class="user-subhead">@user.Role</span>
+									</td>
+									<td>
+										<span class="label label-default">@user.StudentId</span>
+									</td>
+									<td>
+										<span class="label label-default">@user.Email</span>
+									</td>
+									<td>
+										@if (@user.Status != false)
+										{
+											<span class="font-weight-bold text-success" style="font-weight: 600;">Hoạt động</span>
+										}
+										else
+										{
+											<span class="font-weight-bold text-danger" style="font-weight: 600;">Dừng</span>
+										}
+									</td>
+									<td>
+										<span class="label label-default">@user.PointRating</span>
+									</td>
+									<td>
+										@if (user.Role != "Admin")
+										{
+											<form asp-controller="Admin" asp-action="EditAccount" method="post">
+												<input type="hidden" name="id" value="@user.IdUser" /> <!-- Ensure the input name matches your action parameter -->
+												<button type="submit" class="btn btn-success">Thao tác</button>
+											</form>
+										}
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+				@Html.Partial("_Pagination", Model.PagingInfo, new ViewDataDictionary(ViewData) { { "asp-action", "UserManager" }, { "asp-controller", "Admin" } })
+			</div>
+		</div>
+	</div>
+</div>
+@section Scripts {
+	<script>
+		$(document).ready(() => {
+			let timeout;
+			$('#searchUserForm').on('input', () => {
+				clearTimeout(timeout); // Xóa timeout hiện tại nếu có
+				timeoutId = setTimeout(function () {
+					$('#searchUserForm').submit(); // Gửi form khi thời gian chờ (debounce) kết thúc
+				}, 200); // Thời gian debounce là 100ms (có thể điều chỉnh theo nhu cầu của bạn)
+			});
+		})
+	</script>
+}
+
 <style>
+
 	/* USER LIST TABLE */
 	.user-list tbody td > img {
 		position: relative;
@@ -216,84 +325,55 @@
 		color: #a75d54;
 	}
 
-	.table-max-height{
+	.table-max-height {
 		max-height: calc(100vh - 300px);
 		overflow: auto;
 	}
-</style>
+	/*css for dropdown user*/
+	.user-actions-dropdown {
+		display: none;
+		position: absolute;
+		background-color: white;
+		box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+		z-index: 1;
+	}
 
-<div class="container py-5">
-	<div class="row">
-		<div class="col-lg-12">
-			<h2 class="page-header">Quản lý người dùng</h2>
-		</div>
-		<!--  tìm kiếm phía bên phải -->
-		<div class="col-lg-12">
-			<form asp-action="UserManager" asp-controller="Admin" method="get" class="d-flex justify-content-end" id="searchUserForm">
-				<div class="input-group mb-3 w-25">
-					<input type="text" class="form-control" name="search" placeholder="Tìm kiếm theo tên hoặc email" value="@Model.PagingInfo.Search">
-					<button class="btn btn-outline-secondary" type="submit">Tìm kiếm</button>
-				</div>
-			</form>
-		</div>
-		<div class="col-lg-12">
-			<div class="main-box clearfix">
-				<div class="table-responsive table-max-height">
-					<table class="table user-list">
-						<thead>
-							<tr>
-								<th><span>Người dùng</span></th>
-								<th><span>Email</span></th>
-								<th><span>Địa chỉ</span></th>
-								<th class="text-center">&nbsp;</th>
-							</tr>
-						</thead>
-						<tbody>
-							@foreach (var user in Model.Items)
-							{
-								<tr>
-									<td>
-										<a asp-action="UserDetail" asp-controller="Admin" asp-route-id="@user.IdUser" style="float: left;">
-											<img class="rounded-circle me-lg-2 product-rating__avatar-img" src="~/img/userAvar/@user.AvatarImg" alt="" style="width: 40px; height: 40px;">
-										</a>
-										<a asp-action="UserDetail" asp-controller="Admin" asp-route-id="@user.IdUser" class="user-link">@user.Name</a>
-										<span class="user-subhead">@user.Role</span>
-										<span class="user-subhead">@user.Gender</span>
-									</td>
-									<td>
-										<span class="label label-default">@user.Email</span>
-									</td>
-									<td>
-										<span class="label label-default">@user.Address</span>
-									</td>
-									<td style="width: 20%;" class="text-center">
-										<a class="table-link" asp-action="UserDetail" asp-controller="Admin" asp-route-id="@user.IdUser">
-											<span class="fa-stack">
-												<i class="fa fa-square fa-stack-2x"></i>
-												<i class="fa fa-search-plus fa-stack-1x fa-inverse"></i>
-											</span>
-										</a>
-									</td>
-								</tr>
-							}
-						</tbody>
-					</table>
-				</div>
-				@Html.Partial("_Pagination", Model.PagingInfo, new ViewDataDictionary(ViewData) { { "asp-action", "UserManager" }, { "asp-controller", "Admin" } })
-			</div>
-		</div>
-	</div>
-</div>
-@section Scripts {
-	<script>
-		$(document).ready(() => {
-			let timeout;
-			$('#searchUserForm').on('input', () => {
-				clearTimeout(timeout); // Xóa timeout hiện tại nếu có
-				timeoutId = setTimeout(function () {
-					$('#searchUserForm').submit(); // Gửi form khi thời gian chờ (debounce) kết thúc
-				}, 200); // Thời gian debounce là 100ms (có thể điều chỉnh theo nhu cầu của bạn)
+	.user-actions .btn-open-actions {
+		cursor: pointer;
+	}
+
+	.user-actions .dropdown-item {
+		padding: 8px 16px;
+		text-decoration: none;
+		display: block;
+	}
+
+		.user-actions .dropdown-item:hover {
+			background-color: #f1f1f1;
+</style>
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const buttons = document.querySelectorAll('.btn-open-actions');
+		const dropdowns = document.querySelectorAll('.user-actions-dropdown');
+
+		buttons.forEach((button, index) => {
+			button.addEventListener('click', function () {
+				dropdowns.forEach((dropdown, i) => {
+					if (i === index) {
+						dropdown.style.display = dropdown.style.display === 'none' || dropdown.style.display === '' ? 'block' : 'none';
+					} else {
+						dropdown.style.display = 'none';
+					}
+				});
 			});
-		})
-	</script>
-}
+		});
+
+		document.addEventListener('click', function (event) {
+			buttons.forEach((button, index) => {
+				if (!button.contains(event.target) && !dropdowns[index].contains(event.target)) {
+					dropdowns[index].style.display = 'none';
+				}
+			});
+		});
+	});
+</script>

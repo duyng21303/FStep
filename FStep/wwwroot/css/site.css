@@ -128,15 +128,19 @@ body {
     border-radius: 5px; /* Rounded corners for the content boxes */
     margin-bottom: 0px; /* Bottom margin between boxes */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle depth effect */
+    padding-left: 15px;
+    padding-right: 15px;
 }
-
+.card {
+        margin: auto;
+    }
 /* Styles for individual fruit items/posts */
 .fruit-item {
     background-color: #f9f9f9; /* Light gray background for each post */
     border: 1px solid #ddd; /* Light gray border around each post */
     border-radius: 8px; /* Rounded corners for each post */
     overflow: hidden; /* Ensure content inside does not overflow */
-    transition: transform 0.2s ease-in-out; /* Smooth hover transition */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     height: 100%; /* Ensure each post takes full height */
 }
     .fruit-item p,
@@ -146,9 +150,9 @@ body {
     }
 
     .fruit-item:hover {
-        transform: translateY(-5px); /* Move up slightly on hover */
-        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1); /* Shadow effect on hover */
-    }
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
 
 .fruit-img img {
     border-top-left-radius: 8px; /* Rounded corners for the top of the image */
@@ -283,8 +287,6 @@ body {
 .card-body {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
 }
 
 .image-container {
@@ -293,7 +295,13 @@ body {
     overflow: hidden;
     position: relative;
 }
-
+.card-body .creation-date {
+    font-size: 0.875rem; /* Smaller font size */
+    /*color: #b0b0b0;*/ /* Light gray color */
+}
+    .card-body .creation-date i {
+        margin-right: 0.5rem; /* Space between icon and text */
+    }
     .image-container img {
         width: 100%;
         height: 100%;
@@ -701,7 +709,7 @@ body {
     width: 70%;
     box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
 }
-
+   
 .chat-app .people-list {
     width: 215px;
     position: absolute;

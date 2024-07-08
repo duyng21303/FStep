@@ -1,5 +1,5 @@
 /*!
-* sweetalert2 v11.12.1
+* sweetalert2 v11.12.2
 * Released under the MIT License.
 */
 (function (global, factory) {
@@ -4658,7 +4658,7 @@
     };
   });
   SweetAlert.DismissReason = DismissReason;
-  SweetAlert.version = '11.12.1';
+  SweetAlert.version = '11.12.2';
 
   var Swal = SweetAlert;
   // @ts-ignore

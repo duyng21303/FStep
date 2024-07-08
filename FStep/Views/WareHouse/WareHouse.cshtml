@@ -1,7 +1,10 @@
-﻿@model FStep.ViewModels.WareHouse.WareHouseServiceVM
+@model FStep.ViewModels.WareHouse.WareHouseServiceVM
+@using Microsoft.AspNetCore.Http.Extensions
 @using X.PagedList.Mvc.Core
 @{
-	ViewData["Title"] = "WareHouse";
+	ViewData["Title"] = "Kho Hàng";
+	var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+	string fullUrl = Context.Request.GetDisplayUrl();
 }
 <div class="row align-items-center mb-8 search-header">
 	<div class="custom-container">
@@ -10,22 +13,22 @@
 				<div class="col">
 					<!-- Display counts -->
 					<div class="mb-3">
-						<span class="badge bg-primary">Process: @Model.ProcessCount</span>
-						<span class="badge bg-success">Finish: @Model.FinishCount</span>
-						<span class="badge bg-danger">Cancel: @Model.CancelCount</span>
+						<span class="badge bg-primary">Đang chờ: @Model.ProcessCount</span>
+						<span class="badge bg-success">Đã xong: @Model.FinishCount</span>
+						<span class="badge bg-danger">Hủy bỏ: @Model.CancelCount</span>
 					</div>
 
 					<form asp-controller="WareHouse" asp-action="WareHouse" method="get" class="mb-3">
 						<div class="row g-3 align-items-center">
 							<div class="col-auto">
-								<label for="searchString" class="col-form-label">Search:</label>
+								<label for="searchString" class="col-form-label">Tìm kiếm:</label>
 							</div>
 							<div class="col-auto">
-								<input type="text" class="form-control" id="searchString" name="searchString" value="@ViewBag.SearchString" placeholder="Enter search term...">
+								<input type="text" class="form-control" id="searchString" name="searchString" value="@ViewBag.SearchString" placeholder="Nhập mã giao dịch...">
 							</div>
 							<div class="col-auto">
 								<input type="hidden" name="activeTab" value="@ViewBag.ActiveTab" />
-								<button type="submit" class="btn btn-primary">Search</button>
+								<button type="submit" class="btn btn-primary">Tìm</button>
 							</div>
 						</div>
 					</form>
@@ -37,7 +40,7 @@
 							   id="exchange-tab"
 							   role="tab"
 							   aria-controls="exchange"
-							   aria-selected="true">Exchange</a>
+							   aria-selected="true">Trao đổi</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link @(ViewBag.ActiveTab == "sale" ? "active" : "")"
@@ -45,83 +48,318 @@
 							   id="sale-tab"
 							   role="tab"
 							   aria-controls="sale"
-							   aria-selected="false">Sale</a>
+							   aria-selected="false">Mua bán</a>
 						</li>
 					</ul>
 
 					<!-- Tab panes -->
-					<!-- Tab panes -->
 					<div class="tab-content" id="myTabContent">
 						<div class="tab-pane fade @(ViewBag.ActiveTab == "exchange" ? "show active" : "")" id="exchange" role="tabpanel" aria-labelledby="exchange-tab">
-							<h3>Exchange</h3>
+							<h3>Trao đổi</h3>
 							<table class="table table-striped table-bordered">
 								<thead class="thead-light">
 									<tr>
-										<th scope="col">Id Post</th>
-										<th scope="col">Location</th>
-										<th scope="col">Code Transaction</th>
-										<th scope="col">Date</th>
-										<th scope="col">Id UserB</th>
-										<th scope="col">Id UserE</th>
-										<th scope="col">Name Product</th>
-										<th scope="col">Action</th>
+										<th scope="col">Mã Bài</th>
+										<th scope="col">Vị Trí</th>
+										<th scope="col">Mã Giao Dịch</th>
+										<th scope="col">Ngày</th>
+										<th scope="col">Chủ sở hửu bài đăng</th>
+										<th scope="col">Người trao đổi</th>
+										<th scope="col">Tên Sản phẩm</th>
+										<th scope="col">Tác vụ</th>
+
 									</tr>
 								</thead>
 								<tbody>
 									@foreach (var item in Model.ExchangeList)
 									{
-										<tr data-id="@item.TransactionVM.TransactionId" data-type="@item.Type">
-											<td>@Html.DisplayFor(modelItem => item.PostVM.IdPost)</td>
-											<td>@Html.DisplayFor(modelItem => item.Location)</td>
+										<tr data-id="@item.TransactionVM.IdTransaction" data-type="@item.Type">
 											<td>@Html.DisplayFor(modelItem => item.TransactionVM.CodeTransaction)</td>
-											<td>@Html.DisplayFor(modelItem => item.TransactionVM.CreateDate)</td>
-											<td>@Html.DisplayFor(moderItem => item.UserBuyer.IdUser)</td>
-											<td>@Html.DisplayFor(modelItem => item.UserSeller.IdUser)</td>
+											<td>@Html.DisplayFor(modelItem => item.Location)</td>
+											<td>@item.TransactionVM.Date</td>
+											<td>@Html.DisplayFor(moderItem => item.UserSeller.IdUser)</td>
+
+											<td>@Html.DisplayFor(modelItem => item.UserBuyer.IdUser)</td>
+
 											<td>@Html.DisplayFor(modelItem => item.PostVM.Title)</td>
 											<td>
-												<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmModal" data-id="@item.PostVM.IdPost">Confirm</button>
+												<button type="button" class="btn btn-danger btn-sm submit-img" data-toggle="collapse" data-target="#confirmCollapse-@item.TransactionVM.IdTransaction">
+													<i class="fas fa-chevron-down"></i>
+												</button>
+											</td>
+											<td>
+												<i data-bs-toggle="modal" data-bs-target="#confirm-exchange-@item.TransactionVM.IdTransaction" type="button" class="btn btn-danger btn-sm">Hoàn thành</i>
+											</td>
+
+										</tr>
+										<tr id="confirmCollapse-@item.TransactionVM.IdTransaction" class="collapse">
+											<td colspan="9">
+												<div class="card card-body">
+													<table class="table table-bordered">
+														<thead>
+															<tr>
+																<th>Chủ sở hửu bài đăng</th>
+																<th>Người trao đổi</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr>
+																@{
+																	var userBuyerImg = @item.UserBuyer.AvatarImg == null ? "nullAvar/149071.png" : "userAvar/" + @item.UserBuyer.AvatarImg;
+																	var userSellerImg = @item.UserSeller.AvatarImg == null ? "nullAvar/149071.png" : "userAvar/" + @item.UserSeller.AvatarImg;
+																}
+																<td>
+																	<div class="user-info">
+																		<img src="~/img/@userSellerImg" alt="User 2 Avatar" class="avatar">
+																		<p>@item.UserSeller.Name</p>
+																	</div>
+																</td>
+																<td>
+
+																	<div class="user-info">
+																		<img src="/img/@userBuyerImg" alt="User 1 Avatar" class="avatar">
+																		<p>@item.UserBuyer.Name</p>
+																	</div>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<div class="action-info">
+																		<form asp-action="RecieveImg" enctype="multipart/form-data">
+																			<label class="btn btn-primary">
+																				Xác nhận đã gửi hàng
+																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
+																				<input type="hidden" name="type" value="SellerSent" />
+																				<input type="hidden" name="id" value="@item.TransactionVM.IdTransaction" />
+																			</label>
+																		</form>
+																		@if (item.TransactionVM.SentImg != null)
+																		{
+																			<img src="/img/postPic/@item.TransactionVM.SentImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px; height: 250px; width: 250px;">
+																			<p style="margin: 0;">Date: @item.TransactionVM.SentSellerDate</p>
+																		}
+																	</div>
+																</td>
+																<td>
+																	<div class="action-info">
+																		<form asp-action="RecieveImg" enctype="multipart/form-data">
+																			<label class="btn btn-primary">
+																				Xác nhận đã gửi hàng
+																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
+																				<input type="hidden" name="type" value="BuyerSent" />
+																				<input type="hidden" name="id" value="@item.TransactionVM.IdTransaction" />
+																			</label>
+																		</form>
+																		@if (item.TransactionVM.SentBuyerImg != null)
+																		{
+																			<img src="/img/postPic/@item.TransactionVM.SentBuyerImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px; height: 250px; width: 250px;">
+																			<p style="margin: 0;">Date: @item.TransactionVM.SentBuyerDate</p>
+																		}
+																	</div>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<div class="action-info">
+																		<form asp-action="RecieveImg" enctype="multipart/form-data">
+																			<label class="btn btn-primary">
+																				Xác nhận đã nhận hàng
+																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
+																				<input type="hidden" name="type" value="SellerReceive" />
+																				<input type="hidden" name="id" value="@item.TransactionVM.IdTransaction" />
+																			</label>
+																		</form>
+																		@if (item.TransactionVM.RecieveImg != null)
+																		{
+																			<img src="/img/postPic/@item.TransactionVM.RecieveImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px; height: 250px; width: 250px;">
+																			<p style="margin: 0;">Date: @item.TransactionVM.ReceivedSellerDate</p>
+																		}
+																	</div>
+																</td>
+																<td>
+																	<div class="action-info">
+																		<form asp-action="RecieveImg" enctype="multipart/form-data">
+																			<label class="btn btn-primary">
+																				Xác nhận đã nhận hàng
+																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
+																				<input type="hidden" name="type" value="BuyerReceive" />
+																				<input type="hidden" name="id" value="@item.TransactionVM.IdTransaction" />
+																			</label>
+																		</form>
+																		@if (item.TransactionVM.RecieveBuyerImg != null)
+																		{
+																			<img src="/img/postPic/@item.TransactionVM.RecieveBuyerImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px; height: 250px; width: 250px;">
+																			<p style="margin: 0;">Date: @item.TransactionVM.ReceivedBuyerDate</p>
+																		}
+																	</div>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+
+												</div>
 											</td>
 										</tr>
+
+										<!-- Model complete button -->
+										<div class="modal fade" id="confirm-exchange-@item.TransactionVM.IdTransaction" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+											<div class="modal-dialog modal-dialog-centered">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title" id="exampleModalLongTitle">Xác nhận hoàn thành</h5>
+														<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+															<span aria-hidden="true">&times;</span>
+														</button>
+													</div>
+													<div class="modal-body">
+														<h5>Xác nhận thông tin đơn hàng số <span class="text-danger">@item.TransactionVM.IdTransaction</span></h5>
+														<h6>Mã đơn hàng: <span class="text-danger">@item.TransactionVM.CodeTransaction</span></h6>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+														<a asp-action="CompleteTransaction" asp-controller="WareHouse" asp-route-id="@item.TransactionVM.IdTransaction" asp-route-url="@fullUrl" type="button" class="btn btn-primary">Xác nhận</a>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!--End modal-->
 									}
 								</tbody>
 							</table>
-
 							@Html.PagedListPager(Model.ExchangeList, page => Url.Action("WareHouse", new { page, searchString = ViewBag.SearchString, activeTab = "exchange" }))
 						</div>
 
 						<div class="tab-pane fade @(ViewBag.ActiveTab == "sale" ? "show active" : "")" id="sale" role="tabpanel" aria-labelledby="sale-tab">
-							<h3>Sale</h3>
+							<h3>Mua bán</h3>
 							<table class="table table-striped table-bordered">
 								<thead class="thead-light">
 									<tr>
-										<th scope="col">Id Post</th>
-										<th scope="col">Location</th>
-										<th scope="col">Code Transaction</th>
-										<th scope="col">Date</th>
-										<th scope="col">Id User Buyer</th>
-										<th scope="col">Name Product</th>
-										<th scope="col">Quantity</th>
-										<th scope="col">Amount</th>
-										<th scope="col">Action</th>
+										<th scope="col">Mã Bài</th>
+										<th scope="col">Vị Trí</th>
+										<th scope="col">Mã Giao Dịch</th>
+										<th scope="col">Ngày</th>
+										<th scope="col">Id Người Mua</th>
+										<th scope="col">Tên Sản Phẩm</th>
+										<th scope="col">Số Lượng</th>
+										<th scope="col">Tổng Tiền</th>
+										<th scope="col">Tác Vụ</th>
 									</tr>
 								</thead>
 								<tbody>
 									@foreach (var item in Model.SaleList)
 									{
-										<tr data-id="@item.TransactionVM.TransactionId" data-type="@item.Type">
+										<tr data-id="@item.TransactionVM.IdTransaction" data-type="@item.Type">
 											<td>@Html.DisplayFor(modelItem => item.PostVM.IdPost)</td>
 											<td>@Html.DisplayFor(modelItem => item.Location)</td>
 											<td>@Html.DisplayFor(modelItem => item.TransactionVM.CodeTransaction)</td>
-											<td>@Html.DisplayFor(modelItem => item.TransactionVM.CreateDate)</td>
+											<td>@Html.DisplayFor(modelItem => item.TransactionVM.Date)</td>
 											<td>@Html.DisplayFor(moderItem => item.UserBuyer.IdUser)</td>
 											<td>@Html.DisplayFor(modelItem => item.UserSeller.IdUser)</td>
-											<td>@Html.DisplayFor(modelItem => item.PostVM.Title)</td>
 											<td>@Html.DisplayFor(modelItem => item.TransactionVM.Quantity)</td>
-											<td>@Html.DisplayFor(modelItem => item.TransactionVM.Amount)</td>
+											<td>@String.Format(format, "{0:0,0 VND}", item.TransactionVM.Amount)</td>
 											<td>
-												<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmModal" data-id="@item.PostVM.IdPost">Confirm</button>
+												<button type="button" class="btn btn-danger btn-sm submit-img" data-toggle="collapse" data-target="#confirmCollapse-@item.TransactionVM.IdTransaction">
+													<i class="fas fa-chevron-down"></i>
+												</button>
+											</td>
+											<td>
+												<i data-bs-toggle="modal" data-bs-target="#confirm-sale-@item.TransactionVM.IdTransaction" type="button" class="btn btn-danger btn-sm">Hoàn thành</i>
 											</td>
 										</tr>
+										<tr id="confirmCollapse-@item.TransactionVM.IdTransaction" class="collapse">
+											<td colspan="9">
+												<div class="card card-body">
+													<table class="table table-bordered">
+														<thead>
+															<tr>
+																<th>Người bán</th>
+																<th>Người mua</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr>
+																<td>
+																	@{
+																		var userBuyerImg = @item.UserBuyer.AvatarImg == null ? "nullAvar/149071.png" : "userAvar/" + @item.UserBuyer.AvatarImg;
+																		var userSellerImg = @item.UserSeller.AvatarImg == null ? "nullAvar/149071.png" : "userAvar/" + @item.UserSeller.AvatarImg;
+																	}
+																	<div class="user-info">
+																		<img src="/img/@userBuyerImg" alt="User 1 Avatar" class="avatar">
+																		<p>@item.UserBuyer.Name</p>
+																	</div>
+																</td>
+																<td>
+																	<div class="user-info">
+																		<img src="~/img/@userSellerImg" alt="User 2 Avatar" class="avatar">
+																		<p>@item.UserSeller.Name</p>
+																	</div>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<div class="action-info">
+																		<form asp-action="RecieveImg" enctype="multipart/form-data">
+																			<label class="btn btn-primary">
+																				Xác nhận người bán mang hàng tới
+																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
+																				<input type="hidden" name="type" value="SellerSent-Sell" />
+																				<input type="hidden" name="id" value="@item.TransactionVM.IdTransaction" />
+																			</label>
+																		</form>
+																		@if (item.TransactionVM.SentImg != null)
+																		{
+																			<img src="/img/postPic/@item.TransactionVM.SentImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px; height: 250px; width: 250px;">
+																			<p style="margin: 0;">Date: @item.TransactionVM.SentSellerDate</p>
+																		}
+																	</div>
+																</td>
+																<td>
+																	<div class="action-info">
+																		<form asp-action="RecieveImg" enctype="multipart/form-data">
+																			<label class="btn btn-primary">
+																				Xác nhận người mua nhận hàng
+																				<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
+																				<input type="hidden" name="type" value="SellerRevieve-Sell" />
+																				<input type="hidden" name="id" value="@item.TransactionVM.IdTransaction" />
+																			</label>
+																		</form>
+																		@if (item.TransactionVM.RecieveBuyerImg != null)
+																		{
+																			<img src="/img/postPic/@item.TransactionVM.RecieveBuyerImg" alt="User 1 Image" class="action-image" style="display: block; margin-bottom: 10px; height: 250px; width: 250px;">
+																			<p style="margin: 0;">Date: @item.TransactionVM.ReceivedBuyerDate</p>
+																		}
+																	</div>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+
+											</td>
+										</tr>
+
+										<!-- Model complete button -->
+										<div class="modal fade" id="confirm-sale-@item.TransactionVM.IdTransaction" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+											<div class="modal-dialog modal-dialog-centered">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title" id="exampleModalLongTitle">Xác nhận hoàn thành</h5>
+														<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+															<span aria-hidden="true">&times;</span>
+														</button>
+													</div>
+													<div class="modal-body">
+														<h5>Xác nhận thông tin đơn hàng số <span class="text-danger">@item.TransactionVM.IdTransaction</span></h5>
+														<h6>Mã đơn hàng: <span class="text-danger">@item.TransactionVM.CodeTransaction</span></h6>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+														<a asp-action="CompleteTransaction" asp-controller="WareHouse" asp-route-id="@item.TransactionVM.IdTransaction" asp-route-url="@fullUrl" type="button" class="btn btn-primary">Xác nhận</a>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!--End modal-->
 									}
 								</tbody>
 							</table>
@@ -150,7 +388,18 @@
 		</div>
 	</div>
 </div>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
+	$(document).ready(function () {
+		// Lấy tham số từ URL query string
+		var urlParams = new URLSearchParams(window.location.search);
+		var id = urlParams.get('idTrans');
+		// Nếu có id và type từ query string
+		if (id) {
+			var target = "#confirmCollapse-" + id;
+			$(target).collapse('show');
+		}
+	});
 	document.addEventListener('DOMContentLoaded', function () {
 		// Lấy tất cả các thẻ <tr> có thuộc tính data-id
 		var trs = document.querySelectorAll('tr[data-id][data-type]');
@@ -158,7 +407,7 @@
 		// Thêm sự kiện click vào mỗi thẻ <tr>
 		trs.forEach(function (tr) {
 			tr.addEventListener('click', function () {
-				if (event.target.tagName.toLowerCase() !== 'input' && event.target.tagName.toLowerCase() !== 'button') {
+				if (event.target.tagName.toLowerCase() !== 'input' && event.target.tagName.toLowerCase() !== 'button' && event.target.tagName.toLowerCase() !== 'i') {
 
 					// Lấy giá trị của thuộc tính data-id của thẻ <tr> được bấm
 					var itemId = tr.getAttribute('data-id');
@@ -186,5 +435,4 @@
 			});
 		});
 	});
-
 </script>

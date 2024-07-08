@@ -1,0 +1,72 @@
+﻿@model FStep.ViewModels.CancelVM
+@{
+}
+<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content">
+		<div class="modal-body">
+
+			<div class="container py-5">
+				<form asp-controller="Pay" asp-action="Cancel" enctype="multipart/form-data">
+					<h3>Chọn lí do huỷ</h3>
+					<p class="alert alert-warning px-2 py-2">Vui lòng chọn lí do huỷ đơn hàng. Lưu ý: Thao tác này sẽ huỷ tất cả sản phẩm có trong đơn hàng và không thể hoàn tác.</p>
+
+					<div class="form-check mt-4">
+						<input class="form-check-input check" type="radio" name="flexRadioDefault" id="flexRadioDefault1" data-value="Tìm thấy giá rẻ hơn ở chỗ khác">
+						<label class="form-check-label" for="flexRadioDefault1">
+							Tìm thấy giá rẻ hơn ở chỗ khác
+						</label>
+					</div>
+					<div class="form-check mt-4">
+						<input class="form-check-input check" type="radio" name="flexRadioDefault" id="flexRadioDefault2" data-value="Đổi ý không mua nữa">
+						<label class="form-check-label" for="flexRadioDefault2">
+							Đổi ý không mua nữa
+						</label>
+					</div>
+					<div class="form-check mt-4">
+						<input class="form-check-input check" type="radio" name="flexRadioDefault" id="flexRadioDefault3" data-value="Thủ tục thanh toán quá rắc rối">
+						<label class="form-check-label" for="flexRadioDefault3">
+							Thủ tục thanh toán quá rắc rối
+						</label>
+					</div>
+					<div class="form-check mt-4">
+						<input class="form-check-input check" type="radio" name="flexRadioDefault" id="flexRadioDefault4" data-value="Khác">
+						<label class="form-check-label" for="flexRadioDefault4">
+							Khác
+						</label>
+					</div>
+					<p id="note-value" class="mt-3"></p>
+					<input asp-for="@Model.Note" type="hidden" id="value-note" />
+					<input asp-for="@Model.TransactionId" type="hidden"/>
+					<input asp-for="@Model.ReturnUrl" type="hidden"/>
+
+					<div class="row justify-content-end align-items-end align-middle mt-4">
+						<div class="col-md-4">
+							<button type="button" class="btn text-uppercase" data-bs-dismiss="modal">Không phải lúc này</button>
+						</div>
+						<div class="col-md-4 mb-3">
+							<button class="confirm btn btn-primary border-secondary text-light py-2" disabled>Xác nhận huỷ</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$('.check').on('click', function () {
+			var rating = $(this).data('value');
+			$('.check').removeClass('selected');
+			for (var i = 1; i <= rating; i++) {
+				$('.check[data-value="' + i + '"]').addClass('selected');
+			}
+			// $('#note-value').text('You rated this ' + rating);
+			$('#value-note').val(rating);
+			$('.confirm').removeAttr('disabled');
+		});
+	});
+
+</script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>

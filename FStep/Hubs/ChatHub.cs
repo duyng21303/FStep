@@ -4,6 +4,7 @@ using System.Net.WebSockets;
 using System.Web;
 using System.Xml.Linq;
 using AutoMapper;
+using FStep.Controllers.Customer;
 using FStep.Data;
 using FStep.Helpers;
 using FStep.Hubs;
@@ -110,7 +111,7 @@ namespace FStep
 					confirmDb = await _context.Confirms
 						.Where(m => m.IdPost == postDto.IdPost && (m.IdUserConnect == userId || m.IdUserConfirm == userId) && (m.IdUserConnect == currentUser || m.IdUserConfirm == currentUser))
 						.FirstOrDefaultAsync();
-					if(commentDto == null && confirmDb != null)
+					if (commentDto == null && confirmDb != null)
 					{
 						commentDto = await _context.Comments
 						.Where(m => m.IdComment == confirmDb.IdComment)
@@ -252,7 +253,7 @@ namespace FStep
 			var confirmsToRemove = await _context.Confirms
 											.Where(c => c.IdPost == int.Parse(postID))
 											.ToListAsync();
-			if (postDto.Status != "WaitingExchange")
+			if (postDto.Status != "Trading")
 			{
 				var idBuyer = "";
 				var idSeller = "";
@@ -290,7 +291,7 @@ namespace FStep
 								IdPost = int.Parse(postID),
 								IdUserBuyer = idBuyer,
 								IdUserSeller = idSeller,
-								Status = "Waiting",
+								Status = "Processing",
 								CodeTransaction = Util.GenerateRandomKey(10).ToUpper(),
 								Type = "Exchange",
 								IdComment = int.Parse(commentID)
@@ -298,12 +299,24 @@ namespace FStep
 
 							//--------------------------------------
 							await _context.Transactions.AddAsync(transaction);
+							await _context.Transactions.AddAsync(transaction);
+							await _context.SaveChangesAsync();
+							var payment = new Payment()
+							{
+								PayTime = DateTime.Now,
+								VnpayTransactionCode = transaction.CodeTransaction,
+								IdTransaction = transaction.IdTransaction,
+								Type = "Seller",
+								Status = "True"
+							};
+
+							await _context.Payments.AddAsync(payment);
 							checkTransaction = true;
-							
-							
+
+
 							_context.Confirms.RemoveRange(confirmsToRemove);
 							//ẩn bài post ------------------------
-							postDto.Status = "WaitingExchange";
+							postDto.Status = "Trading";
 							_context.Posts.Update(postDto);
 							//-------------------------------------
 						}

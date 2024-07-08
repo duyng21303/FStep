@@ -12,7 +12,7 @@ namespace FStep.ViewComponents
     public class ChatViewComponent : ViewComponent
 	{
 		private readonly FstepDbContext db;
-
+		
 		public ChatViewComponent(FstepDbContext context)
 		{
 			db = context;
