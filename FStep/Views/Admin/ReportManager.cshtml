@@ -1,7 +1,13 @@
 ﻿@using FStep.ViewModels
+@using System.Security.Claims
 @model PagingModel<ReportVM>
 @{
+	var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 	Layout = "_LayoutAdmin";
+	if (!string.IsNullOrEmpty(userRole) && userRole == "Moderator")
+	{
+		Layout = "_LayoutModer";
+	}
 }
 
 <div class="container py-5">
