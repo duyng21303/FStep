@@ -3,6 +3,7 @@
 
 @{
 	ViewData["Title"] = "Quản lí bài đăng";
+	var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -92,7 +93,7 @@
 										}
 									</td>
 									<td>@Html.Raw(item.Quantity)</td>
-									<td>@Html.Raw(item.Price)</td>
+									<td>@Html.Raw(@String.Format(format, "{0:0,0 VND}", item.Price))</td>
 									<td>@Html.Raw(item.CreateDate.ToString("yyyy-MM-dd"))</td>
 									<td>
 										@switch (item.Status.ToLower())
@@ -100,13 +101,13 @@
 											case "true":
 												<span class="badge bg-primary badge-custom badge-dark-text">Đã Duyệt</span>
 												break;
-											case "false":
+											case "waiting":
 												<span class="badge bg-danger badge-custom badge-dark-text">Chờ Duyệt</span>
 												break;
 											case "rejected":
 												<span class="badge bg-warning text-dark badge-custom badge-dark-text">Từ Chối</span>
 												break;
-											case "finish":
+											case "false":
 												<span class="badge bg-success badge-custom badge-dark-text">Hoàn Thành</span>
 												break;
 											case "trading":

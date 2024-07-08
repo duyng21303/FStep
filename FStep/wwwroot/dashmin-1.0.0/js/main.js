@@ -26,11 +26,11 @@
     });
 
 
-    //// Sidebar Toggler
-    //$('.sidebar-toggler').click(function () {
-    //    $('.sidebar, .content').toggleClass("open");
-    //    return false;
-    //});
+    // Sidebar Toggler
+    $('.sidebar-toggler').click(function () {
+        $('.sidebar, .content').toggleClass("open");
+        return false;
+    });
 
 
     // Progress Bar
@@ -81,20 +81,20 @@
             datasets: [{
                 label: dataListPostName,
                 data: dataListPost,
-                backgroundColor: "rgba(0, 156, 255, .7)"
-            },
-            {
+                    backgroundColor: "rgba(0, 156, 255, .7)"
+                },
+                {
                 label: dataListTransName,
                 data:  dataListTrans,
-                backgroundColor: "rgba(0, 156, 255, .5)"
-            },
-            {
+                    backgroundColor: "rgba(0, 156, 255, .5)"
+                },
+                {
                 label: dataListCompName,
                 data: dataListComp,
-                backgroundColor: "rgba(0, 156, 255, .3)"
-            }
+                    backgroundColor: "rgba(0, 156, 255, .3)"
+                }
             ]
-        },
+            },
         options: {
             responsive: true
         }
@@ -108,22 +108,26 @@
         data: {
             labels: ["2016", "2017", "2018", "2019", "2020", "2021", "2022"],
             datasets: [{
-                label: "Salse",
-                data: [15, 30, 55, 45, 70, 65, 85],
-                backgroundColor: "rgba(0, 156, 255, .5)",
-                fill: true
-            },
-            {
-                label: "Revenue",
-                data: [99, 135, 170, 130, 190, 180, 270],
-                backgroundColor: "rgba(0, 156, 255, .3)",
-                fill: true
-            }
+                    label: "Salse",
+                    data: [15, 30, 55, 45, 70, 65, 85],
+                    backgroundColor: "rgba(0, 156, 255, .5)",
+                    fill: true
+                },
+                {
+                    label: "Revenue",
+                    data: [99, 135, 170, 130, 190, 180, 270],
+                    backgroundColor: "rgba(0, 156, 255, .3)",
+                    fill: true
+                }
             ]
-        },
+            },
         options: {
             responsive: true
         }
     });
+    
+
+
+    
 })(jQuery);
 

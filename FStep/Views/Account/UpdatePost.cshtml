@@ -17,7 +17,7 @@
 					<img src="@Url.Content("~/img/postPic/" + Model.Img)" class="img-fluid rounded-top custom-img" alt="Laptop">
 				</div>
 				<div class="form-item">
-					<label class="form-label my-3">Hình Ảnh Mới</label><sup style="color: red">(Có thể Bỏ Qua)</sup>
+					<label class="form-label my-3">Hình Ảnh Mới</label>
 					<input type="file" name="img" class="form-control">
 				</div>
 			</div>
@@ -37,13 +37,13 @@
 				{
 					<div class="form-item">
 						<label asp-for="Quantity" class="form-label my-3">Số lượng</label><sup style="color: red">*</sup>
-						<input asp-for="Quantity" class="form-control" required>
+						<input asp-for="Quantity" class="form-control" readonly>
 						<span asp-validation-for="Quantity" class="text-danger"></span>
 					</div>
 					<div class="form-item">
 						<label asp-for="Price" class="form-label my-3">Giá (VND)</label><sup style="color: red">*</sup>
-						<input asp-for="Price" class="form-control" required>
-						<span asp-validation-for="Price" class="text-danger"></span>
+						<input asp-for="Price" class="form-control" placeholder="10000 &#61; 10.000 (Mười ngàn Việt Nam Đồng)" required>
+					<span asp-validation-for="Price" class="text-danger"></span>
 					</div>
 				}
 			</div>

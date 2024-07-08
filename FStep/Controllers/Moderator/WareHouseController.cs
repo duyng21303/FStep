@@ -24,6 +24,7 @@ namespace FStep.Controllers.ManagePost
 	{
 		private readonly FstepDbContext db;
 		private readonly IMapper _mapper;
+
 		private readonly NotificationServices notificationServices;
 		public WareHouseController(FstepDbContext context, IMapper mapper)
 		{
@@ -80,11 +81,13 @@ namespace FStep.Controllers.ManagePost
 						var userSeller = db.Users.SingleOrDefault(user => user.IdUser == item.IdUserSeller);
 						var postVM = new PostVM
 						{
-							Type = post.Type,
+							IdPost = post.IdPost,
 							Img = post.Img,
+							Type = post.Type,
 							IdUser = post.IdUser,
 							CreateDate = post.Date,
 							Title = post.Content,
+							Location = post.Location,
 							DetailProduct = post.Detail,
 							FeedbackNum = post.Feedbacks.Count
 						};
@@ -118,12 +121,14 @@ namespace FStep.Controllers.ManagePost
 						var userSeller = db.Users.SingleOrDefault(user => user.IdUser == item.IdUserSeller);
 						var postVM = new PostVM
 						{
+							IdPost = post.IdPost,
 							Type = post.Type,
 							Img = post.Img,
 							IdUser = post.IdUser,
 							CreateDate = post.Date,
 							Title = post.Content,
 							DetailProduct = post.Detail,
+							Location = post.Location,
 							FeedbackNum = post.Feedbacks.Count
 						};
 						saleList.Add(new WareHouseVM()
@@ -139,6 +144,8 @@ namespace FStep.Controllers.ManagePost
 				viewModel.SaleList = saleList.ToPagedList(pageNumber, pageSize);
 				// Calculate counts for different statuses
 				viewModel.ProcessCount = listTransactions.Count(t => t.Status == "Processing");
+				viewModel.FinishCount = listTransactions.Count(t => t.Status == "Finished");
+				viewModel.CancelCount = listTransactions.Count(t => t.Status == "Cancel");
 				viewModel.FinishCount = listTransactions.Count(t => t.Status == "Completed");
 				viewModel.CancelCount = listTransactions.Count(t => t.Status == "Canceled");
 
@@ -164,6 +171,7 @@ namespace FStep.Controllers.ManagePost
 
 			transaction.Status = "Completed";
 			db.Update(transaction);
+			db.SaveChanges();
 
 			//Pay money for Seller
 
@@ -186,6 +194,7 @@ namespace FStep.Controllers.ManagePost
 
 			db.SaveChanges();
 
+			return RedirectToAction("WareHouse");
 			return Redirect(url);
 		}
 
@@ -282,7 +291,7 @@ namespace FStep.Controllers.ManagePost
 				var trans = db.Transactions.SingleOrDefault(trans => trans.IdTransaction == int.Parse(id));
 				var userBuyer = db.Users.SingleOrDefault(user => user.IdUser == trans.IdUserBuyer);
 				var userSeller = db.Users.SingleOrDefault(user => user.IdUser == trans.IdUserSeller);
-				
+
 				switch (type)
 				{
 					case "SellerSent":

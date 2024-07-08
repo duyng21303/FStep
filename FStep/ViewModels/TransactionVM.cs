@@ -18,10 +18,15 @@ namespace FStep.ViewModels
 		public DateTime? DeliveryDate { get; set; }
 		public DateTime? CancelDate { get; set; }
 		public bool CheckFeedback { get; set; }
+
+		public float Revenues { get; set; }
+
+		// Add this property to hold a list of transactions
+		public IPagedList<TransactionVM>? PagedTransactions { get; set; }
 	}
 	public class TransactionServiceVM
 	{
-		public IPagedList<TransactionVM> ExchangeList { get; set; }
-		public IPagedList<TransactionVM> SaleList { get; set; }
+		public IPagedList<TransactionVM>? ExchangeList { get; set; }
+		public IPagedList<TransactionVM>? SaleList { get; set; }
 	}
 }

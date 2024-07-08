@@ -4,6 +4,7 @@
 @{
 	var successMessage = TempData["SuccessMessage"] as string;
 	var errorMessage = TempData["ErrorMessage"] as string;
+	var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
 
 @if (!string.IsNullOrEmpty(successMessage))
@@ -61,7 +62,7 @@
 										</td>
 										<td class="post-studentid">@Html.Raw(item.StudentId)</td>
 										<td>@Html.Raw(item.Quantity)</td>
-										<td>@Html.Raw(item.Price)</td>
+										<td>@Html.Raw(@String.Format(format, "{0:0,0 VND}", item.Price))</td>
 										<td>@Html.Raw(item.CreateDate.ToString("yyyy-MM-dd"))</td>
 										<td>
 											<form asp-controller="ModeManagePost" asp-action="UpdateStatus" method="post" onsubmit="return confirmApprove()">

@@ -16,6 +16,8 @@ namespace FStep.Controllers.ManagePost
         private static readonly string[] defaultRole = new[] { "Customer", "Moderator", "Administrator" };
 
         public ModeManageUserController(FstepDbContext context, IMapper mapper)
+
+
         {
             _context = context;
             _mapper = mapper;

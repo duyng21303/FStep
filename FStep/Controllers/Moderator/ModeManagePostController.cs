@@ -23,7 +23,6 @@ namespace FStep.Controllers.ManagePost
 		[Authorize(Roles = "Moderator")]
 		[HttpGet]
 		public IActionResult ManagePosts(string pendingQuery, string approvedQuery, String currentTab, int pendingPage = 1, int approvedPage = 1, int pageSize = 30)
-
 		{
 			var pendingPostsResult = GetPendingPosts(pendingQuery, pendingPage, pageSize);
 			var approvedPostsResult = GetApprovedPosts(approvedQuery, approvedPage, pageSize);
@@ -55,7 +54,7 @@ namespace FStep.Controllers.ManagePost
 			var queryable = _db.Posts
 				.Include(p => p.IdUserNavigation)
 				.Include(p => p.IdProductNavigation)
-				.Where(p => p.Status == "False");
+				.Where(p => p.Status == "Waiting");
 
 
 			if (!string.IsNullOrEmpty(query))
@@ -80,7 +79,6 @@ namespace FStep.Controllers.ManagePost
 					Category = s.Category ?? string.Empty,
 					Description = s.Detail ?? string.Empty,
 					
-
 				})
 				.ToPagedList(pageNumber, pageSize);
 
@@ -98,7 +96,7 @@ namespace FStep.Controllers.ManagePost
 			var queryable = _db.Posts
 				.Include(p => p.IdUserNavigation)
 				.Include(p => p.IdProductNavigation)
-				.Where(p => p.Status == "True");
+				.Where(p => p.Status != "Waiting" && p.Status != "Rejected");
 
 
 			if (!string.IsNullOrEmpty(query))
@@ -117,6 +115,7 @@ namespace FStep.Controllers.ManagePost
 					Image = s.Img ?? string.Empty,
 					CreateDate = s.Date ?? DateTime.Now,
 					Location = s.Location ?? string.Empty,
+					Status = s.Status ?? string.Empty,
 					Category = s.Category ?? string.Empty,
 				})
 			.ToPagedList(pageNumber, pageSize);
@@ -136,7 +135,6 @@ namespace FStep.Controllers.ManagePost
 			if (post != null)
 			{
 				post.Status = "True";
-
 				post.Date = DateTime.Now;
 
 				_db.Posts.Update(post);
@@ -161,7 +159,6 @@ namespace FStep.Controllers.ManagePost
 			if (post != null)
 			{
 				post.Status = "Rejected";
-
 				_db.Posts.Update(post);
 				_db.SaveChanges();
 				TempData["SuccessMessage"] = $"Bài đăng {id} đã được xóa thành công.";
@@ -183,7 +180,6 @@ namespace FStep.Controllers.ManagePost
 			if (post != null)
 			{
 				post.Status = "True";
-
 				post.Date = DateTime.Now;
 
 				_db.Posts.Update(post);
@@ -206,8 +202,7 @@ namespace FStep.Controllers.ManagePost
 			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
 			if (post != null)
 			{
-				post.Status = "Finish";
-
+				post.Status = "False";
 				_db.Posts.Update(post);
 				_db.SaveChanges();
 				TempData["SuccessMessage"] = $"Bài đăng {id} đã được xóa thành công.";
@@ -244,4 +239,3 @@ namespace FStep.Controllers.ManagePost
 	}
 
 }
-

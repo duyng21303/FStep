@@ -1,215 +1,215 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Areas\**" />
-    <Compile Remove="Area\**" />
-    <Compile Remove="Controllers\Admin\**" />
-    <Compile Remove="Controllers\Moder\**" />
-    <Compile Remove="ViewComponents\**" />
-    <Compile Remove="Views\Shared\Components\**" />
-    <Compile Remove="wwwroot\admin_template_dep\**" />
-    <Compile Remove="wwwroot\car-repair-html-template\**" />
-    <Content Remove="Areas\**" />
-    <Content Remove="Area\**" />
-    <Content Remove="Controllers\Admin\**" />
-    <Content Remove="Controllers\Moder\**" />
-    <Content Remove="ViewComponents\**" />
-    <Content Remove="Views\Shared\Components\**" />
-    <Content Remove="wwwroot\admin_template_dep\**" />
-    <Content Remove="wwwroot\car-repair-html-template\**" />
-    <EmbeddedResource Remove="Areas\**" />
-    <EmbeddedResource Remove="Area\**" />
-    <EmbeddedResource Remove="Controllers\Admin\**" />
-    <EmbeddedResource Remove="Controllers\Moder\**" />
-    <EmbeddedResource Remove="ViewComponents\**" />
-    <EmbeddedResource Remove="Views\Shared\Components\**" />
-    <EmbeddedResource Remove="wwwroot\admin_template_dep\**" />
-    <EmbeddedResource Remove="wwwroot\car-repair-html-template\**" />
-    <None Remove="Areas\**" />
-    <None Remove="Area\**" />
-    <None Remove="Controllers\Admin\**" />
-    <None Remove="Controllers\Moder\**" />
-    <None Remove="ViewComponents\**" />
-    <None Remove="Views\Shared\Components\**" />
-    <None Remove="wwwroot\admin_template_dep\**" />
-    <None Remove="wwwroot\car-repair-html-template\**" />
-    <TypeScriptCompile Remove="wwwroot\admin_template_dep\**" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Areas\**" />
+		<Compile Remove="Area\**" />
+		<Compile Remove="Controllers\Admin\**" />
+		<Compile Remove="Controllers\Moder\**" />
+		<Compile Remove="ViewComponents\**" />
+		<Compile Remove="Views\Shared\Components\**" />
+		<Compile Remove="wwwroot\admin_template_dep\**" />
+		<Compile Remove="wwwroot\car-repair-html-template\**" />
+		<Content Remove="Areas\**" />
+		<Content Remove="Area\**" />
+		<Content Remove="Controllers\Admin\**" />
+		<Content Remove="Controllers\Moder\**" />
+		<Content Remove="ViewComponents\**" />
+		<Content Remove="Views\Shared\Components\**" />
+		<Content Remove="wwwroot\admin_template_dep\**" />
+		<Content Remove="wwwroot\car-repair-html-template\**" />
+		<EmbeddedResource Remove="Areas\**" />
+		<EmbeddedResource Remove="Area\**" />
+		<EmbeddedResource Remove="Controllers\Admin\**" />
+		<EmbeddedResource Remove="Controllers\Moder\**" />
+		<EmbeddedResource Remove="ViewComponents\**" />
+		<EmbeddedResource Remove="Views\Shared\Components\**" />
+		<EmbeddedResource Remove="wwwroot\admin_template_dep\**" />
+		<EmbeddedResource Remove="wwwroot\car-repair-html-template\**" />
+		<None Remove="Areas\**" />
+		<None Remove="Area\**" />
+		<None Remove="Controllers\Admin\**" />
+		<None Remove="Controllers\Moder\**" />
+		<None Remove="ViewComponents\**" />
+		<None Remove="Views\Shared\Components\**" />
+		<None Remove="wwwroot\admin_template_dep\**" />
+		<None Remove="wwwroot\car-repair-html-template\**" />
+		<TypeScriptCompile Remove="wwwroot\admin_template_dep\**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Remove="Views\Feedback\Cancel.cshtml" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Remove="Views\Feedback\Cancel.cshtml" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Include="Controllers\Admin\AdminController.cs" />
-    <Compile Include="Controllers\Admin\AdminPostController.cs" />
-    <Compile Include="ViewComponents\ChatViewComponent.cs" />
-    <Compile Include="ViewComponents\CreatePostViewComponent.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Include="Controllers\Admin\AdminController.cs" />
+		<Compile Include="Controllers\Admin\AdminPostController.cs" />
+		<Compile Include="ViewComponents\ChatViewComponent.cs" />
+		<Compile Include="ViewComponents\CreatePostViewComponent.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Include="Views\Shared\Components\Chat\Default.cshtml" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="Views\Shared\Components\Chat\Default.cshtml" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.5">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.5">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.4.5">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
-    <PackageReference Include="Quartz" Version="3.9.0" />
-    <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.9.0" />
-    <PackageReference Include="X.PagedList" Version="9.1.2" />
-    <PackageReference Include="X.PagedList.Mvc.Core" Version="9.1.2" />
-	  <Folder Include="wwwroot\detail\css\" />
-	  <Folder Include="wwwroot\img\ReciveImage\" />
-	  <Folder Include="wwwroot\img\pic\" />
-	  <Folder Include="wwwroot\img\postPic\" />
-	  <Folder Include="wwwroot\img\userAvar\" />
-	  <Folder Include="wwwroot\img\nullAvar\" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.4" />
+		<PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.5" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.5">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.5" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.5">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.4.5">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
+		<PackageReference Include="Quartz" Version="3.9.0" />
+		<PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.9.0" />
+		<PackageReference Include="X.PagedList" Version="9.1.2" />
+		<PackageReference Include="X.PagedList.Mvc.Core" Version="9.1.2" />
+		<Folder Include="wwwroot\detail\css\" />
+		<Folder Include="wwwroot\img\ReciveImage\" />
+		<Folder Include="wwwroot\img\pic\" />
+		<Folder Include="wwwroot\img\postPic\" />
+		<Folder Include="wwwroot\img\userAvar\" />
+		<Folder Include="wwwroot\img\nullAvar\" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="Views\Home\Cancel.cshtml" />
-    <None Include="Views\Shared\_Pagination.cshtml" />
-    <None Include="wwwroot\dashmin-1.0.0\js\main.js" />
-    <None Include="wwwroot\dashmin-1.0.0\lib\chart\chart.min.js" />
-    <None Include="wwwroot\dashmin-1.0.0\lib\easing\easing.js" />
-    <None Include="wwwroot\dashmin-1.0.0\lib\easing\easing.min.js" />
-    <None Include="wwwroot\dashmin-1.0.0\lib\owlcarousel\LICENSE" />
-    <None Include="wwwroot\dashmin-1.0.0\lib\owlcarousel\owl.carousel.js" />
-    <None Include="wwwroot\dashmin-1.0.0\lib\owlcarousel\owl.carousel.min.js" />
-    <None Include="wwwroot\dashmin-1.0.0\lib\tempusdominus\js\moment-timezone.min.js" />
-    <None Include="wwwroot\dashmin-1.0.0\lib\tempusdominus\js\moment.min.js" />
-    <None Include="wwwroot\dashmin-1.0.0\lib\tempusdominus\js\tempusdominus-bootstrap-4.js" />
-    <None Include="wwwroot\dashmin-1.0.0\lib\tempusdominus\js\tempusdominus-bootstrap-4.min.js" />
-    <None Include="wwwroot\dashmin-1.0.0\lib\waypoints\links.php" />
-    <None Include="wwwroot\dashmin-1.0.0\lib\waypoints\waypoints.min.js" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\bootstrap-grid.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\bootstrap-reboot.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\bootstrap-utilities.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\bootstrap.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\forms\_floating-labels.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\forms\_form-check.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\forms\_form-control.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\forms\_form-range.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\forms\_form-select.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\forms\_form-text.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\forms\_input-group.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\forms\_labels.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\forms\_validation.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\helpers\_clearfix.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\helpers\_colored-links.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\helpers\_position.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\helpers\_ratio.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\helpers\_stretched-link.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\helpers\_text-truncation.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\helpers\_visually-hidden.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_alert.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_border-radius.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_box-shadow.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_breakpoints.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_buttons.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_caret.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_clearfix.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_color-scheme.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_container.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_deprecate.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_forms.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_gradients.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_grid.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_image.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_list-group.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_lists.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_pagination.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_reset-text.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_resize.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_table-variants.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_text-truncate.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_transition.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_utilities.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_visually-hidden.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\utilities\_api.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\vendor\_rfs.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_accordion.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_alert.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_badge.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_breadcrumb.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_button-group.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_buttons.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_card.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_carousel.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_close.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_containers.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_dropdown.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_forms.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_functions.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_grid.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_helpers.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_images.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_list-group.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_mixins.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_modal.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_nav.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_navbar.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_offcanvas.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_pagination.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_popover.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_progress.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_reboot.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_root.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_spinners.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_tables.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_toasts.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_tooltip.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_transitions.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_type.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_utilities.scss" />
-    <None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_variables.scss" />
-    <None Include="wwwroot\detail\js\scripts.js" />
-    <None Include="wwwroot\vendor\bootstrap\js\bootstrap.min.js" />
-    <None Include="wwwroot\vendor\jquery\jquery.js" />
-    <None Include="wwwroot\vendor\jquery\jquery.min.js" />
-    <None Include="wwwroot\vendor\jquery\jquery.min.map" />
-    <None Include="wwwroot\vendor\jquery\jquery.slim.js" />
-    <None Include="wwwroot\vendor\jquery\jquery.slim.min.js" />
-    <None Include="wwwroot\vendor\jquery\jquery.slim.min.map" />
-    <None Include="wwwroot\webfonts\fa-brands-400.woff2" />
-    <None Include="wwwroot\webfonts\fa-regular-400.woff2" />
-    <None Include="wwwroot\webfonts\fa-solid-900.woff2" />
-    <None Include="wwwroot\webfonts\fa-v4compatibility.woff2" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="Views\Home\Cancel.cshtml" />
+		<None Include="Views\Shared\_Pagination.cshtml" />
+		<None Include="wwwroot\dashmin-1.0.0\js\main.js" />
+		<None Include="wwwroot\dashmin-1.0.0\lib\chart\chart.min.js" />
+		<None Include="wwwroot\dashmin-1.0.0\lib\easing\easing.js" />
+		<None Include="wwwroot\dashmin-1.0.0\lib\easing\easing.min.js" />
+		<None Include="wwwroot\dashmin-1.0.0\lib\owlcarousel\LICENSE" />
+		<None Include="wwwroot\dashmin-1.0.0\lib\owlcarousel\owl.carousel.js" />
+		<None Include="wwwroot\dashmin-1.0.0\lib\owlcarousel\owl.carousel.min.js" />
+		<None Include="wwwroot\dashmin-1.0.0\lib\tempusdominus\js\moment-timezone.min.js" />
+		<None Include="wwwroot\dashmin-1.0.0\lib\tempusdominus\js\moment.min.js" />
+		<None Include="wwwroot\dashmin-1.0.0\lib\tempusdominus\js\tempusdominus-bootstrap-4.js" />
+		<None Include="wwwroot\dashmin-1.0.0\lib\tempusdominus\js\tempusdominus-bootstrap-4.min.js" />
+		<None Include="wwwroot\dashmin-1.0.0\lib\waypoints\links.php" />
+		<None Include="wwwroot\dashmin-1.0.0\lib\waypoints\waypoints.min.js" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\bootstrap-grid.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\bootstrap-reboot.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\bootstrap-utilities.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\bootstrap.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\forms\_floating-labels.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\forms\_form-check.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\forms\_form-control.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\forms\_form-range.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\forms\_form-select.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\forms\_form-text.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\forms\_input-group.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\forms\_labels.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\forms\_validation.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\helpers\_clearfix.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\helpers\_colored-links.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\helpers\_position.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\helpers\_ratio.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\helpers\_stretched-link.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\helpers\_text-truncation.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\helpers\_visually-hidden.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_alert.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_border-radius.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_box-shadow.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_breakpoints.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_buttons.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_caret.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_clearfix.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_color-scheme.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_container.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_deprecate.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_forms.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_gradients.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_grid.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_image.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_list-group.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_lists.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_pagination.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_reset-text.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_resize.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_table-variants.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_text-truncate.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_transition.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_utilities.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\mixins\_visually-hidden.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\utilities\_api.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\vendor\_rfs.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_accordion.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_alert.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_badge.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_breadcrumb.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_button-group.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_buttons.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_card.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_carousel.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_close.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_containers.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_dropdown.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_forms.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_functions.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_grid.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_helpers.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_images.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_list-group.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_mixins.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_modal.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_nav.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_navbar.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_offcanvas.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_pagination.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_popover.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_progress.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_reboot.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_root.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_spinners.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_tables.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_toasts.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_tooltip.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_transitions.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_type.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_utilities.scss" />
+		<None Include="wwwroot\dashmin-1.0.0\scss\bootstrap\scss\_variables.scss" />
+		<None Include="wwwroot\detail\js\scripts.js" />
+		<None Include="wwwroot\vendor\bootstrap\js\bootstrap.min.js" />
+		<None Include="wwwroot\vendor\jquery\jquery.js" />
+		<None Include="wwwroot\vendor\jquery\jquery.min.js" />
+		<None Include="wwwroot\vendor\jquery\jquery.min.map" />
+		<None Include="wwwroot\vendor\jquery\jquery.slim.js" />
+		<None Include="wwwroot\vendor\jquery\jquery.slim.min.js" />
+		<None Include="wwwroot\vendor\jquery\jquery.slim.min.map" />
+		<None Include="wwwroot\webfonts\fa-brands-400.woff2" />
+		<None Include="wwwroot\webfonts\fa-regular-400.woff2" />
+		<None Include="wwwroot\webfonts\fa-solid-900.woff2" />
+		<None Include="wwwroot\webfonts\fa-v4compatibility.woff2" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Views\Feedback\Cancel.cshtml" />
-  </ItemGroup>
+	<ItemGroup>
+		<UpToDateCheckInput Remove="Views\Feedback\Cancel.cshtml" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Views\Feedback\Cancel.cshtml" />
-  </ItemGroup>
+	<ItemGroup>
+		<_ContentIncludedByDefault Remove="Views\Feedback\Cancel.cshtml" />
+	</ItemGroup>
 
 </Project>
