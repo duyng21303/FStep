@@ -11,6 +11,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace FStep.Controllers.Admin
 {
+
     public class AdminController : Controller
     {
         private readonly FstepDbContext _context;
@@ -18,70 +19,69 @@ namespace FStep.Controllers.Admin
         private static readonly string[] defaultRole = new[] { "Customer", "Moderator", "Administrator" };
 		private readonly IConfiguration _configuration;
 		public AdminController(FstepDbContext context, IMapper mapper, IConfiguration configuration)
-
-
         {
             _context = context;
             _mapper = mapper;
 			_configuration = configuration;
 		}
+
         public async Task<IActionResult> Index(string codeTransaction, int? page)
         {
             var totalPost = _context.Posts.Count(p => p.Status != "Rejected");
             var totalUser = _context.Users.Count(u => u.Status != false);
+			var totalTransaction = _context.Transactions.Count(t => t.Status == "Completed" || t.Status == "Processing" || t.Status == "Canceled");
+			var totalGMV = _context.Transactions
+				.Where(t => t.Status == "Completed")
+				.Sum(t => t.Amount);
+			IQueryable<Transaction> query = _context.Transactions;
+			if (!string.IsNullOrEmpty(codeTransaction))
+			{
+				query = query.Where(t => t.CodeTransaction.Contains(codeTransaction));
+			}
 
-            var totalTransaction = _context.Transactions.Count(t => t.Status == "Completed" || t.Status == "Processing" || t.Status == "Canceled");
-            var totalGMV = _context.Transactions
-                .Where(t => t.Status == "Completed")
-                .Sum(t => t.Amount);
-            IQueryable<Transaction> query = _context.Transactions;
-            if (!string.IsNullOrEmpty(codeTransaction))
-            {
-                query = query.Where(t => t.CodeTransaction.Contains(codeTransaction));
-            }
+			var transactions = query.OrderByDescending(t => t.Date).ToList();
+			List<TransactionVM> transactionVMs = new List<TransactionVM>();
+			foreach (var item in transactions)
+			{
+				transactionVMs.Add(new TransactionVM()
+				{
+					Transaction = item
+				});
+			}
 
-            var transactions = query.OrderByDescending(t => t.Date).ToList();
-            List<TransactionVM> transactionVMs = new List<TransactionVM>();
-            foreach (var item in transactions)
-            {
-                transactionVMs.Add(new TransactionVM()
-                {
-                    Transaction = item
-                });
-            }
+			// Calculate revenues and assign to each transaction
+			foreach (var transaction in transactionVMs)
+			{
+				transaction.Revenues = CalculateDiscount(transaction.Transaction.Amount);
+			}
 
-            // Calculate revenues and assign to each transaction
-            foreach (var transaction in transactionVMs)
-            {
-                transaction.Revenues = CalculateDiscount(transaction.Transaction.Amount);
-            }
+			float totalRevenues = 0;
+			foreach (var transaction in transactionVMs)
+			{
+				if (transaction.Transaction.Status == "Completed")
+				{
+					totalRevenues += transaction.Revenues;
+				}
+			}
 
-            float totalRevenues = 0;
-            foreach (var transaction in transactionVMs)
-            {
-                if (transaction.Transaction.Status == "Completed")
-                {
-                    totalRevenues += transaction.Revenues;
-                }
-            }
+			// Paginate transactions
+			int pageSize = 20;
+			int pageNumber = (page ?? 1);
+			var pagedTransactions = transactionVMs.ToPagedList(pageNumber, pageSize);
 
-            // Paginate transactions
-            int pageSize = 20;
-            int pageNumber = (page ?? 1);
-            var pagedTransactions = transactionVMs.ToPagedList(pageNumber, pageSize);
+			var transactionVM = new TransactionVM
+			{
+				PagedTransactions = pagedTransactions
+			};
+			//----------------------------------------------------------------------------------------------------Dasboard
+			var sevenMonthsAgo = DateTime.Now.AddMonths(-6);
 
-            var transactionVM = new TransactionVM
-            {
-                PagedTransactions = pagedTransactions
-            };
-            //----------------------------------------------------------------------------------------------------Dasboard
-            var sevenMonthsAgo = DateTime.Now.AddMonths(-6);
+			// Tạo danh sách các tháng trong 7 tháng gần nhất
+			var months = Enumerable.Range(0, 5)
+					.Select(i => DateTime.Now.AddMonths(-i))
+					.OrderBy(d => d.Year).ThenBy(d => d.Month)
+					.ToList();
 
-            // Tạo danh sách các tháng trong 7 tháng gần nhất
-            var months = Enumerable.Range(0, 5)
-                    .Select(i => DateTime.Now.AddMonths(-i))
-                    .OrderBy(d => d.Year).ThenBy(d => d.Month)
-                    .ToList();
 
             // Phân loại giao dịch theo tháng
             var resultListTotalPost = new List<int>();
@@ -98,9 +98,9 @@ namespace FStep.Controllers.Admin
                             .Where(o => o.Date != null && o.Date.Value.Month == month.Month && o.Date.Value.Year == month.Year)
                             .CountAsync();
 
-                var totalTransactionCount = await _context.Transactions
-                            .Where(o => o.Date != null && o.Date.Value.Month == month.Month && o.Date.Value.Year == month.Year)
-                            .CountAsync();
+				var totalTransactionCount = await _context.Transactions
+							.Where(o => o.Date != null && o.Date.Value.Month == month.Month && o.Date.Value.Year == month.Year)
+							.CountAsync();
 
                 var totalCompletedTransactionCount = await _context.Transactions
                             .Where(o => o.Date != null && o.Date.Value.Month == month.Month && o.Date.Value.Year == month.Year && o.Status == "Completed")
@@ -138,7 +138,7 @@ namespace FStep.Controllers.Admin
             return View(transactionVM);
         }
 
-        public float CalculateDiscount(float? amount)
+		public float CalculateDiscount(float? amount)
 		{
 			if (amount.HasValue && amount > 0)
 			{
@@ -177,18 +177,18 @@ namespace FStep.Controllers.Admin
 				query = query.Where(x => x.Name.ToLower().Contains(search.ToLower()) || x.Email.ToLower().Contains(search.ToLower()));
 			}
 
-            var users = query.Skip((page - 1) * pageSize).Take(pageSize).Select(x => _mapper.Map<ProfileVM>(x)).ToList();
-            PagingModel<ProfileVM> pagingModel = new()
-            {
-                Items = users,
-                PagingInfo = new PagingInfo
-                {
-                    CurrentPage = page,
-                    ItemsPerPage = pageSize,
-                    TotalItems = query.Count(),
-                    Search = search
-                }
-            };
+			var users = query.Skip((page - 1) * pageSize).Take(pageSize).Select(x => _mapper.Map<ProfileVM>(x)).ToList();
+			PagingModel<ProfileVM> pagingModel = new()
+			{
+				Items = users,
+				PagingInfo = new PagingInfo
+				{
+					CurrentPage = page,
+					ItemsPerPage = pageSize,
+					TotalItems = query.Count(),
+					Search = search
+				}
+			};
 
 			return View("UserManager", pagingModel);
 		}
@@ -198,13 +198,13 @@ namespace FStep.Controllers.Admin
 			// Lấy thông tin người dùng
 			var user = _context.Users.FirstOrDefault(user => user.IdUser == id);
 
-            if (user != null)
-            {
-                // Đếm số bài đăng của người dùng có type là Sale
-                var saleCount = _context.Posts.Count(post => post.IdUser == id && post.Type == "Sale");
+			if (user != null)
+			{
+				// Đếm số bài đăng của người dùng có type là Sale
+				var saleCount = _context.Posts.Count(post => post.IdUser == id && post.Type == "Sale");
 
-                // Đếm số bài đăng của người dùng có type là Exchange
-                var exchangeCount = _context.Posts.Count(post => post.IdUser == id && post.Type == "Exchange");
+				// Đếm số bài đăng của người dùng có type là Exchange
+				var exchangeCount = _context.Posts.Count(post => post.IdUser == id && post.Type == "Exchange");
 
 				var totalPost = saleCount + exchangeCount;
 
@@ -216,8 +216,8 @@ namespace FStep.Controllers.Admin
 				ViewBag.TotalPost = totalPost;
 				ViewBag.TotalTransaction = totalTransaction;
 
-                return View("UserDetail", profileVM);
-            }
+				return View("UserDetail", profileVM);
+			}
 
 			return View("UserDetail");
 		}
@@ -230,73 +230,73 @@ namespace FStep.Controllers.Admin
 				query = query.Where(x => x.Content.Contains(search) || x.Type.Contains(search));
 			}
 
-            var comments = query.Skip((page - 1) * pageSize).Take(pageSize).Select(x => new CommentVM
-            {
-                IdPost = x.IdPost,
-                IdUser = x.IdUser,
-                Content = x.Content,
-                Date = x.Date,
-                IdComment = x.IdComment,
-                PostName = x.IdPostNavigation.Content,
-                Name = x.IdUserNavigation.Name,
-                Type = x.Type,
-                Img = x.Img,
-                avarImg = x.IdUserNavigation.AvatarImg
-            }).ToList();
+			var comments = query.Skip((page - 1) * pageSize).Take(pageSize).Select(x => new CommentVM
+			{
+				IdPost = x.IdPost,
+				IdUser = x.IdUser,
+				Content = x.Content,
+				Date = x.Date,
+				IdComment = x.IdComment,
+				PostName = x.IdPostNavigation.Content,
+				Name = x.IdUserNavigation.Name,
+				Type = x.Type,
+				Img = x.Img,
+				avarImg = x.IdUserNavigation.AvatarImg
+			}).ToList();
 
-            PagingModel<CommentVM> pagingModel = new()
-            {
-                Items = comments,
-                PagingInfo = new PagingInfo
-                {
-                    CurrentPage = page,
-                    ItemsPerPage = pageSize,
-                    TotalItems = query.Count(),
-                    Search = search
-                }
-            };
+			PagingModel<CommentVM> pagingModel = new()
+			{
+				Items = comments,
+				PagingInfo = new PagingInfo
+				{
+					CurrentPage = page,
+					ItemsPerPage = pageSize,
+					TotalItems = query.Count(),
+					Search = search
+				}
+			};
 
 			return View("CommentManager", pagingModel);
 		}
 		[HttpPost]
 		[Authorize(Roles = "Admin")]
 		public IActionResult EditAccount(string id)
-        {
-            var user = _context.Users.FirstOrDefault(p => p.IdUser == id);
+		{
+			var user = _context.Users.FirstOrDefault(p => p.IdUser == id);
 
-            if (user == null)
-            {
-                return NotFound();
-            }
+			if (user == null)
+			{
+				return NotFound();
+			}
 
-            var viewModel = new ProfileVM
-            {
-                IdUser = user.IdUser,
-                Role = user.Role,
-                Status = user.Status ?? true, // Ensure status defaults to true if null
-                BankName = user.BankName,
-                BankAccountNumber = user.BankAccountNumber
-            };
+			var viewModel = new ProfileVM
+			{
+				IdUser = user.IdUser,
+				Role = user.Role,
+				Status = user.Status ?? true, // Ensure status defaults to true if null
+				BankName = user.BankName,
+				BankAccountNumber = user.BankAccountNumber
+			};
 
-            return View(viewModel);
-        }
+			return View(viewModel);
+		}
 		[Authorize(Roles = "Admin")]
 		[HttpPost]
-        public IActionResult UpdateAccount(ProfileVM viewModel)
-        {
-            try
-            {
-                // Lưu thông tin bài đăng
-                var user = _context.Users
-                    .FirstOrDefault(p => p.IdUser == viewModel.IdUser);
-                if (user == null)
-                {
-                    return NotFound();
-                }
-                else
-                {
+		public IActionResult UpdateAccount(ProfileVM viewModel)
+		{
+			try
+			{
+				// Lưu thông tin bài đăng
+				var user = _context.Users
+					.FirstOrDefault(p => p.IdUser == viewModel.IdUser);
+				if (user == null)
+				{
+					return NotFound();
+				}
+				else
+				{
 					user.Role = viewModel.Role;
-                    user.Status = viewModel.Status;
+					user.Status = viewModel.Status;
 					user.BankName = viewModel.BankName;
 					user.BankAccountNumber = viewModel.BankAccountNumber;
                     _context.SaveChanges();

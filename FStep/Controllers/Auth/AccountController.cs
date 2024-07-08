@@ -180,7 +180,7 @@ namespace FStep.Controllers.Auth
 			return View(profile);
 		}
 
-		
+
 		[Authorize]
 		[HttpPost]
 		public async Task<IActionResult> Profile(ProfileVM model)
