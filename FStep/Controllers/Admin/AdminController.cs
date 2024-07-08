@@ -17,7 +17,6 @@ namespace FStep.Controllers.Admin
         private readonly IMapper _mapper;
         private static readonly string[] defaultRole = new[] { "Customer", "Moderator", "Administrator" };
 		private readonly IConfiguration _configuration;
-
 		public AdminController(FstepDbContext context, IMapper mapper, IConfiguration configuration)
 
 
@@ -88,7 +87,11 @@ namespace FStep.Controllers.Admin
             var resultListTotalPost = new List<int>();
             var resultListTotal = new List<int>();
             var resultListTotalCompleted = new List<int>();
-            foreach (var month in months)
+
+			var resultListPostCountExchange = new List<int>();
+			var resultListPostCountSale = new List<int>();
+			var amount = _configuration.GetValue<float>("Amount");
+			foreach (var month in months)
             {
                 // Kiểm tra xem tháng hiện tại có giao dịch hay không
                 var totalPostCount = await _context.Posts
@@ -102,21 +105,31 @@ namespace FStep.Controllers.Admin
                 var totalCompletedTransactionCount = await _context.Transactions
                             .Where(o => o.Date != null && o.Date.Value.Month == month.Month && o.Date.Value.Year == month.Year && o.Status == "Completed")
                             .CountAsync();
-                // Thêm số lượng giao dịch hoặc giá trị 0 vào danh sách kết quả
-                resultListTotal.Add(totalTransactionCount);
+				var totalPostCountExchange = await _context.Posts
+							.Where(o => o.Date != null && o.Date.Value.Month == month.Month && o.Date.Value.Year == month.Year && o.Type == "Exchange")
+							.CountAsync();
+				var totalPostCountSale = await _context.Posts
+							.Where(o => o.Date != null && o.Date.Value.Month == month.Month && o.Date.Value.Year == month.Year && o.Type == "Sale")
+							.CountAsync();
+				// Thêm số lượng giao dịch hoặc giá trị 0 vào danh sách kết quả
+				resultListTotal.Add(totalTransactionCount);
                 resultListTotalCompleted.Add(totalCompletedTransactionCount);
                 resultListTotalPost.Add(totalPostCount);
-            }
 
-            // Chuẩn bị dữ liệu cho biểu đồ
-            var labels = months.Select(g => "Tháng " + g.Month).ToList();
+                resultListPostCountExchange.Add((int)(totalPostCountSale * amount));
+				resultListPostCountSale.Add((int)(totalPostCountSale * amount));
+			}
+			// Chuẩn bị dữ liệu cho biểu đồ
+			var labels = months.Select(g => "Tháng " + g.Month).ToList();
             ViewBag.Labels = labels;
             ViewBag.TotalTransactionDash = resultListTotal;
             ViewBag.TotalPostDash = resultListTotalPost;
             ViewBag.TotalCompleted = resultListTotalCompleted;
-            //----------------------------------------------------------------------------------------------------Dasboard
+            ViewBag.TotalPostExchange = resultListPostCountExchange;
+			ViewBag.TotalPostSale = resultListPostCountSale;
+			//----------------------------------------------------------------------------------------------------Dasboard
 
-            ViewBag.TotalPost = totalPost;
+			ViewBag.TotalPost = totalPost;
             ViewBag.TotalTransaction = totalTransaction;
             ViewBag.TotalUser = totalUser;
             ViewBag.TotalGMV = totalGMV;
@@ -129,11 +142,12 @@ namespace FStep.Controllers.Admin
 		{
 			if (amount.HasValue && amount > 0)
 			{
-				return 5000; // 10% discount
+				return _configuration.GetValue<float>("Amount");
+				 // 10% discount
 			}
 			else
 			{
-				return 5000; // Default discount if amount is null or <= 0
+				return _configuration.GetValue<float>("Amount"); // Default discount if amount is null or <= 0
 			}
 		}
 		[Authorize(Roles = "Admin")]
