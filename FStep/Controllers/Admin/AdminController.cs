@@ -16,13 +16,16 @@ namespace FStep.Controllers.Admin
         private readonly FstepDbContext _context;
         private readonly IMapper _mapper;
         private static readonly string[] defaultRole = new[] { "Customer", "Moderator", "Administrator" };
+		private readonly IConfiguration _configuration;
 
-		public AdminController(FstepDbContext context, IMapper mapper)
-		{
-			_context = context;
-			_mapper = mapper;
+		public AdminController(FstepDbContext context, IMapper mapper, IConfiguration configuration)
+
+
+        {
+            _context = context;
+            _mapper = mapper;
+			_configuration = configuration;
 		}
-		[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(string codeTransaction, int? page)
         {
             var totalPost = _context.Posts.Count(p => p.Status != "Rejected");
@@ -126,7 +129,7 @@ namespace FStep.Controllers.Admin
 		{
 			if (amount.HasValue && amount > 0)
 			{
-				return amount.Value * 0.1f; // 10% discount
+				return 5000; // 10% discount
 			}
 			else
 			{
@@ -295,31 +298,58 @@ namespace FStep.Controllers.Admin
             return View(viewModel);
         }
         [Authorize(Roles = "Admin")]
-		[HttpPost]
-		public IActionResult ChangeRole([FromBody] ProfileVM user)
-		{
-			var userFound = _context.Users.FirstOrDefault(x => x.IdUser == user.IdUser);
-			if (userFound != null && defaultRole.Contains(user.Role))
-			{
-				userFound.Role = user.Role;
-				_context.Users.Update(userFound);
-				_context.SaveChanges();
-				return Ok();
-			}
-			return BadRequest();
-		}
-		[Authorize(Roles = "Admin")]
-		[HttpPost]
-		public IActionResult DeleteComment([FromBody] CommentVM comment)
-		{
-			var commentExisted = _context.Comments.FirstOrDefault(x => x.IdComment == comment.IdComment);
-			if (commentExisted != null)
-			{
-				_context.Comments.Remove(commentExisted);
-				_context.SaveChanges();
-				return Ok();
-			}
-			return BadRequest();
-		}
-	}
+        [HttpPost]
+        public IActionResult ChangeRole([FromBody] ProfileVM user)
+        {
+            var userFound = _context.Users.FirstOrDefault(x => x.IdUser == user.IdUser);
+            if (userFound != null && defaultRole.Contains(user.Role))
+            {
+                userFound.Role = user.Role;
+                _context.Users.Update(userFound);
+                _context.SaveChanges();
+                return Ok();
+            }
+            return BadRequest();
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult DeleteComment([FromBody] CommentVM comment)
+        {
+            var commentExisted = _context.Comments.FirstOrDefault(x => x.IdComment == comment.IdComment);
+            if (commentExisted != null)
+            {
+                _context.Comments.Remove(commentExisted);
+                _context.SaveChanges();
+                return Ok();
+            }
+            return BadRequest();
+        }
+        [Authorize(Roles = "Admin")]
+        public IActionResult Payment(int page = 1, int pageSize = 10, string? search = null)
+        {
+            var query = _context.Payments.AsQueryable();
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(x => x.IdTransaction.ToString().ToLower().Contains(search.ToLower()));
+            }
+
+            var payment = query.Skip((page - 1) * pageSize).Take(pageSize).Select(x => _mapper.Map<PaymentVM>(x)).ToList();
+
+			var link = _configuration.GetValue<string>("VNPayMerchant");
+
+			PagingModel<PaymentVM> pagingModel = new()
+            {
+                Items = payment,
+                PagingInfo = new PagingInfo
+                {
+                    CurrentPage = page,
+                    ItemsPerPage = pageSize,
+                    TotalItems = query.Count(),
+                    Search = search
+                }
+            };
+            ViewBag.link = link;
+            return View("Payment",pagingModel);
+        }
+    }
 }

@@ -92,7 +92,7 @@ public class Program
 		{
 			endpoints.MapHub<ChatHub>("chatHub");
 			endpoints.MapHub<NotificationHub>("notificationhub");
-			
+
 		});
 		// Fallback default route
 		app.MapControllerRoute(

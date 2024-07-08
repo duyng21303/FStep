@@ -175,7 +175,7 @@
 								</td>
 								<td>
 									<form asp-controller="Admin" asp-action="ReferTransaction" method="post" onsubmit="return confirmDelete()">
-										<input type="hidden" name="id" value="@transaction.TransactionId" />
+										<input type="hidden" name="id" value="@transaction.Transaction.IdTransaction" />
 										<button type="submit" class="btn btn-danger btn-sm">Trả lại</button>
 									</form>
 								</td>

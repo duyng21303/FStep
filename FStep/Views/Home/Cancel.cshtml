@@ -36,7 +36,8 @@
 					</div>
 					<p id="note-value" class="mt-3"></p>
 					<input asp-for="@Model.Note" type="hidden" id="value-note" />
-					<input asp-for="@Model.TransactionId" type="hidden" id="@Model.TransactionId" />
+					<input asp-for="@Model.TransactionId" type="hidden"/>
+					<input asp-for="@Model.ReturnUrl" type="hidden"/>
 
 					<div class="row justify-content-end align-items-end align-middle mt-4">
 						<div class="col-md-4">

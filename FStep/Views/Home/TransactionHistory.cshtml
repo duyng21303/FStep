@@ -4,7 +4,7 @@
 @{
 	ViewData["Title"] = "List bought Posts";
 	var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
-	string fullUrl = Context.Request.GetDisplayUrl();
+	ViewBag.url = Context.Request.GetDisplayUrl();
 }
 <!-- Header body  -->
 <div class="container py-5">
@@ -17,7 +17,7 @@
 					<li class="nav-item">
 						@* <button class="nav-link active" id="pills-home-tab-exchange" data-bs-toggle="pill" data-bs-target="#pills-exchange" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Trao đổi</button> *@
 						<a class="nav-link @(ViewBag.ActiveTab == "exchange" ? "active" : "")"
-						   href="@Url.Action("TransactionHistory", new { activeTab = "exchange", query = ViewBag.Query })"
+						   href="@Url.Action("TransactionHistory", new { activeTab = "exchange" })"
 						   id="pills-home-tab-exchange"
 						   role="tab"
 						   type="button"
@@ -27,7 +27,7 @@
 					<li class="nav-item">
 						@* <button class="nav-link" id="pills-profile-tab-sale" data-bs-toggle="pill" data-bs-target="#pills-sale" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Mua</button> *@
 						<a class="nav-link @(ViewBag.ActiveTab == "sale" ? "active" : "")"
-						   href="@Url.Action("TransactionHistory", new { activeTab = "sale", query = ViewBag.Query })"
+						   href="@Url.Action("TransactionHistory", new { activeTab = "sale" })"
 						   id="pills-profile-tab-sale"
 						   role="tab"
 						   type="button"
@@ -47,7 +47,7 @@
 			<div class="row align-items-center mb-4 search-header">
 				<div class="col-md-12">
 					<form asp-action="TransactionHistory" asp-controller="Home" method="get" class="d-flex justify-content-end search-form">
-						<input type="search" class="form-control search-input" placeholder="keywords" name="query">
+						<input type="search" class="form-control search-input" placeholder="keywords" name="query" value="@ViewBag.Query">
 						<input type="hidden" name="activeTab" value="@ViewBag.ActiveTab" />
 						<button class="btn btn-primary search-button" type="submit">
 							<i class="fa fa-search search-icon"></i>
@@ -168,9 +168,9 @@
 																<div class="d-flex flex-column mt-4">
 																	<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm" asp-action="TransactionExchangeDetail" asp-controller="Home" asp-route-id="@item.TransactionId">Chi tiết</a>
 
-																	@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.Transaction.Status == "Completed")
+																	@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.Transaction.Status == "Completed" && !item.CheckFeedback)
 																	{
-																		<a data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-sm mt-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@item.Post.IdPost" asp-route-idTransaction="@item.TransactionId">
+																		<a data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-sm mt-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@item.Post.IdPost" asp-route-idTransaction="@item.TransactionId" asp-route-url="@ViewBag.url">
 																			Đánh giá
 																		</a>
 																	}
@@ -432,9 +432,9 @@
 																	<div class="d-flex flex-column mt-4">
 																		<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm" asp-action="TransactionExchangeDetail" asp-controller="Home" asp-route-id="@item.TransactionId">Chi tiết</a>
 
-																		@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.CheckFeedback)
+																		@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && !item.CheckFeedback)
 																		{
-																			<a data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-sm mt-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@item.Post.IdPost" asp-route-idTransaction="@item.TransactionId">
+																			<a data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-sm mt-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@item.Post.IdPost" asp-route-idTransaction="@item.TransactionId" asp-route-url="@ViewBag.url">
 																				Đánh giá
 																			</a>
 																		}
@@ -640,7 +640,7 @@
 			<div class="row align-items-center mb-4 search-header">
 				<div class="col-md-12">
 					<form asp-action="TransactionHistory" asp-controller="Home" method="get" class="d-flex justify-content-end search-form">
-						<input type="search" class="form-control search-input" placeholder="keywords" name="query">
+						<input type="search" class="form-control search-input" placeholder="keywords" name="query" value="@ViewBag.Query">
 						<input type="hidden" name="activeTab" value="@ViewBag.ActiveTab" />
 						<button class="btn btn-primary search-button" type="submit">
 							<i class="fa fa-search search-icon"></i>
@@ -746,9 +746,9 @@
 																<div class="d-flex flex-column mt-4">
 																	<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm" asp-action="TransactionSaleDetail" asp-controller="Home" asp-route-id="@item.TransactionId">Chi tiết</a>
 
-																	@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.Transaction.Status == "Completed")
+																	@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.Transaction.Status == "Completed" && !item.CheckFeedback)
 																	{
-																		<a data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-sm mt-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@item.Post.IdPost" asp-route-idTransaction="@item.TransactionId">
+																		<a data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-sm mt-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@item.Post.IdPost" asp-route-idTransaction="@item.TransactionId" asp-route-url="@ViewBag.url">
 																			Đánh giá
 																		</a>
 																	}
@@ -903,7 +903,7 @@
 						<div class="col-lg-12">
 							@foreach (var item in Model.SaleList)
 							{
-								@if (item.Transaction.Status == "Processing")
+								@if (item.Transaction.Status == "Completed")
 								{
 									<div class="container-contentboby">
 										<div class="container py-5">
@@ -980,9 +980,9 @@
 																	<div class="d-flex flex-column mt-4">
 																		<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm" asp-action="TransactionSaleDetail" asp-controller="Home" asp-route-id="@item.TransactionId">Chi tiết</a>
 
-																		@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.CheckFeedback)
+																		@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.CheckFeedback && !item.CheckFeedback)
 																		{
-																			<a data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-sm mt-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@item.Post.IdPost" asp-route-idTransaction="@item.TransactionId">
+																			<a data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-sm mt-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@item.Post.IdPost" asp-route-idTransaction="@item.TransactionId" asp-route-url="@ViewBag.url">
 																				Đánh giá
 																			</a>
 																		}
@@ -1021,7 +1021,7 @@
 						<div class="col-lg-12">
 							@foreach (var item in Model.SaleList)
 							{
-								@if (item.Transaction.Status == "Processing")
+								@if (item.Transaction.Status == "Canceled")
 								{
 									<div class="container-contentboby">
 										<div class="container py-5">
