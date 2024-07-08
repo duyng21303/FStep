@@ -4,7 +4,7 @@
 @{
 	var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 	Layout = "_LayoutAdmin";
-	if (!string.IsNullOrEmpty(userRole) && userRole == "Moderator")
+	if (!string.IsNullOrEmpty(userRole) && userRole == "Moderator") //role moder
 	{
 		Layout = "_LayoutModer";
 	}
