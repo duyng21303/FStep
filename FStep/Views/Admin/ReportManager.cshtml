@@ -1,7 +1,14 @@
 ﻿@using FStep.ViewModels
+@using System.Security.Claims
 @model PagingModel<ReportVM>
 @{
+	var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 	Layout = "_LayoutAdmin";
+	if (!string.IsNullOrEmpty(userRole) && userRole == "Moderator")
+	{
+		Layout = "_LayoutModer";
+	}
+
 }
 
 <div class="container py-5">
@@ -93,6 +100,7 @@
 				clearTimeout(timeout); // Xóa timeout hiện tại nếu có
 				timeoutId = setTimeout(function () {
 					$('#searchUserForm').submit(); // Gửi form khi thời gian chờ (debounce) kết thúc
+
 				}, 200); // Thời gian debounce là 100ms (có thể điều chỉnh theo nhu cầu của bạn)
 			});
 

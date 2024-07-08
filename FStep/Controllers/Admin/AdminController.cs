@@ -226,6 +226,7 @@ namespace FStep.Controllers.Admin
 			return View("UserDetail");
 		}
 
+
 		[Authorize(Roles = "Admin")]
 		public IActionResult ReportManager(int page = 1, int pageSize = 10, string? search = null)
 		{
