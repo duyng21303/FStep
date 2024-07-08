@@ -60,9 +60,18 @@
 					</ul>
 				</div>
 				<!--End body-->
-				<div style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
-					<h4>Tổng tiền: @String.Format(format, "{0:0,0 VND}", Model.Transaction.Amount)</h4>
-				</div>
+				@if (Model.Transaction.Status == "Canceled")
+				{
+					<div style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+						<h4>Số tiền <span style="color:red">@String.Format(format, "{0:0,0 VND}", Model.Transaction.Amount)</span> đã được hoàn thành công vào tài khoản!! </h4>
+					</div>
+				}
+				else
+				{
+					<div style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+						<h4>Tổng tiền: @String.Format(format, "{0:0,0 VND}", Model.Transaction.Amount)</h4>
+					</div>
+				}
 			</div>
 		</div>
 	</div>
