@@ -1,0 +1,70 @@
+﻿@model FStep.ViewModels.TransactionVM
+@{
+	var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Hóa đơn</title>
+</head>
+<body>
+	<div style="justify-content: center!important; display: flex!important">
+		<div style="border-radius: 10px; background-color:#FFF5E0; width: 700px">
+			<div style="padding: 2rem">
+				<div>
+					<h4>Loại đơn: <span style="color: green text-decoration-line: underline;">@Model.Post.Type</span></h4>
+				</div>
+				<!--Body-->
+				<div>
+					<h4>Mã giao dịch : <span style="color:red">@Model.Transaction.CodeTransaction</span></h4>
+					<hr />
+					<div>
+						<!--Product exchange person-->
+						<div>
+							<h5>Người trao đổi: <span style="color: #3572EF;">@Model.UserBuyer.Name</span><span> (MSSV: @Model.UserBuyer.StudentId)</span>!</h5>
+							<h4>Đồ trao đổi</h4>
+							<p style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">@Html.Raw(Model.CommentExchangeVM.Content)</p>
+						</div>
+						<!--Product of post owwner-->
+						<div style="padding-top 10px">
+							<h5>Người đăng: <span style="color: #3572EF;">@Model.UserSeller.Name</span><span> (MSSV: @Model.UserSeller.StudentId)</span>!</h5>
+							<h4>@Html.Raw(Model.Post.Content)</h4>
+							<p style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">@Html.Raw(Model.Post.Detail)</p>
+						</div>
+					</div>
+
+					<hr />
+
+					<h4>Chi tiết</h4>
+					<ul>
+						<li>
+							<h5>Ngày đặt hàng: <span>@Model.CreateDate?.ToString("MM/dd/yyyy hh:mm tt")</span></h5>
+						</li>
+						@if (Model.Transaction.Status == "Completed")
+						{
+							<li>
+								<h5 style="color: #3572EF">Ngày nhận hàng: <span>@Model.DeliveryDate?.ToString("MM/dd/yyyy hh:mm tt")</span></h5>
+							</li>
+						}
+						else
+						@if (Model.Transaction.Status == "Canceled")
+						{
+							<li>
+								<h5 style="color: red">Ngày huỷ: <span>@Model.CancelDate?.ToString("MM/dd/yyyy hh:mm tt")</span></h5>
+							</li>
+						}
+						else
+						{
+							<h5>-----</h5>
+							<h5 style="font-style:italic; color:red;">Vui lòng đem sản phẩm của bạn tới kho trong vòng 3 ngày kể từ ngày đặt hàng!</h5>
+							<p>(Lưu ý: Đơn hàng sẽ tự động huỷ nếu quá thời hạn)</p>
+						}
+					</ul>
+				</div>
+				<!--Enbody-->
+			</div>
+		</div>
+	</div>
+</body>
+</html>

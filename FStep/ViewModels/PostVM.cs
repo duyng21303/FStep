@@ -18,7 +18,6 @@ namespace FStep.ViewModels
 		[FileExtensions(Extensions = "png,jgp,jpeg,gif")]
 		public string Img { get; set; }
 
-
 		[Display(Name = "Mô tả")]
 		[Required(ErrorMessage = "Bắt buộc")]
 		[MaxLength(65500, ErrorMessage = "Vượt quá giới hạn ký tự cho phép")]
@@ -33,7 +32,7 @@ namespace FStep.ViewModels
 
 		public int? ProductStatus { get; set; }
 
-		[Display(Name = "Giá")]
+		[Display(Name = "Giá (VNĐ)")]
 		[DataType(DataType.Currency)]
 		[Required(ErrorMessage = "Bắt buộc")]
 		public float? Price { get; set; }

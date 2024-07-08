@@ -2,14 +2,22 @@
 {
     public class PaymentVM
     {
-        public String NameProduct { get; set; }
+        public int IdPayment { get; set; }
 
-        public String Image {  get; set; }
+        public DateTime? PayTime { get; set; }
 
-        public float Price { get; set; }
+        public float? Amount { get; set; }
 
-        public int Quantity { get; set; }
+        public string? VnpayTransactionCode { get; set; }
 
-       public float Amount { get; set; }
+        public string? Type { get; set; }
+
+        public int IdTransaction { get; set; }
+
+        public string? Status { get; set; }
+
+        public string? Note { get; set; }
+
+        public DateTime? CancelDate { get; set; }
     }
 }
