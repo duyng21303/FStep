@@ -11,23 +11,24 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace FStep.Controllers.Admin
 {
-	public class AdminController : Controller
-	{
-		private readonly FstepDbContext _context;
-		private readonly IMapper _mapper;
-		private static readonly string[] defaultRole = new[] { "Customer", "Moderator", "Administrator" };
 
-		public AdminController(FstepDbContext context, IMapper mapper)
-		{
-			_context = context;
-			_mapper = mapper;
+    public class AdminController : Controller
+    {
+        private readonly FstepDbContext _context;
+        private readonly IMapper _mapper;
+        private static readonly string[] defaultRole = new[] { "Customer", "Moderator", "Administrator" };
+		private readonly IConfiguration _configuration;
+		public AdminController(FstepDbContext context, IMapper mapper, IConfiguration configuration)
+        {
+            _context = context;
+            _mapper = mapper;
+			_configuration = configuration;
 		}
-		[Authorize(Roles = "Admin")]
-		public async Task<IActionResult> Index(string codeTransaction, int? page)
-		{
-			var totalPost = _context.Posts.Count(p => p.Status != "Rejected");
-			var totalUser = _context.Users.Count(u => u.Status != false);
 
+        public async Task<IActionResult> Index(string codeTransaction, int? page)
+        {
+            var totalPost = _context.Posts.Count(p => p.Status != "Rejected");
+            var totalUser = _context.Users.Count(u => u.Status != false);
 			var totalTransaction = _context.Transactions.Count(t => t.Status == "Completed" || t.Status == "Processing" || t.Status == "Canceled");
 			var totalGMV = _context.Transactions
 				.Where(t => t.Status == "Completed")
@@ -81,56 +82,72 @@ namespace FStep.Controllers.Admin
 					.OrderBy(d => d.Year).ThenBy(d => d.Month)
 					.ToList();
 
-			// Phân loại giao dịch theo tháng
-			var resultListTotalPost = new List<int>();
-			var resultListTotal = new List<int>();
-			var resultListTotalCompleted = new List<int>();
+
+            // Phân loại giao dịch theo tháng
+            var resultListTotalPost = new List<int>();
+            var resultListTotal = new List<int>();
+            var resultListTotalCompleted = new List<int>();
+
+			var resultListPostCountExchange = new List<int>();
+			var resultListPostCountSale = new List<int>();
+			var amount = _configuration.GetValue<float>("Amount");
 			foreach (var month in months)
-			{
-				// Kiểm tra xem tháng hiện tại có giao dịch hay không
-				var totalPostCount = await _context.Posts
-							.Where(o => o.Date != null && o.Date.Value.Month == month.Month && o.Date.Value.Year == month.Year)
-							.CountAsync();
+            {
+                // Kiểm tra xem tháng hiện tại có giao dịch hay không
+                var totalPostCount = await _context.Posts
+                            .Where(o => o.Date != null && o.Date.Value.Month == month.Month && o.Date.Value.Year == month.Year)
+                            .CountAsync();
 
 				var totalTransactionCount = await _context.Transactions
 							.Where(o => o.Date != null && o.Date.Value.Month == month.Month && o.Date.Value.Year == month.Year)
 							.CountAsync();
 
-				var totalCompletedTransactionCount = await _context.Transactions
-							.Where(o => o.Date != null && o.Date.Value.Month == month.Month && o.Date.Value.Year == month.Year && o.Status == "Completed")
+                var totalCompletedTransactionCount = await _context.Transactions
+                            .Where(o => o.Date != null && o.Date.Value.Month == month.Month && o.Date.Value.Year == month.Year && o.Status == "Completed")
+                            .CountAsync();
+				var totalPostCountExchange = await _context.Posts
+							.Where(o => o.Date != null && o.Date.Value.Month == month.Month && o.Date.Value.Year == month.Year && o.Type == "Exchange" && o.Status == "Completed")
+							.CountAsync();
+				var totalPostCountSale = await _context.Posts
+							.Where(o => o.Date != null && o.Date.Value.Month == month.Month && o.Date.Value.Year == month.Year && o.Type == "Sale" && o.Status == "Completed")
 							.CountAsync();
 				// Thêm số lượng giao dịch hoặc giá trị 0 vào danh sách kết quả
 				resultListTotal.Add(totalTransactionCount);
-				resultListTotalCompleted.Add(totalCompletedTransactionCount);
-				resultListTotalPost.Add(totalPostCount);
-			}
+                resultListTotalCompleted.Add(totalCompletedTransactionCount);
+                resultListTotalPost.Add(totalPostCount);
 
+                resultListPostCountExchange.Add((int)(totalPostCountSale * amount));
+				resultListPostCountSale.Add((int)(totalPostCountSale * amount));
+			}
 			// Chuẩn bị dữ liệu cho biểu đồ
 			var labels = months.Select(g => "Tháng " + g.Month).ToList();
-			ViewBag.Labels = labels;
-			ViewBag.TotalTransactionDash = resultListTotal;
-			ViewBag.TotalPostDash = resultListTotalPost;
-			ViewBag.TotalCompleted = resultListTotalCompleted;
+            ViewBag.Labels = labels;
+            ViewBag.TotalTransactionDash = resultListTotal;
+            ViewBag.TotalPostDash = resultListTotalPost;
+            ViewBag.TotalCompleted = resultListTotalCompleted;
+            ViewBag.TotalPostExchange = resultListPostCountExchange;
+			ViewBag.TotalPostSale = resultListPostCountSale;
 			//----------------------------------------------------------------------------------------------------Dasboard
 
 			ViewBag.TotalPost = totalPost;
-			ViewBag.TotalTransaction = totalTransaction;
-			ViewBag.TotalUser = totalUser;
-			ViewBag.TotalGMV = totalGMV;
-			ViewBag.TotalRevenues = totalRevenues;
-			ViewBag.CodeTransaction = codeTransaction;
-			return View(transactionVM);
-		}
+            ViewBag.TotalTransaction = totalTransaction;
+            ViewBag.TotalUser = totalUser;
+            ViewBag.TotalGMV = totalGMV;
+            ViewBag.TotalRevenues = totalRevenues;
+            ViewBag.CodeTransaction = codeTransaction;
+            return View(transactionVM);
+        }
 
 		public float CalculateDiscount(float? amount)
 		{
 			if (amount.HasValue && amount > 0)
 			{
-				return 5000;
+				return _configuration.GetValue<float>("Amount");
+				 // 10% discount
 			}
 			else
 			{
-				return 5000; // Default discount if amount is null or <= 0
+				return _configuration.GetValue<float>("Amount"); // Default discount if amount is null or <= 0
 			}
 		}
 		[Authorize(Roles = "Admin")]
@@ -282,44 +299,71 @@ namespace FStep.Controllers.Admin
 					user.Status = viewModel.Status;
 					user.BankName = viewModel.BankName;
 					user.BankAccountNumber = viewModel.BankAccountNumber;
-					_context.SaveChanges();
-					TempData["SuccessMessage"] = $"Tài khoản {user.Name} đã được cập nhật lại thành công";
-					return RedirectToAction("UserManager", "Admin");
-				}
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex);
-				TempData["ErrorMessage"] = "Đã xảy ra lỗi khi cập nhật lại tài khoản {user.Name}.";
-			}
-			return View(viewModel);
-		}
-		[Authorize(Roles = "Admin")]
-		[HttpPost]
-		public IActionResult ChangeRole([FromBody] ProfileVM user)
-		{
-			var userFound = _context.Users.FirstOrDefault(x => x.IdUser == user.IdUser);
-			if (userFound != null && defaultRole.Contains(user.Role))
-			{
-				userFound.Role = user.Role;
-				_context.Users.Update(userFound);
-				_context.SaveChanges();
-				return Ok();
-			}
-			return BadRequest();
-		}
-		[Authorize(Roles = "Admin")]
-		[HttpPost]
-		public IActionResult DeleteComment([FromBody] CommentVM comment)
-		{
-			var commentExisted = _context.Comments.FirstOrDefault(x => x.IdComment == comment.IdComment);
-			if (commentExisted != null)
-			{
-				_context.Comments.Remove(commentExisted);
-				_context.SaveChanges();
-				return Ok();
-			}
-			return BadRequest();
-		}
-	}
+                    _context.SaveChanges();
+                    TempData["SuccessMessage"] = $"Tài khoản {user.Name} đã được cập nhật lại thành công";
+                    return RedirectToAction("UserManager", "Admin");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "Đã xảy ra lỗi khi cập nhật lại tài khoản {user.Name}.";
+            }
+            return View(viewModel);
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult ChangeRole([FromBody] ProfileVM user)
+        {
+            var userFound = _context.Users.FirstOrDefault(x => x.IdUser == user.IdUser);
+            if (userFound != null && defaultRole.Contains(user.Role))
+            {
+                userFound.Role = user.Role;
+                _context.Users.Update(userFound);
+                _context.SaveChanges();
+                return Ok();
+            }
+            return BadRequest();
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult DeleteComment([FromBody] CommentVM comment)
+        {
+            var commentExisted = _context.Comments.FirstOrDefault(x => x.IdComment == comment.IdComment);
+            if (commentExisted != null)
+            {
+                _context.Comments.Remove(commentExisted);
+                _context.SaveChanges();
+                return Ok();
+            }
+            return BadRequest();
+        }
+        [Authorize(Roles = "Admin")]
+        public IActionResult Payment(int page = 1, int pageSize = 10, string? search = null)
+        {
+            var query = _context.Payments.AsQueryable();
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(x => x.IdTransaction.ToString().ToLower().Contains(search.ToLower()));
+            }
+
+            var payment = query.Skip((page - 1) * pageSize).Take(pageSize).Select(x => _mapper.Map<PaymentVM>(x)).ToList();
+
+			var link = _configuration.GetValue<string>("VNPayMerchant");
+
+			PagingModel<PaymentVM> pagingModel = new()
+            {
+                Items = payment,
+                PagingInfo = new PagingInfo
+                {
+                    CurrentPage = page,
+                    ItemsPerPage = pageSize,
+                    TotalItems = query.Count(),
+                    Search = search
+                }
+            };
+            ViewBag.link = link;
+            return View("Payment",pagingModel);
+        }
+    }
 }

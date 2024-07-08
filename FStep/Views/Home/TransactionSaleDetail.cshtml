@@ -1,7 +1,9 @@
-﻿@model FStep.ViewModels.TransactionVM
+﻿@using Microsoft.AspNetCore.Http.Extensions
+@model FStep.ViewModels.TransactionVM
 @{
 	ViewData["Title"] = "TransactionSaleDetail";
 	var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+	ViewBag.url = Context.Request.GetDisplayUrl();
 }
 
 <!--Detail Sale-->
@@ -18,9 +20,9 @@
 					<h5 class="text-muted">Cảm ơn, <span style="color: #3572EF;">@Model.UserBuyer.IdUser</span>!</h5>
 				}
 				<div>
-					@if (DateTime.Now.CompareTo(Model.DeliveryDate?.AddDays(7)) <= 0 && Model.Transaction.Status == "Completed")
+					@if (DateTime.Now.CompareTo(Model.DeliveryDate?.AddDays(7)) <= 0 && Model.Transaction.Status == "Completed" && !Model.CheckFeedback)
 					{
-						<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm px-5 py-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@Model.Post.IdPost" asp-route-idTransaction="@Model.TransactionId">
+						<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm px-5 py-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@Model.Post.IdPost" asp-route-idTransaction="@Model.TransactionId" asp-route-url="@ViewBag.url">
 							Đánh giá
 						</a>
 					}
@@ -32,7 +34,7 @@
 					}
 					@if (DateTime.Now.CompareTo(Model.CreateDate?.AddDays(3)) <= 0 && Model.Transaction.Status == "Processing")
 					{
-						<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm px-4 py-2" type="button" data-bs-toggle="modal" data-bs-target="#cancelModal" asp-action="Cancel" asp-controller="Feedback" asp-route-idPost="@Model.Post.IdPost" asp-route-idTransaction="@Model.TransactionId">
+						<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm px-4 py-2" type="button" data-bs-toggle="modal" data-bs-target="#cancelModal">
 							Huỷ đơn hàng
 						</a>
 					}
@@ -120,7 +122,8 @@
 <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	@await Html.PartialAsync("Cancel", new CancelVM()
 {
-	TransactionId = Model.TransactionId
+	TransactionId = Model.TransactionId,
+	ReturnUrl = ViewBag.url
 })
 </div>
 

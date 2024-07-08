@@ -27,10 +27,10 @@
 
 
     //// Sidebar Toggler
-    //$('.sidebar-toggler').click(function () {
-    //    $('.sidebar, .content').toggleClass("open");
-    //    return false;
-    //});
+    $('.sidebar-toggler').click(function () {
+        $('.sidebar, .content').toggleClass("open");
+        return false;
+    });
 
 
     // Progress Bar
@@ -67,10 +67,14 @@
     var dataListTrans = $(dataListElementTrans).data("list");
     var dataListPost = $(dataListElementPost).data("list");
     var dataListComp = $(dataListElementComp).data("list");
+    var dataListPostExchange = $(dataListTotalPostExchange).data("list");
+    var dataListPostSale = $(dataListTotalPostSale).data("list");
 
     var dataListTransName = $(dataListElementTrans).data("name");
     var dataListPostName = $(dataListElementPost).data("name");
     var dataListCompName = $(dataListElementComp).data("name");
+    var dataListPostExchangeName = $(dataListTotalPostExchange).data("name");
+    var dataListPostSaleName = $(dataListTotalPostSale).data("name");
 
     var ctx1 = $("#worldwide-sales").get(0).getContext("2d");
     var myChart1 = new Chart(ctx1, {
@@ -100,22 +104,21 @@
         }
     });
 
-
     // Salse & Revenue Chart
     var ctx2 = $("#salse-revenue").get(0).getContext("2d");
     var myChart2 = new Chart(ctx2, {
         type: "line",
         data: {
-            labels: ["2016", "2017", "2018", "2019", "2020", "2021", "2022"],
+            labels: dataList,
             datasets: [{
-                    label: "Salse",
-                    data: [15, 30, 55, 45, 70, 65, 85],
+                label: dataListPostExchangeName,
+                data: dataListPostExchange,
                     backgroundColor: "rgba(0, 156, 255, .5)",
                     fill: true
                 },
                 {
-                    label: "Revenue",
-                    data: [99, 135, 170, 130, 190, 180, 270],
+                    label: dataListPostSaleName,
+                    data: dataListPostSale,
                     backgroundColor: "rgba(0, 156, 255, .3)",
                     fill: true
                 }

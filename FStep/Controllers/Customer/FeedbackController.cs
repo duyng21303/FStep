@@ -22,7 +22,7 @@ namespace FStep.Controllers.Customer
 
 		[Authorize]
 		[HttpGet]
-		public IActionResult Feedback(int idPost, int idTransaction)
+		public IActionResult Feedback(int idPost, int idTransaction, string url)
 		{
 			var feedback = new FeedbackVM();
 			feedback.IdPost = idPost;
@@ -33,6 +33,7 @@ namespace FStep.Controllers.Customer
 			feedback.Quantity = db.Transactions.FirstOrDefault(p => p.IdTransaction == idTransaction).Quantity;
 			feedback.UnitPrice = db.Transactions.FirstOrDefault(p => p.IdTransaction == idTransaction).UnitPrice;
 			feedback.Amount = db.Transactions.FirstOrDefault(p => p.IdTransaction == idTransaction).Amount;
+			feedback.ReturnUrl = url;
 
 			HttpContext.Session.Set<FeedbackVM>("FEEDBACK_INFO", feedback);
 
@@ -75,7 +76,7 @@ namespace FStep.Controllers.Customer
 					db.Users.Update(user);
 					db.SaveChanges();
 				}
-				return RedirectToAction("TransactionHistory", "Home");
+				return Redirect(info.ReturnUrl);
 			}
 			catch (Exception ex)
 			{

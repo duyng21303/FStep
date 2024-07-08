@@ -679,7 +679,7 @@
 														Báo cáo
 													</button>
 												}
-												@if (comment.Type == "Exchange" && User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(comment.IdUser))
+												@if (comment.Type == "Exchange" && User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser))
                                                 {
 													<span class="labelConfirm exchange">Trao đổi</span>
 													@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(comment.IdUser))

@@ -4,5 +4,6 @@
 	{
 		public string Note { get; set; }
 		public int TransactionId { get; set; }
+		public string ReturnUrl { get; set; }
 	}
 }
