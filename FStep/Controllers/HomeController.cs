@@ -254,6 +254,95 @@ namespace FStep.Controllers
 		}
 		[Authorize]
 		[HttpGet]
+		public IActionResult OrderHistory(string? query, int? page, string activeTab = "exchange")
+		{
+			int pageSize = 12; // số lượng sản phẩm mỗi trang 
+			int pageNumber = (page ?? 1);   // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định
+			try
+			{
+				// Base query for transactions
+				var transaction = db.Transactions.AsQueryable();
+				transaction = transaction.Where(p => p.IdUserSeller == User.FindFirst("UserID").Value);
+
+				var exchangeTransactions = transaction.Where(t => t.Type == "Exchange");
+				var saleTransactions = transaction.Where(t => t.Type == "Sale");
+
+				//search operating
+				if (!string.IsNullOrEmpty(query))
+				{
+					transaction = transaction.Where(p => p.IdPostNavigation.Content.Contains(query));
+					if (activeTab == "exchange")
+					{
+
+						query = query.ToLower();
+						exchangeTransactions = exchangeTransactions.Where(t =>
+							t.CodeTransaction.ToLower().Contains(query) ||
+							t.IdPostNavigation.Content.ToLower().Contains(query)
+						);
+					}
+					else
+					{
+						saleTransactions = saleTransactions.Where(t =>
+							t.IdPostNavigation.Location.ToLower().Contains(query) ||
+							t.IdPostNavigation.Content.ToLower().Contains(query)
+						);
+					}
+				}
+
+				var viewResult = new TransactionServiceVM();
+
+				var exchangeList = exchangeTransactions.Select(s => new TransactionVM
+				{
+					TransactionId = s.IdTransaction,
+					Transaction = s,
+					Post = db.Posts.FirstOrDefault(p => p.IdPost == s.IdPost),
+					UserBuyer = db.Users.FirstOrDefault(p => p.IdUser == s.IdUserBuyer),
+					UserSeller = db.Users.FirstOrDefault(p => p.IdUser == s.IdUserSeller),
+					CommentExchangeVM = new CommentExchangeVM()
+					{
+						Content = db.Comments.SingleOrDefault(comment => comment.IdComment == s.IdComment).Content,
+						IdPost = db.Comments.SingleOrDefault(comment => comment.IdComment == s.IdComment).IdPost.ToString(),
+						IdUser = db.Comments.SingleOrDefault(comment => comment.IdComment == s.IdComment).IdUser,
+						Img = db.Comments.SingleOrDefault(comment => comment.IdComment == s.IdComment).Img,
+						Type = db.Comments.SingleOrDefault(comment => comment.IdComment == s.IdComment).Type
+					},
+					CreateDate = s.Date,
+					DeliveryDate = db.Payments.FirstOrDefault(p => p.IdTransaction == s.IdTransaction && p.Type == "Seller").PayTime,
+					CancelDate = db.Payments.FirstOrDefault(p => p.IdTransaction == s.IdTransaction).CancelDate,
+					CheckFeedback = db.Feedbacks.Any(p => p.IdPost == s.IdPost),
+				}).OrderByDescending(o => o.TransactionId);
+				viewResult.ExchangeList = exchangeList.ToPagedList(pageNumber, pageSize);
+
+				var saleList = saleTransactions.Select(s => new TransactionVM
+				{
+					TransactionId = s.IdTransaction,
+					Transaction = s,
+					Post = db.Posts.FirstOrDefault(p => p.IdPost == s.IdPost),
+					UserBuyer = db.Users.FirstOrDefault(p => p.IdUser == s.IdUserBuyer),
+					UserSeller = db.Users.FirstOrDefault(p => p.IdUser == s.IdUserSeller),
+					CreateDate = s.Date,
+					DeliveryDate = db.Payments.FirstOrDefault(p => p.IdTransaction == s.IdTransaction && p.Type == "Seller").PayTime,
+					CancelDate = db.Payments.FirstOrDefault(p => p.IdTransaction == s.IdTransaction).CancelDate,
+					CheckFeedback = db.Feedbacks.Any(p => p.IdPost == s.IdPost),
+				}).OrderByDescending(o => o.TransactionId);
+				viewResult.SaleList = saleList.ToPagedList(pageNumber, pageSize);
+
+
+
+				ViewBag.Query = query;
+				ViewBag.ActiveTab = activeTab;
+
+				return View(viewResult);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine("An error occurred: " + ex.Message);
+				Console.WriteLine("Stack Trace: " + ex.StackTrace);
+				return View("Error", "Home");
+			}
+		}
+		[Authorize]
+		[HttpGet]
 		public ActionResult TransactionSaleDetail(int id)
 		{
 			var transaction = db.Transactions.FirstOrDefault(p => p.IdTransaction == id);
