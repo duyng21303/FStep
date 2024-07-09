@@ -172,7 +172,7 @@ namespace FStep.Controllers.Admin
 			}
 			return RedirectToAction("Index", "Admin");
 		}
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin, Moderator")]
 		public IActionResult UserManager(int page = 1, int pageSize = 10, string? search = null)
 		{
 			var query = _context.Users.AsQueryable();
