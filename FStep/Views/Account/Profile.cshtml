@@ -18,10 +18,10 @@
 								<img class="img-account-profile mb-2" src="~/img/@Model.AvatarImg" alt="">
 							</div>
 							<!-- Profile picture help block-->
-							<div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
+							<div class="small font-italic text-muted mb-4">JPG or PNG không lớn hơn 5 MB</div>
 							<!-- Profile picture upload button-->
 							<label class="btn btn-primary">
-								Upload new image
+								Lưu ảnh
 								<input type="file" name="img" style="display: none;" onchange="this.form.submit()">
 							</label>
 						</form>
@@ -36,44 +36,48 @@
 						<form asp-action="Profile">
 							<!-- Form Group (username)-->
 							<div class="mb-3">
-								<label asp-for="@Model.IdUser" class="small mb-1" for="inputUsername"></label>
+								<label asp-for="@Model.IdUser" class="small mb-1" style="font-weight: bold; color:black">Mã định dạng</label>
 								<input asp-for="@Model.IdUser" class="form-control" id="inputUsername" readonly />
 							</div>
 							<!-- Form Row-->
 							<div class="row gx-3 mb-3">
 								<div class="col-md-6">
-									<label asp-for="@Model.Name" class="small mb-1"></label>
-									<input asp-for="@Model.Name" class="form-control" type="text" placeholder="Enter your name">
+									<label asp-for="@Model.Name" class="small mb-1" style="font-weight: bold; color:black">Tên người dùng</label>
+									<input asp-for="@Model.Name" class="form-control" type="text" placeholder="Nhập tên">
+								</div>
+								<div class="col-md-6">
+									<label asp-for="@Model.PointRating" class="small mb-1" style="font-weight: bold; color:black">Số điểm</label>
+									<input asp-for="@Model.PointRating" class="form-control" type="text" readonly">
 								</div>
 							</div>
 							<!-- Form Row        -->
 							<div class="row gx-3 mb-3">
 								<!-- Form Group (organization name)-->
 								<div class="col-md-6">
-									<label asp-for="@Model.StudentId" class="small mb-1" for="inputOrgName"></label>
+									<label asp-for="@Model.StudentId" class="small mb-1" style="font-weight: bold; color:black">Mã Số</label>
 									<input asp-for="@Model.StudentId" class="form-control" readonly />
 								</div>
 								<!-- Form Group (location)-->
 								<div class="col-md-6">
-									<label asp-for="@Model.Address" class="small mb-1"></label>
-									<input asp-for="@Model.Address" class="form-control" type="text" placeholder="Enter your Address">
+									<label asp-for="@Model.Address" class="small mb-1" style="font-weight: bold; color:black">Địa chỉ</label>
+									<input asp-for="@Model.Address" class="form-control" type="text" placeholder="Nhập địa chỉ">
 								</div>
 							</div>
 							<!-- Form Group (email address)-->
 							<div class="mb-3">
-								<label asp-for="@Model.Email" class="small mb-1" for="inputOrgName"></label>
+								<label asp-for="@Model.Email" class="small mb-1" style="font-weight: bold; color:black">Gmail</label>
 								<input asp-for="@Model.Email" class="form-control" readonly />
 							</div>
 							<div class="mb-3">
-								<label asp-for="@Model.BankName" class="small mb-1" for="inputOrgName"></label>
+								<label asp-for="@Model.BankName" class="small mb-1" style="font-weight: bold; color:black">Ngân hàng</label>
 								<input asp-for="@Model.BankName" class="form-control" readonly />
 							</div>
 							<div class="mb-3">
-								<label asp-for="@Model.BankAccountNumber" class="small mb-1" for="inputOrgName"></label>
+								<label asp-for="@Model.BankAccountNumber" class="small mb-1" style="font-weight: bold; color:black">Số tài khoản</label>
 								<input asp-for="@Model.BankAccountNumber" class="form-control" readonly />
 							</div>
 							<!-- Save changes button-->
-							<button class="btn btn-primary" type="submit">Save changes</button>
+							<button class="btn btn-primary" type="submit">Lưu</button>
 						</form>
 					</div>
 				</div>
@@ -146,7 +150,7 @@
 									else
 									{
 										<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@post.IdPost">
-											<img src="@Url.Content("~/img/postPic/" + post.Img)" class="img-fluid w-100 rounded-top" style="min-height: 188px" alt="Post Image">
+											<img src="@Url.Content("~/img/postPic/" + post.Img)" class="img-fluid w-100 rounded-top" style="min-height: 188px;max-height: 188px " alt="Post Image">
 										</a>
 									}
 								</div>

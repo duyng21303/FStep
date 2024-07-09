@@ -74,13 +74,12 @@
 									@foreach (var item in Model.ExchangeList)
 									{
 										<tr data-id="@item.TransactionVM.IdTransaction" data-type="@item.Type">
+											<td>@Html.DisplayFor(modelItem => item.PostVM.IdPost)</td>
+											<td>@Html.DisplayFor(modelItem => item.PostVM.Location)</td>
 											<td>@Html.DisplayFor(modelItem => item.TransactionVM.CodeTransaction)</td>
-											<td>@Html.DisplayFor(modelItem => item.Location)</td>
-											<td>@item.TransactionVM.Date</td>
+											<td>@Html.DisplayFor(modelItem => item.TransactionVM.Date)</td>
 											<td>@Html.DisplayFor(moderItem => item.UserSeller.IdUser)</td>
-
 											<td>@Html.DisplayFor(modelItem => item.UserBuyer.IdUser)</td>
-
 											<td>@Html.DisplayFor(modelItem => item.PostVM.Title)</td>
 											<td>
 												<button type="button" class="btn btn-danger btn-sm submit-img" data-toggle="collapse" data-target="#confirmCollapse-@item.TransactionVM.IdTransaction">
@@ -250,11 +249,11 @@
 									{
 										<tr data-id="@item.TransactionVM.IdTransaction" data-type="@item.Type">
 											<td>@Html.DisplayFor(modelItem => item.PostVM.IdPost)</td>
-											<td>@Html.DisplayFor(modelItem => item.Location)</td>
+											<td>@Html.DisplayFor(modelItem => item.PostVM.Location)</td>
 											<td>@Html.DisplayFor(modelItem => item.TransactionVM.CodeTransaction)</td>
 											<td>@Html.DisplayFor(modelItem => item.TransactionVM.Date)</td>
 											<td>@Html.DisplayFor(moderItem => item.UserBuyer.IdUser)</td>
-											<td>@Html.DisplayFor(modelItem => item.UserSeller.IdUser)</td>
+											<td>@Html.DisplayFor(modelItem => item.PostVM.Title)</td>
 											<td>@Html.DisplayFor(modelItem => item.TransactionVM.Quantity)</td>
 											<td>@String.Format(format, "{0:0,0 VND}", item.TransactionVM.Amount)</td>
 											<td>

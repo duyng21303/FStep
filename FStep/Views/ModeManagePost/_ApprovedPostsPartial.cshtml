@@ -57,7 +57,20 @@
 									<tr>
 										<td>@Html.Raw(item.PostId)</td>
 										<td><img src="@Url.Content("~/img/postPic/" + item.Image)" class="img-fluid small-rounded-image" alt="Post Image"></td>
-										<td class="post-title">@Html.Raw(item.PostTitle)</td>
+										<td class="post-title">
+											@if (item.Type == "Sale")
+											{
+												<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@item.PostId" class="text-decoration-none">
+													<span>@Html.Raw(item.PostTitle)</span>
+												</a>
+											}
+											else
+											{
+												<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.PostId" class="text-decoration-none">
+													<span>@Html.Raw(item.PostTitle)</span>
+												</a>
+											}
+										</td>
 										<td class="post-studentid">@Html.Raw(item.StudentId)</td>
 										<td>@Html.Raw(item.CreateDate.ToString("yyyy-MM-dd"))</td>
 										<td>@Html.Raw(item.DaysRemaining)</td>
@@ -91,7 +104,7 @@
 											</td>
 											<td style="width: 60px">
 												<form asp-controller="ModeManagePost" asp-action="FinishPost" method="post" onsubmit="return confirmDelete()">
-													<input type="hidden" name="id" value="@item.PostId"  />
+													<input type="hidden" name="id" value="@item.PostId" />
 													<button type="submit" class="btn btn-danger btn-sm" style="width: 60px">Xóa</button>
 												</form>
 											</td>
@@ -99,7 +112,6 @@
 										@if (item.Status == "True")
 										{
 											<td style="width: 120px">
-
 												<form asp-controller="ModeManagePost" asp-action="FinishPost" method="post" onsubmit="return confirmDelete()">
 													<input type="hidden" name="id" value="@item.PostId" />
 													<button type="submit" class="btn btn-danger btn-sm" style="width: 60px">Xóa</button>
@@ -111,7 +123,7 @@
 											<td>
 												<form asp-controller="ModeManagePost" asp-action="AddLocation" method="post" class="add-location-form">
 													<div class="input-group input-group-sm compact-form">
-														<input type="text" name="location" class="form-control" placeholder="Nhập vị trí" aria-label="Location" required>
+														<input type="text" name="location" class="form-control" placeholder="Vị trí" aria-label="Location" required>
 														<input type="hidden" name="id" value="@item.PostId" />
 														<button class="btn btn-primary" type="submit">Thêm</button>
 													</div>
@@ -134,12 +146,11 @@
 <style>
 	.add-location-form {
 		display: inline-block;
-		width: 150px; /* Adjust the width as needed */
+		width: 130px; /* Adjust the width as needed */
 	}
 
 		.add-location-form .form-control {
 			max-width: none; /* Remove the inline max-width style */
 			width: 100%; /* Make the input take the full width of the form */
 		}
-
 </style>
