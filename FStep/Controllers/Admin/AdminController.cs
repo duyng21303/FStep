@@ -351,7 +351,7 @@ namespace FStep.Controllers.Admin
 			}
 			return BadRequest();
 		}
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin, Moderator")]
 		[HttpPost]
 		public IActionResult DeleteComment([FromBody] CommentVM comment)
 		{
@@ -364,7 +364,7 @@ namespace FStep.Controllers.Admin
 			}
 			return BadRequest();
 		}
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin, Moderator")]
 		[HttpPost]
 		public async Task<IActionResult> DeleteReport([FromBody] ReportVM report)
 		{
@@ -433,7 +433,7 @@ namespace FStep.Controllers.Admin
 		/// </summary>
 		/// <param name="report"></param>
 		/// <returns></returns>
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin, Moderator")]
 		[HttpPost]
 		public async Task<IActionResult> PointHandler([FromBody] ReportVM report)
 		{
