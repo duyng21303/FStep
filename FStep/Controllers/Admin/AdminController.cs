@@ -17,11 +17,15 @@ namespace FStep.Controllers.Admin
         private readonly FstepDbContext _context;
         private readonly IMapper _mapper;
         private static readonly string[] defaultRole = new[] { "Customer", "Moderator", "Administrator" };
+		private readonly IConfiguration _configuration;
+		private readonly NotificationServices notificationServices;
 
-		public AdminController(FstepDbContext context, IMapper mapper)
+		public AdminController(FstepDbContext context, IMapper mapper, IConfiguration configuration)
 		{
 			_context = context;
 			_mapper = mapper;
+			_configuration = configuration;
+			notificationServices = new NotificationServices(_context);
 		}
 		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Index(string codeTransaction, int? page)
