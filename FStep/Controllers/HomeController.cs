@@ -14,6 +14,7 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using NuGet.Protocol.Plugins;
 using System;
 using System.Diagnostics;
+using System.Drawing.Printing;
 using System.Net;
 using X.PagedList;
 
@@ -31,7 +32,7 @@ namespace FStep.Controllers
 			_mapper = mapper;
 		}
 
-		public IActionResult Index(String? query, int? page)
+		public IActionResult Index(String? query, int suggestedPage = 1, int highRatedPage = 1)
 		{
 			if (User.IsInRole("Moderator"))
 			{
@@ -40,8 +41,7 @@ namespace FStep.Controllers
 			{
                 return Redirect("/Admin/Index");
             }
-			int pageSize = 12; // số lượng sản phẩm mỗi trang 
-			int pageNumber = (page ?? 1);   // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
+			int pageSize = 15; // số lượng sản phẩm mỗi trang 
 			var ExchangePost = db.Posts
 				.Include(t => t.IdUserNavigation)
 				.AsQueryable();
@@ -51,7 +51,7 @@ namespace FStep.Controllers
 			{
 				ExchangePost = ExchangePost.Where(p => p.Content.Contains(query));
 			}
-			var result = ExchangePost.Select(s => new PostVM
+			var suggestedPosts = ExchangePost.Select(s => new PostVM
 			{
 				IdProduct = s.IdProduct,
 				IdPost = s.IdPost,
@@ -63,7 +63,16 @@ namespace FStep.Controllers
 				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now
 			}).OrderByDescending(o => o.IdPost);
 
-			var pageList = result.ToPagedList(pageNumber, pageSize);
+			var suggestedPostList = suggestedPosts.ToPagedList(suggestedPage, pageSize);
+
+			//hight rating
+			var highRatedPosts = suggestedPosts
+				.Where(p => p.PointRating > 50)
+				.OrderBy(p => Guid.NewGuid())
+				.Take(10);
+
+			var highRatedPostList = highRatedPosts.ToPagedList(highRatedPage, pageSize);
+
 			ViewBag.Query = query;
 			string checkInfo;
 			string id = User.FindFirst("UserID")?.Value;
@@ -77,14 +86,22 @@ namespace FStep.Controllers
 				checkInfo = "notLogin";
 			}
 			ViewBag.checkInfo = checkInfo;
-			return View(pageList);
+
+			var model = new PostVM
+			{
+				SuggestedPosts = suggestedPostList,
+				highRatedPostList = highRatedPostList
+			};
+
+			return View(model);
 		}
 
-		public IActionResult Sale(String? query, int? page)
+		public IActionResult Sale(String? query, int suggestedPage = 1, int highRatedPage = 1)
 		{
-			int pageSize = 12; // số lượng sản phẩm mỗi trang 
-			int pageNumber = (page ?? 1);  // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
-			var SalePost = db.Posts.AsQueryable();
+			var pageSize = 15;
+			var SalePost = db.Posts
+				.Include(t => t.IdUserNavigation)
+				.AsQueryable();
 			SalePost = SalePost.Where(p => p.Type == "Sale" && p.Status == "True");
 
 			if (!string.IsNullOrEmpty(query))
@@ -92,18 +109,27 @@ namespace FStep.Controllers
 				SalePost = SalePost.Where(p => p.Content.Contains(query));
 			}
 
-			var result = SalePost.Select(s => new PostVM
+			var suggestedPosts = SalePost.Select(s => new PostVM
 			{
+				IdProduct = s.IdProduct,
 				IdPost = s.IdPost,
 				Title = s.Content,
-				Img = s.Img,
 				Description = s.Detail,
-				ProductStatus = (int)s.IdProductNavigation.Quantity,
-				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now,
-				Price = s.IdProductNavigation.Price ?? 0
+				PointRating = s.IdUserNavigation.PointRating,
+				Img = s.Img,
+				NameBoss = s.IdUserNavigation.Name,
+				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now
 			}).OrderByDescending(o => o.IdPost);
 
-			var pageList = result.ToPagedList(pageNumber, pageSize);
+			var suggestedPostList = suggestedPosts.ToPagedList(suggestedPage, pageSize);
+
+			//hight rating
+			var highRatedPosts = suggestedPosts
+				.Where(p => p.PointRating > 50)
+				.OrderBy(p => Guid.NewGuid())
+			.Take(10);
+
+			var highRatedPostList = highRatedPosts.ToPagedList(highRatedPage, pageSize);
 
 			ViewBag.Query = query;
 			string checkInfo;
@@ -118,7 +144,13 @@ namespace FStep.Controllers
 				checkInfo = "notLogin";
 			}
 			ViewBag.checkInfo = checkInfo;
-			return View(pageList);
+			var model = new PostVM
+			{
+				SuggestedPosts = suggestedPostList,
+				highRatedPostList = highRatedPostList
+			};
+
+			return View(model);
 		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

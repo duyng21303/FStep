@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using X.PagedList;
 
 namespace FStep.ViewModels
 {
@@ -47,5 +48,8 @@ namespace FStep.ViewModels
 		public int? PointRating { get; set; }
 		public string? Location { get; set; }
 		public String? NameBoss { get; set; }
+
+		public IPagedList<PostVM> SuggestedPosts { get; set; }
+		public IPagedList<PostVM> highRatedPostList { get; set; }
 	}
 }

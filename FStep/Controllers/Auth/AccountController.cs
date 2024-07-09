@@ -164,6 +164,8 @@ namespace FStep.Controllers.Auth
 				Name = user.Name,
 				PointRating = user.PointRating,
 				StudentId = user.StudentId,
+				BankName = user.BankName,
+				BankAccountNumber = user.BankAccountNumber,
 				Posts = user.Posts.Select(p => new PostVM()
 				{
 					IdPost = p.IdPost,
