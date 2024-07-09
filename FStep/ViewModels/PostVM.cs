@@ -18,6 +18,11 @@ namespace FStep.ViewModels
 		[DataType(DataType.Upload)]
 		[FileExtensions(Extensions = "png,jgp,jpeg,gif")]
 		public string Img { get; set; }
+		[Display(Name = "Giá (VNĐ)")]
+		[DataType(DataType.Currency)]
+		[Range(10_000, 9_000_000, ErrorMessage = "Số tiền tối thiểu 10,000VNĐ")]
+		[Required(ErrorMessage = "Bắt buộc")]
+		public float? Price { get; set; }
 
 		[Display(Name = "Mô tả")]
 		[Required(ErrorMessage = "Bắt buộc")]
@@ -26,17 +31,13 @@ namespace FStep.ViewModels
 		public DateTime? CreateDate { get; set; }
 		public string Type { get; set; }
 
-
 		[Display(Name = "Số lượng")]
 		[Required(ErrorMessage = "Bắt buộc")]
 		public int? Quantity { get; set; }
 
 		public int? ProductStatus { get; set; }
 
-		[Display(Name = "Giá (VNĐ)")]
-		[DataType(DataType.Currency)]
-		[Required(ErrorMessage = "Bắt buộc")]
-		public float? Price { get; set; }
+		
 		[Display(Name = "Thông tin chi tiết sản phẩm")]
 		public string? DetailProduct { get; set; }
 		public string IdUser { get; set; }

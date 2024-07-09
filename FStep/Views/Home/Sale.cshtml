@@ -117,6 +117,7 @@
 										<h4 class="card-title">@Html.Raw(item.Title)</h4>
 									</a>
 									<div class="small" style="color: red">Giá: @String.Format(format, "{0:0,0 VND}", item.Price)</div>
+
 									<p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate?.ToString("dd/MM/yyyy")</span></p>
 								</div>
 							</div>

@@ -12,14 +12,14 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace FStep.Controllers.Admin
 {
-
 	public class AdminController : Controller
 	{
 		private readonly FstepDbContext _context;
 		private readonly IMapper _mapper;
-		private static readonly string[] defaultRole = new[] { "Customer", "Moderator", "Admin" };
+		private static readonly string[] defaultRole = new[] { "Customer", "Moderator", "Administrator" };
 		private readonly IConfiguration _configuration;
 		private readonly NotificationServices notificationServices;
+
 		public AdminController(FstepDbContext context, IMapper mapper, IConfiguration configuration)
 		{
 			_context = context;
@@ -27,7 +27,7 @@ namespace FStep.Controllers.Admin
 			_configuration = configuration;
 			notificationServices = new NotificationServices(_context);
 		}
-
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Index(string codeTransaction, int? page)
 		{
 			var totalPost = _context.Posts.Count(p => p.Status != "Rejected");
@@ -172,7 +172,7 @@ namespace FStep.Controllers.Admin
 			}
 			return RedirectToAction("Index", "Admin");
 		}
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin, Moderator")]
 		public IActionResult UserManager(int page = 1, int pageSize = 10, string? search = null)
 		{
 			var query = _context.Users.AsQueryable();
@@ -196,7 +196,7 @@ namespace FStep.Controllers.Admin
 
 			return View("UserManager", pagingModel);
 		}
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin, Moderator")]
 		public IActionResult UserDetail(string id)
 		{
 			// Lấy thông tin người dùng
@@ -227,7 +227,7 @@ namespace FStep.Controllers.Admin
 		}
 
 
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin, Moderator")]
 		public IActionResult ReportManager(int page = 1, int pageSize = 10, string? search = null)
 		{
 			var query = _context.Reports
@@ -351,7 +351,7 @@ namespace FStep.Controllers.Admin
 			}
 			return BadRequest();
 		}
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin, Moderator")]
 		[HttpPost]
 		public IActionResult DeleteComment([FromBody] CommentVM comment)
 		{
@@ -364,7 +364,7 @@ namespace FStep.Controllers.Admin
 			}
 			return BadRequest();
 		}
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin, Moderator")]
 		[HttpPost]
 		public async Task<IActionResult> DeleteReport([FromBody] ReportVM report)
 		{
@@ -433,7 +433,7 @@ namespace FStep.Controllers.Admin
 		/// </summary>
 		/// <param name="report"></param>
 		/// <returns></returns>
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin, Moderator")]
 		[HttpPost]
 		public async Task<IActionResult> PointHandler([FromBody] ReportVM report)
 		{

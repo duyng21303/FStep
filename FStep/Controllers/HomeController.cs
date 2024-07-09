@@ -34,10 +34,7 @@ namespace FStep.Controllers
 
 		public IActionResult Index(String? query, int suggestedPage = 1, int highRatedPage = 1)
 		{
-			if (User.IsInRole("Moderator"))
-			{
-				return Redirect("/ModeManagePost/ManagePosts");
-			} else if (User.IsInRole("Admin"))
+			try
 			{
                 return Redirect("/Admin/Index");
             }
@@ -80,10 +77,13 @@ namespace FStep.Controllers
 			{
 				var user = db.Users.FirstOrDefault(p => p.IdUser == id);
 				checkInfo = (user?.StudentId != null || user.BankAccountNumber != null || user.BankName != null).ToString();
+
 			}
-			else
+			catch (Exception ex)
 			{
-				checkInfo = "notLogin";
+				Console.WriteLine(ex);
+				ModelState.AddModelError("Error", "Đã xảy ra một số lỗi khi phản hồi yêu cầu của bạn");
+				return RedirectToAction("Error", "Home");
 			}
 			ViewBag.checkInfo = checkInfo;
 
@@ -94,6 +94,7 @@ namespace FStep.Controllers
 			};
 
 			return View(model);
+
 		}
 
 		public IActionResult Sale(String? query, int suggestedPage = 1, int highRatedPage = 1)
@@ -105,9 +106,12 @@ namespace FStep.Controllers
 			SalePost = SalePost.Where(p => p.Type == "Sale" && p.Status == "True");
 
 			if (!string.IsNullOrEmpty(query))
+
 			{
-				SalePost = SalePost.Where(p => p.Content.Contains(query));
-			}
+				int pageSize = 12; // số lượng sản phẩm mỗi trang 
+				int pageNumber = (page ?? 1);  // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
+				var SalePost = db.Posts.AsQueryable();
+				SalePost = SalePost.Where(p => p.Type == "Sale" && p.Status == "True");
 
 			var suggestedPosts = SalePost.Select(s => new PostVM
 			{
@@ -138,10 +142,13 @@ namespace FStep.Controllers
 			{
 				var user = db.Users.FirstOrDefault(p => p.IdUser == id);
 				checkInfo = (user?.StudentId != null && user.BankAccountNumber != null && user.BankName != null).ToString();
+
 			}
-			else
+			catch (Exception ex)
 			{
-				checkInfo = "notLogin";
+				Console.WriteLine(ex);
+				ModelState.AddModelError("Error", "Đã xảy ra một số lỗi khi phản hồi yêu cầu của bạn");
+				return RedirectToAction("Error", "Home");
 			}
 			ViewBag.checkInfo = checkInfo;
 			var model = new PostVM
@@ -151,13 +158,14 @@ namespace FStep.Controllers
 			};
 
 			return View(model);
+
 		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
 		{
-			var status = (int) HttpStatusCode.InternalServerError;
-			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier, StatusCode = ((int) HttpStatusCode.InternalServerError).ToString() });
+			var status = (int)HttpStatusCode.InternalServerError;
+			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier, StatusCode = ((int)HttpStatusCode.InternalServerError).ToString() });
 		}
 		[Authorize]
 		[HttpPost]
@@ -167,7 +175,10 @@ namespace FStep.Controllers
 			{
 				var product = _mapper.Map<Product>(model);
 				product.Quantity = 1;
-				product.Price = model.Price;
+				if (model.Type == "Sale" && (model.Price == null || model.Price < 10_000 || model.Price > 9_000_000))
+				{
+					return View("FailToCreate");
+				}
 				product.Status = "True";
 				db.Add(product);
 				db.SaveChanges();
@@ -187,7 +198,6 @@ namespace FStep.Controllers
 				db.SaveChanges();
 				return Redirect("/");
 			}
-
 			catch (Exception ex)
 			{
 				Console.WriteLine(ex);

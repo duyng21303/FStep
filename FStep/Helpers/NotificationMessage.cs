@@ -118,15 +118,19 @@ namespace FStep.Helpers
 								  on payment.IdTransaction equals transaction.IdTransaction
 								  join user in context.Users
 								  on transaction.IdUserBuyer equals user.IdUser
-								  where payment.IdPayment == EventEntity<Payment>(context, notif).IdPayment// paymentId là id của payment bạn có
+								  where payment.IdPayment == EventEntity<Payment>(context, notif).IdPayment
 								  select user).FirstOrDefault(),
+
 					"Transaction" => context.Users
-						.Where(p => p.IdUser == EventEntity<Transaction>(context, notif).IdUserBuyer)
+						.Where(p => p.IdUser == EventEntity<Transaction>(context, notif).IdUserBuyer) // đảm bảo người dùng khác với currentIdUser
 						.FirstOrDefault(),
+
 					"Comment" => context.Users
-						.Where(p => p.IdUser == EventEntity<Comment>(context, notif).IdUser)
+						.Where(p => p.IdUser == EventEntity<Comment>(context, notif).IdUser) // đảm bảo người dùng khác với currentIdUser
 						.FirstOrDefault(),
+
 					"Report" => null,
+
 					_ => null
 				};
 			}
