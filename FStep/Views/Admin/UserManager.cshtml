@@ -93,6 +93,14 @@
 												<button type="submit" class="btn btn-success">Thao tác</button>
 											</form>
 										}
+										@if (userRole == "Moderator")
+										{
+											<form asp-controller="Admin" asp-action="UserDetail" method="post">
+												<input type="hidden" name="id" value="@user.IdUser" /> <!-- Ensure the input name matches your action parameter -->
+												<button type="submit" class="btn btn-success">Chi tiết</button>
+											</form>
+										}
+
 									</td>
 								</tr>
 							}
