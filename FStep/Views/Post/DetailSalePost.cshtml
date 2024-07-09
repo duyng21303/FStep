@@ -493,7 +493,6 @@
 		<div class="left-column">
 			<img src="~/img/postPic/@Model.Img" alt="Project Image">
 		</div>
-
 		<!-- Right Column -->
 		<div class="right-column">
 			<!-- Product Description -->
@@ -504,6 +503,8 @@
 				<a class="read-more" href="javascript:void(0)">Xem thêm</a>
 				<a class="shrink-btn" href="javascript:void(0)">Thu gọn</a>
 			</div>
+		</div>
+
 			@* <div class="row">
 			<div class="mb-3 text-muted small">
 			<span>
@@ -779,56 +780,25 @@
 			var shrinkButton = productDescription.querySelector('.shrink-btn');
 
 			if (textContainer.scrollHeight > textContainer.clientHeight) {
-				readMoreLink.style.display = 'inline-block'; // Hiển thị liên kết "Xem thêm" nếu nội dung vượt quá chiều rộng
+				readMoreLink.style.display = 'inline-block'; // Show "Read more" link if content overflows
+				shrinkButton.style.display = 'none'; // Hide "Collapse" button initially
 
 				readMoreLink.addEventListener('click', function () {
-					if (textContainer.style.maxHeight === 'none') {
-						textContainer.style.maxHeight = '200px'; // Thu gọn nội dung lại về giới hạn chiều cao ban đầu
-						readMoreLink.innerText = 'Xem thêm'; // Đổi văn bản liên kết thành "Xem thêm"
-					} else {
-						textContainer.style.maxHeight = 'none'; // Mở rộng nội dung
-						readMoreLink.innerText = 'Thu gọn'; // Đổi văn bản liên kết thành "Thu gọn"
-					}
+					textContainer.style.maxHeight = 'none'; // Expand content
+					readMoreLink.style.display = 'none'; // Hide "Read more" link
+					shrinkButton.style.display = 'inline-block'; // Show "Collapse" button
 				});
+
+				shrinkButton.addEventListener('click', function () {
+					textContainer.style.maxHeight = '100px'; // Collapse content to initial height
+					readMoreLink.style.display = 'inline-block'; // Show "Read more" link
+					shrinkButton.style.display = 'none'; // Hide "Collapse" button
+				});
+			} else {
+				readMoreLink.style.display = 'none'; // Hide "Read more" link if content does not overflow
 			}
 		});
 
-
-		document.addEventListener('DOMContentLoaded', function () {
-			var inputQuantity = document.getElementById('inputQuantity');
-			var increaseButton = document.getElementById('increase');
-			var maxValue = @Model.ProductStatus; // Lấy giá trị max từ model
-
-			var clicked = false; // Biến để kiểm tra xem đã click lần đầu tiên hay chưa
-
-			increaseButton.addEventListener('click', function () {
-				// if (!clicked) {
-				// 	// Nếu chưa click lần nào thì tăng giá trị từ 1 lên 2 (hoặc 1 đơn vị tăng)
-				// 	inputQuantity.value = 2; // hoặc inputQuantity.value++;
-				// 	clicked = true; // Đánh dấu là đã click lần đầu tiên
-				// } else {
-				var currentValue = parseInt(inputQuantity.value) || 0;
-				if (currentValue < maxValue) {
-					inputQuantity.value = currentValue + 1;
-				}
-				// }
-			});
-
-			document.getElementById('decrease').addEventListener('click', function () {
-				var currentValue = parseInt(inputQuantity.value) || 0;
-				var minValue = 1;
-				if (currentValue > minValue) {
-					inputQuantity.value = currentValue - 1;
-				}
-			});
-
-			inputQuantity.addEventListener('input', function () {
-				var currentValue = inputQuantity.value;
-				if (isNaN(currentValue) || currentValue < 1 || currentValue > maxValue) {
-					inputQuantity.value = 1;
-				}
-			});
-		});
 
 
 	</script>

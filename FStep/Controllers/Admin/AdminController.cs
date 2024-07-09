@@ -119,7 +119,7 @@ namespace FStep.Controllers.Admin
 				resultListTotalCompleted.Add(totalCompletedTransactionCount);
 				resultListTotalPost.Add(totalPostCount);
 
-				resultListPostCountExchange.Add((int)(totalPostCountSale * amount));
+				resultListPostCountExchange.Add((int)(totalPostCountExchange * amount));
 				resultListPostCountSale.Add((int)(totalPostCountSale * amount));
 			}
 			// Chuẩn bị dữ liệu cho biểu đồ
