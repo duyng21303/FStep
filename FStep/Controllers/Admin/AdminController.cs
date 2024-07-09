@@ -108,10 +108,10 @@ namespace FStep.Controllers.Admin
 				var totalCompletedTransactionCount = await _context.Transactions
 							.Where(o => o.Date != null && o.Date.Value.Month == month.Month && o.Date.Value.Year == month.Year && o.Status == "Completed")
 							.CountAsync();
-				var totalPostCountExchange = await _context.Posts
+				var totalPostCountExchange = await _context.Transactions
 							.Where(o => o.Date != null && o.Date.Value.Month == month.Month && o.Date.Value.Year == month.Year && o.Type == "Exchange" && o.Status == "Completed")
 							.CountAsync();
-				var totalPostCountSale = await _context.Posts
+				var totalPostCountSale = await _context.Transactions
 							.Where(o => o.Date != null && o.Date.Value.Month == month.Month && o.Date.Value.Year == month.Year && o.Type == "Sale" && o.Status == "Completed")
 							.CountAsync();
 				// Thêm số lượng giao dịch hoặc giá trị 0 vào danh sách kết quả
