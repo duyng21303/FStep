@@ -7,7 +7,7 @@
 }
 
 <!--Detail Sale-->
-<div class="d-flex justify-content-center align-items-center mx-5">
+<div class="d-flex justify-content-center align-items-center mx-5 my-5">
 	<div class="card" style="border-radius: 10px;">
 		<div class="card-header px-3 py-3">
 			<div class="d-flex justify-content-between align-items-center">
@@ -20,29 +20,35 @@
 					<h5 class="text-muted">Cảm ơn, <span style="color: #3572EF;">@Model.UserBuyer.IdUser</span>!</h5>
 				}
 				<div>
-					@if (DateTime.Now.CompareTo(Model.DeliveryDate?.AddDays(7)) <= 0 && Model.Transaction.Status == "Completed" && !Model.CheckFeedback)
+					@if (User.Identity.IsAuthenticated)
 					{
-						<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm px-5 py-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@Model.Post.IdPost" asp-route-idTransaction="@Model.TransactionId" asp-route-url="@ViewBag.url">
-							Đánh giá
-						</a>
-					}
-					else
-					{
-						<button disabled data-mdb-button-init data-mdb-ripple-init class="btn btn-sm px-5 py-2 bg-dark text-light bg-opacity-50" type="button">
-							Đánh giá
-						</button>
-					}
-					@if (DateTime.Now.CompareTo(Model.CreateDate?.AddDays(3)) <= 0 && Model.Transaction.Status == "Processing")
-					{
-						<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm px-4 py-2" type="button" data-bs-toggle="modal" data-bs-target="#cancelModal">
-							Huỷ đơn hàng
-						</a>
-					}
-					else
-					{
-						<button disabled data-mdb-button-init data-mdb-ripple-init class="btn btn-sm px-4 py-2 bg-dark text-light bg-opacity-50" type="button">
-							Huỷ đơn hàng
-						</button>
+						@if (User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.UserBuyer.IdUser))
+						{
+							@if (DateTime.Now.CompareTo(Model.DeliveryDate?.AddDays(7)) <= 0 && Model.Transaction.Status == "Completed" && !Model.CheckFeedback)
+							{
+								<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm px-5 py-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@Model.Post.IdPost" asp-route-idTransaction="@Model.TransactionId" asp-route-url="@ViewBag.url">
+									Đánh giá
+								</a>
+							}
+							else
+							{
+								<button disabled data-mdb-button-init data-mdb-ripple-init class="btn btn-sm px-5 py-2 bg-dark text-light bg-opacity-50" type="button">
+									Đánh giá
+								</button>
+							}
+							@if (DateTime.Now.CompareTo(Model.CreateDate?.AddDays(3)) <= 0 && Model.Transaction.Status == "Processing")
+							{
+								<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm px-4 py-2" type="button" data-bs-toggle="modal" data-bs-target="#cancelModal">
+									Huỷ đơn hàng
+								</a>
+							}
+							else
+							{
+								<button disabled data-mdb-button-init data-mdb-ripple-init class="btn btn-sm px-4 py-2 bg-dark text-light bg-opacity-50" type="button">
+									Huỷ đơn hàng
+								</button>
+							}
+						}
 					}
 				</div>
 			</div>
