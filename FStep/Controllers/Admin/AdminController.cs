@@ -196,7 +196,7 @@ namespace FStep.Controllers.Admin
 
 			return View("UserManager", pagingModel);
 		}
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin, Moderator")]
 		public IActionResult UserDetail(string id)
 		{
 			// Lấy thông tin người dùng
@@ -227,7 +227,7 @@ namespace FStep.Controllers.Admin
 		}
 
 
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin, Moderator")]
 		public IActionResult ReportManager(int page = 1, int pageSize = 10, string? search = null)
 		{
 			var query = _context.Reports
