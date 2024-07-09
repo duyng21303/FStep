@@ -24,21 +24,21 @@
 					</div>
 
 					<div class="profile-details mb-2">
-						@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser))
-						{
+						@* @if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser))
+						{ *@
 							@* Tính năng khóa
 						1. user là Administrator
 						2. user là Moderator và người xem chi tiết hiện tại là Customer
 						=> thì sẽ hiển thị nút khóa *@
-							if (User.IsInRole("Admin") || (User.IsInRole("Moderator") && Model.Role == "Customer"))
+							@* if (User.IsInRole("Admin") || (User.IsInRole("Moderator") && Model.Role == "Customer"))
 							{
 								<button class="btn btn-primary btn-sm btn-lock-unlock" data-status="@Model.Status" data-userid="@Model.IdUser">@(Model.Status == false ? "Mở khóa" : "Khóa")</button>
-							}
+							} *@
 
 							@* Tính năng phân quyền
 						1. user là Administrator
 						=> thì sẽ hiển thị nút phân quyền *@
-							if (User.IsInRole("Admin"))
+							@* if (User.IsInRole("Admin"))
 							{
 								<div class="nav-item dropdown mt-2">
 									<div class="dropdown">
@@ -54,7 +54,7 @@
 									</div>
 								</div>
 							}
-						}
+						} *@
 					</div>
 				</div>
 			</div>
@@ -98,6 +98,13 @@
 							</div>
 						</div>
 					}
+
+					<div class="w-100">
+						<p class="card-text"><strong>Email:</strong> @Model.Email</p>
+						<p class="card-text"><strong>Địa chỉ:</strong> @Model.Address</p>
+						<p class="card-text"><strong>Mã sinh viên:</strong> @Model.StudentId</p>
+						<p class="card-text"><strong>Điểm uy tín:</strong> @Model.PointRating</p>
+					</div>
 				</div>
 			</div>
 		</div>
