@@ -14,6 +14,7 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using NuGet.Protocol.Plugins;
 using System;
 using System.Diagnostics;
+using System.Drawing.Printing;
 using System.Net;
 using X.PagedList;
 
@@ -31,56 +32,52 @@ namespace FStep.Controllers
 			_mapper = mapper;
 		}
 
-		public IActionResult Index(String? query, int? page)
+		public IActionResult Index(String? query, int suggestedPage = 1, int highRatedPage = 1)
 		{
 			try
 			{
-				if (User.IsInRole("Moderator"))
-				{
-					return Redirect("/ModeManagePost/ManagePosts");
-				}
-				else if (User.IsInRole("Admin"))
-				{
-					return Redirect("/Admin/Index");
-				}
-				int pageSize = 12; // số lượng sản phẩm mỗi trang 
-				int pageNumber = (page ?? 1);   // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
-				var ExchangePost = db.Posts
-					.Include(t => t.IdUserNavigation)
-					.AsQueryable();
-				ExchangePost = ExchangePost.Where(p => p.Type == "Exchange" && p.Status == "True");    //check exchangePost là những post thuộc type "exhcange" và có status = 1
+                return Redirect("/Admin/Index");
+            }
+			int pageSize = 15; // số lượng sản phẩm mỗi trang 
+			var ExchangePost = db.Posts
+				.Include(t => t.IdUserNavigation)
+				.AsQueryable();
+			ExchangePost = ExchangePost.Where(p => p.Type == "Exchange" && p.Status == "True");    //check exchangePost là những post thuộc type "exhcange" và có status = 1
 
-				if (!string.IsNullOrEmpty(query))
-				{
-					ExchangePost = ExchangePost.Where(p => p.Content.Contains(query));
-				}
-				var result = ExchangePost.Select(s => new PostVM
-				{
-					IdProduct = s.IdProduct,
-					IdPost = s.IdPost,
-					Title = s.Content,
-					Description = s.Detail,
-					PointRating = s.IdUserNavigation.PointRating,
-					Img = s.Img,
-					NameBoss = s.IdUserNavigation.Name,
-					CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now
-				}).OrderByDescending(o => o.IdPost);
+			if (!string.IsNullOrEmpty(query))
+			{
+				ExchangePost = ExchangePost.Where(p => p.Content.Contains(query));
+			}
+			var suggestedPosts = ExchangePost.Select(s => new PostVM
+			{
+				IdProduct = s.IdProduct,
+				IdPost = s.IdPost,
+				Title = s.Content,
+				Description = s.Detail,
+				PointRating = s.IdUserNavigation.PointRating,
+				Img = s.Img,
+				NameBoss = s.IdUserNavigation.Name,
+				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now
+			}).OrderByDescending(o => o.IdPost);
 
-				var pageList = result.ToPagedList(pageNumber, pageSize);
-				ViewBag.Query = query;
-				string checkInfo;
-				string id = User.FindFirst("UserID")?.Value;
-				if (id != null)
-				{
-					var user = db.Users.FirstOrDefault(p => p.IdUser == id);
-					checkInfo = (user?.StudentId != null || user.BankAccountNumber != null || user.BankName != null).ToString();
-				}
-				else
-				{
-					checkInfo = "notLogin";
-				}
-				ViewBag.checkInfo = checkInfo;
-				return View(pageList);
+			var suggestedPostList = suggestedPosts.ToPagedList(suggestedPage, pageSize);
+
+			//hight rating
+			var highRatedPosts = suggestedPosts
+				.Where(p => p.PointRating > 50)
+				.OrderBy(p => Guid.NewGuid())
+				.Take(10);
+
+			var highRatedPostList = highRatedPosts.ToPagedList(highRatedPage, pageSize);
+
+			ViewBag.Query = query;
+			string checkInfo;
+			string id = User.FindFirst("UserID")?.Value;
+			if (id != null)
+			{
+				var user = db.Users.FirstOrDefault(p => p.IdUser == id);
+				checkInfo = (user?.StudentId != null || user.BankAccountNumber != null || user.BankName != null).ToString();
+
 			}
 			catch (Exception ex)
 			{
@@ -88,49 +85,64 @@ namespace FStep.Controllers
 				ModelState.AddModelError("Error", "Đã xảy ra một số lỗi khi phản hồi yêu cầu của bạn");
 				return RedirectToAction("Error", "Home");
 			}
+			ViewBag.checkInfo = checkInfo;
+
+			var model = new PostVM
+			{
+				SuggestedPosts = suggestedPostList,
+				highRatedPostList = highRatedPostList
+			};
+
+			return View(model);
+
 		}
 
-		public IActionResult Sale(String? query, int? page)
+		public IActionResult Sale(String? query, int suggestedPage = 1, int highRatedPage = 1)
 		{
-			try
+			var pageSize = 15;
+			var SalePost = db.Posts
+				.Include(t => t.IdUserNavigation)
+				.AsQueryable();
+			SalePost = SalePost.Where(p => p.Type == "Sale" && p.Status == "True");
+
+			if (!string.IsNullOrEmpty(query))
+
 			{
 				int pageSize = 12; // số lượng sản phẩm mỗi trang 
 				int pageNumber = (page ?? 1);  // số trang hiện tại, mặc định là trang 1 nếu ko có page được chỉ định 
 				var SalePost = db.Posts.AsQueryable();
 				SalePost = SalePost.Where(p => p.Type == "Sale" && p.Status == "True");
 
-				if (!string.IsNullOrEmpty(query))
-				{
-					SalePost = SalePost.Where(p => p.Content.Contains(query));
-				}
+			var suggestedPosts = SalePost.Select(s => new PostVM
+			{
+				IdProduct = s.IdProduct,
+				IdPost = s.IdPost,
+				Title = s.Content,
+				Description = s.Detail,
+				PointRating = s.IdUserNavigation.PointRating,
+				Img = s.Img,
+				NameBoss = s.IdUserNavigation.Name,
+				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now
+			}).OrderByDescending(o => o.IdPost);
 
-				var result = SalePost.Select(s => new PostVM
-				{
-					IdPost = s.IdPost,
-					Title = s.Content,
-					Img = s.Img,
-					Description = s.Detail,
-					ProductStatus = (int)s.IdProductNavigation.Quantity,
-					CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now,
-					Price = s.IdProductNavigation.Price ?? 0
-				}).OrderByDescending(o => o.IdPost);
+			var suggestedPostList = suggestedPosts.ToPagedList(suggestedPage, pageSize);
 
-				var pageList = result.ToPagedList(pageNumber, pageSize);
+			//hight rating
+			var highRatedPosts = suggestedPosts
+				.Where(p => p.PointRating > 50)
+				.OrderBy(p => Guid.NewGuid())
+			.Take(10);
 
-				ViewBag.Query = query;
-				string checkInfo;
-				string id = User.FindFirst("UserID")?.Value;
-				if (id != null)
-				{
-					var user = db.Users.FirstOrDefault(p => p.IdUser == id);
-					checkInfo = (user?.StudentId != null && user.BankAccountNumber != null && user.BankName != null).ToString();
-				}
-				else
-				{
-					checkInfo = "notLogin";
-				}
-				ViewBag.checkInfo = checkInfo;
-				return View(pageList);
+			var highRatedPostList = highRatedPosts.ToPagedList(highRatedPage, pageSize);
+
+			ViewBag.Query = query;
+			string checkInfo;
+			string id = User.FindFirst("UserID")?.Value;
+			if (id != null)
+			{
+				var user = db.Users.FirstOrDefault(p => p.IdUser == id);
+				checkInfo = (user?.StudentId != null && user.BankAccountNumber != null && user.BankName != null).ToString();
+
 			}
 			catch (Exception ex)
 			{
@@ -138,6 +150,15 @@ namespace FStep.Controllers
 				ModelState.AddModelError("Error", "Đã xảy ra một số lỗi khi phản hồi yêu cầu của bạn");
 				return RedirectToAction("Error", "Home");
 			}
+			ViewBag.checkInfo = checkInfo;
+			var model = new PostVM
+			{
+				SuggestedPosts = suggestedPostList,
+				highRatedPostList = highRatedPostList
+			};
+
+			return View(model);
+
 		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
