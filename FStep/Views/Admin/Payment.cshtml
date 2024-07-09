@@ -57,14 +57,17 @@
 								<td>@Html.Raw(item.Type)</td>
 								<td>@Html.Raw(item.IdTransaction)</td>
 								<td>
-									@switch (item.Status.ToLower())
+									@if (item.Status != null)
 									{
-										case "true":
-											<span class="badge bg-primary badge-custom badge-dark-text">Thành công</span>
-											break;
-										case "false":
-											<span class="badge bg-danger badge-custom badge-dark-text">Đã huỷ</span>
-											break;
+										@switch (item.Status.ToLower())
+										{
+											case "true":
+												<span class="badge bg-primary badge-custom badge-dark-text">Thành công</span>
+												break;
+											case "false":
+												<span class="badge bg-danger badge-custom badge-dark-text">Đã huỷ</span>
+												break;
+										}
 									}
 								</td>
 								<td>@Html.Raw(item.Note)</td>

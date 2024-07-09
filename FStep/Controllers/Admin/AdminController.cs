@@ -27,7 +27,7 @@ namespace FStep.Controllers.Admin
 			_configuration = configuration;
 			notificationServices = new NotificationServices(_context);
 		}
-
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Index(string codeTransaction, int? page)
 		{
 			var totalPost = _context.Posts.Count(p => p.Status != "Rejected");
