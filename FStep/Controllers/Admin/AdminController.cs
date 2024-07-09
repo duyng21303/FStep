@@ -330,10 +330,9 @@ namespace FStep.Controllers.Admin
             var query = _context.Payments.AsQueryable();
             if (!string.IsNullOrEmpty(search))
             {
-                query = query.Where(x => x.IdTransaction.ToString().ToLower().Contains(search.ToLower()));
+                query = query.Where(x => x.IdTransaction.ToString().ToLower().Contains(search.ToLower())).OrderByDescending(p => p.PayTime).OrderByDescending(p => p.PayTime);
             }
-
-            var payment = query.Skip((page - 1) * pageSize).Take(pageSize).Select(x => _mapper.Map<PaymentVM>(x)).ToList();
+            var payment = query.OrderByDescending(p => p.PayTime).Skip((page - 1) * pageSize).Take(pageSize).Select(x => _mapper.Map<PaymentVM>(x)).ToList();
 
 			var link = _configuration.GetValue<string>("VNPayMerchant");
 
