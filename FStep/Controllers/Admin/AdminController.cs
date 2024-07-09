@@ -12,11 +12,11 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace FStep.Controllers.Admin
 {
-    public class AdminController : Controller
-    {
-        private readonly FstepDbContext _context;
-        private readonly IMapper _mapper;
-        private static readonly string[] defaultRole = new[] { "Customer", "Moderator", "Administrator" };
+	public class AdminController : Controller
+	{
+		private readonly FstepDbContext _context;
+		private readonly IMapper _mapper;
+		private static readonly string[] defaultRole = new[] { "Customer", "Moderator", "Administrator" };
 		private readonly IConfiguration _configuration;
 		private readonly NotificationServices notificationServices;
 

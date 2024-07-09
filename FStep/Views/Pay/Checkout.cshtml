@@ -8,17 +8,9 @@
 <div class="container-fluid py-5">
 	<div class="container-contentboby">
 		<h1 class="mb-4">Checkout</h1>
-		@* @if ()
-		{ *@
 		<form asp-action="CheckoutSale" asp-controller="Pay" asp-route-amount="@Model.Amount">
 			<div class="row g-5">
-				<div class="col-md-12 col-lg-6 col-xl-3">
-					<div class="form-item mt-3">
-						<textarea asp-for="@Model.Note" type="text" class="form-control" spellcheck="false" cols="30" rows="11" placeholder="Oreder Notes (Optional)"></textarea>
-						<span asp-validation-for="@Model.Title" class="text-danger"></span>
-					</div>
-				</div>
-				<div class="col-md-12 col-lg-6 col-xl-9">
+				<div class="col-md-12 col-lg-12 col-xl-12">
 					<div class="table-responsive">
 						<table class="table">
 							<thead>

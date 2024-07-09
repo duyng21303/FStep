@@ -294,6 +294,7 @@ namespace FStep.Controllers
 					transaction = transaction.Where(p => p.IdPostNavigation.Content.Contains(query));
 					if (activeTab == "exchange")
 					{
+
 						query = query.ToLower();
 						exchangeTransactions = exchangeTransactions.Where(t =>
 							t.CodeTransaction.ToLower().Contains(query) ||
