@@ -2,7 +2,7 @@
 @using System.Security.Claims
 @model PagingModel<ProfileVM>
 @{
-	Layout = "_LayoutAdmin";
+	
 	var successMessage = TempData["SuccessMessage"] as string;
 	var errorMessage = TempData["ErrorMessage"] as string;
 	var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
