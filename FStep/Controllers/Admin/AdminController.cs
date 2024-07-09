@@ -27,7 +27,7 @@ namespace FStep.Controllers.Admin
 			_configuration = configuration;
 			notificationServices = new NotificationServices(_context);
 		}
-
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Index(string codeTransaction, int? page)
 		{
 			var totalPost = _context.Posts.Count(p => p.Status != "Rejected");
@@ -172,7 +172,7 @@ namespace FStep.Controllers.Admin
 			}
 			return RedirectToAction("Index", "Admin");
 		}
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin, Moderator")]
 		public IActionResult UserManager(int page = 1, int pageSize = 10, string? search = null)
 		{
 			var query = _context.Users.AsQueryable();
@@ -196,7 +196,7 @@ namespace FStep.Controllers.Admin
 
 			return View("UserManager", pagingModel);
 		}
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin, Moderator")]
 		public IActionResult UserDetail(string id)
 		{
 			// Lấy thông tin người dùng
@@ -227,7 +227,7 @@ namespace FStep.Controllers.Admin
 		}
 
 
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin, Moderator")]
 		public IActionResult ReportManager(int page = 1, int pageSize = 10, string? search = null)
 		{
 			var query = _context.Reports

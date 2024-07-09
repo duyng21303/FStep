@@ -15,6 +15,8 @@
 		<Compile Remove="Views\Shared\Components\**" />
 		<Compile Remove="wwwroot\admin_template_dep\**" />
 		<Compile Remove="wwwroot\car-repair-html-template\**" />
+		<Compile Remove="wwwroot\img\pic\**" />
+		<Compile Remove="wwwroot\img\ReciveImage\**" />
 		<Content Remove="Areas\**" />
 		<Content Remove="Area\**" />
 		<Content Remove="Controllers\Admin\**" />
@@ -23,6 +25,8 @@
 		<Content Remove="Views\Shared\Components\**" />
 		<Content Remove="wwwroot\admin_template_dep\**" />
 		<Content Remove="wwwroot\car-repair-html-template\**" />
+		<Content Remove="wwwroot\img\pic\**" />
+		<Content Remove="wwwroot\img\ReciveImage\**" />
 		<EmbeddedResource Remove="Areas\**" />
 		<EmbeddedResource Remove="Area\**" />
 		<EmbeddedResource Remove="Controllers\Admin\**" />
@@ -31,6 +35,8 @@
 		<EmbeddedResource Remove="Views\Shared\Components\**" />
 		<EmbeddedResource Remove="wwwroot\admin_template_dep\**" />
 		<EmbeddedResource Remove="wwwroot\car-repair-html-template\**" />
+		<EmbeddedResource Remove="wwwroot\img\pic\**" />
+		<EmbeddedResource Remove="wwwroot\img\ReciveImage\**" />
 		<None Remove="Areas\**" />
 		<None Remove="Area\**" />
 		<None Remove="Controllers\Admin\**" />
@@ -39,7 +45,11 @@
 		<None Remove="Views\Shared\Components\**" />
 		<None Remove="wwwroot\admin_template_dep\**" />
 		<None Remove="wwwroot\car-repair-html-template\**" />
+		<None Remove="wwwroot\img\pic\**" />
+		<None Remove="wwwroot\img\ReciveImage\**" />
 		<TypeScriptCompile Remove="wwwroot\admin_template_dep\**" />
+		<TypeScriptCompile Remove="wwwroot\img\pic\**" />
+		<TypeScriptCompile Remove="wwwroot\img\ReciveImage\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -85,8 +95,6 @@
 		<PackageReference Include="X.PagedList" Version="9.1.2" />
 		<PackageReference Include="X.PagedList.Mvc.Core" Version="9.1.2" />
 		<Folder Include="wwwroot\detail\css\" />
-		<Folder Include="wwwroot\img\ReciveImage\" />
-		<Folder Include="wwwroot\img\pic\" />
 		<Folder Include="wwwroot\img\postPic\" />
 		<Folder Include="wwwroot\img\userAvar\" />
 		<Folder Include="wwwroot\img\nullAvar\" />

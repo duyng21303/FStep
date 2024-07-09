@@ -99,6 +99,7 @@
 										@if (item.Status == "True")
 										{
 											<td style="width: 120px">
+
 												<form asp-controller="ModeManagePost" asp-action="FinishPost" method="post" onsubmit="return confirmDelete()">
 													<input type="hidden" name="id" value="@item.PostId" />
 													<button type="submit" class="btn btn-danger btn-sm" style="width: 60px">Xóa</button>
@@ -118,7 +119,7 @@
 											</td>
 										}
 									</tr>
-									}
+								}
 								<!-- End loop -->
 							</tbody>
 						</table>
@@ -140,4 +141,5 @@
 			max-width: none; /* Remove the inline max-width style */
 			width: 100%; /* Make the input take the full width of the form */
 		}
+
 </style>
