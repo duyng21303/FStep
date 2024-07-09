@@ -10,8 +10,8 @@
         }, 1);
     };
     spinner();
-    
-    
+
+
     // Back to top button
     $(window).scroll(function () {
         if ($(this).scrollTop() > 300) {
@@ -21,7 +21,7 @@
         }
     });
     $('.back-to-top').click(function () {
-        $('html, body').animate({scrollTop: 0}, 1500, 'easeInOutExpo');
+        $('html, body').animate({ scrollTop: 0 }, 1500, 'easeInOutExpo');
         return false;
     });
 
@@ -32,13 +32,13 @@
         return false;
     });
 
-
+    
     // Progress Bar
     $('.pg-bar').waypoint(function () {
         $('.progress .progress-bar').each(function () {
             $(this).css("width", $(this).attr("aria-valuenow") + '%');
         });
-    }, {offset: '80%'});
+    }, { offset: '80%' });
 
 
     // Calender
@@ -55,13 +55,15 @@
         items: 1,
         dots: true,
         loop: true,
-        nav : false
+        nav: false
     });
 
     var dataListElement = document.getElementById('dataList');
     var dataListElementTrans = document.getElementById('dataListTransaction');
     var dataListElementPost = document.getElementById('dataListPost');
     var dataListElementComp = document.getElementById('dataListCompleted');
+    var dataListTotalPostExchange = document.getElementById('dataListTotalPostExchange');
+    var dataListTotalPostSale = document.getElementById('dataListTotalPostSale');
 
     var dataList = $(dataListElement).data("list");
     var dataListTrans = $(dataListElementTrans).data("list");
@@ -85,20 +87,20 @@
             datasets: [{
                 label: dataListPostName,
                 data: dataListPost,
-                    backgroundColor: "rgba(0, 156, 255, .7)"
-                },
-                {
+                backgroundColor: "rgba(0, 156, 255, .7)"
+            },
+            {
                 label: dataListTransName,
-                data:  dataListTrans,
-                    backgroundColor: "rgba(0, 156, 255, .5)"
-                },
-                {
+                data: dataListTrans,
+                backgroundColor: "rgba(0, 156, 255, .5)"
+            },
+            {
                 label: dataListCompName,
                 data: dataListComp,
-                    backgroundColor: "rgba(0, 156, 255, .3)"
-                }
+                backgroundColor: "rgba(0, 156, 255, .3)"
+            }
             ]
-            },
+        },
         options: {
             responsive: true
         }
@@ -113,24 +115,24 @@
             datasets: [{
                 label: dataListPostExchangeName,
                 data: dataListPostExchange,
-                    backgroundColor: "rgba(0, 156, 255, .5)",
-                    fill: true
-                },
-                {
-                    label: dataListPostSaleName,
-                    data: dataListPostSale,
-                    backgroundColor: "rgba(0, 156, 255, .3)",
-                    fill: true
-                }
-            ]
+                backgroundColor: "rgba(0, 156, 255, .5)",
+                fill: true
             },
+            {
+                label: dataListPostSaleName,
+                data: dataListPostSale,
+                backgroundColor: "rgba(0, 156, 255, .3)",
+                fill: true
+            }
+            ]
+        },
         options: {
             responsive: true
         }
     });
-    
 
 
-    
+
+
 })(jQuery);
 

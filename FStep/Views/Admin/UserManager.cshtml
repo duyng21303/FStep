@@ -1,9 +1,16 @@
 ﻿@using FStep.ViewModels
+@using System.Security.Claims
 @model PagingModel<ProfileVM>
 @{
 	Layout = "_LayoutAdmin";
 	var successMessage = TempData["SuccessMessage"] as string;
 	var errorMessage = TempData["ErrorMessage"] as string;
+	var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+	Layout = "_LayoutAdmin";
+	if (!string.IsNullOrEmpty(userRole) && userRole == "Moderator") //role moder
+	{
+		Layout = "_LayoutModer";
+	}
 }
 @if (!string.IsNullOrEmpty(successMessage))
 {
@@ -79,7 +86,7 @@
 										<span class="label label-default">@user.PointRating</span>
 									</td>
 									<td>
-										@if (user.Role != "Admin")
+										@if (userRole == "Admin")
 										{
 											<form asp-controller="Admin" asp-action="EditAccount" method="post">
 												<input type="hidden" name="id" value="@user.IdUser" /> <!-- Ensure the input name matches your action parameter -->

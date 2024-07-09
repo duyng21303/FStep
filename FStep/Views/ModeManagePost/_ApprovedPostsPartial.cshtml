@@ -96,7 +96,7 @@
 										}
 										@if (item.Status == "True")
 										{
-										<td>
+											<td>
 												<form asp-controller="ModeManagePost" asp-action="FinishPost" method="post" onsubmit="return confirmDelete()">
 													<input type="hidden" name="id" value="@item.PostId" />
 													<button type="submit" class="btn btn-danger btn-sm">Xóa</button>
@@ -116,7 +116,7 @@
 											</td>
 										}
 									</tr>
-									}
+								}
 								<!-- End loop -->
 							</tbody>
 						</table>
@@ -129,5 +129,5 @@
 	</div>
 </div>
 <style>
-	
+
 </style>
