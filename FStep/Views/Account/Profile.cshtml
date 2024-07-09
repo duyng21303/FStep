@@ -132,13 +132,13 @@
 									@if (post.Type == "Exchange")
 									{
 										<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@post.IdPost">
-											<img src="@Url.Content("~/img/postPic/" + post.Img)" class="img-fluid w-100 rounded-top" alt="Post Image">
+											<img src="@Url.Content("~/img/postPic/" + post.Img)" class="img-fluid w-100 rounded-top" style="min-height: 188px;max-height: 188px " alt="Post Image">
 										</a>
 									}
 									else
 									{
 										<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@post.IdPost">
-											<img src="@Url.Content("~/img/postPic/" + post.Img)" class="img-fluid w-100 rounded-top" alt="Post Image">
+											<img src="@Url.Content("~/img/postPic/" + post.Img)" class="img-fluid w-100 rounded-top" style="min-height: 188px" alt="Post Image">
 										</a>
 									}
 								</div>
@@ -149,14 +149,14 @@
 										</button>
 										<div class="post-actions-dropdown">
 											<ul class="list-unstyled">
-												@if (post.Status == "True" || post.Status == "False" || post.Status == "Rejected")
+												@if (post.Status == "True" || post.Status == "Waiting" || post.Status == "Rejected")
 												{
 													<li><a asp-action="UpdatePost" asp-controller="Account" asp-route-id="@post.IdPost" asp-route-type="@post.Type" class="dropdown-item">Sửa</a></li>
-													<li><a asp-action="FinishPost" asp-controller="Account" asp-route-id="@post.IdPost" class="dropdown-item">Xóa</a></li>
+													<li><a asp-action="HiddenPost" asp-controller="Account" asp-route-id="@post.IdPost" class="dropdown-item">Xóa</a></li>
 												}
-												else if (post.Status == "Finish")
+												@if (post.Status == "False")
 												{
-													<li><a asp-action="HiddenPost" asp-controller="Account" asp-route-id="@post.IdPost" class="dropdown-item">Ẩn</a></li>
+													<li><a asp-action="HiddenPost" asp-controller="Account" asp-route-id="@post.IdPost" class="dropdown-item">Xóa</a></li>
 												}
 											</ul>
 										</div>

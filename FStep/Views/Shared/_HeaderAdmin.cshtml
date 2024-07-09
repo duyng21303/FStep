@@ -74,11 +74,17 @@
             <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>DASHMIN</h3>
         </a>
         <div class="navbar-nav w-100">
-            <a asp-area="" asp-action="Index" asp-controller="Admin" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+            <a asp-area="" asp-action="Index" asp-controller="Admin" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Thống kê</a>
             <a asp-area="" asp-action="ManagePost" asp-controller="AdminPost" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Bài đăng</a>
             <a asp-area="" asp-action="UserManager" asp-controller="Admin" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Người dùng</a>
-            <a asp-area="" asp-action="Payment" asp-controller="Admin" class="nav-item nav-link"><i class="fa fa-money-bill"></i>Payment</a>
-            <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Report</a>
+            <a asp-area="" asp-action="Payment" asp-controller="Admin" class="nav-item nav-link"><i class="fa fa-money-bill"></i>Thanh toán</a>
+            <a asp-area="" asp-action="ReportManager" asp-controller="Admin" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Báo cáo</a>
         </div>
     </nav>
 </div>
+<script>
+    $('.nav-item').click(function () {
+        $('.nav-item').removeClass('active');
+        $(this).addClass('active');
+    });
+</script>

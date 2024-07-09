@@ -347,6 +347,8 @@ namespace FStep.Controllers
 				}).OrderByDescending(o => o.TransactionId);
 				viewResult.SaleList = saleList.ToPagedList(pageNumber, pageSize);
 
+
+
 				ViewBag.Query = query;
 				ViewBag.ActiveTab = activeTab;
 

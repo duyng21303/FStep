@@ -17,7 +17,7 @@
 			<div id="pendingPosts" class="tabcontent">
 			<form method="get" asp-action="ManagePosts">
 				<input type="hidden" name="approvedQuery" value="@ViewBag.ApprovedQuery" />
-				<input type="text" name="pendingQuery" value="@ViewBag.PendingQuery" placeholder="Search by Student ID" />
+				<input type="text" name="pendingQuery" value="@ViewBag.PendingQuery" placeholder="Nhập MSSV" />
 				<input type="hidden" name="currentTab" value="pendingPosts" />
 				<input type="hidden" name="pendingPage" value="1" /> <!-- Reset page to 1 on new search -->
 				<button type="submit">Search</button>
@@ -27,7 +27,7 @@
 			<div id="approvedPosts" class="tabcontent" style="display: none;">
 			<form method="get" asp-action="ManagePosts">
 				<input type="hidden" name="pendingQuery" value="@ViewBag.PendingQuery" />
-				<input type="text" name="approvedQuery" value="@ViewBag.ApprovedQuery" placeholder="Search by Student ID" />
+				<input type="text" name="approvedQuery" value="@ViewBag.ApprovedQuery" placeholder="Nhập MSSV" />
 				<input type="hidden" name="currentTab" value="approvedPosts" />
 				<input type="hidden" name="approvedPage" value="1" /> <!-- Reset page to 1 on new search -->
 				<button type="submit">Search</button>

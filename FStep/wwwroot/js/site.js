@@ -114,9 +114,8 @@ _notiConnection.on("LoadNotification", function (notification) {
 
     notification.forEach(notification => {
         var img = '';
-        console.log(notification);
         if (notification.userOtherImg != null) {
-            img = "userAvar/" + recieverUser.userOtherImg;
+            img = "userAvar/" + notification.userOtherImg;
         } else {
             img = "nullAvar/149071.png";
         }

@@ -180,7 +180,7 @@ namespace FStep.Controllers.Auth
 			return View(profile);
 		}
 
-		
+
 		[Authorize]
 		[HttpPost]
 		public async Task<IActionResult> Profile(ProfileVM model)
@@ -380,23 +380,6 @@ namespace FStep.Controllers.Auth
 				TempData["ErrorMessage"] = "Đã xảy ra lỗi khi cập nhật bài đăng của bạn.";
 			}
 			return View(model);
-		}
-
-		public IActionResult FinishPost(int id)
-		{
-			var post = db.Posts.FirstOrDefault(p => p.IdPost == id);
-			if (post != null)
-			{
-				post.Status = "False";
-				db.Posts.Update(post);
-				db.SaveChanges();
-				TempData["SuccessMessage"] = $"Bài đăng {post.Content} đã được xóa thành công.";
-			}
-			else
-			{
-				TempData["ErrorMessage"] = $"Bài đăng {post.Content} không được tìm thấy.";
-			}
-			return RedirectToAction("Profile");
 		}
 		public IActionResult HiddenPost(int id)
 		{
