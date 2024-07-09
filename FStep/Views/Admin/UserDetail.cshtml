@@ -2,7 +2,7 @@
 @model ProfileVM
 @{
 	int rating = (int)(Model.PointRating ?? 0);
-	var roles = new List<string> { "Customer", "Moderator", "Admin" };
+	var roles = new List<string> { "Customer", "Moderator", "Administrator" };
 	roles = roles.Where(role => !role.Equals(Model.Role, StringComparison.OrdinalIgnoreCase)).ToList();
 }
 @Html.AntiForgeryToken()
@@ -16,10 +16,22 @@
 					<div class="profile-label my-2">
 						<span class="badge bg-danger">Vai trò: @Model.Role</span>
 					</div>
+
+					@* div class="profile-stars mb-2" style="color : yellow">
+					@for (int i = 0; i < rating; i++)
+					{
+					<i class="fa fa-star"></i>
+					}
+					</div> *@
+
+					<div class="profile-since mb-2">
+						Ngày đăng ký: @Model.CreateDate?.ToString("dd/MM/yyyy")
+					</div>
+
 					<div class="profile-details mb-2">
 						<ul class="fa-ul mx-0">
-							<li>Đã đăng: <span>@ViewData["TotalPost"]</span></li>
-							<li>Đã giao dịch: <span>@ViewData["TotalTransaction"]</span></li>
+							<li>Đã bán: <span>@ViewData["SalePostCount"]</span></li>
+							<li>Đã trao đổi: <span>@ViewData["ExchangePostCount"]</span></li>
 						</ul>
 					</div>
 
@@ -30,15 +42,15 @@
 						1. user là Administrator
 						2. user là Moderator và người xem chi tiết hiện tại là Customer
 						=> thì sẽ hiển thị nút khóa *@
-							if (User.IsInRole("Admin") || (User.IsInRole("Moderator") && Model.Role == "Customer"))
+							if (User.IsInRole("Administrator") || (User.IsInRole("Moderator") && Model.Role == "Customer"))
 							{
 								<button class="btn btn-primary btn-sm btn-lock-unlock" data-status="@Model.Status" data-userid="@Model.IdUser">@(Model.Status == false ? "Mở khóa" : "Khóa")</button>
 							}
 
-							@* Tính năng phân quyền
+							@* Tính năng phân quyền cho user
 						1. user là Administrator
 						=> thì sẽ hiển thị nút phân quyền *@
-							if (User.IsInRole("Admin"))
+							if (User.IsInRole("Administrator"))
 							{
 								<div class="nav-item dropdown mt-2">
 									<div class="dropdown">
@@ -66,38 +78,12 @@
 					Chi tiết
 				</div>
 				<div class="card-body">
-					@if (User.IsInRole("Customer"))
-					{
-						<div class="your-post">
-							<div class="container-xl px-4 mt-4">
-								<h3>Your Posts</h3>
-								<div class="row">
-									@foreach (var post in Model.Posts)
-									{
-										<div class="col-md-6 col-lg-4 col-xl-3 mb-4">
-											<!-- Added mb-4 for spacing between rows -->
-											<div class="rounded position-relative fruit-item">
-												<div class="post-img-wrapper">
-													<img src="@Url.Content("~/img/postPic/" + post.Img)" class="img-fluid w-100 rounded-top" alt="Post Image">
-													@if (post.Status == "finish")
-													{
-														<div class="completed-label">
-															<span class="badge bg-success">Hoàn thành</span>
-														</div>
-													}
-												</div>
-												<div class="p-4 border border-secondary border-top-0 rounded-bottom">
-													<h4 class="title">@Html.Raw(post.Title)</h4>
-													<div class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(post.Description)</div>
-													<p class="text-end mb-0 mt-2">Created on: <span>@Html.Raw(post.CreateDate?.ToString("dd/MM/yyyy"))</span></p>
-												</div>
-											</div>
-										</div>
-									}
-								</div>
-							</div>
-						</div>
-					}
+					<div class="w-100">
+						<p class="card-text"><strong>Email:</strong> @Model.Email</p>
+						<p class="card-text"><strong>Địa chỉ:</strong> @Model.Address</p>
+						<p class="card-text"><strong>Mã sinh viên:</strong> @Model.StudentId</p>
+						<p class="card-text"><strong>Điểm uy tín:</strong> @Model.PointRating</p>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -170,20 +156,19 @@
 							Role: newRole
 						})
 					})
-					.then(response => {
-						if (!response.ok) {
-							throw new Error('Network response was not ok');
-						}
-						window.location.reload();
-					})
-					.catch(error => {
-						Swal.fire("Đã có lỗi xảy ra", "", "error");
-					});
+						.then(response => {
+							if (!response.ok) {
+								throw new Error('Network response was not ok');
+							}
+							window.location.reload();
+						})
+						.catch(error => {
+							Swal.fire("Đã có lỗi xảy ra", "", "error");
+						});
 				}
 			});
 		});
 	});
 </script>
-
 
 
