@@ -49,35 +49,38 @@ namespace FStep.Repostory.Service
 				var dbContext = scope.ServiceProvider.GetRequiredService<FstepDbContext>();
 				// Lấy các bài post đã duyệt sắp hết hạn
 				var approvedPosts = await dbContext.Posts
+					.Include(p => p.IdUserNavigation)
 					.Where(p => p.Status == "True" && p.Date.HasValue && EF.Functions.DateDiffDay(DateTime.Now, p.Date.Value.AddDays(30)) == 0)
 					.ToListAsync();
-
 
 				foreach (var post in approvedPosts)
 				{
 					if (post.IdUserNavigation != null && !string.IsNullOrEmpty(post.IdUserNavigation.Email))
 					{
-						post.Status = "False"; // Đặt trạng thái của bài post thành "False"
-
 						try
 						{
-							await dbContext.SaveChangesAsync(); // Lưu vào database
-
-							// Gửi email thông báo
-							string subject = $"Bài đăng {post.Content} sắp hết hạn";
+							post.Status = "False";
+							string subject = $"Your post has expired";
 							string body = $@"Hello {post.IdUserNavigation.Name},<br/><br/>
-                                     Your post '{post.Content}' has expired. Please create a new post or you can pay to have us review '{post.Content}' for you.<br/><br/>
+                                    Your post: '{post.Content}' with code: {post.IdPost} has expired. Please create a new post or you can pay to have us review again '{post.Content}' for you.<br/>
                                      Information: ABC Bank - Account: 123456789 (fee 5,000 VND) <br/>
+                                     <span style='color: red;'>
+                                      Transfer content includes: <br/>
+                                      Your name:........ <br/>
+                                     IdPost:........... <br/>
+                                     NamePost:.......... <br/>
+                                    (idPost and namePost are the posts you want to review. We sent it via email)
+                                     </span> <br/>
                                      Sincerely,<br/>
                                      Admin Team";
-
+							await dbContext.SaveChangesAsync();
 							await _emailSender.EmailSendAsync(post.IdUserNavigation.Email, subject, body);
 							_logger.LogInformation($"The email has been sent successfully to {post.IdUserNavigation.Email}");
 						}
 						catch (Exception ex)
 						{
 							_logger.LogError($"Error processing post ID {post.IdProduct}: {ex.Message}");
-							throw; 
+							throw;
 						}
 					}
 				}

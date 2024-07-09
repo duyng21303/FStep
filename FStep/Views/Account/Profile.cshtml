@@ -132,13 +132,13 @@
 									@if (post.Type == "Exchange")
 									{
 										<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@post.IdPost">
-											<img src="@Url.Content("~/img/postPic/" + post.Img)" class="img-fluid w-100 rounded-top" alt="Post Image">
+											<img src="@Url.Content("~/img/postPic/" + post.Img)" class="img-fluid w-100 rounded-top" style="min-height: 188px;max-height: 188px " alt="Post Image">
 										</a>
 									}
 									else
 									{
 										<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@post.IdPost">
-											<img src="@Url.Content("~/img/postPic/" + post.Img)" class="img-fluid w-100 rounded-top" alt="Post Image">
+											<img src="@Url.Content("~/img/postPic/" + post.Img)" class="img-fluid w-100 rounded-top" style="min-height: 188px" alt="Post Image">
 										</a>
 									}
 								</div>
@@ -163,9 +163,6 @@
 									</div>
 								</div>
 								<div class="p-4 border border-secondary border-top-0 rounded-bottom">
-
-									<h4 class="title">@Html.Raw(post.Title)</h4>
-
 									@if (post.Type == "Exchange")
 									{
 										<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@post.IdPost" style="text-decoration:none">
