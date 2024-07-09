@@ -47,7 +47,7 @@
 								<button class="btn btn-primary btn-sm btn-lock-unlock" data-status="@Model.Status" data-userid="@Model.IdUser">@(Model.Status == false ? "Mở khóa" : "Khóa")</button>
 							}
 
-							@* Tính năng phân quyền
+							@* Tính năng phân quyền cho user
 						1. user là Administrator
 						=> thì sẽ hiển thị nút phân quyền *@
 							if (User.IsInRole("Administrator"))
