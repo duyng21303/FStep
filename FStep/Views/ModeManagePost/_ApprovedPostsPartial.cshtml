@@ -40,13 +40,14 @@
 						<table class="table table-striped">
 							<thead class="thead-light">
 								<tr>
+									<th scope="col">Mã</th>
 									<th scope="col">Ảnh</th>
 									<th scope="col">Tên</th>
 									<th scope="col">MSSV</th>
 									<th scope="col">Ngày Tạo</th>
 									<th scope="col">Hạn Còn</th>
-									<td scope="col">Trạng thái</td>
-									<td scope="col">Tác vụ</td>
+									<th scope="col">Trạng thái</th>
+									<th scope="col">Tác vụ</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -54,8 +55,22 @@
 								@foreach (var item in Model)
 								{
 									<tr>
+										<td>@Html.Raw(item.PostId)</td>
 										<td><img src="@Url.Content("~/img/postPic/" + item.Image)" class="img-fluid small-rounded-image" alt="Post Image"></td>
-										<td class="post-title">@Html.Raw(item.PostTitle)</td>
+										<td class="post-title">
+											@if (item.Type == "Sale")
+											{
+												<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@item.PostId" class="text-decoration-none">
+													<span>@Html.Raw(item.PostTitle)</span>
+												</a>
+											}
+											else
+											{
+												<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.PostId" class="text-decoration-none">
+													<span>@Html.Raw(item.PostTitle)</span>
+												</a>
+											}
+										</td>
 										<td class="post-studentid">@Html.Raw(item.StudentId)</td>
 										<td>@Html.Raw(item.CreateDate.ToString("yyyy-MM-dd"))</td>
 										<td>@Html.Raw(item.DaysRemaining)</td>
@@ -79,36 +94,36 @@
 													break;
 											}
 										</td>
-										@if (item.Status == "False" || item.Status == "False")
+										@if (item.Status == "False")
 										{
-											<td>
+											<td style="width: 120px">
 												<form asp-controller="ModeManagePost" asp-action="UpdateStatusAgain" method="post" onsubmit="return confirmApprove()">
 													<input type="hidden" name="id" value="@item.PostId" /> <!-- Ensure the input name matches your action parameter -->
 													<button type="submit" class="btn btn-success">Duyệt lại</button>
 												</form>
 											</td>
-											<td>
+											<td style="width: 60px">
 												<form asp-controller="ModeManagePost" asp-action="FinishPost" method="post" onsubmit="return confirmDelete()">
 													<input type="hidden" name="id" value="@item.PostId" />
-													<button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+													<button type="submit" class="btn btn-danger btn-sm" style="width: 60px">Xóa</button>
 												</form>
 											</td>
 										}
 										@if (item.Status == "True")
 										{
-											<td>
+											<td style="width: 120px">
 												<form asp-controller="ModeManagePost" asp-action="FinishPost" method="post" onsubmit="return confirmDelete()">
 													<input type="hidden" name="id" value="@item.PostId" />
-													<button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+													<button type="submit" class="btn btn-danger btn-sm" style="width: 60px">Xóa</button>
 												</form>
 											</td>
 										}
 										@if (string.IsNullOrEmpty(@item.Location) && @item.Status == "Trading") //checks if the Location is either null or an empty string.
 										{
 											<td>
-												<form asp-controller="ModeManagePost" asp-action="AddLocation" method="post">
+												<form asp-controller="ModeManagePost" asp-action="AddLocation" method="post" class="add-location-form">
 													<div class="input-group input-group-sm compact-form">
-														<input type="text" name="location" class="form-control" placeholder="Nhập vị trí" aria-label="Location" required style="max-width: 80px;">
+														<input type="text" name="location" class="form-control" placeholder="Vị trí" aria-label="Location" required>
 														<input type="hidden" name="id" value="@item.PostId" />
 														<button class="btn btn-primary" type="submit">Thêm</button>
 													</div>
@@ -129,5 +144,13 @@
 	</div>
 </div>
 <style>
+	.add-location-form {
+		display: inline-block;
+		width: 130px; /* Adjust the width as needed */
+	}
 
+		.add-location-form .form-control {
+			max-width: none; /* Remove the inline max-width style */
+			width: 100%; /* Make the input take the full width of the form */
+		}
 </style>

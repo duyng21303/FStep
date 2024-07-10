@@ -16,7 +16,7 @@ namespace FStep.Helpers
 			CreateMap<ProfileVM, User>();
             CreateMap<TransactionVM, Transaction>();
 			CreateMap<User, ProfileVM>();
-			CreateMap<CommentVM, Comment>().ReverseMap();
+			CreateMap<Comment, CommentVM>().ReverseMap();
 			CreateMap<CheckoutVM, Payment>();
 			CreateMap<CheckoutVM, Transaction>();
 

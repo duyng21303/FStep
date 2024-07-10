@@ -43,12 +43,6 @@
 													<textarea asp-for="@Model.Title" type="text" class="form-control"></textarea>
 													<span asp-validation-for="@Model.Title" class="text-danger"></span>
 												</div>
-
-												@* @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
-												<div class="col-md-10">
-												@Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
-												@Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
-												</div> *@
 											</div>
 											<div class="form-item">
 												<label asp-for="Img" class="form-label my-3"></label><sup>*</sup>
@@ -83,40 +77,31 @@
 									<div class="col-md-12 col-lg-6 col-xl-12">
 										<div class="row">
 											<div class="form-item">
-												<div class="form-item w-100">
-													<label asp-for="@Model.Title" class="form-label my-3"></label><sup>*</sup>
-													<textarea asp-for="@Model.Title" type="text" class="form-control"></textarea>
-													<span asp-validation-for="@Model.Title" class="text-danger"></span>
-												</div>
+												<label asp-for="@Model.Title" class="form-label my-3"></label><sup>*</sup>
+												<textarea asp-for="@Model.Title" type="text" class="form-control"></textarea>
+												<span asp-validation-for="@Model.Title" class="text-danger"></span>
 											</div>
 											<div class="form-item">
-												@* <label asp-for="Img" class="control-label"></label>
-												<input asp-for="Img" class="form-control" type="file" >
-												<span asp-validation-for="Img" class="text-danger"></span> *@
-
 												<label asp-for="Img" class="form-label my-3"></label><sup>*</sup>
 												<input asp-for="Img" type="file" class="form-control">
 												<span asp-validation-for="Img" class="text-danger"></span>
 												<input type="hidden" asp-for="@Model.Type" value="Sale" />
+											</div>
+											<div class="form-item ">
+												<label asp-for="@Model.Price" class="form-label my-3"></label><sup>*</sup>
+												<input asp-for="@Model.Price" type="text" class="form-control" placeholder="10000 hoặc 10,000 (Mười ngàn VNĐ)">
+												<span asp-validation-for="@Model.Price" class="text-danger"></span>
+											</div>
+											<div class="form-item mb-3">
+												<label asp-for="@Model.Quantity" class="form-label my-3"></label><sup>*</sup>
+												<input asp-for="@Model.Quantity" type="number" class="form-control" disabled value="1">
+												<span asp-validation-for="@Model.Quantity" class="text-danger"></span>
 											</div>
 											<div class="form-item">
 												<label asp-for="@Model.Description" class="form-label my-3"></label><sup>*</sup>
 												<textarea asp-for="@Model.Description" type="text" class="form-control" id="summernoteDescription2"></textarea>
 												<span asp-validation-for="@Model.Description" class="text-danger"></span>
 											</div>
-
-								<div class="form-item">
-									<label asp-for="@Model.ProductStatus" class="form-label my-3"></label><sup>*</sup>
-									<input asp-for="@Model.ProductStatus" type="number" class="form-control" disabled value="1">
-									<span asp-validation-for="@Model.ProductStatus" class="text-danger"></span>
-								</div>
-
-											<div class="form-item mb-3">
-												<label asp-for="@Model.Price" class="form-label my-3"></label><sup>*</sup>
-												<input asp-for="@Model.Price" type="text" class="form-control" placeholder="10000/10,000 (Mười ngàn VNĐ)">
-												<span asp-validation-for="@Model.Price" class="text-danger"></span>
-											</div>
-
 											<div style="background-color=gray;">
 												<button type="submit" class="btn btn-primary border-secondary py-3 px-4 text-uppercase w-100 text-light">Đăng</button>
 											</div>

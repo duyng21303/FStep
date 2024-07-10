@@ -139,11 +139,11 @@ namespace FStep.Controllers.ManagePost
 
 				_db.Posts.Update(post);
 				_db.SaveChanges();
-				TempData["SuccessMessage"] = $"Bài đăng {id} đã được duyệt thành công.";
+				TempData["SuccessMessage"] = $"Bài đăng {post.Content} đã được duyệt thành công.";
 			}
 			else
 			{
-				TempData["ErrorMessage"] = $"Bài đăng {id} không được tìm thấy.";
+				TempData["ErrorMessage"] = $"Bài đăng {post.Content} không được tìm thấy.";
 			}
 			string encodedUrl = Url.Action("ManagePosts", new { currentTab = "pendingPosts" });
 			return Redirect(encodedUrl);
@@ -161,11 +161,11 @@ namespace FStep.Controllers.ManagePost
 				post.Status = "Rejected";
 				_db.Posts.Update(post);
 				_db.SaveChanges();
-				TempData["SuccessMessage"] = $"Bài đăng {id} đã được xóa thành công.";
+				TempData["SuccessMessage"] = $"Bài đăng {post.Content} đã được xóa thành công.";
 			}
 			else
 			{
-				TempData["ErrorMessage"] = $"Bài đăng {id} không được tìm thấy.";
+				TempData["ErrorMessage"] = $"Bài đăng {post.Content} không được tìm thấy.";
 			}
 			string encodedUrl = Url.Action("ManagePosts", new { currentTab = "pendingPosts" });
 			return Redirect(encodedUrl);
@@ -184,11 +184,11 @@ namespace FStep.Controllers.ManagePost
 
 				_db.Posts.Update(post);
 				_db.SaveChanges();
-				TempData["SuccessMessage"] = $"Bài đăng {id} đã được duyệt thành công.";
+				TempData["SuccessMessage"] = $"Bài đăng {post.Content} đã được duyệt thành công.";
 			}
 			else
 			{
-				TempData["ErrorMessage"] = $"Bài đăng {id} không được tìm thấy.";
+				TempData["ErrorMessage"] = $"Bài đăng {post.Content} không được tìm thấy.";
 			}
 			string encodedUrl = Url.Action("ManagePosts", new { currentTab = "approvedPosts" });
 			return Redirect(encodedUrl);
@@ -202,14 +202,14 @@ namespace FStep.Controllers.ManagePost
 			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
 			if (post != null)
 			{
-				post.Status = "False";
+				post.Status = "Hidden";
 				_db.Posts.Update(post);
 				_db.SaveChanges();
-				TempData["SuccessMessage"] = $"Bài đăng {id} đã được xóa thành công.";
+				TempData["SuccessMessage"] = $"Bài đăng {post.Content} đã được xóa thành công.";
 			}
 			else
 			{
-				TempData["ErrorMessage"] = $"Bài đăng {id} không được tìm thấy.";
+				TempData["ErrorMessage"] = $"Bài đăng {post.Content} không được tìm thấy.";
 			}
 			string encodedUrl = Url.Action("ManagePosts", new { currentTab = "approvedPosts" });
 			return Redirect(encodedUrl);
@@ -225,11 +225,11 @@ namespace FStep.Controllers.ManagePost
 				post.Location = location;
 				_db.Posts.Update(post);
 				_db.SaveChanges();
-				TempData["SuccessMessage"] = "Location added successfully!";
+				TempData["SuccessMessage"] = $"Đã thêm vị trí cho bài post {post.Content} thành công !";
 			}
 			else
 			{
-				TempData["ErrorMessage"] = "Location cannot be empty.";
+				TempData["ErrorMessage"] = $"Thêm vị trí cho bài post {post.Content} thất bại !";
 			}
 
 			string encodedUrl = Url.Action("ManagePosts", new { currentTab = "approvedPosts" });

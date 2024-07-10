@@ -73,7 +73,7 @@ namespace FStep.Controllers.Customer
 			var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
 
 			ViewData["USER_CREATE"] = user;
-			if (post.Status == "WaitingExchange")
+			if (post.Status == "Trading")
 			{
 				return Redirect("/");
 			}
@@ -138,8 +138,7 @@ namespace FStep.Controllers.Customer
 			var recommendedSales = db.Posts
 									 .Include(p => p.IdProductNavigation)
 									 .Include(p => p.IdUserNavigation)
-									 .Where(p => p.IdProductNavigation.Price >= currentProductPrice - 1000000
-												 && p.IdProductNavigation.Price <= currentProductPrice + 1000000
+									 .Where(p => p.IdProductNavigation.Price == currentProductPrice
 												 && p.Type == "Sale"
 												 && p.IdPost != id)
 									 .ToList();

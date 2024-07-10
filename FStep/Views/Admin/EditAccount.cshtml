@@ -2,7 +2,6 @@
 @{
 	ViewData["Title"] = "EditAccount";
 }
-
 <div class="container mt-5">
 	<h1 class="mb-4">Cập Nhật Tài Khoản</h1>
 	<form asp-action="UpdateAccount" method="post" class="update-account-form">
@@ -12,9 +11,9 @@
 			<div class="form-group col-md-6">
 				<label asp-for="Role" class="form-label my-3">Vai trò</label>
 				<select asp-for="Role" class="form-control form-control-sm custom-select custom-select-sm role-select">
-					<option value="admin">Admin</option>
-					<option value="customer">Customer</option>
-					<option value="moderator">Moderator</option>
+					<option value="Admin">Admin</option>
+					<option value="Customer">Customer</option>
+					<option value="Moderator">Moderator</option>
 				</select>
 			</div>
 

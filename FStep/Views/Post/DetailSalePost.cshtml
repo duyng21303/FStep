@@ -503,51 +503,34 @@
 				<div class="text">@Html.Raw(Model.Description)</div>
 				<a class="read-more" href="javascript:void(0)">Xem thêm</a>
 				<a class="shrink-btn" href="javascript:void(0)">Thu gọn</a>
-			</div>
-			@* <div class="row">
-			<div class="mb-3 text-muted small">
-			<span>
-			5.0 <span class="text-danger">
-			<i class="fa fa-star"></i>
-			<i class="fa fa-star"></i>
-			<i class="fa fa-star"></i>
-			<i class="fa fa-star"></i>
-			<i class="fa fa-star"></i>
-			</span>
-			</span>
-			<span class="text-primary p-2"> | </span>
-			<span>@Model.FeedbackNum <span>Đánh giá</span></span>
-			<span class="text-primary p-2"> | </span>
-			<span>@Model.SoldQuantity <span>Đã bán</span><br /></span>
-			</div>
-			</div> *@
-			<!-- Product Pricing -->
-			<div class="product-price">
-				<span>@String.Format(format, "{0:0,0 VND}", Model.Price)</span>
-				@* <a href="#" class="cart-btn">Mua ngay</a> *@
-			</div>
-			<form method="get" asp-action="CheckoutSale" asp-controller="Pay" asp-route-id="@Model.IdPost">
-				<div style="min-height:10px;"></div>
-				<div class="d-flex mt-1">
-					<div class="text align-content-lg-center mx-3">Số lượng</div>
-					<input name="quantity" class="form-control text-center" id="inputQuantity" value="1" disabled style="max-width: 7.5rem; " />
+				<div class="product-price">
+					<span>@String.Format(format, "{0:0,0 VND}", Model.Price)</span>
+					@* <a href="#" class="cart-btn">Mua ngay</a> *@
 				</div>
-				<div style="min-height:10px;"></div>
-				@if (User.Identity.IsAuthenticated)
-				{
-					@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser) && Model.Status == "True")
+				<form method="get" asp-action="CheckoutSale" asp-controller="Pay" asp-route-id="@Model.IdPost">
+					<div style="min-height:10px;"></div>
+					<div class="d-flex mt-1">
+						<div class="text align-content-lg-center mx-3">Số lượng</div>
+						<input name="quantity" class="form-control text-center" id="inputQuantity" value="1" disabled style="max-width: 7.5rem; " />
+					</div>
+					<div style="min-height:10px;"></div>
+					@if (User.Identity.IsAuthenticated)
 					{
-						<button type="submit" class="btn btn-outline-secondary text-bg-primary">
-							<div class="mx-4 text-white">Mua ngay</div>
-						</button>
+						@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser) && Model.Status == "True")
+						{
+							<button type="submit" class="btn btn-outline-secondary text-bg-primary">
+								<div class="mx-4 text-white">Mua ngay</div>
+							</button>
+						}
+						else
+						{
+							<button disabled class="btn btn-sm mt-2 bg-dark text-light bg-opacity-50">Mua ngay</button>
+						}
 					}
-					else
-					{
-						<button disabled class="btn btn-sm mt-2 bg-dark text-light bg-opacity-50">Mua ngay</button>
-					}
-				}
 
-			</form>
+				</form>
+			</div>
+
 		</div>
 	</div>
 	<div class="container">
@@ -567,14 +550,15 @@
 						</div>
 						<div class="name">
 							<div class="mb-2">
-								<span class="fs-20 pr-16">@user.Name</span>
+								<a asp-action="Detail" asp-route-id="@user.IdUser" asp-controller="User" style="text-decoration: none; color: black;">
+									<span class="fs-20 pr-16">@user.Name</span>
+								</a>
 							</div>
-
 							@if (User.Identity.IsAuthenticated)
 							{
 								@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(Model.IdUser))
 								{
-									<button type="button" class="btn btn-sm btn-primary load-chat-comment" style="float: inline-end" data-userid="@Model.IdUser">
+									<button type="button" class="btn btn-sm btn-primary load-chat-comment" data-userid="@Model.IdUser">
 										<span>Chat ngay</span>
 									</button>
 								}
@@ -604,7 +588,7 @@
 	@if (recommendedSales.Count > 0)
 	{
 		<div class="col-lg-12 mt-3">
-			<h3 class="page-header">Recommended Sales</h3>
+			<h3 class="page-header">Các sản phẩm cùng giá</h3>
 			<div class="swiper">
 				@* col-lg-4 col-md-6 col-sm-12 *@
 				<div class="swiper-wrapper">
@@ -620,13 +604,10 @@
 										<div>
 											<span class="fs-20 pr-16 recommend-post-content">@post.Content</span>
 										</div>
-										<div class="fs-14 text-fade">
-											<span>Post Date: @post.Date</span>
+										<div class="">
+											<span style="clor:red">Giá: @post.IdProductNavigation.Price</span>
 										</div>
-										<div class="fs-14 text-fade">
-											<span>Type: @post.Type</span>
-										</div>
-										<div class="fs-14 text-fade">
+										<div class="">
 											<span>Rating: @post.IdUserNavigation.PointRating</span>
 										</div>
 									</div>
@@ -779,58 +760,24 @@
 			var shrinkButton = productDescription.querySelector('.shrink-btn');
 
 			if (textContainer.scrollHeight > textContainer.clientHeight) {
-				readMoreLink.style.display = 'inline-block'; // Hiển thị liên kết "Xem thêm" nếu nội dung vượt quá chiều rộng
+				readMoreLink.style.display = 'inline-block'; // Show "Read more" link if content overflows
+				shrinkButton.style.display = 'none'; // Hide "Collapse" button initially
 
 				readMoreLink.addEventListener('click', function () {
-					if (textContainer.style.maxHeight === 'none') {
-						textContainer.style.maxHeight = '200px'; // Thu gọn nội dung lại về giới hạn chiều cao ban đầu
-						readMoreLink.innerText = 'Xem thêm'; // Đổi văn bản liên kết thành "Xem thêm"
-					} else {
-						textContainer.style.maxHeight = 'none'; // Mở rộng nội dung
-						readMoreLink.innerText = 'Thu gọn'; // Đổi văn bản liên kết thành "Thu gọn"
-					}
+					textContainer.style.maxHeight = 'none'; // Expand content
+					readMoreLink.style.display = 'none'; // Hide "Read more" link
+					shrinkButton.style.display = 'inline-block'; // Show "Collapse" button
 				});
+
+				shrinkButton.addEventListener('click', function () {
+					textContainer.style.maxHeight = '100px'; // Collapse content to initial height
+					readMoreLink.style.display = 'inline-block'; // Show "Read more" link
+					shrinkButton.style.display = 'none'; // Hide "Collapse" button
+				});
+			} else {
+				readMoreLink.style.display = 'none'; // Hide "Read more" link if content does not overflow
 			}
 		});
-
-
-		document.addEventListener('DOMContentLoaded', function () {
-			var inputQuantity = document.getElementById('inputQuantity');
-			var increaseButton = document.getElementById('increase');
-			var maxValue = @Model.ProductStatus; // Lấy giá trị max từ model
-
-			var clicked = false; // Biến để kiểm tra xem đã click lần đầu tiên hay chưa
-
-			increaseButton.addEventListener('click', function () {
-				// if (!clicked) {
-				// 	// Nếu chưa click lần nào thì tăng giá trị từ 1 lên 2 (hoặc 1 đơn vị tăng)
-				// 	inputQuantity.value = 2; // hoặc inputQuantity.value++;
-				// 	clicked = true; // Đánh dấu là đã click lần đầu tiên
-				// } else {
-				var currentValue = parseInt(inputQuantity.value) || 0;
-				if (currentValue < maxValue) {
-					inputQuantity.value = currentValue + 1;
-				}
-				// }
-			});
-
-			document.getElementById('decrease').addEventListener('click', function () {
-				var currentValue = parseInt(inputQuantity.value) || 0;
-				var minValue = 1;
-				if (currentValue > minValue) {
-					inputQuantity.value = currentValue - 1;
-				}
-			});
-
-			inputQuantity.addEventListener('input', function () {
-				var currentValue = inputQuantity.value;
-				if (isNaN(currentValue) || currentValue < 1 || currentValue > maxValue) {
-					inputQuantity.value = 1;
-				}
-			});
-		});
-
-
 	</script>
 	<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 	<script>
@@ -855,7 +802,7 @@
 			nextEl: '.swiper-button-next',
 			prevEl: '.swiper-button-prev',
 		},
-								});
+												});
 	</script>
 	<script>
 		$(document).ready(function () {

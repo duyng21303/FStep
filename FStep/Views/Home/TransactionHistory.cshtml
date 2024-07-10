@@ -432,6 +432,9 @@
 																				Đánh giá
 																			</button>
 																		}
+																		<button type="button" data-bs-toggle="modal" data-bs-target="#reportComment" class="btn btn-outline-danger btn-sm mt-2 btn-report" style="float: inline-end;margin-left: 4px;" data-post="@item.Post.IdPost" data-transaction="@item.TransactionId">
+																			Báo cáo
+																		</button>
 																	</div>
 																	<p class="fst-italic text-end mb-0 mt-5">Đánh giá sản phẩm trước: <span>@item.DeliveryDate?.AddDays(7).ToString("dd/MM/yyyy")</span></p>
 
@@ -703,12 +706,12 @@
 																		</button>
 																	}
 
-																	@* @if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.Transaction.Status == "Completed")
-																	{ *@
+																	@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.Transaction.Status == "Completed")
+																	{
 																		<button type="button" data-bs-toggle="modal" data-bs-target="#reportComment" class="btn btn-outline-danger btn-sm mt-2 btn-report" style="float: inline-end;margin-left: 4px;" data-post="@item.Post.IdPost" data-transaction="@item.TransactionId">
 																			Báo cáo
 																		</button>
-																	@* } *@
+																	}
 																</div>
 																@if (item.Transaction.Status == "Completed")
 																{
@@ -918,6 +921,9 @@
 																				Đánh giá
 																			</button>
 																		}
+																		<button type="button" data-bs-toggle="modal" data-bs-target="#reportComment" class="btn btn-outline-danger btn-sm mt-2 btn-report" style="float: inline-end;margin-left: 4px;" data-post="@item.Post.IdPost" data-transaction="@item.TransactionId">
+																			Báo cáo
+																		</button>
 																	</div>
 																	<p class="fst-italic text-end mb-0 mt-5">Đánh giá sản phẩm trước: <span>@item.DeliveryDate?.AddDays(7).ToString("dd/MM/yyyy")</span></p>
 																</div>
@@ -1094,9 +1100,9 @@
 			}
 		});
 
-		$('.btn-report').click((e) => {
-			var postId = $('.btn-report').data('post');
-			var transactionId = $('.btn-report').data('transaction');
+		$('.btn-report').click(function() => {
+			var postId = $(this).data('post');
+			var transactionId = $(this).data('transaction');
 
 			$('#reportForm').data('postid', postId);
 			$('#reportForm').data('transactionid', transactionId);

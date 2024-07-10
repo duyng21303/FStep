@@ -78,9 +78,14 @@
 										<span class="label label-default">@user.PointRating</span>
 									</td>
 									<td style="width: 20%;" class="text-center">
-										
-										<button class="btn btn-sm btn-primary btn-point-rating" data-comment="@user.IdReport" data-idtransaction="@user.IdTransaction" data-idcomment="@user.IdComment">Trừ điểm</button>
-										<button class="btn btn-sm btn-danger btn-reject-comment" data-report="@user.IdReport" data-idtransaction="@user.IdTransaction" data-idcomment="@user.IdComment">Từ chối</button>
+										<button class="btn btn-sm btn-primary btn-point-rating" data-comment="@user.IdReport"
+												data-idtransaction="@user.IdTransaction" data-idcomment="@user.IdComment">
+											Trừ điểm và xóa
+										</button>
+										<button class="btn btn-sm btn-secondary btn-reject-comment" data-report="@user.IdReport"
+												data-idtransaction="@user.IdTransaction" data-idcomment="@user.IdComment">
+											Từ chối
+										</button>
 									</td>
 								</tr>
 							}
@@ -97,13 +102,13 @@
     <script>
         $(document).ready(function () {
 
-            let timeout;
-            $('#searchUserForm').on('input', function () {
-                clearTimeout(timeout); // Xóa timeout hiện tại nếu có
-                timeout = setTimeout(function () {
-                    $('#searchUserForm').submit(); // Gửi form khi thời gian chờ (debounce) kết thúc
-                }, 200); // Thời gian debounce là 200ms (có thể điều chỉnh theo nhu cầu của bạn)
-            });
+			let timeout;
+			$('#searchUserForm').on('input', function () {
+				clearTimeout(timeout); // Xóa timeout hiện tại nếu có
+				timeout = setTimeout(function () {
+					$('#searchUserForm').submit(); // Gửi form khi thời gian chờ (debounce) kết thúc
+				}, 200); // Thời gian debounce là 200ms (có thể điều chỉnh theo nhu cầu của bạn)
+			});
 
             $('.btn-point-rating').on('click', function () {
                 let commentId = $(this).data('comment');
@@ -167,70 +172,70 @@
                     reportObject.IdComment = idComment;
                 }
 
-                Swal.fire({
-                    title: `Bạn có muốn xóa báo cáo này không`,
-                    showCancelButton: true,
-                    confirmButtonText: "Có",
-                    cancelButtonText: "Không"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        fetch('/Admin/DeleteReport', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'RequestVerificationToken': token
-                            },
-                            body: JSON.stringify(reportObject)
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            window.location.reload();
-                        })
-                        .catch(error => {
-                            Swal.fire("Đã có lỗi xảy ra", "", "error");
-                        });
-                    }
-                });
-            });
+				Swal.fire({
+					title: `Bạn có muốn xóa báo cáo này không`,
+					showCancelButton: true,
+					confirmButtonText: "Có",
+					cancelButtonText: "Không"
+				}).then((result) => {
+					if (result.isConfirmed) {
+						fetch('/Admin/DeleteReport', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+								'RequestVerificationToken': token
+							},
+							body: JSON.stringify(reportObject)
+						})
+							.then(response => {
+								if (!response.ok) {
+									throw new Error('Network response was not ok');
+								}
+								window.location.reload();
+							})
+							.catch(error => {
+								Swal.fire("Đã có lỗi xảy ra", "", "error");
+							});
+					}
+				});
+			});
 
-            $('.btn-reject-comment').on('click', function () {
-                let report = $(this).data('report');
-                let token = $('input[name="__RequestVerificationToken"]').val();
+			$('.btn-reject-comment').on('click', function () {
+				let report = $(this).data('report');
+				let token = $('input[name="__RequestVerificationToken"]').val();
 
-                let reportObject = {
+				let reportObject = {
 					IdReport: report
-                };
-                Swal.fire({
-                    title: `Bạn có muốn từ chối báo cáo này không`,
-                    showCancelButton: true,
-                    confirmButtonText: "Có",
-                    cancelButtonText: "Không"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        fetch('/Admin/RejectReport', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'RequestVerificationToken': token
-                            },
-                            body: JSON.stringify(reportObject)
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            window.location.reload();
-                        })
-                        .catch(error => {
-                            Swal.fire("Đã có lỗi xảy ra", "", "error");
-                        });
-                    }
-                });
-            });
-        });
-    </script>
+				};
+				Swal.fire({
+					title: `Bạn có muốn từ chối báo cáo này không`,
+					showCancelButton: true,
+					confirmButtonText: "Có",
+					cancelButtonText: "Không"
+				}).then((result) => {
+					if (result.isConfirmed) {
+						fetch('/Admin/RejectReport', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+								'RequestVerificationToken': token
+							},
+							body: JSON.stringify(reportObject)
+						})
+							.then(response => {
+								if (!response.ok) {
+									throw new Error('Network response was not ok');
+								}
+								window.location.reload();
+							})
+							.catch(error => {
+								Swal.fire("Đã có lỗi xảy ra", "", "error");
+							});
+					}
+				});
+			});
+		});
+	</script>
 }
 <style>
 	/* USER LIST TABLE */
