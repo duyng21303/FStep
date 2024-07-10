@@ -7,6 +7,8 @@ using FStep.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
+using System.Configuration;
 using X.PagedList;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
@@ -382,13 +384,13 @@ namespace FStep.Controllers.Admin
 					{
 						_context.Notifications.Remove(notification);
 					}
-
 					var comment = await _context.Comments.FirstOrDefaultAsync(x => x.IdComment == report.IdComment);
 					if (comment != null)
 					{
 						_context.Comments.Remove(comment);
 
 					}
+
 					await _context.SaveChangesAsync();
 					await _context.Database.CommitTransactionAsync();
 				}
@@ -437,69 +439,91 @@ namespace FStep.Controllers.Admin
 		[HttpPost]
 		public async Task<IActionResult> PointHandler([FromBody] ReportVM report)
 		{
-			var reportExists = _context.Reports.FirstOrDefault(x => x.IdReport == report.IdReport);
-			User user = null;
-			Comment comment = null;
-			Transaction transaction = null;
-			int pointRating = 0;
-			if (reportExists != null)
+			await _context.Database.BeginTransactionAsync();
+			try
 			{
-				// trừ 10 điểm của người bình luận nếu người khác báo cáo
-				if (report.IdComment != null)
+				var reportExisted = _context.Reports.FirstOrDefault(x => x.IdReport == report.IdReport);
+				User user = null;
+				Comment comment = null;
+				Transaction transaction = null;
+				int pointRating = 0;
+				if (reportExisted != null)
 				{
-					comment = await _context.Comments.FirstOrDefaultAsync(x => x.IdComment == report.IdComment);
-					if (comment != null)
+					if (report.IdComment != null)
 					{
-						user = await _context.Users.FirstOrDefaultAsync(x => x.IdUser == comment.IdUser);
-						if (user != null)
-						{
-							user.PointRating -= 10;
-							pointRating += 10;
-						}
-					}
-				}
-
-				// trừ 20 điểm của người đăng bài nếu người dùng báo cáo mua hàng
-				if (report.IdTransaction != null)
-				{
-					transaction = await _context.Transactions.FirstOrDefaultAsync(x => x.IdTransaction == report.IdTransaction);
-					if (transaction != null)
-					{
-						user = await _context.Users.FirstOrDefaultAsync(x => x.IdUser == transaction.IdUserSeller);
-						if (user != null)
-						{
-							user.PointRating -= 20;
-							pointRating += 20;
-						}
-					}
-				}
-
-				if (user != null)
-				{
-					await _context.Database.BeginTransactionAsync();
-					try
-					{
-						_context.Users.Update(user);
-						await _context.SaveChangesAsync();
-						if (transaction != null)
-						{
-							await notificationServices.CreateNotification(user.IdUser, "ReportTransaction", "Transaction", pointRating.ToString(), transaction.IdTransaction);
-						}
-
+						comment = await _context.Comments.FirstOrDefaultAsync(x => x.IdComment == report.IdComment);
 						if (comment != null)
 						{
-							await notificationServices.CreateNotification(user.IdUser, "ReportComment", "Comment", pointRating.ToString(), comment.IdComment);
+							// trừ 10 điểm của người bình luận nếu người khác báo cáo
+							user = await _context.Users.FirstOrDefaultAsync(x => x.IdUser == comment.IdUser);
+							if (user != null)
+							{
+								user.PointRating -= 10;
+								pointRating += 10;
+								int? x = null;
+								//Gửi thông báo cho user
+								await notificationServices.CreateNotification(user.IdUser, "ReportComment", "Comment", pointRating.ToString(), comment.IdComment);
+								_context.Users.Update(user);
+								await _context.SaveChangesAsync();
+							}
+							//Xóa báo cáo, bình luận,
+							//Xóa reference comment ở notification
+							var notification = await _context.Notifications.FirstOrDefaultAsync(x => x.IdComment == report.IdComment);
+							notification.IdComment = null;
+							_context.Notifications.Update(notification);
+							//xóa báo cáo
+							_context.Reports.Remove(reportExisted);
+							//xóa comment
+							_context.Comments.Remove(comment);
+
+							await _context.SaveChangesAsync();
+							await _context.Database.CommitTransactionAsync();
 						}
-						await _context.Database.CommitTransactionAsync();
+						return Ok();
 					}
-					catch (Exception ex)
+					// trừ 20 điểm của người đăng bài nếu người dùng báo cáo mua hàng
+					if (report.IdTransaction != null)
 					{
-						await _context.Database.RollbackTransactionAsync();
+						transaction = await _context.Transactions.FirstOrDefaultAsync(x => x.IdTransaction == report.IdTransaction);
+						if (transaction != null)
+						{
+							user = await _context.Users.FirstOrDefaultAsync(x => x.IdUser == transaction.IdUserSeller);
+							if (user != null)
+							{
+								user.PointRating -= 20;
+								pointRating += 20;
+								//Gửi thông báo cho user
+								await notificationServices.CreateNotification(user.IdUser, "ReportTransaction", "Transaction", pointRating.ToString(), transaction.IdTransaction);
+								_context.Users.Update(user);
+								await _context.SaveChangesAsync();
+								await _context.Database.CommitTransactionAsync();
+							}
+						}
+						return Ok();
 					}
 				}
+			}
+			catch (Exception ex)
+			{
+				await _context.Database.RollbackTransactionAsync();
+				return BadRequest();
+			}
+			return Ok();
+		}
+
+		[Authorize(Roles = "Admin, Moderator")]
+		[HttpPost]
+		public async Task<IActionResult> RejectReport([FromBody] ReportVM report)
+		{
+			var reportExisted = _context.Reports.FirstOrDefault(x => x.IdReport == report.IdReport);
+			if (reportExisted != null)
+			{
+				_context.Reports.Remove(reportExisted);
+				await _context.SaveChangesAsync();
 				return Ok();
 			}
 			return BadRequest();
 		}
+
 	}
 }

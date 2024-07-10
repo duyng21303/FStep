@@ -15,12 +15,12 @@
                         <span class="badge bg-danger">@Model.Role</span>
                     </div>
 
-                    <div class="profile-stars mb-2" style="color : yellow">
+                   @*  <div class="profile-stars mb-2" style="color : yellow">
                         @for (int i = 0; i < rating; i++)
                         {
                             <i class="fa fa-star"></i>
                         }
-                    </div>
+                    </div> *@
 
                     <div class="profile-since mb-2">
                         Member since: @Model.CreateDate?.ToString("dd/MM/yyyy")
@@ -43,10 +43,10 @@
                 </div>
                 <div class="card-body">
                     <div class="w-100">
-                        <p class="card-text"><strong>Gender:</strong> @Model.Gender</p>
                         <p class="card-text"><strong>Email:</strong> @Model.Email</p>
-                        <p class="card-text"><strong>Address:</strong> @Model.Address</p>
-                        <p class="card-text"><strong>StudentId:</strong> @Model.StudentId</p>
+                        <p class="card-text"><strong>Địa chỉ:</strong> @Model.Address</p>
+                        <p class="card-text"><strong>Mã sinh viên:</strong> @Model.StudentId</p>
+                        <p class="card-text"><strong>Điểm uy tín:</strong> @Model.PointRating</p>
                     </div>
                 </div>
             </div>
