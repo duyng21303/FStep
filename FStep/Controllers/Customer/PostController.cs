@@ -73,7 +73,7 @@ namespace FStep.Controllers.Customer
 			var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
 
 			ViewData["USER_CREATE"] = user;
-			if (post.Status == "WaitingExchange")
+			if (post.Status == "Trading")
 			{
 				return Redirect("/");
 			}

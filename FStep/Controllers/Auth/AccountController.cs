@@ -189,7 +189,7 @@ namespace FStep.Controllers.Auth
                     Type = p.Type,
                     Price = p.IdProductNavigation != null && p.IdProductNavigation.Price.HasValue ? p.IdProductNavigation.Price.Value : 0f,
                     CreateDate = p.Date.HasValue ? p.Date.Value : DateTime.Now
-                }).ToList()
+                }).OrderByDescending(o => o.CreateDate).ToList()
 
             };
             return View(profile);

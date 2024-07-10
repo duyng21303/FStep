@@ -501,5 +501,20 @@ namespace FStep.Controllers.Admin
 			}
 			return BadRequest();
 		}
+		[Authorize(Roles = "Admin, Moderator")]
+		[HttpPost]
+		public async Task<IActionResult> RejectReport([FromBody] ReportVM report)
+		{
+			var reportExisted = _context.Reports.FirstOrDefault(x => x.IdReport == report.IdReport);
+			if (reportExisted != null)
+			{
+				_context.Reports.Remove(reportExisted);
+				await _context.SaveChangesAsync();
+				return Ok();
+			}
+			return BadRequest();
+		}
+
 	}
+
 }

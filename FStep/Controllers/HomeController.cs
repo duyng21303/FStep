@@ -70,7 +70,7 @@ namespace FStep.Controllers
 			var highRatedPosts = suggestedPosts
 				.Where(p => p.PointRating > 50)
 				.OrderBy(p => Guid.NewGuid())
-				.Take(10);
+				.Take(8);
 
 			var highRatedPostList = highRatedPosts.ToPagedList(highRatedPage, pageSize);
 
@@ -129,7 +129,7 @@ namespace FStep.Controllers
 			var highRatedPosts = suggestedPosts
 				.Where(p => p.PointRating > 50)
 				.OrderBy(p => Guid.NewGuid())
-			.Take(10);
+			.Take(8);
 
 			var highRatedPostList = highRatedPosts.ToPagedList(highRatedPage, pageSize);
 
