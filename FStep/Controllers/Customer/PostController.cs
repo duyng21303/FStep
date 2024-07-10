@@ -138,8 +138,7 @@ namespace FStep.Controllers.Customer
 			var recommendedSales = db.Posts
 									 .Include(p => p.IdProductNavigation)
 									 .Include(p => p.IdUserNavigation)
-									 .Where(p => p.IdProductNavigation.Price >= currentProductPrice - 1000000
-												 && p.IdProductNavigation.Price <= currentProductPrice + 1000000
+									 .Where(p => p.IdProductNavigation.Price == currentProductPrice
 												 && p.Type == "Sale"
 												 && p.IdPost != id)
 									 .ToList();
