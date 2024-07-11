@@ -177,7 +177,8 @@ namespace FStep.Controllers.Admin
 		[Authorize(Roles = "Admin, Moderator")]
 		public IActionResult UserManager(int page = 1, int pageSize = 10, string? search = null)
 		{
-			var query = _context.Users.AsQueryable();
+			string id = User.FindFirst("UserID")?.Value;
+			var query = _context.Users.Where(user => user.IdUser != id).AsQueryable();
 			if (!string.IsNullOrEmpty(search))
 			{
 				query = query.Where(x => x.Name.ToLower().Contains(search.ToLower()) || x.Email.ToLower().Contains(search.ToLower()));
@@ -327,6 +328,7 @@ namespace FStep.Controllers.Admin
 					user.Status = viewModel.Status;
 					user.BankName = viewModel.BankName;
 					user.BankAccountNumber = viewModel.BankAccountNumber;
+					_context.Update(user);
 					_context.SaveChanges();
 					TempData["SuccessMessage"] = $"Tài khoản {user.Name} đã được cập nhật lại thành công";
 					return RedirectToAction("UserManager", "Admin");

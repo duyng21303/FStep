@@ -1100,9 +1100,9 @@
 			}
 		});
 
-		$('.btn-report').click((e) => {
-			var postId = $('.btn-report').data('post');
-			var transactionId = $('.btn-report').data('transaction');
+		$('.btn-report').click(function () {
+			var postId = $(this).data('post');
+			var transactionId = $(this).data('transaction');
 
 			$('#reportForm').data('postid', postId);
 			$('#reportForm').data('transactionid', transactionId);
