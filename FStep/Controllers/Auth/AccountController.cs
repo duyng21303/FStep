@@ -131,7 +131,8 @@ namespace FStep.Controllers.Auth
                     AvatarImg = downloadedImgPath,
                     Role = "Customer",
                     PointRating = 50,
-                    CreateDate = DateTime.Now
+                    CreateDate = DateTime.Now,
+                    Status = true
                 };
                 db.Add(user);
                 db.SaveChanges();
@@ -141,7 +142,7 @@ namespace FStep.Controllers.Auth
             else
             {
                 var user = db.Users.SingleOrDefault(user => user.IdUser == userID);
-                if (user.PointRating > 0)
+                if (user.PointRating > 0 && user.Status == true)
                 {
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, Util.ClaimsHelper(user)); ;
                 }
