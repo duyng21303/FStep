@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FStep.ViewModels
 {
@@ -18,5 +19,8 @@ namespace FStep.ViewModels
         public string? avarImg { get; set; }
         public string? Img { get; set; }
         public string? Type { get; set; }
+
+        [NotMapped]
+        public bool IsReported { get; set; } = false;
     }
 }
