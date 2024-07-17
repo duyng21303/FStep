@@ -257,6 +257,7 @@ namespace FStep.Controllers
 						DeliveryDate = db.Payments.FirstOrDefault(p => p.IdTransaction == s.IdTransaction && p.Type == "Seller").PayTime,
 						CancelDate = db.Payments.FirstOrDefault(p => p.IdTransaction == s.IdTransaction).CancelDate,
 						CheckFeedback = db.Feedbacks.Any(p => p.IdPost == s.IdPost),
+						IsReported = db.Reports.FirstOrDefault(x=>x.IdTransaction == s.IdTransaction && x.IdUser == s.IdUserBuyer) != null
 					}).OrderByDescending(o => o.TransactionId);
 					viewResult.ExchangeList = exchangeList.ToPagedList(pageNumber, pageSize);
 
@@ -271,6 +272,7 @@ namespace FStep.Controllers
 						DeliveryDate = db.Payments.FirstOrDefault(p => p.IdTransaction == s.IdTransaction && p.Type == "Seller").PayTime,
 						CancelDate = db.Payments.FirstOrDefault(p => p.IdTransaction == s.IdTransaction).CancelDate,
 						CheckFeedback = db.Feedbacks.Any(p => p.IdPost == s.IdPost),
+						IsReported = db.Reports.FirstOrDefault(x => x.IdTransaction == s.IdTransaction && x.IdUser == s.IdUserBuyer) != null
 					}).OrderByDescending(o => o.TransactionId);
 					viewResult.SaleList = saleList.ToPagedList(pageNumber, pageSize);
 

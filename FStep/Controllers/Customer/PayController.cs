@@ -285,6 +285,9 @@ namespace FStep.Controllers.Customer
 				//sent email
 				bool sentSeller = await emailSender.EmailSendAsync(seller.Email, "Sản phẩm của bạn đã bị huỷ giao dịch", emailBody);
 				bool sentBuyer = await emailSender.EmailSendAsync(buyer.Email, "Đơn hàng của bạn đã được huỷ", emailBody);
+				
+				buyer.PointRating -= 5;
+				db.Update(buyer);
 
 				db.SaveChanges();
 

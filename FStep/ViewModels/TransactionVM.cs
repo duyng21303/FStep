@@ -1,5 +1,6 @@
 ﻿using FStep.Data;
 using FStep.ViewModels.WareHouse;
+using System.ComponentModel.DataAnnotations.Schema;
 using X.PagedList;
 
 namespace FStep.ViewModels
@@ -20,6 +21,9 @@ namespace FStep.ViewModels
 		public bool CheckFeedback { get; set; }
 
 		public float Revenues { get; set; }
+
+		[NotMapped]
+		public bool IsReported { get; set; } = false;
 
 		// Add this property to hold a list of transactions
 		public IPagedList<TransactionVM>? PagedTransactions { get; set; }
