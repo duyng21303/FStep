@@ -88,7 +88,10 @@ namespace FStep.Controllers.Admin
 			var post = _db.Posts
 				.Include(p => p.IdProductNavigation)
 				.FirstOrDefault(p => p.IdPost == id);
-
+			if (post.Status == "Hidden" || post.Status == "Trading")
+			{
+				return Redirect("/AdminPost/ManagePost");
+			}
 			if (post == null)
 			{
 				return NotFound();
@@ -119,6 +122,7 @@ namespace FStep.Controllers.Admin
 				var post = _db.Posts
 					.Include(p => p.IdProductNavigation)
 					.FirstOrDefault(p => p.IdPost == model.IdPost);
+				
 				if (post == null)
 				{
 					return NotFound();

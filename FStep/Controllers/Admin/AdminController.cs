@@ -249,7 +249,6 @@ namespace FStep.Controllers.Admin
 			{
 				query = query.Where(x => x.Content.Contains(search));
 			}
-
 			var comments = query.Skip((page - 1) * pageSize).Take(pageSize).Select(x => new ReportVM
 			{
 				IdReport = x.IdReport,
