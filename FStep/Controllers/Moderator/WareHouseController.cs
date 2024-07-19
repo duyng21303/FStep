@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using FStep.Services;
 using Microsoft.AspNetCore.Http.Extensions;
+using System.Configuration;
 
 
 namespace FStep.Controllers.ManagePost
@@ -26,11 +27,15 @@ namespace FStep.Controllers.ManagePost
 		private readonly IMapper _mapper;
 
 		private readonly NotificationServices notificationServices;
-		public WareHouseController(FstepDBContext context, IMapper mapper)
+		private readonly IConfiguration _configuration;
+
+		public WareHouseController(FstepDBContext context, IMapper mapper, IConfiguration configuration)
 		{
 			db = context;
 			_mapper = mapper;
 			notificationServices = new NotificationServices(db);
+			_configuration = configuration;
+
 		}
 
 		[HttpGet]
@@ -191,7 +196,20 @@ namespace FStep.Controllers.ManagePost
 			var product = db.Products.SingleOrDefault(p => p.IdProduct == post.IdProduct);
 			product.Status = "False";
 			db.Update(product);
-
+			
+			var buyer = db.Users.FirstOrDefault(p => p.IdUser == transaction.IdUserBuyer);
+			var seller = db.Users.FirstOrDefault(p => p.IdUser == transaction.IdUserSeller);
+			var maxPoint = _configuration.GetValue<float>("MaxPoint");
+			if(buyer.PointRating < maxPoint)
+			{
+				buyer.PointRating += 5;
+			}
+			if(seller.PointRating < maxPoint)
+			{
+				seller.PointRating += 5;
+			}
+			db.Update(buyer);
+			db.Update(seller);
 			db.SaveChanges();
 
 			return RedirectToAction("WareHouse");
