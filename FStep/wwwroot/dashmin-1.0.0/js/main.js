@@ -79,6 +79,7 @@
     var dataListPostSaleName = $(dataListTotalPostSale).data("name");
 
     var ctx1 = $("#worldwide-sales").get(0).getContext("2d");
+
     var myChart1 = new Chart(ctx1, {
         type: "bar",
         data: {
@@ -131,8 +132,78 @@
         }
     });
 
+    var dataDayListElement = document.getElementById('dataDayList');
+    var dataDayListElementTrans = document.getElementById('dataDayListTransaction');
+    var dataDayListElementPost = document.getElementById('dataDayListPost');
+    var dataDayListElementComp = document.getElementById('dataDayListCompleted');
+    var dataDayListTotalPostExchange = document.getElementById('dataDayListTotalPostExchange');
+    var dataDayListTotalPostSale = document.getElementById('dataDayListTotalPostSale');
 
+    var dataDayList = $(dataDayListElement).data("list");
+    var dataDayListTrans = $(dataDayListElementTrans).data("list");
+    var dataDayListPost = $(dataDayListElementPost).data("list");
+    var dataDayListComp = $(dataDayListElementComp).data("list");
+    var dataDayListPostExchange = $(dataDayListTotalPostExchange).data("list");
+    var dataDayListPostSale = $(dataDayListTotalPostSale).data("list");
 
+    var dataDayListTransName = $(dataDayListElementTrans).data("name");
+    var dataDayListPostName = $(dataDayListElementPost).data("name");
+    var dataDayListCompName = $(dataDayListElementComp).data("name");
+    var dataDayListPostExchangeName = $(dataDayListTotalPostExchange).data("name");
+    var dataDayListPostSaleName = $(dataDayListTotalPostSale).data("name");
+    var ctx1Day = $("#worldwide-salesDay").get(0).getContext("2d");
+
+    var myChart1 = new Chart(ctx1Day, {
+        type: "bar",
+        data: {
+            labels: dataDayList,
+
+            datasets: [{
+                label: dataDayListPostName,
+                data: dataDayListPost,
+                backgroundColor: "rgba(0, 156, 255, .7)"
+            },
+            {
+                label: dataDayListTransName,
+                data: dataDayListTrans,
+                backgroundColor: "rgba(0, 156, 255, .5)"
+            },
+            {
+                label: dataDayListCompName,
+                data: dataDayListComp,
+                backgroundColor: "rgba(0, 156, 255, .3)"
+            }
+            ]
+        },
+        options: {
+            responsive: true
+        }
+    });
+    var ctx2Day = $("#salse-revenueDay").get(0).getContext("2d");
+
+    // Salse & Revenue Chart
+    var myChart2 = new Chart(ctx2Day, {
+        type: "line",
+        data: {
+            labels: dataDayList,
+            datasets: [{
+                label: dataDayListPostExchangeName,
+                data: dataDayListPostExchange,
+                backgroundColor: "rgba(0, 156, 255, .5)",
+                fill: true
+            },
+            {
+                label: dataDayListPostSaleName,
+                data: dataDayListPostSale,
+                backgroundColor: "rgba(0, 156, 255, .3)",
+                fill: true
+            }
+            ]
+        },
+        options: {
+            responsive: true
+        }
+    });
 
 })(jQuery);
 

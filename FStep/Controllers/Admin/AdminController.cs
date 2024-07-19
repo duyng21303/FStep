@@ -17,12 +17,12 @@ namespace FStep.Controllers.Admin
 
 	public class AdminController : Controller
 	{
-		private readonly FstepDbContext _context;
+		private readonly FstepDBContext _context;
 		private readonly IMapper _mapper;
 		private static readonly string[] defaultRole = new[] { "Customer", "Moderator", "Admin" };
 		private readonly IConfiguration _configuration;
 		private readonly NotificationServices notificationServices;
-		public AdminController(FstepDbContext context, IMapper mapper, IConfiguration configuration)
+		public AdminController(FstepDBContext context, IMapper mapper, IConfiguration configuration)
 		{
 			_context = context;
 			_mapper = mapper;
@@ -124,10 +124,69 @@ namespace FStep.Controllers.Admin
 				resultListPostCountExchange.Add((int)(totalPostCountSale * amount));
 				resultListPostCountSale.Add((int)(totalPostCountSale * amount));
 			}
-			// Chuẩn bị dữ liệu cho biểu đồ
-			var labels = months.Select(g => "Tháng " + g.Month).ToList();
-			ViewBag.Labels = labels;
-			ViewBag.TotalTransactionDash = resultListTotal;
+            var sevenDaysAgo = DateTime.Now.AddDays(-6);
+
+            // Tạo danh sách các ngày trong 7 ngày gần nhất
+            var days = Enumerable.Range(0, 7)
+                    .Select(i => DateTime.Now.AddDays(-i))
+                    .OrderBy(d => d.Year).ThenBy(d => d.Month).ThenBy(d => d.Day)
+                    .ToList();
+
+            // Phân loại giao dịch theo ngày
+            var resultDayListTotalPost = new List<int>();
+            var resultDayListTotal = new List<int>();
+            var resultDayListTotalCompleted = new List<int>();
+
+            var resultDayListPostCountExchange = new List<int>();
+            var resultDayListPostCountSale = new List<int>();
+            var amountDay = _configuration.GetValue<float>("Amount");
+
+            foreach (var day in days)
+            {
+                // Kiểm tra xem ngày hiện tại có giao dịch hay không
+                var totalPostCount = await _context.Posts
+                            .Where(o => o.Date != null && o.Date.Value.Date == day.Date)
+                            .CountAsync();
+
+                var totalTransactionCount = await _context.Transactions
+                            .Where(o => o.Date != null && o.Date.Value.Date == day.Date)
+                            .CountAsync();
+
+                var totalCompletedTransactionCount = await _context.Transactions
+                            .Where(o => o.Date != null && o.Date.Value.Date == day.Date && o.Status == "Completed")
+                            .CountAsync();
+
+                var totalPostCountExchange = await _context.Transactions
+                            .Where(o => o.Date != null && o.Date.Value.Date == day.Date && o.Type == "Exchange" && o.Status == "Completed")
+                            .CountAsync();
+
+                var totalPostCountSale = await _context.Transactions
+                            .Where(o => o.Date != null && o.Date.Value.Date == day.Date && o.Type == "Sale" && o.Status == "Completed")
+                            .CountAsync();
+
+                // Thêm số lượng giao dịch hoặc giá trị 0 vào danh sách kết quả
+                resultDayListTotal.Add(totalTransactionCount);
+				resultDayListTotalCompleted.Add(totalCompletedTransactionCount);
+				resultDayListTotalPost.Add(totalPostCount);
+
+				resultDayListPostCountExchange.Add((int)(totalPostCountExchange * amount));
+				resultDayListPostCountSale.Add((int)(totalPostCountSale * amount));
+            }
+
+            // Chuẩn bị dữ liệu cho biểu đồ
+            var labels = months.Select(g => "Tháng " + g.Month).ToList();
+            var labelsDay = days.Select(g => "Ngày " + g.Day).ToList();
+
+            ViewBag.Labels = labels;
+            ViewBag.LabelsDay = labelsDay;
+
+            ViewBag.TotalDayTransactionDash = resultDayListTotal;
+            ViewBag.TotalDayPostDash = resultDayListTotalPost;
+            ViewBag.TotalDayCompleted = resultDayListTotalCompleted;
+            ViewBag.TotalDayPostExchange = resultDayListPostCountExchange;
+            ViewBag.TotalDayPostSale = resultDayListPostCountSale;
+
+            ViewBag.TotalTransactionDash = resultListTotal;
 			ViewBag.TotalPostDash = resultListTotalPost;
 			ViewBag.TotalCompleted = resultListTotalCompleted;
 			ViewBag.TotalPostExchange = resultListPostCountExchange;

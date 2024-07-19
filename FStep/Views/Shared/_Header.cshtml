@@ -19,8 +19,8 @@
 
 <!-- Navbar Start -->
 
-<div class="container-fluid fixed-top">
-	<nav class="navbar navbar-expand-lg bg-light navbar-light sticky-top px-4 py-0">
+<div class="container-fluid fixed-top" style="background: linear-gradient(-180deg, #f53d2d, #f63);">
+	<nav class="navbar navbar-expand-lg bg-light navbar-light sticky-top px-4 py-0" style="background: linear-gradient(-180deg, #f53d2d, #f63);">
 		<a href="/" class="navbar-brand d-flex align-items-center">
 			@* <h2 class="text-primary mb-0"><i class="fa fa-car me-3"></i>FStep</h2> *@
 			<img src="~/img/logo/fstep-logo.png" alt="FStep Logo" width="70" />
@@ -32,17 +32,17 @@
 			<div class="navbar-nav">
 				@if (User.IsInRole("Moderator"))
 				{
-					<a class="nav-link text-dark" asp-area="" asp-action="ManagePosts" asp-controller="ModeManagePost">Quản lý bài đăng</a>
-					<a class="nav-link text-dark" asp-area="" asp-action="WareHouse" asp-controller="Warehouse">Kho hàng</a>
-					<a class="nav-link text-dark" asp-area="" asp-action="UserManager" asp-controller="Admin">Quản lý người dùng</a>
-					<a class="nav-link text-dark" asp-area="" asp-action="ReportManager" asp-controller="Admin">Quản lý báo cáo</a>
+					<a class="nav-link text-light" asp-area="" asp-action="ManagePosts" asp-controller="ModeManagePost">Quản lý bài đăng</a>
+					<a class="nav-link text-light" asp-area="" asp-action="WareHouse" asp-controller="Warehouse">Kho hàng</a>
+					<a class="nav-link text-light" asp-area="" asp-action="UserManager" asp-controller="Admin">Quản lý người dùng</a>
+					<a class="nav-link text-light" asp-area="" asp-action="ReportManager" asp-controller="Admin">Quản lý báo cáo</a>
 				}
 				else
 				{
-					<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ </a>
-					<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Sale">Bán</a>
-					<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="TransactionHistory">Giao dịch</a>
-					<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="OrderHistory">Đơn hàng</a>
+					<a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ </a>
+					<a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Sale">Bán</a>
+					<a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="TransactionHistory">Giao dịch</a>
+					<a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="OrderHistory">Đơn hàng</a>
 				}
 			</div>
 			<div class="navbar-nav ms-auto align-items-center">
@@ -50,19 +50,19 @@
 				{
 					<div class="navbar-nav align-items-center ms-auto">
 						<div class="nav-item dropdown">
-							<a href="#" class="nav-link dropdown-toggle notification-toggle" data-bs-toggle="dropdown">
-								<i class="fa fa-bell me-lg-2"></i>
-								Thông báo
-								<span class="badge bg-danger">@ViewBag.NotificationCount</span>
+							<a href="#" class="nav-link dropdown-toggle notification-toggle text-light" data-bs-toggle="dropdown">
+								<i class="fa fa-bell me-lg-2 text-light"></i>
+								<text class="text-light">Thông báo</text>
+								<span class="badge bg-danger text-light">@ViewBag.NotificationCount</span>
 							</a>
 							<div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0 notification" id="notification">
 							</div>
 
 						</div>
 						<div class="nav-item dropdown">
-							<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+							<a href="#" class="nav-link dropdown-toggle text-light" data-bs-toggle="dropdown">
 								<img class="rounded-circle me-lg-2" src="~/img/@User.FindFirst("IMG")?.Value" alt="" style="width: 40px; height: 40px;">
-								<span class="d-none d-lg-inline-flex">
+								<span class="d-none d-lg-inline-flex text-light">
 									@if (!string.IsNullOrEmpty(User.Identity.Name))
 									{
 										@User.Identity.Name

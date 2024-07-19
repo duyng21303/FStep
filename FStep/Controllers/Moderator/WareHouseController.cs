@@ -22,11 +22,11 @@ namespace FStep.Controllers.ManagePost
 {
 	public class WareHouseController : Controller
 	{
-		private readonly FstepDbContext db;
+		private readonly FstepDBContext db;
 		private readonly IMapper _mapper;
 
 		private readonly NotificationServices notificationServices;
-		public WareHouseController(FstepDbContext context, IMapper mapper)
+		public WareHouseController(FstepDBContext context, IMapper mapper)
 		{
 			db = context;
 			_mapper = mapper;

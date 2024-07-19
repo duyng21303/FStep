@@ -30,7 +30,7 @@ namespace FStep.Controllers.Customer
 	public class PayController : Controller
 	{
 
-		private readonly FstepDbContext db;
+		private readonly FstepDBContext db;
 		private readonly IMapper _mapper;
 		private readonly IEmailSender emailSender;
 		private readonly IVnPayService _vnPayService;
@@ -39,7 +39,7 @@ namespace FStep.Controllers.Customer
 		private readonly IServiceProvider _serviceProvider;
 		private readonly ILogger<RegistrationController> _logger;
 
-		public PayController(FstepDbContext context, IMapper mapper, IVnPayService vnPayService, IEmailSender emailSender, IRazorViewEngine viewEngine, ITempDataProvider tempDataProvider, IServiceProvider serviceProvider, ILogger<RegistrationController> logger)
+		public PayController(FstepDBContext context, IMapper mapper, IVnPayService vnPayService, IEmailSender emailSender, IRazorViewEngine viewEngine, ITempDataProvider tempDataProvider, IServiceProvider serviceProvider, ILogger<RegistrationController> logger)
 		{
 			db = context;
 			_mapper = mapper;
