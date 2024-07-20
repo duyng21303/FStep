@@ -252,7 +252,16 @@ namespace FStep.Controllers.Customer
 			{
 				var transaction = db.Transactions.SingleOrDefault(p => p.IdTransaction == model.TransactionId);
 				transaction.Status = "Canceled";
+				transaction.CancelDate = DateTime.Now;
 				db.Update(transaction);
+
+				var buyer = db.Users.FirstOrDefault(p => p.IdUser == transaction.IdUserBuyer);
+				buyer.PointRating -= 5;
+				db.Update(buyer);
+
+				var seller = db.Users.FirstOrDefault(p => p.IdUser == transaction.IdUserSeller);
+				seller.PointRating -= 5;
+				db.Update(seller);
 
 				var post = db.Posts.SingleOrDefault(p => p.IdPost == transaction.IdPost);
 				post.Status = "True";
@@ -280,8 +289,6 @@ namespace FStep.Controllers.Customer
 				}
 				string emailBody = await RenderViewToStringAsync($"Invoice{transaction.Type}", invoice);
 
-				var buyer = db.Users.SingleOrDefault(p => p.IdUser == transaction.IdUserBuyer);
-				var seller = db.Users.SingleOrDefault(p => p.IdUser == transaction.IdUserSeller);
 				//sent email
 				bool sentSeller = await emailSender.EmailSendAsync(seller.Email, "Sản phẩm của bạn đã bị huỷ giao dịch", emailBody);
 				bool sentBuyer = await emailSender.EmailSendAsync(buyer.Email, "Đơn hàng của bạn đã được huỷ", emailBody);

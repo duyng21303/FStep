@@ -1,4 +1,4 @@
-(function ($) {
+﻿(function ($) {
     "use strict";
 
     // Spinner
@@ -11,7 +11,7 @@
     };
     spinner();
 
-
+    
     // Back to top button
     $(window).scroll(function () {
         if ($(this).scrollTop() > 300) {

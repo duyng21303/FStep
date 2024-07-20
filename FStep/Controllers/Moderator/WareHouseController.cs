@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using FStep.Services;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.Build.Framework;
 
 
 namespace FStep.Controllers.ManagePost
@@ -170,7 +171,21 @@ namespace FStep.Controllers.ManagePost
 			var transaction = db.Transactions.FirstOrDefault(p => p.IdTransaction == id);
 
 			transaction.Status = "Completed";
+			transaction.CompleteDate = DateTime.Now;
 			db.Update(transaction);
+
+			var buyer = db.Users.FirstOrDefault(p => p.IdUser == transaction.IdUserBuyer);
+			buyer.PointRating += 5;
+			if (buyer.PointRating > 70)
+				buyer.PointRating = 70;
+			db.Update(buyer);
+
+			var seller = db.Users.FirstOrDefault(p => p.IdUser == transaction.IdUserSeller);
+			seller.PointRating += 5;
+			if (buyer.PointRating > 70)
+				buyer.PointRating = 70;
+			db.Update(seller);
+
 			db.SaveChanges();
 
 			//Pay money for Seller
@@ -194,7 +209,6 @@ namespace FStep.Controllers.ManagePost
 
 			db.SaveChanges();
 
-			return RedirectToAction("WareHouse");
 			return Redirect(url);
 		}
 

@@ -9,6 +9,10 @@ public partial class Transaction
 
     public DateTime? Date { get; set; }
 
+    public DateTime? CompleteDate { get; set; }
+
+    public DateTime? CancelDate { get; set; }
+
     public string? Status { get; set; }
 
     public int? Quantity { get; set; }
@@ -44,7 +48,6 @@ public partial class Transaction
     public DateTime? SentSellerDate { get; set; }
 
     public DateTime? SentBuyerDate { get; set; }
-
 
     public virtual Comment? IdCommentNavigation { get; set; }
 

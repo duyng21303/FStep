@@ -78,10 +78,10 @@
 					</div>
 					<canvas id="salse-revenue"></canvas>
 
-                    <ul id="dataList" data-list='@Json.Serialize(ViewBag.Labels)' data-name=""></ul>
-                    <ul id="dataListTransaction" data-list='@Json.Serialize(ViewBag.TotalTransactionDash)' data-name="Số lượng giao dịch"></ul>
-                    <ul id="dataListPost" data-list='@Json.Serialize(ViewBag.TotalPostDash)' data-name="Tổng số bài đăng"></ul>
-                    <ul id="dataListCompleted" data-list='@Json.Serialize(ViewBag.TotalCompleted)' data-name="Số lượng giao dịch thành công"></ul>
+					<ul id="dataList" data-list='@Json.Serialize(ViewBag.Labels)' data-name=""></ul>
+					<ul id="dataListTransaction" data-list='@Json.Serialize(ViewBag.TotalTransactionDash)' data-name="Số lượng giao dịch"></ul>
+					<ul id="dataListPost" data-list='@Json.Serialize(ViewBag.TotalPostDash)' data-name="Tổng số bài đăng"></ul>
+					<ul id="dataListCompleted" data-list='@Json.Serialize(ViewBag.TotalCompleted)' data-name="Số lượng giao dịch thành công"></ul>
 					<ul id="dataListTotalPostExchange" data-list='@Json.Serialize(ViewBag.TotalPostExchange)' data-name="Doanh số mua bán"></ul>
 					<ul id="dataListTotalPostSale" data-list='@Json.Serialize(ViewBag.TotalPostSale)' data-name="Doanh số mua bán trao đổi"></ul>
 
@@ -127,6 +127,7 @@
 							<th scope="col">Tổng Tiền</th>
 							<th scope="col">Trạng thái</th>
 							<th scope="col">Thu phí</th>
+							<th scope="col">Chi tiết</th>
 							<th scope="col">Thao tác</th>
 						</tr>
 					</thead>
@@ -180,6 +181,13 @@
 								</td>
 								<td>
 
+									<button type="button" class="btn btn-danger btn-sm submit-img" data-toggle="collapse" data-target="#confirmCollapse-@transaction.Transaction.IdTransaction">
+										<i class="fas fa-chevron-down"></i>
+									</button>
+
+								</td>
+								<td>
+
 									@if (transaction.Transaction.Status != "Processing")
 									{
 
@@ -191,6 +199,171 @@
 
 								</td>
 							</tr>
+							<!--Chi tiết-->
+							<tr id="confirmCollapse-@transaction.Transaction.IdTransaction" class="collapse">
+								<td colspan="8">
+									<div class="card card-body">
+										@if (transaction.Transaction.Type == "Sale")
+										{
+											<table class="table table-bordered">
+												<tr>
+													@if (transaction.Transaction.CancelDate != null)
+													{
+														<div class="progress">
+															<div class="progress-bar progress-bar-striped bg-danger role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+														</div>
+													}
+													else
+													{
+														@if (transaction.Transaction.CompleteDate != null)
+														{
+															<div class="progress">
+																<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+															</div>
+														}
+														else
+														{
+															@if (transaction.Transaction.ReceivedBuyerDate != null)
+															{
+																<div class="progress">
+																	<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+																</div>
+															}
+															else
+															{
+																@if(transaction.Transaction.SentSellerDate != null)
+																{
+																	<div class="progress">
+																		<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+																	</div>
+																}
+																else
+																{
+																	<div class="progress">
+																		<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+																	</div>
+																}
+															}
+														}
+													}
+												</tr>
+												<thead>
+													<tr>
+														<th>Ngày đặt hàng</th>
+														<th>Nhận hàng</th>
+														<th>Giao hàng</th>
+														<th>Hoàn thành</th>
+														<th>Ngày huỷ</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>
+															@transaction.Transaction.Date
+														</td>
+														<td>
+															@transaction.Transaction.SentSellerDate
+														</td>
+														<td>
+															@transaction.Transaction.ReceivedBuyerDate
+														</td>
+														<td>
+															@transaction.Transaction.CompleteDate
+														</td>
+														<td>
+															@transaction.Transaction.CancelDate
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										}
+										else
+										{
+											<table class="table table-bordered">
+												<tr>
+													@if (transaction.Transaction.CancelDate != null)
+													{
+														<div class="progress">
+															<div class="progress-bar progress-bar-striped bg-danger role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+														</div>
+													}
+													else
+													{
+														@if (transaction.Transaction.CompleteDate != null)
+														{
+															<div class="progress">
+																<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+															</div>
+														}
+														else
+														{
+															@if (transaction.Transaction.ReceivedBuyerDate != null)
+															{
+																<div class="progress">
+																	<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+																</div>
+															}
+															else
+															{
+																@if (transaction.Transaction.SentSellerDate != null)
+																{
+																	<div class="progress">
+																		<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+																	</div>
+																}
+																else
+																{
+																	<div class="progress">
+																		<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+																	</div>
+																}
+															}
+														}
+													}
+												</tr>
+												<thead>
+													<tr>
+														<th>Bắt đầu</th>
+														<th>Nhận hàng người đăng</th>
+														<th>Nhận hàng người trao đổi</th>
+														<th>Giao hàng người trao đổi</th>
+														<th>Giao hàng người đăng</th>
+														<th>Hoàn thành</th>
+														<th>Ngày huỷ</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>
+															@transaction.Transaction.Date
+														</td>
+														<td>
+															@transaction.Transaction.SentSellerDate
+														</td>
+														<td>
+															@transaction.Transaction.SentBuyerDate
+														</td>
+														<td>
+															@transaction.Transaction.ReceivedBuyerDate
+														</td>
+														<td>
+															@transaction.Transaction.ReceivedSellerDate
+														</td>
+														<td>
+															@transaction.Transaction.CompleteDate
+														</td>
+														<td>
+															@transaction.Transaction.CancelDate
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										}
+									</div>
+
+								</td>
+							</tr>
+							<!--Chi tiết-->
 						}
 					</tbody>
 				</table>
@@ -228,4 +401,17 @@
 			margin-bottom: 0.5rem;
 		}
 </style>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+	$(document).ready(function () {
+		// Lấy tham số từ URL query string
+		var urlParams = new URLSearchParams(window.location.search);
+		var id = urlParams.get('idTrans');
+		// Nếu có id và type từ query string
+		if (id) {
+			var target = "#confirmCollapse-" + id;
+			$(target).collapse('show');
+		}
+	});
 
+</script>
