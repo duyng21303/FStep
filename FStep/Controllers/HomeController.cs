@@ -99,6 +99,8 @@ namespace FStep.Controllers
 				highRatedPostList = highRatedPostList
 			};
 
+
+
 			return View(model);
 		}
 
