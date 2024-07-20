@@ -17,12 +17,12 @@ namespace FStep.Controllers.Admin
 
 	public class AdminController : Controller
 	{
-		private readonly FstepDbContext _context;
+		private readonly FstepDBContext _context;
 		private readonly IMapper _mapper;
 		private static readonly string[] defaultRole = new[] { "Customer", "Moderator", "Admin" };
 		private readonly IConfiguration _configuration;
 		private readonly NotificationServices notificationServices;
-		public AdminController(FstepDbContext context, IMapper mapper, IConfiguration configuration)
+		public AdminController(FstepDBContext context, IMapper mapper, IConfiguration configuration)
 		{
 			_context = context;
 			_mapper = mapper;

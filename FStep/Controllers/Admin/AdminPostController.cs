@@ -14,9 +14,9 @@ namespace FStep.Controllers.Admin
 {
 	public class AdminPostController : Controller
 	{
-		private readonly FstepDbContext _db;
+		private readonly FstepDBContext _db;
 
-		public AdminPostController(FstepDbContext context)
+		public AdminPostController(FstepDBContext context)
 		{
 			_db = context;
 		}
@@ -88,7 +88,10 @@ namespace FStep.Controllers.Admin
 			var post = _db.Posts
 				.Include(p => p.IdProductNavigation)
 				.FirstOrDefault(p => p.IdPost == id);
-
+			if (post.Status == "Hidden" || post.Status == "Trading")
+			{
+				return Redirect("/AdminPost/ManagePost");
+			}
 			if (post == null)
 			{
 				return NotFound();
@@ -119,6 +122,7 @@ namespace FStep.Controllers.Admin
 				var post = _db.Posts
 					.Include(p => p.IdProductNavigation)
 					.FirstOrDefault(p => p.IdPost == model.IdPost);
+				
 				if (post == null)
 				{
 					return NotFound();

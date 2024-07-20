@@ -26,11 +26,11 @@ namespace FStep.Controllers
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
-		private readonly FstepDbContext db;
+		private readonly FstepDBContext db;
 		private readonly IMapper _mapper;
 		private readonly IConfiguration _configuration;
 
-		public HomeController(FstepDbContext context, IMapper mapper, IConfiguration configuration)
+		public HomeController(FstepDBContext context, IMapper mapper, IConfiguration configuration)
 		{
 			db = context;
 			_mapper = mapper;
@@ -67,7 +67,7 @@ namespace FStep.Controllers
 				Img = s.Img,
 				NameBoss = s.IdUserNavigation.Name,
 				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now
-			}).OrderByDescending(o => o.IdPost);
+			})?.OrderByDescending(o => o.IdPost);
 
 			var suggestedPostList = suggestedPosts.ToPagedList(suggestedPage, pageSize);
 

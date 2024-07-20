@@ -50,7 +50,7 @@ namespace FStep.ViewModels
 		public string? Location { get; set; }
 		public String? NameBoss { get; set; }
 
-		public IPagedList<PostVM> SuggestedPosts { get; set; }
-		public IPagedList<PostVM> highRatedPostList { get; set; }
+		public IPagedList<PostVM>? SuggestedPosts { get; set; }
+		public IPagedList<PostVM>? highRatedPostList { get; set; }
 	}
 }

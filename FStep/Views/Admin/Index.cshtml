@@ -66,7 +66,33 @@
 			<div class="col-sm-12 col-xl-6">
 				<div class="bg-light text-center rounded p-4">
 					<div class="d-flex align-items-center justify-content-between mb-4">
-						<h6 class="mb-0">Số lượng giao dịch và trao đổi</h6>
+						<h6 class="mb-0">Số lượng giao dịch và trao đổi theo ngày</h6>
+					</div>
+					<canvas id="worldwide-salesDay"></canvas>
+				</div>
+			</div>
+			<div class="col-sm-12 col-xl-6">
+				<div class="bg-light text-center rounded p-4">
+					<div class="d-flex align-items-center justify-content-between mb-4">
+						<h6 class="mb-0">Doanh thu theo ngày</h6>
+					</div>
+					<canvas id="salse-revenueDay"></canvas>
+
+					<ul id="dataDayList" data-list='@Json.Serialize(ViewBag.LabelsDay)' data-name=""></ul>
+					<ul id="dataDayListTransaction" data-list='@Json.Serialize(ViewBag.TotalDayTransactionDash)' data-name="Số lượng giao dịch"></ul>
+					<ul id="dataDayListPost" data-list='@Json.Serialize(ViewBag.TotalDayPostDash)' data-name="Tổng số bài đăng"></ul>
+					<ul id="dataDayListCompleted" data-list='@Json.Serialize(ViewBag.TotalDayCompleted)' data-name="Số lượng giao dịch thành công"></ul>
+					<ul id="dataDayListTotalPostExchange" data-list='@Json.Serialize(ViewBag.TotalDayPostExchange)' data-name="Doanh số mua bán"></ul>
+					<ul id="dataDayListTotalPostSale" data-list='@Json.Serialize(ViewBag.TotalDayPostSale)' data-name="Doanh số mua bán trao đổi"></ul>
+
+				</div>
+			</div>
+		</div>
+		<div class="row g-4">
+			<div class="col-sm-12 col-xl-6">
+				<div class="bg-light text-center rounded p-4">
+					<div class="d-flex align-items-center justify-content-between mb-4">
+						<h6 class="mb-0">Số lượng giao dịch và trao đổi trong tháng</h6>
 					</div>
 					<canvas id="worldwide-sales"></canvas>
 				</div>
@@ -74,7 +100,7 @@
 			<div class="col-sm-12 col-xl-6">
 				<div class="bg-light text-center rounded p-4">
 					<div class="d-flex align-items-center justify-content-between mb-4">
-						<h6 class="mb-0">Doanh thu</h6>
+						<h6 class="mb-0">Doanh thu trong tháng</h6>
 					</div>
 					<canvas id="salse-revenue"></canvas>
 
@@ -84,7 +110,6 @@
 					<ul id="dataListCompleted" data-list='@Json.Serialize(ViewBag.TotalCompleted)' data-name="Số lượng giao dịch thành công"></ul>
 					<ul id="dataListTotalPostExchange" data-list='@Json.Serialize(ViewBag.TotalPostExchange)' data-name="Doanh số mua bán"></ul>
 					<ul id="dataListTotalPostSale" data-list='@Json.Serialize(ViewBag.TotalPostSale)' data-name="Doanh số mua bán trao đổi"></ul>
-
 				</div>
 			</div>
 		</div>

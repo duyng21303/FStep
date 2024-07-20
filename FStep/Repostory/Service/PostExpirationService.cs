@@ -47,7 +47,7 @@ namespace FStep.Repostory.Service
 		{
 			using (var scope = _services.CreateScope())
 			{
-				var dbContext = scope.ServiceProvider.GetRequiredService<FstepDbContext>();
+				var dbContext = scope.ServiceProvider.GetRequiredService<FstepDBContext>();
 				// Lấy các bài post đã duyệt sắp hết hạn
 				var approvedPosts = await dbContext.Posts
 					.Include(p => p.IdUserNavigation)

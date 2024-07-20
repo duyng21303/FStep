@@ -8,9 +8,9 @@ namespace FStep.Controllers.Customer
 {
 	public class UserController : Controller
 	{
-		private readonly FstepDbContext _context;
+		private readonly FstepDBContext _context;
 		private readonly IMapper _mapper;
-		public UserController(FstepDbContext context, IMapper mapper)
+		public UserController(FstepDBContext context, IMapper mapper)
 		{
 			_context = context;
 			_mapper = mapper;

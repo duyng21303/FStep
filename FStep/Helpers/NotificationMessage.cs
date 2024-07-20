@@ -8,6 +8,8 @@ namespace FStep.Helpers
 		public static class NotificationMessages
 		{
 			// Transaction Notifications
+			public static string RejectPost(string post) =>
+				$"Bài đăng {post} của bạn đã bị từ chối do vi phạm hoặc chứa nội dung không đúng quy định";
 			public static string TransactionSuccess(string bankName) =>
 				$"Giao dịch cho đơn hàng của {bankName} đã thành công.";
 			public static string TransactionExchangeSuccess(string name) =>
@@ -82,6 +84,7 @@ namespace FStep.Helpers
 			{
 				return typeMessage switch
 				{
+					"RejectPost" => RejectPost(parameters),
 					"TransactionSuccess" => TransactionSuccess(parameters),
 					"TransactionExchangeSuccess" => TransactionExchangeSuccess(parameters),
 					"TransactionExchangeFail" => TransactionExchangeFail(parameters),
@@ -108,7 +111,7 @@ namespace FStep.Helpers
 					_ => "Unknown notification type."
 				} ;
 			}
-			public static User? UserOther(FstepDbContext context, Notification notif)
+			public static User? UserOther(FstepDBContext context, Notification notif)
 			{
 				string type = notif.Type;
 				return type switch
@@ -134,7 +137,7 @@ namespace FStep.Helpers
 					_ => null
 				};
 			}
-			public static T EventEntity<T>(FstepDbContext context, Notification notif)
+			public static T EventEntity<T>(FstepDBContext context, Notification notif)
 			{
 				string type = notif.Type;
 
