@@ -6,7 +6,7 @@
 <div>
 	<!--/slider-->
 	<div class="carousel rounded">
-		<section id="slider"  style="margin-top: 30px">
+		<section id="slider" style="margin-top: 30px">
 			<div class="container">
 				<div class="row">
 					<div id="slider-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
@@ -69,31 +69,31 @@
 				<div class="col-lg-12">
 					<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4" style="background-color: white;">
 						<!-- Start of post item column -->
-						 @foreach (var item in Model.SuggestedPosts)
-                        {
-                            <div class="col">
-                                <div class="card h-100 rounded position-relative fruit-item">
-                                    <div class="fruit-img">
-                                        <a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost">
-                                            <img src="@Url.Content("~/img/postPic/" + item.Img)" class="card-img-top img-fluid w-100 rounded-top" alt="@item.Title" style="min-height: 188px;max-height: 188px">
-                                        </a>
-                                    </div>
-                                    <div class="card-body p-4 rounded-bottom text-start">
-                                        <a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost" class="text-decoration-none">
-                                            <h4 class="card-title">@Html.Raw(item.Title)</h4>
-                                        </a>
-                                        <div class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Description)</div>
-                                        <p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate?.ToString("dd/MM/yyyy")</span></p>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                    <!-- Pagination for Suggested Posts -->
+						@foreach (var item in Model.SuggestedPosts)
+						{
+							<div class="col">
+								<div class="card h-100 rounded position-relative fruit-item">
+									<div class="fruit-img">
+										<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost">
+											<img src="@Url.Content("~/img/postPic/" + item.Img)" class="card-img-top img-fluid w-100 rounded-top" alt="@item.Title" style="min-height: 188px;max-height: 188px">
+										</a>
+									</div>
+									<div class="card-body p-4 rounded-bottom text-start">
+										<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost" class="text-decoration-none">
+											<h4 class="card-title">@Html.Raw(item.Title)</h4>
+										</a>
+										<div class="description" style="max-height: 40px; overflow: hidden; transition: max-height 0.5s ease;">@Html.Raw(item.Description)</div>
+										<p class="text-end mb-0 mt-2">Ngày tạo: <span>@item.CreateDate?.ToString("dd/MM/yyyy")</span></p>
+									</div>
+								</div>
+							</div>
+						}
+					</div>
+					<!-- Pagination for Suggested Posts -->
 					@Html.PagedListPager(Model.SuggestedPosts, page => Url.Action("Index", new { query = ViewBag.Query, suggestedPage = page, highRatedPage = Model.highRatedPostList.PageNumber }))
-                </div>
-            </div>
-        </div>
+				</div>
+			</div>
+		</div>
 		<div>
 			<section id="courses" class="padding-medium">
 				<div class="container">
@@ -103,45 +103,43 @@
 					</div>
 
 					<div class="row">
-							@foreach (var item in Model.highRatedPostList)
-							{
-								<div class="col-sm-6 col-lg-4 col-xl-3 mb-5">
-									<div class="z-1 position-absolute m-4">
-										<span class="badge text-white bg-secondary">Tốt</span>
-									</div>
-									<div class="card rounded-4 border-0 shadow-sm p-3 position-relative">
-										<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost" class="text-decoration-none"><img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid rounded-3" alt="@item.Title" style="min-height: 188px;max-height: 188px"></a>
-										<div class="card-body p-0">
+						@foreach (var item in Model.highRatedPostList)
+						{
+							<div class="col-sm-6 col-lg-4 col-xl-3 mb-5">
+								<div class="z-1 position-absolute m-4">
+									<span class="badge text-white bg-secondary">Tốt</span>
+								</div>
+								<div class="card rounded-4 border-0 shadow-sm p-3 position-relative">
+									<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost" class="text-decoration-none">
+										<div class="ribbon"><span>★★★</span></div>
+										<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid rounded-3" alt="@item.Title" style="min-height: 188px;max-height: 188px">
+									</a>
+									<div class="card-body p-0">
 
-											<div class="d-flex justify-content-between my-3">
-												<p class="text-black-50 fw-bold text-uppercase m-0"></p>
-												<div class="d-flex align-items-center">
-													<svg width="20" height="20">
-														<p class="text-black-50 fw-bold text-uppercase m-0">@item.CreateDate?.ToString("dd/MM/yyyy")</p>
-														<use xlink:href="#clock" class="text-black-50"></use>
-													</svg>
-												</div>
+										<div class="d-flex justify-content-between my-3">
+											<p class="text-black-50 fw-bold text-uppercase m-0"></p>
+											<div class="d-flex align-items-center">
+												<svg width="20" height="20">
+													<p class="text-black-50 fw-bold text-uppercase m-0">@item.CreateDate?.ToString("dd/MM/yyyy")</p>
+													<use xlink:href="#clock" class="text-black-50"></use>
+												</svg>
 											</div>
-
-											<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost" class="text-decoration-none">
-												<h5 class="course-title py-2 m-0">@Html.Raw(item.Title)</h5>
-											</a>
-
-											<div class="card-text">
-												<span class="rating d-flex align-items-center mt-3">
-													<p class="text-muted fw-semibold m-0 me-2">By: @Html.Raw(item.NameBoss.Length > 12 ? item.NameBoss.Substring(0, 12) + "..." : item.NameBoss)</p>
-													<iconify-icon icon="clarity:star-solid" class="text-primary" style="color: #ffc107 !important;"></iconify-icon>
-													<iconify-icon icon="clarity:star-solid" class="text-primary" style="color: #ffc107 !important;"></iconify-icon>
-													<iconify-icon icon="clarity:star-solid" class="text-primary" style="color: #ffc107 !important;"></iconify-icon>
-													<iconify-icon icon="clarity:star-solid" class="text-primary" style="color: #ffc107 !important;"></iconify-icon>
-													<iconify-icon icon="clarity:star-solid" class="text-primary" style="color: #ffc107 !important;"></iconify-icon>
-												</span>
-											</div>
-
 										</div>
+
+										<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost" class="text-decoration-none">
+											<h5 class="course-title py-2 m-0">@Html.Raw(item.Title)</h5>
+										</a>
+
+										<div class="card-text">
+											<span class="rating d-flex align-items-center mt-3">
+												<p class="text-muted fw-semibold m-0 me-2">By: @Html.Raw(item.NameBoss.Length > 12 ? item.NameBoss.Substring(0, 12) + "..." : item.NameBoss)</p>
+											</span>
+										</div>
+
 									</div>
 								</div>
-							}
+							</div>
+						}
 					</div>
 				</div>
 			</section>
@@ -165,6 +163,29 @@
 	</div>
 </div>
 <style>
+	.ribbon {
+		width: 100px;
+		height: 150px;
+		overflow: hidden;
+		position: absolute;
+		top: -10px;
+		right: -10px;
+	}
+
+		.ribbon span {
+			position: absolute;
+			display: block;
+			width: 200px;
+			background-color: #ffc107;
+			box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+			color: #fff;
+			font-size: 20px;
+			text-align: center;
+			transform: rotate(45deg);
+			top: 30px;
+			right: -65px;
+		}
+
 	.search-header h2 {
 		text-transform: uppercase;
 		font-weight: 500;
@@ -180,10 +201,6 @@
 		background-color: #e74c3c;
 		margin-top: -5px;
 		position: relative;
-	}
-
-	.text-center h2 {
-		color: orange;
 	}
 
 	.product-card {
