@@ -187,9 +187,9 @@
 																			Đánh giá
 																		</button>
 																	}
-																	@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.Transaction.Status == "Completed")
+																	@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.Transaction.Status == "Completed" && !item.IsReported)
 																	{
-																		<button type="button" data-bs-toggle="modal" data-bs-target="#reportComment" class="btn btn-outline-danger btn-sm mt-2 btn-report" style="float: inline-end;margin-left: 4px;" data-post="@item.Post.IdPost" data-transaction="@item.TransactionId">
+																		<button type="button" data-bs-toggle="modal" data-bs-target="#reportComment" class="btn btn-danger btn-sm mt-2 btn-report" data-post="@item.Post.IdPost" data-transaction="@item.TransactionId">
 																			Báo cáo
 																		</button>
 																	}
@@ -432,9 +432,12 @@
 																				Đánh giá
 																			</button>
 																		}
-																		<button type="button" data-bs-toggle="modal" data-bs-target="#reportComment" class="btn btn-outline-danger btn-sm mt-2 btn-report" style="float: inline-end;margin-left: 4px;" data-post="@item.Post.IdPost" data-transaction="@item.TransactionId">
-																			Báo cáo
-																		</button>
+																		@if (!item.IsReported)
+																		{
+																			<button type="button" data-bs-toggle="modal" data-bs-target="#reportComment" class="btn btn-danger btn-sm mt-2 btn-report" data-post="@item.Post.IdPost" data-transaction="@item.TransactionId">
+																				Báo cáo
+																			</button>
+																		}
 																	</div>
 																	<p class="fst-italic text-end mb-0 mt-5">Đánh giá sản phẩm trước: <span>@item.DeliveryDate?.AddDays(7).ToString("dd/MM/yyyy")</span></p>
 
@@ -706,9 +709,9 @@
 																		</button>
 																	}
 
-																	@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.Transaction.Status == "Completed")
+																	@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.Transaction.Status == "Completed" && !item.IsReported)
 																	{
-																		<button type="button" data-bs-toggle="modal" data-bs-target="#reportComment" class="btn btn-outline-danger btn-sm mt-2 btn-report" style="float: inline-end;margin-left: 4px;" data-post="@item.Post.IdPost" data-transaction="@item.TransactionId">
+																		<button type="button" data-bs-toggle="modal" data-bs-target="#reportComment" class="btn btn-danger btn-sm mt-2 btn-report" data-post="@item.Post.IdPost" data-transaction="@item.TransactionId">
 																			Báo cáo
 																		</button>
 																	}
@@ -921,9 +924,13 @@
 																				Đánh giá
 																			</button>
 																		}
-																		<button type="button" data-bs-toggle="modal" data-bs-target="#reportComment" class="btn btn-outline-danger btn-sm mt-2 btn-report" style="float: inline-end;margin-left: 4px;" data-post="@item.Post.IdPost" data-transaction="@item.TransactionId">
-																			Báo cáo
-																		</button>
+
+																		@if (!item.IsReported)
+																		{
+																			<button type="button" data-bs-toggle="modal" data-bs-target="#reportComment" class="btn btn-danger btn-sm mt-2 btn-report" data-post="@item.Post.IdPost" data-transaction="@item.TransactionId">
+																				Báo cáo
+																			</button>
+																		}
 																	</div>
 																	<p class="fst-italic text-end mb-0 mt-5">Đánh giá sản phẩm trước: <span>@item.DeliveryDate?.AddDays(7).ToString("dd/MM/yyyy")</span></p>
 																</div>
@@ -1163,6 +1170,9 @@
 					});
 					$('#reportComment').modal('hide');
 					$('#message-text').val('');
+					setTimeout(() => {
+						window.location.reload();
+					}, 1000);
 				})
 				.catch(error => {
 					Swal.fire({

@@ -1,7 +1,4 @@
 ﻿using AutoMapper;
-using Firebase.Auth;
-using Firebase.Auth.Providers;
-using Firebase.Storage;
 using FStep.Data;
 using FStep.Helpers;
 using FStep.Models;
@@ -28,13 +25,11 @@ namespace FStep.Controllers
 		private readonly ILogger<HomeController> _logger;
 		private readonly FstepDBContext db;
 		private readonly IMapper _mapper;
-		private readonly IConfiguration _configuration;
 
-		public HomeController(FstepDBContext context, IMapper mapper, IConfiguration configuration)
+		public HomeController(FstepDBContext context, IMapper mapper)
 		{
 			db = context;
 			_mapper = mapper;
-			_configuration = configuration;
 		}
 
 		public IActionResult Index(String? query, int suggestedPage = 1, int highRatedPage = 1)
@@ -67,7 +62,7 @@ namespace FStep.Controllers
 				Img = s.Img,
 				NameBoss = s.IdUserNavigation.Name,
 				CreateDate = s.Date.HasValue ? s.Date.Value : DateTime.Now
-			})?.OrderByDescending(o => o.IdPost);
+			}).OrderByDescending(o => o.IdPost);
 
 			var suggestedPostList = suggestedPosts.ToPagedList(suggestedPage, pageSize);
 
@@ -172,9 +167,6 @@ namespace FStep.Controllers
 		{
 			try
 			{
-				//var fileUpload = img;
-				//FileStream fs;
-
 				var product = _mapper.Map<Product>(model);
 				product.Quantity = 1;
 				if (model.Type == "Sale" && (model.Price == null || model.Price < 10_000 || model.Price > 9_000_000))
@@ -190,40 +182,6 @@ namespace FStep.Controllers
 				post.Date = DateTime.Now;
 				//Helpers.Util.UpLoadImg(model.Img, "")
 				post.Img = Util.UpLoadImg(img, "postPic");
-
-				// Upload file to firebase
-				//if (fileUpload.Length > 0)
-				//{
-				//	string foldername = "firebaseImg";
-				//	string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", $"img/{foldername}");
-
-				//	if (Directory.Exists(path))
-				//	{
-				//		fs = new FileStream(Path.Combine(path, fileUpload.FileName), FileMode.Open);
-
-				//	}
-				//	else
-				//	{
-				//		Directory.CreateDirectory(path);
-				//	}
-
-				//	//Firebase uploading stuffs
-				//	FirebaseAuthProvider auth;
-
-				//	var cancellation = new CancellationTokenSource();
-
-				//	var upload = new FirebaseStorage(
-				//		_configuration["Firebase:StorageBucket"],
-				//		new FirebaseStorageOptions
-				//		{
-				//			ThrowOnCancel = true
-				//		}
-				//		)
-				//		.Child("assets")
-				//		.Child($"{fileUpload}.{Path.GetExtension(fileUpload.FileName).Substring(1)}");
-				//		//.PutAsync(fs, cancellation.Token);
-				//}
-
 				post.Status = "Waiting";
 				post.Type = model.Type;
 				post.Detail = model.Description;
@@ -299,6 +257,7 @@ namespace FStep.Controllers
 					DeliveryDate = db.Payments.FirstOrDefault(p => p.IdTransaction == s.IdTransaction && p.Type == "Seller").PayTime,
 					CancelDate = db.Payments.FirstOrDefault(p => p.IdTransaction == s.IdTransaction).CancelDate,
 					CheckFeedback = db.Feedbacks.Any(p => p.IdPost == s.IdPost),
+					IsReported = db.Reports.FirstOrDefault(x => x.IdTransaction == s.IdTransaction && x.IdUser == s.IdUserBuyer) != null
 				}).OrderByDescending(o => o.TransactionId);
 				viewResult.ExchangeList = exchangeList.ToPagedList(pageNumber, pageSize);
 
@@ -313,6 +272,7 @@ namespace FStep.Controllers
 					DeliveryDate = db.Payments.FirstOrDefault(p => p.IdTransaction == s.IdTransaction && p.Type == "Seller").PayTime,
 					CancelDate = db.Payments.FirstOrDefault(p => p.IdTransaction == s.IdTransaction).CancelDate,
 					CheckFeedback = db.Feedbacks.Any(p => p.IdPost == s.IdPost),
+					IsReported = db.Reports.FirstOrDefault(x => x.IdTransaction == s.IdTransaction && x.IdUser == s.IdUserBuyer) != null
 				}).OrderByDescending(o => o.TransactionId);
 				viewResult.SaleList = saleList.ToPagedList(pageNumber, pageSize);
 

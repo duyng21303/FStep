@@ -238,6 +238,10 @@ namespace FStep.Controllers.Admin
 		{
 			string id = User.FindFirst("UserID")?.Value;
 			var query = _context.Users.Where(user => user.IdUser != id).AsQueryable();
+			if (User.IsInRole("Moderator"))
+			{
+				query = query.Where(x => x.Role == "Customer");
+			}
 			if (!string.IsNullOrEmpty(search))
 			{
 				query = query.Where(x => x.Name.ToLower().Contains(search.ToLower()) || x.Email.ToLower().Contains(search.ToLower()));
@@ -263,7 +267,10 @@ namespace FStep.Controllers.Admin
 		{
 			// Lấy thông tin người dùng
 			var user = _context.Users.FirstOrDefault(user => user.IdUser == id);
-
+			if (User.IsInRole("Moderator") && user?.Role != "Customer")
+			{
+				return Redirect("/Admin/UserManager");
+			}
 			if (user != null)
 			{
 				// Đếm số bài đăng của người dùng có type là Sale

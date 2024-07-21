@@ -78,18 +78,22 @@ namespace FStep.Controllers.Customer
 				return Redirect("/");
 			}
 			// lấy thêm comment sản phẩm
-			var comments = db.Comments.Where(x => x.IdPost == id && x.Type != "ExchangeAnonymous").Include(x => x.IdUserNavigation).Select(x => new CommentVM
-			{
-				IdPost = id,
-				IdUser = x.IdUser,
-				Content = x.Content,
-				Date = x.Date,
-				IdComment = x.IdComment,
-				Name = x.IdUserNavigation.Name,
-				Type = x.Type,
-				Img = x.Img,
-				avarImg = x.IdUserNavigation.AvatarImg // Adjust this property name to match your actual property name for the user's image
-			}).ToList();
+			var comments = db.Comments.Where(x => x.IdPost == id && x.Type != "ExchangeAnonymous")
+				.Include(x => x.IdUserNavigation)
+				.Include(x => x.Reports)
+				.Select(x => new CommentVM
+				{
+					IdPost = id,
+					IdUser = x.IdUser,
+					Content = x.Content,
+					Date = x.Date,
+					IdComment = x.IdComment,
+					Name = x.IdUserNavigation.Name,
+					Type = x.Type,
+					Img = x.Img,
+					avarImg = x.IdUserNavigation.AvatarImg, // Adjust this property name to match your actual property name for the user's image
+					IsReported = x.Reports.FirstOrDefault(x => x.IdUser == User.FindFirst("UserID").Value) != null,
+				}).ToList();
 
 			ViewData["comments"] = comments;
 

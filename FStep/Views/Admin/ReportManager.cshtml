@@ -78,10 +78,20 @@
 										<span class="label label-default">@user.PointRating</span>
 									</td>
 									<td style="width: 20%;" class="text-center">
-										<button class="btn btn-sm btn-primary btn-point-rating" data-comment="@user.IdReport"
-												data-idtransaction="@user.IdTransaction" data-idcomment="@user.IdComment">
-											Trừ điểm và xóa
-										</button>
+										@if (user.IdTransaction != null)
+										{
+											<button class="btn btn-sm btn-primary btn-point-rating" data-comment="@user.IdReport"
+													data-idtransaction="@user.IdTransaction" data-idcomment="@user.IdComment">
+												Trừ điểm
+											</button>
+										}
+										else
+										{
+											<button class="btn btn-sm btn-primary btn-point-rating" data-comment="@user.IdReport"
+													data-idtransaction="@user.IdTransaction" data-idcomment="@user.IdComment">
+												Trừ điểm và xóa
+											</button>
+										}
 										<button class="btn btn-sm btn-secondary btn-reject-comment" data-report="@user.IdReport"
 												data-idtransaction="@user.IdTransaction" data-idcomment="@user.IdComment">
 											Từ chối
