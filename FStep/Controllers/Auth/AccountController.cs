@@ -27,10 +27,10 @@ namespace FStep.Controllers.Auth
     {
 
         private readonly IMapper _mapper;
-        private readonly FstepDbContext db;
+        private readonly FstepDBContext db;
         private const string PASSWORD_GOOGLE = "KJDHF";
         private readonly IEmailSender emailSender;
-        public AccountController(FstepDbContext context, IMapper mapper, IEmailSender emailSender)
+        public AccountController(FstepDBContext context, IMapper mapper, IEmailSender emailSender)
 
         {
             db = context;
@@ -41,9 +41,11 @@ namespace FStep.Controllers.Auth
         [AllowAnonymous]
         public IActionResult Login(string? ReturnUrl)
         {
-            ViewBag.ReturnUrl = ReturnUrl;
-
-            return View();
+            if(ReturnUrl != null)
+            {
+				ViewBag.ReturnUrl = ReturnUrl;
+			}
+			return View();
         }
         [HttpPost]
         [AllowAnonymous]

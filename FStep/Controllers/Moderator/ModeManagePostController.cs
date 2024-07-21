@@ -9,16 +9,19 @@ using FStep.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using X.PagedList;
+using FStep.Services;
 
 namespace FStep.Controllers.ManagePost
 {
 	public class ModeManagePostController : Controller
 	{
-		private readonly FstepDbContext _db;
+		private readonly FstepDBContext _db;
+		private readonly NotificationServices notificationServices;
 
-		public ModeManagePostController(FstepDbContext context)
+		public ModeManagePostController(FstepDBContext context)
 		{
 			_db = context;
+			notificationServices = new NotificationServices(_db);
 		}
 		[Authorize(Roles = "Moderator")]
 		[HttpGet]
@@ -153,14 +156,15 @@ namespace FStep.Controllers.ManagePost
 
 		[Authorize(Roles = "Moderator")]
 		[HttpPost]
-		public IActionResult DeletePost(int id)
+		public async Task<IActionResult> DeletePost(int id)
 		{
 			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
 			if (post != null)
 			{
 				post.Status = "Rejected";
 				_db.Posts.Update(post);
-				_db.SaveChanges();
+				await _db.SaveChangesAsync();
+				await notificationServices.CreateNotification(post.IdUser, "RejectPost", "None", post.Content, 0);
 				TempData["SuccessMessage"] = $"Bài đăng {post.Content} đã được xóa thành công.";
 			}
 			else

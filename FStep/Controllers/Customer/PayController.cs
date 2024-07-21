@@ -30,7 +30,7 @@ namespace FStep.Controllers.Customer
 	public class PayController : Controller
 	{
 
-		private readonly FstepDbContext db;
+		private readonly FstepDBContext db;
 		private readonly IMapper _mapper;
 		private readonly IEmailSender emailSender;
 		private readonly IVnPayService _vnPayService;
@@ -39,7 +39,7 @@ namespace FStep.Controllers.Customer
 		private readonly IServiceProvider _serviceProvider;
 		private readonly ILogger<RegistrationController> _logger;
 
-		public PayController(FstepDbContext context, IMapper mapper, IVnPayService vnPayService, IEmailSender emailSender, IRazorViewEngine viewEngine, ITempDataProvider tempDataProvider, IServiceProvider serviceProvider, ILogger<RegistrationController> logger)
+		public PayController(FstepDBContext context, IMapper mapper, IVnPayService vnPayService, IEmailSender emailSender, IRazorViewEngine viewEngine, ITempDataProvider tempDataProvider, IServiceProvider serviceProvider, ILogger<RegistrationController> logger)
 		{
 			db = context;
 			_mapper = mapper;
@@ -252,7 +252,16 @@ namespace FStep.Controllers.Customer
 			{
 				var transaction = db.Transactions.SingleOrDefault(p => p.IdTransaction == model.TransactionId);
 				transaction.Status = "Canceled";
+				transaction.CancelDate = DateTime.Now;
 				db.Update(transaction);
+
+				var buyer = db.Users.FirstOrDefault(p => p.IdUser == transaction.IdUserBuyer);
+				buyer.PointRating -= 5;
+				db.Update(buyer);
+
+				var seller = db.Users.FirstOrDefault(p => p.IdUser == transaction.IdUserSeller);
+				seller.PointRating -= 5;
+				db.Update(seller);
 
 				var post = db.Posts.SingleOrDefault(p => p.IdPost == transaction.IdPost);
 				post.Status = "True";
@@ -280,15 +289,11 @@ namespace FStep.Controllers.Customer
 				}
 				string emailBody = await RenderViewToStringAsync($"Invoice{transaction.Type}", invoice);
 
-				var buyer = db.Users.SingleOrDefault(p => p.IdUser == transaction.IdUserBuyer);
-				var seller = db.Users.SingleOrDefault(p => p.IdUser == transaction.IdUserSeller);
 				//sent email
 				bool sentSeller = await emailSender.EmailSendAsync(seller.Email, "Sản phẩm của bạn đã bị huỷ giao dịch", emailBody);
 				bool sentBuyer = await emailSender.EmailSendAsync(buyer.Email, "Đơn hàng của bạn đã được huỷ", emailBody);
-				
 				buyer.PointRating -= 5;
 				db.Update(buyer);
-
 				db.SaveChanges();
 
 				return Redirect(model.ReturnUrl);

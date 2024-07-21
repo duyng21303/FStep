@@ -21,6 +21,8 @@ namespace FStep.ViewModels
 		public bool CheckFeedback { get; set; }
 
 		public float Revenues { get; set; }
+		[NotMapped]
+		public bool IsReported { get; set; } = false;
 
 		[NotMapped]
 		public bool IsReported { get; set; } = false;

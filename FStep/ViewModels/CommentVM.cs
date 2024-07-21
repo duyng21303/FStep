@@ -19,8 +19,7 @@ namespace FStep.ViewModels
         public string? avarImg { get; set; }
         public string? Img { get; set; }
         public string? Type { get; set; }
-
-        [NotMapped]
-        public bool IsReported { get; set; } = false;
-    }
+		[NotMapped]
+		public bool IsReported { get; set; } = false;
+	}
 }
