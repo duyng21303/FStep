@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Configuration;
+using System.Reflection.Metadata.Ecma335;
 using X.PagedList;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
@@ -36,7 +37,7 @@ namespace FStep.Controllers.Admin
 			var totalUser = _context.Users.Count(u => u.Status != false);
 			var totalTransaction = _context.Transactions.Count(t => t.Status == "Completed" || t.Status == "Processing" || t.Status == "Canceled");
 			var totalGMV = _context.Transactions
-				.Where(t => t.Status == "Completed")
+				.Where(t => t.Status == "Completed" || t.Status == "Processing")
 				.Sum(t => t.Amount);
 			IQueryable<Transaction> query = _context.Transactions;
 			if (!string.IsNullOrEmpty(codeTransaction))
@@ -292,7 +293,10 @@ namespace FStep.Controllers.Admin
 		public IActionResult EditAccount(string id)
 		{
 			var user = _context.Users.FirstOrDefault(p => p.IdUser == id);
-
+			if(user.Role == "Admin")
+			{
+				return RedirectToAction("UserManager", "Admin");
+			}
 			if (user == null)
 			{
 				return NotFound();

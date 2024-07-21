@@ -339,8 +339,11 @@ namespace FStep.Controllers.Auth
             {
                 return NotFound();
             }
-
-            var postViewModel = new PostVM
+			else if (post.Status == "Trading" || post.Status == "Hidden")
+			{
+				return RedirectToAction("Profile", "Account"); // Hoặc RedirectToAction("ErrorPage");
+			}
+			var postViewModel = new PostVM
             {
                 IdPost = post.IdPost,
                 Title = post.Content,
@@ -369,7 +372,11 @@ namespace FStep.Controllers.Auth
                 {
                     return NotFound();
                 }
-                else
+				else if (post.Status == "Trading" || post.Status == "Hidden")
+				{
+					return RedirectToAction("Profile", "Account"); // Hoặc RedirectToAction("ErrorPage");
+				}
+				else
                 {
                     post.Content = model.Title;
                     post.Date = DateTime.Now;

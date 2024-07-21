@@ -35,7 +35,7 @@ public class Program
 
 		// Add services to the container.
 		builder.Services.AddTransient<IEmailSender, EmailSender>();
-		builder.Services.AddHostedService<PostExpirationService>();
+		//builder.Services.AddHostedService<PostExpirationService>();
 
 		builder.Services.AddSignalR();
 		builder.Services.AddSession(options =>

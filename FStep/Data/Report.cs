@@ -17,13 +17,13 @@ public partial class Report
 
     public string? IdUser { get; set; }
 
-    public int? IdTransaction { get; set; }
+    public int IdTransaction { get; set; }
 
     public virtual Comment? IdCommentNavigation { get; set; }
 
     public virtual Post? IdPostNavigation { get; set; }
 
-    public virtual Transaction? IdTransactionNavigation { get; set; } = null!;
+    public virtual Transaction IdTransactionNavigation { get; set; } = null!;
 
     public virtual User? IdUserNavigation { get; set; }
 

@@ -131,8 +131,11 @@
 															<li><a asp-action="UpdateStatus" asp-controller="AdminPost" asp-route-id="@Html.Raw(item.PostId)" class="dropdown-item">Duyệt</a></li>
 															<li><a asp-action="DeletePost" asp-controller="AdminPost" asp-route-id="@Html.Raw(item.PostId)" class="dropdown-item">Từ chối</a></li>
 														}
+														@if (item.Status != "Trading")
+														{
 														<li><a asp-action="UpdatePost" asp-controller="AdminPost" asp-route-id="@Html.Raw(item.PostId)" class="dropdown-item">Sửa</a></li>
 														<li><a asp-action="HiddenPost" asp-controller="AdminPost" asp-route-id="@Html.Raw(item.PostId)" class="dropdown-item">Xóa</a></li>
+														}
 													</ul>
 												</div>
 											</div>

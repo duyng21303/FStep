@@ -146,10 +146,12 @@
 									<div class="z-1 position-absolute m-4">
 										<span class="badge text-white bg-secondary">Tốt</span>
 									</div>
-									<div class="card rounded-4 border-0 shadow-sm p-3 position-relative">
-										<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@item.IdPost" class="text-decoration-none"><img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid rounded-3" alt="@item.Title" style="min-height: 188px;max-height: 188px"></a>
+								<div class="card rounded-4 border-0 shadow-sm p-3 position-relative">
+									<a asp-action="DetailPost" asp-controller="Post" asp-route-id="@item.IdPost" class="text-decoration-none">
+										<div class="ribbon"><span>★★★</span></div>
+										<img src="@Url.Content("~/img/postPic/" + item.Img)" class="img-fluid rounded-3" alt="@item.Title" style="min-height: 188px;max-height: 188px">
+									</a>
 										<div class="card-body p-0">
-
 											<div class="d-flex justify-content-between my-3">
 												<p class="text-black-50 fw-bold text-uppercase m-0"></p>
 												<div class="d-flex align-items-center">
@@ -159,19 +161,12 @@
 													</svg>
 												</div>
 											</div>
-
 											<a asp-action="DetailSalePost" asp-controller="Post" asp-route-id="@item.IdPost" class="text-decoration-none">
 												<h5 class="course-title py-2 m-0">@Html.Raw(item.Title)</h5>
 											</a>
-
 											<div class="card-text">
 												<span class="rating d-flex align-items-center mt-3">
 													<p class="text-muted fw-semibold m-0 me-2">By: @Html.Raw(item.NameBoss.Length > 12 ? item.NameBoss.Substring(0, 12) + "..." : item.NameBoss)</p>
-													<iconify-icon icon="clarity:star-solid" class="text-primary" style="color: #ffc107 !important;"></iconify-icon>
-													<iconify-icon icon="clarity:star-solid" class="text-primary" style="color: #ffc107 !important;"></iconify-icon>
-													<iconify-icon icon="clarity:star-solid" class="text-primary" style="color: #ffc107 !important;"></iconify-icon>
-													<iconify-icon icon="clarity:star-solid" class="text-primary" style="color: #ffc107 !important;"></iconify-icon>
-													<iconify-icon icon="clarity:star-solid" class="text-primary" style="color: #ffc107 !important;"></iconify-icon>
 												</span>
 											</div>
 
@@ -203,6 +198,28 @@
 	</div>
 </div>
 <style>
+	.ribbon {
+		width: 100px;
+		height: 150px;
+		overflow: hidden;
+		position: absolute;
+		top: -10px;
+		right: -10px;
+	}
+
+		.ribbon span {
+			position: absolute;
+			display: block;
+			width: 200px;
+			background-color: #ffc107;
+			box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+			color: #fff;
+			font-size: 20px;
+			text-align: center;
+			transform: rotate(45deg);
+			top: 30px;
+			right: -65px;
+		}
 	.search-header h2 {
 		text-transform: uppercase;
 		font-weight: 500;

@@ -171,15 +171,13 @@
 									}
 
 								</td>
-
 								<td>
 									@if (@transaction.Transaction.Status == "Completed")
 									{
 										<span>@String.Format(format, "{0:0,0 VND}", @transaction.Revenues)</span>
 									}
 								</td>
-								<td>
-
+								@* <td>
 									@if (transaction.Transaction.Status != "Processing")
 									{
 
@@ -189,7 +187,7 @@
 										</form>
 									}
 
-								</td>
+								</td> *@
 							</tr>
 						}
 					</tbody>

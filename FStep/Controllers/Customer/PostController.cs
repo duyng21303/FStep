@@ -73,7 +73,7 @@ namespace FStep.Controllers.Customer
 			var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
 
 			ViewData["USER_CREATE"] = user;
-			if (post.Status == "Trading")
+			if (post.Status == "Trading" || post.Status == "Hidden")
 			{
 				return Redirect("/");
 			}
@@ -100,6 +100,10 @@ namespace FStep.Controllers.Customer
 			var post = db.Posts.Include(x => x.IdProductNavigation).SingleOrDefault(post => post.IdPost == id);
 			var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
 
+			if(post.Status == "Hidden" || post.Status == "Trading")
+			{
+				return Redirect("/");
+			}
 			var feedback = db.Feedbacks.Count(x => x.IdPost == id);
 			ViewData["USER_CREATE"] = user;
 
