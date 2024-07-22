@@ -11,7 +11,7 @@
 	<!-- Sale & Revenue Start -->
 	<div class="container-fluid pt-4 px-4">
 		<div class="row g-4 justify-content-center">
-			<div class="col-sm-6 col-md-3">
+			<div class="col-sm-6 col-md-4">
 				<div class="card-custom bg-light rounded p-4 d-flex align-items-center justify-content-between">
 					<i class="bi bi-file-post fa-3x text-primary icon-custom-size"></i>
 					<div class="ms-3 text-center flex-grow-1">
@@ -20,7 +20,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-sm-6 col-md-3">
+			<div class="col-sm-6 col-md-4">
 				<div class="card-custom bg-light rounded p-4 d-flex align-items-center justify-content-between">
 					<i class="fa fa-users fa-3x text-primary icon-custom-size"></i>
 					<div class="ms-3 text-center flex-grow-1">
@@ -29,7 +29,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-sm-6 col-md-3">
+			<div class="col-sm-6 col-md-4">
 				<div class="card-custom bg-light rounded p-4 d-flex align-items-center justify-content-between">
 					<i class="fa fa-exchange-alt fa-3x text-primary icon-custom-size"></i>
 					<div class="ms-3 text-center flex-grow-1">
@@ -38,7 +38,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-sm-6 col-md-3">
+			<div class="col-sm-6 col-md-4">
 				<div class="card-custom bg-light rounded p-4 d-flex align-items-center justify-content-between">
 					<i class="fa fa-shopping-cart fa-3x text-primary icon-custom-size"></i>
 					<div class="ms-3 text-center flex-grow-1">
@@ -47,7 +47,16 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-sm-6 col-md-3">
+			<div class="col-sm-6 col-md-4">
+				<div class="card-custom bg-light rounded p-4 d-flex align-items-center justify-content-between">
+					<i class="fa fa-money-bill fa-3x text-primary icon-custom-size"></i>
+					<div class="ms-3 text-center flex-grow-1">
+						<p class="mb-2" style="font-size: 1.25rem;">Ví hệ thống</p>
+						<h6 class="mb-0" style="font-size: 1.5rem;">@String.Format(format, "{0:0,0 VND}", @ViewData["SystemWallet"])</h6>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-4">
 				<div class="card-custom bg-light rounded p-4 d-flex align-items-center justify-content-between">
 					<i class="fa fa-dollar-sign fa-3x text-primary icon-custom-size"></i>
 					<div class="ms-3 text-center flex-grow-1">
@@ -56,6 +65,7 @@
 					</div>
 				</div>
 			</div>
+			
 		</div>
 	</div>
 
@@ -209,18 +219,6 @@
 									<button type="button" class="btn btn-danger btn-sm submit-img" data-toggle="collapse" data-target="#confirmCollapse-@transaction.Transaction.IdTransaction">
 										<i class="fas fa-chevron-down"></i>
 									</button>
-
-								</td>
-								<td>
-
-									@if (transaction.Transaction.Status != "Processing")
-									{
-
-										<form asp-controller="Admin" asp-action="ReferTransaction" method="post" onsubmit="return confirmDelete()">
-											<input type="hidden" name="id" value="@transaction.Transaction.IdTransaction" />
-											<button type="submit" class="btn btn-danger btn-sm">Hoàn trả</button>
-										</form>
-									}
 
 								</td>
 							</tr>

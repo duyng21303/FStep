@@ -24,7 +24,7 @@
 							<div class="form-item w-100">
 								<label asp-for="@Model.BankName" class="form-label my-3"></label><sup>*</sup>
 								<select asp-for="@Model.BankName" class="form-select" aria-label="Default select example">
-									<option selected value="TPBANK">TPBANK - Ngân hàng Tiên phong</option>
+									<option value="TPBANK">TPBANK - Ngân hàng Tiên phong</option>
 									<option value="VIETCOMBANK">VIETCOMBANK - Ngân hàng TMCP Ngoại Thương Việt Nam</option>
 									<option value="VIETINBANK">VIETINBANK - Ngân hàng Công Thương Việt Nam</option>
 									<option value="TECHCOMBANK">TECHCOMBANK - Ngân hàng Kỹ thương Việt Nam</option>
@@ -58,8 +58,7 @@
 							<div class="modal-content">
 								<div class="modal-header">
 									<h5 class="modal-title" id="exampleModalLongTitle">Xác nhận hoàn thành</h5>
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&times;</span>
+									<button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
 									</button>
 								</div>
 								<div class="modal-body">

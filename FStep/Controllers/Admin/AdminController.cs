@@ -35,12 +35,14 @@ namespace FStep.Controllers.Admin
 			var totalPost = _context.Posts.Count(p => p.Status != "Rejected");
 			var totalUser = _context.Users.Count(u => u.Status != false);
 			var totalTransaction = _context.Transactions.Count(t => t.Status == "Completed" || t.Status == "Processing" || t.Status == "Canceled");
+			var systemWallet = _context.Transactions
+							  .Where(t => t.Status == "Processing")
+							  .Sum(t => t.Amount);
 			var totalGMV = _context.Transactions
-						.Where(t => t.Status == "Completed" || t.Status == "Processing")
 						.Sum(t => t.Amount);
 			IQueryable<Transaction> query = _context.Transactions;
 			if (!string.IsNullOrEmpty(codeTransaction))
-			{
+			{ 
 				query = query.Where(t => t.CodeTransaction.Contains(codeTransaction));
 			}
 
@@ -199,6 +201,7 @@ namespace FStep.Controllers.Admin
 			ViewBag.TotalGMV = totalGMV;
 			ViewBag.TotalRevenues = totalRevenues;
 			ViewBag.CodeTransaction = codeTransaction;
+			ViewBag.SystemWallet = systemWallet;
 			return View(transactionVM);
 		}
 

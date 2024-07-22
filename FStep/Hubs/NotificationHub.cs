@@ -71,8 +71,10 @@ namespace FStep.Hubs
 							IDEvent = NotificationMessage.NotificationMessages.EventNotifID(notificationUser),
 							Type = notificationUser.Type,
 						});
+						Console.WriteLine(notificationList);
 					}
 				}
+				
 				await Clients.Caller.SendAsync("LoadNotification", notificationList);
 			}
 		}

@@ -8,6 +8,8 @@ namespace FStep.Helpers
 		public static class NotificationMessages
 		{
 			// Transaction Notifications
+			public static string TransactionSaleFail(string post) =>
+				$"Rất tiếc đơn hàng của bài post {post} đã hết, tiền đã được hoàn lại vào tài khoản của bạn";
 			public static string RejectPost(string post) =>
 				$"Bài đăng {post} của bạn đã bị từ chối do vi phạm hoặc chứa nội dung không đúng quy định";
 			public static string TransactionSuccess(string bankName) =>
@@ -84,6 +86,7 @@ namespace FStep.Helpers
 			{
 				return typeMessage switch
 				{
+					"TransactionSaleFail" => TransactionSaleFail(parameters),
 					"RejectPost" => RejectPost(parameters),
 					"TransactionSuccess" => TransactionSuccess(parameters),
 					"TransactionExchangeSuccess" => TransactionExchangeSuccess(parameters),

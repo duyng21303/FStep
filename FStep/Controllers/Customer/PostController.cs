@@ -2,6 +2,7 @@
 using Firebase.Auth;
 using FStep.Data;
 using FStep.Helpers;
+using FStep.Services;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,11 +17,13 @@ namespace FStep.Controllers.Customer
 	{
 		private readonly FstepDBContext db;
 		private readonly IMapper _mapper;
+		private readonly NotificationServices notificationServices;
 
 		public PostController(FstepDBContext context, IMapper mapper)
 		{
 			db = context;
 			_mapper = mapper;
+			notificationServices = new NotificationServices(db);
 		}
 
 		public IActionResult Index()
