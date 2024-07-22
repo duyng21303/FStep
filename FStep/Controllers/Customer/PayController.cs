@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Azure.Identity;
+using Firebase.Auth;
 using FStep.Controllers.Auth;
 using FStep.Data;
 using FStep.Helpers;
@@ -38,6 +39,7 @@ namespace FStep.Controllers.Customer
 		private readonly ITempDataProvider _tempDataProvider;
 		private readonly IServiceProvider _serviceProvider;
 		private readonly ILogger<RegistrationController> _logger;
+		private readonly NotificationServices notificationServices;
 
 		public PayController(FstepDBContext context, IMapper mapper, IVnPayService vnPayService, IEmailSender emailSender, IRazorViewEngine viewEngine, ITempDataProvider tempDataProvider, IServiceProvider serviceProvider, ILogger<RegistrationController> logger)
 		{
@@ -49,6 +51,7 @@ namespace FStep.Controllers.Customer
 			_tempDataProvider = tempDataProvider;
 			_serviceProvider = serviceProvider;
 			_logger = logger;
+			notificationServices = new NotificationServices(db);
 		}
 		public IActionResult Index()
 		{
@@ -176,7 +179,14 @@ namespace FStep.Controllers.Customer
 					return RedirectToAction("PaymentFail");
 				}
 				CheckoutVM info = HttpContext.Session.Get<CheckoutVM>("CHECKOUT_INFO");
-
+				var postCheck = db.Posts.SingleOrDefault(p => p.IdPost == info.IdPost);
+				if (postCheck.Status != "True")
+				{
+					var user =  User.FindFirst("UserID").Value;
+					// Gửi thông báo đến người nhận
+					await notificationServices.CreateNotification(user, "TransactionSaleFail", "None", postCheck.IdPost.ToString(), 0);
+					return RedirectToAction("PaymentFail");
+				}
 				var transaction = new FStep.Data.Transaction();
 				transaction.Date = DateTime.Now;
 				transaction.Status = "Processing";
@@ -189,6 +199,7 @@ namespace FStep.Controllers.Customer
 				transaction.IdUserSeller = info.IdUserSeller;
 				transaction.Type = info.Type;
 				transaction.CodeTransaction = response.TransactionCode;
+				
 				db.Add(transaction);
 				db.SaveChanges();
 

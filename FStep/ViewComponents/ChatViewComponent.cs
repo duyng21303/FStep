@@ -1,5 +1,6 @@
 ﻿using FStep.Data;
 using FStep.Helpers;
+using FStep.Services;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ namespace FStep.ViewComponents
     public class ChatViewComponent : ViewComponent
 	{
 		private readonly FstepDBContext db;
-		
+
 		public ChatViewComponent(FstepDBContext context)
 		{
 			db = context;

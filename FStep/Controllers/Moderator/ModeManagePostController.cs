@@ -99,7 +99,7 @@ namespace FStep.Controllers.ManagePost
 			var queryable = _db.Posts
 				.Include(p => p.IdUserNavigation)
 				.Include(p => p.IdProductNavigation)
-				.Where(p => p.Status != "Waiting" && p.Status != "Rejected");
+				.Where(p => p.Status != "Waiting" && p.Status != "Rejected" && p.Status != "Hidden");
 
 
 			if (!string.IsNullOrEmpty(query))

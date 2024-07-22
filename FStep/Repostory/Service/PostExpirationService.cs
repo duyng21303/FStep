@@ -86,8 +86,65 @@ namespace FStep.Repostory.Service
 						}
 					}
 				}
+
+				// autoBan tự động hủy các giao dịch đang processing của transaction và post đang trading, true  của người bị ban 
+				var autoBan = await dbContext.Users
+	.Where(p => p.PointRating <= 0)
+	.ToListAsync();
+
+				foreach (var user in autoBan)
+				{
+					user.Status = false;
+					var lispost = await dbContext.Posts
+						.Where(p => p.IdUser == user.IdUser && (p.Status == "True" || p.Status == "Trading"))
+						.ToListAsync();
+
+					var tasks = new List<Task>();
+
+					foreach (var post in lispost)
+					{
+						if (post.Status == "Trading")
+						{
+							var transactionTask = dbContext.Transactions
+								.SingleOrDefaultAsync(p => p.IdPost == post.IdPost && p.Status == "Processing")
+								.ContinueWith(async tranTask =>
+								{
+									var tran = await tranTask;
+									tran.Status = "Canceled";
+
+									string body = $"Đơn hàng mới mã số <span style=\"color:red\"> {tran.CodeTransaction} </span> đã bị huỷ tự động vì tài khoản của người bán đã bị khóa!";
+									var sellerTask = dbContext.Users.SingleOrDefaultAsync(p => p.IdUser == tran.IdUserSeller);
+									var buyerTask = dbContext.Users.SingleOrDefaultAsync(p => p.IdUser == tran.IdUserBuyer);
+
+									var seller = await sellerTask;
+									var buyer = await buyerTask;
+
+									var emailTasks = new List<Task>
+									{
+						_emailSender.EmailSendAsync(seller.Email, "Đơn hàng bị huỷ tự động", body),
+						_emailSender.EmailSendAsync(buyer.Email, "Đơn hàng bị huỷ tự động", body)
+									};
+
+									await Task.WhenAll(emailTasks);
+									dbContext.Update(tran);
+								});
+
+							tasks.Add(transactionTask.Unwrap());
+						}
+
+						post.Status = "Hidden";
+						dbContext.Update(post);
+					}
+
+					dbContext.Update(user);
+					await Task.WhenAll(tasks);
+				}
+
 				// Các transaction exchange bị quá hạn 3 ngày (1 trong 2 không đem hàng tới, huỷ tự động)
-				var exchange = await dbContext.Transactions.Where(p => p.Type == "Exchange" && p.Status == "Processing" && p.Date.Value.AddDays(3).CompareTo(DateTime.Now) < 0 && (p.SentImg == null || p.SentBuyerImg == null))?.ToListAsync();
+				var exchange = await dbContext.Transactions
+					.Where(p => p.Type == "Exchange" && p.Status == "Processing" && p.Date.Value.AddDays(3).CompareTo(DateTime.Now) < 0 && (p.SentImg == null || p.SentBuyerImg == null))
+					.ToListAsync();
+
 				foreach (var x in exchange)
 				{
 					//update status transaction, post, product, payment
@@ -133,7 +190,6 @@ namespace FStep.Repostory.Service
 					await _emailSender.EmailSendAsync(buyer.Email, "Đơn hàng bị huỷ tự động vì quá hạn", body);
 
 					//save change db
-					await dbContext.SaveChangesAsync();
 				}
 				// Các transaction sale bị quá hạn 3 ngày (người bán không đem hàng tới, huỷ tự động)
 				var sale = await dbContext.Transactions.Where(p => p.Type == "Sale" && p.Status == "Processing" && p.Date.Value.AddDays(3).CompareTo(DateTime.Now) < 0 && p.SentImg == null)?.ToListAsync();
@@ -171,7 +227,6 @@ namespace FStep.Repostory.Service
 					await _emailSender.EmailSendAsync(buyer.Email, "Đơn hàng bị huỷ tự động vì quá hạn", $"Đơn hàng mới mã số <span style=\"color:red\"> {x.CodeTransaction} </span> đã bị huỷ tự động vì quá hạn giao hàng, tiền của bạn sẽ được hoàn lại trong thời gian sớm nhất!!!");
 
 					//save change db
-					await dbContext.SaveChangesAsync();
 				}
 				// Tất cả Các transaction processing bị quá hạn 7 ngày (hoàn thành giao dịch)
 				var transaction = await dbContext.Transactions.Where(p => p.Status == "Processing" && p.Date.Value.AddDays(7).CompareTo(DateTime.Now) < 0)?.ToListAsync();
@@ -211,8 +266,8 @@ namespace FStep.Repostory.Service
 					dbContext.Update(x);
 
 					//save change db
-					await dbContext.SaveChangesAsync();
 				}
+				await dbContext.SaveChangesAsync();
 			}
 		}
 

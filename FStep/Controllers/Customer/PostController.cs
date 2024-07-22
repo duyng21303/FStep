@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
+using Firebase.Auth;
 using FStep.Data;
 using FStep.Helpers;
+using FStep.Services;
 using FStep.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using X.PagedList;
 
 namespace FStep.Controllers.Customer
@@ -14,11 +17,13 @@ namespace FStep.Controllers.Customer
 	{
 		private readonly FstepDBContext db;
 		private readonly IMapper _mapper;
+		private readonly NotificationServices notificationServices;
 
 		public PostController(FstepDBContext context, IMapper mapper)
 		{
 			db = context;
 			_mapper = mapper;
+			notificationServices = new NotificationServices(db);
 		}
 
 		public IActionResult Index()
@@ -73,53 +78,67 @@ namespace FStep.Controllers.Customer
 			var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
 
 			ViewData["USER_CREATE"] = user;
-			if (post.Status == "Trading")
+			if (post.Status == "Trading" || post.Status == "Hidden")
 			{
 				return Redirect("/");
 			}
 			// lấy thêm comment sản phẩm
-			var comments = db.Comments.Where(x => x.IdPost == id && x.Type != "ExchangeAnonymous")
-				.Include(x => x.IdUserNavigation)
-				.Include(x => x.Reports)
-				.Select(x => new CommentVM
-				{
-					IdPost = id,
-					IdUser = x.IdUser,
-					Content = x.Content,
-					Date = x.Date,
-					IdComment = x.IdComment,
-					Name = x.IdUserNavigation.Name,
-					Type = x.Type,
-					Img = x.Img,
-					avarImg = x.IdUserNavigation.AvatarImg, // Adjust this property name to match your actual property name for the user's image
-					IsReported = x.Reports.FirstOrDefault(x => x.IdUser == User.FindFirst("UserID").Value) != null,
-				}).ToList();
-
-			ViewData["comments"] = comments;
-
+			if (db.Comments.Where(x => x.IdPost == id).Any())
+			{
+				var comments = db.Comments
+						.Where(x => x.IdPost == id && x.Type != "ExchangeAnonymous")
+						.Include(x => x.IdUserNavigation)
+						.Include(x => x.Reports)
+						.Select(x => new CommentVM
+						{
+							IdPost = id,
+							IdUser = x.IdUser,
+							Content = x.Content,
+							Date = x.Date,
+							IdComment = x.IdComment,
+							Name = x.IdUserNavigation.Name,
+							Type = x.Type,
+							Img = x.Img,
+							avarImg = x.IdUserNavigation.AvatarImg, // Adjust this property name to match your actual property name for the user's image
+							IsReported = User.FindFirst("UserID") != null ? x.Reports.FirstOrDefault(x => x.IdUser == User.FindFirst("UserID").Value) != null : false
+						}).ToList();
+				ViewData["comments"] = comments;
+			}
 			return View(post);
 		}
 		public IActionResult DetailSalePost(int id)
 		{
 			var post = db.Posts.Include(x => x.IdProductNavigation).SingleOrDefault(post => post.IdPost == id);
 			var user = db.Users.SingleOrDefault(user => user.IdUser == post.IdUser);
-
+			if (post.Status == "Hidden" || post.Status == "Trading")
+			{
+				return Redirect("/");
+			}
 			var feedback = db.Feedbacks.Count(x => x.IdPost == id);
 			ViewData["USER_CREATE"] = user;
 
 			// lấy thêm comment sản phẩm
-			var comments = db.Comments.Where(x => x.IdPost == id).Include(x => x.IdUserNavigation).Select(x => new CommentVM
+			if (db.Comments.Where(x => x.IdPost == id).Any())
 			{
-				IdPost = id,
-				IdUser = x.IdUser,
-				Content = x.Content,
-				Date = x.Date,
-				IdComment = x.IdComment,
-				Name = x.IdUserNavigation.Name,
-				avarImg = x.IdUserNavigation.AvatarImg // Adjust this property name to match your actual property name for the user's image
-			}).ToList();
-
-			ViewData["comments"] = comments;
+				var comments = db.Comments
+						.Where(x => x.IdPost == id && x.Type != "ExchangeAnonymous")
+						.Include(x => x.IdUserNavigation)
+						.Include(x => x.Reports)
+						.Select(x => new CommentVM
+						{
+							IdPost = id,
+							IdUser = x.IdUser,
+							Content = x.Content,
+							Date = x.Date,
+							IdComment = x.IdComment,
+							Name = x.IdUserNavigation.Name,
+							Type = x.Type,
+							Img = x.Img,
+							avarImg = x.IdUserNavigation.AvatarImg, // Adjust this property name to match your actual property name for the user's image
+							IsReported = User.FindFirst("UserID") != null ? x.Reports.FirstOrDefault(x => x.IdUser == User.FindFirst("UserID").Value) != null : false
+						}).ToList();
+				ViewData["comments"] = comments;
+			}
 
 			var result = new PostVM()
 			{

@@ -56,7 +56,8 @@ namespace FStep.Controllers.Admin
 				CreateDate = s.Date ?? DateTime.Now,
 				Status = s.Status ?? string.Empty,
 				Category = s.Category ?? string.Empty,
-			}).ToPagedList(page, 10);
+			}).OrderByDescending(o => o.PostId)
+				.ToPagedList(page, 10);
 
 			ViewBag.SearchName = searchName;
 			ViewBag.SearchType = searchType;
@@ -88,15 +89,15 @@ namespace FStep.Controllers.Admin
 			var post = _db.Posts
 				.Include(p => p.IdProductNavigation)
 				.FirstOrDefault(p => p.IdPost == id);
-			if (post.Status == "Hidden" || post.Status == "Trading")
-			{
-				return Redirect("/AdminPost/ManagePost");
-			}
+
 			if (post == null)
 			{
 				return NotFound();
 			}
-
+			if (post.Status == "Trading" || post.Status == "Hidden")
+			{
+				return RedirectToAction("Index", "Admin"); // Hoặc RedirectToAction("ErrorPage");
+			}
 			var postViewModel = new PostVM
 			{
 				IdPost = post.IdPost,
@@ -115,17 +116,19 @@ namespace FStep.Controllers.Admin
 		[Authorize]
 		public IActionResult UpdatePost(PostVM model, IFormFile img)
 		{
-
 			try
 			{
 				// Lưu thông tin bài đăng
 				var post = _db.Posts
 					.Include(p => p.IdProductNavigation)
 					.FirstOrDefault(p => p.IdPost == model.IdPost);
-				
 				if (post == null)
 				{
 					return NotFound();
+				}
+				else if (post.Status == "Trading" || post.Status == "Hidden")
+				{
+					return RedirectToAction("Index", "Admin"); // Hoặc RedirectToAction("ErrorPage");
 				}
 				else
 				{
@@ -159,7 +162,11 @@ namespace FStep.Controllers.Admin
 		public IActionResult HiddenPost(int id)
 		{
 			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
-			if (post != null)
+			if (post.Status == "Trading" || post.Status == "Hidden")
+			{
+				return RedirectToAction("Index", "Admin"); // Hoặc RedirectToAction("ErrorPage");
+			}
+			else if (post != null)
 			{
 				post.Status = "Hidden";
 				_db.Posts.Update(post);
@@ -176,7 +183,12 @@ namespace FStep.Controllers.Admin
 		public IActionResult UpdateStatus(int id)
 		{
 			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
-			if (post != null)
+
+			if (post.Status == "Trading" || post.Status == "Hidden")
+			{
+				return RedirectToAction("Index", "Admin"); // Hoặc RedirectToAction("ErrorPage");
+			}
+			else if (post != null)
 			{
 				post.Status = "True";
 				post.Date = DateTime.Now;
@@ -195,7 +207,11 @@ namespace FStep.Controllers.Admin
 		public IActionResult DeletePost(int id, int? page)
 		{
 			var post = _db.Posts.FirstOrDefault(p => p.IdPost == id);
-			if (post != null)
+			if (post.Status == "Trading" || post.Status == "Hidden")
+			{
+				return RedirectToAction("Index", "Admin"); // Hoặc RedirectToAction("ErrorPage");
+			}
+			else if (post != null)
 			{
 				post.Status = "Rejected";
 				_db.Posts.Update(post);

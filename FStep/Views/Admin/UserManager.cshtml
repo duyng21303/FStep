@@ -112,19 +112,6 @@
 		</div>
 	</div>
 </div>
-@section Scripts {
-	<script>
-		$(document).ready(() => {
-			let timeout;
-			$('#searchUserForm').on('input', () => {
-				clearTimeout(timeout); // Xóa timeout hiện tại nếu có
-				timeoutId = setTimeout(function () {
-					$('#searchUserForm').submit(); // Gửi form khi thời gian chờ (debounce) kết thúc
-				}, 200); // Thời gian debounce là 100ms (có thể điều chỉnh theo nhu cầu của bạn)
-			});
-		})
-	</script>
-}
 
 <style>
 
