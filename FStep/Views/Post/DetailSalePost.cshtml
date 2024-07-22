@@ -670,7 +670,7 @@
 											<a href="#">@comment.Name</a> <small>@comment.Date?.ToString("dd-MM-yyyy HH:mm:ss")</small>
 											@if (User.Identity.IsAuthenticated)
 											{
-												@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(comment.IdUser))
+												@if (!User.Claims.FirstOrDefault(c => c.Type == "UserID").Value.Equals(comment.IdUser) && !comment.IsReported)
 												{
 													<button type="button" data-bs-toggle="modal" data-bs-target="#reportComment" class="btn btn-sm btn-danger btn-report" style="float: inline-end;margin-left: 4px;" data-userid="@comment.IdUser" data-post="@comment.IdPost" data-comment="@comment.IdComment">
 														Báo cáo
@@ -877,6 +877,9 @@
 						});
 						$('#reportComment').modal('hide');
 						$('#message-text').val('');
+						setTimeout(() => {
+							window.location.reload();
+						}, 1000);
 					})
 					.catch(error => {
 						Swal.fire({

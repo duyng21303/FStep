@@ -24,9 +24,6 @@ namespace FStep.ViewModels
 		[NotMapped]
 		public bool IsReported { get; set; } = false;
 
-		[NotMapped]
-		public bool IsReported { get; set; } = false;
-
 		// Add this property to hold a list of transactions
 		public IPagedList<TransactionVM>? PagedTransactions { get; set; }
 	}
