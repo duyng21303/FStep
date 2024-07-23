@@ -88,57 +88,34 @@ namespace FStep.Repostory.Service
 				}
 
 				// autoBan tự động hủy các giao dịch đang processing của transaction và post đang trading, true  của người bị ban 
-				var autoBan = await dbContext.Users
-	.Where(p => p.PointRating <= 0)
-	.ToListAsync();
-
+				var autoBan = await dbContext.Users.Where(p => p.PointRating <= 0)?.ToListAsync();
 				foreach (var user in autoBan)
 				{
 					user.Status = false;
 					var lispost = await dbContext.Posts
-						.Where(p => p.IdUser == user.IdUser && (p.Status == "True" || p.Status == "Trading"))
+						.Where(p => p.IdUser == user.IdUser && p.Status == "True" || p.Status == "Trading")
 						.ToListAsync();
-
-					var tasks = new List<Task>();
-
 					foreach (var post in lispost)
 					{
 						if (post.Status == "Trading")
 						{
-							var transactionTask = dbContext.Transactions
-								.SingleOrDefaultAsync(p => p.IdPost == post.IdPost && p.Status == "Processing")
-								.ContinueWith(async tranTask =>
-								{
-									var tran = await tranTask;
-									tran.Status = "Canceled";
-
-									string body = $"Đơn hàng mới mã số <span style=\"color:red\"> {tran.CodeTransaction} </span> đã bị huỷ tự động vì tài khoản của người bán đã bị khóa!";
-									var sellerTask = dbContext.Users.SingleOrDefaultAsync(p => p.IdUser == tran.IdUserSeller);
-									var buyerTask = dbContext.Users.SingleOrDefaultAsync(p => p.IdUser == tran.IdUserBuyer);
-
-									var seller = await sellerTask;
-									var buyer = await buyerTask;
-
-									var emailTasks = new List<Task>
-									{
-						_emailSender.EmailSendAsync(seller.Email, "Đơn hàng bị huỷ tự động", body),
-						_emailSender.EmailSendAsync(buyer.Email, "Đơn hàng bị huỷ tự động", body)
-									};
-
-									await Task.WhenAll(emailTasks);
-									dbContext.Update(tran);
-								});
-
-							tasks.Add(transactionTask.Unwrap());
+							var tran = await dbContext.Transactions
+								.FirstOrDefaultAsync(p => p.IdPost == post.IdPost && p.Status == "Processing");
+							tran.Status = "Canceled";
+							tran.CancelDate = DateTime.Now;
+							string body = $"Đơn hàng mới mã số <span style=\"color:red\"> {tran.CodeTransaction} </span> đã bị huỷ tự động vì tài khoản của người đăng đã bị khóa!";
+							var seller = await dbContext.Users.SingleOrDefaultAsync(p => p.IdUser == tran.IdUserSeller);
+							var buyer = await dbContext.Users.SingleOrDefaultAsync(p => p.IdUser == tran.IdUserBuyer);
+							await _emailSender.EmailSendAsync(seller.Email, "Đơn hàng bị huỷ tự động", body);
+							await _emailSender.EmailSendAsync(buyer.Email, "Đơn hàng bị huỷ tự động", body);
+							dbContext.Transactions.Update(tran);
 						}
-
 						post.Status = "Hidden";
-						dbContext.Update(post);
+						dbContext.Posts.Update(post);
 					}
-
-					dbContext.Update(user);
-					await Task.WhenAll(tasks);
+					dbContext.Users.Update(user);
 				}
+				await dbContext.SaveChangesAsync();
 
 				// Các transaction exchange bị quá hạn 3 ngày (1 trong 2 không đem hàng tới, huỷ tự động)
 				var exchange = await dbContext.Transactions
