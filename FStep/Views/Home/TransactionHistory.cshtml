@@ -175,7 +175,7 @@
 																<div class="d-flex flex-column mt-4">
 																	<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm" asp-action="TransactionExchangeDetail" asp-controller="Home" asp-route-id="@item.TransactionId">Chi tiết</a>
 
-																	@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.Transaction.Status == "Completed" && !item.CheckFeedback)
+																	@if (DateTime.Now.CompareTo(item.Transaction.CompleteDate?.AddDays(7)) <= 0 && item.Transaction.Status == "Completed" && !item.CheckFeedback)
 																	{
 																		<a data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-sm mt-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@item.Post.IdPost" asp-route-idTransaction="@item.TransactionId" asp-route-url="@ViewBag.url">
 																			Đánh giá
@@ -187,7 +187,7 @@
 																			Đánh giá
 																		</button>
 																	}
-																	@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.Transaction.Status == "Completed" && !item.IsReported)
+																	@if (DateTime.Now.CompareTo(item.Transaction.CompleteDate?.AddDays(3)) <= 0 && item.Transaction.Status == "Completed" && !item.IsReported)
 																	{
 																		<button type="button" data-bs-toggle="modal" data-bs-target="#reportComment" class="btn btn-danger btn-sm mt-2 btn-report" data-post="@item.Post.IdPost" data-transaction="@item.TransactionId">
 																			Báo cáo
@@ -302,7 +302,6 @@
 																	<div class="d-flex flex-row align-items-center mb-1">
 																		<span>Thành tiền:</span>
 																		<h5 class="mb-1 me-1 text-danger mx-2">@String.Format(format, "{0:0,0 VND}", item.Transaction.Amount)</h5>
-																		@* <span class="text-danger"><s>$20.99</s></span> *@
 																	</div>
 																	<div class="d-flex flex-column mt-4">
 																		<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm" asp-action="TransactionExchangeDetail" asp-controller="Home" asp-route-id="@item.TransactionId">Chi tiết</a>
@@ -420,7 +419,7 @@
 																	<div class="d-flex flex-column mt-4">
 																		<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm" asp-action="TransactionExchangeDetail" asp-controller="Home" asp-route-id="@item.TransactionId">Chi tiết</a>
 
-																		@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && !item.CheckFeedback)
+																		@if (DateTime.Now.CompareTo(item.Transaction.CompleteDate?.AddDays(7)) <= 0 && !item.CheckFeedback)
 																		{
 																			<a data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-sm mt-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@item.Post.IdPost" asp-route-idTransaction="@item.TransactionId" asp-route-url="@ViewBag.url">
 																				Đánh giá
@@ -432,7 +431,7 @@
 																				Đánh giá
 																			</button>
 																		}
-																		@if (!item.IsReported)
+																		@if (DateTime.Now.CompareTo(item.Transaction.CompleteDate?.AddDays(3)) <= 0 && !item.IsReported)
 																		{
 																			<button type="button" data-bs-toggle="modal" data-bs-target="#reportComment" class="btn btn-danger btn-sm mt-2 btn-report" data-post="@item.Post.IdPost" data-transaction="@item.TransactionId">
 																				Báo cáo
@@ -696,7 +695,7 @@
 																<div class="d-flex flex-column mt-4">
 																	<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm" asp-action="TransactionSaleDetail" asp-controller="Home" asp-route-id="@item.TransactionId">Chi tiết</a>
 
-																	@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.Transaction.Status == "Completed" && !item.CheckFeedback)
+																	@if (DateTime.Now.CompareTo(item.Transaction.CompleteDate?.AddDays(7)) <= 0 && item.Transaction.Status == "Completed" && !item.CheckFeedback)
 																	{
 																		<a data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-sm mt-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@item.Post.IdPost" asp-route-idTransaction="@item.TransactionId" asp-route-url="@ViewBag.url">
 																			Đánh giá
@@ -709,7 +708,7 @@
 																		</button>
 																	}
 
-																	@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.Transaction.Status == "Completed" && !item.IsReported)
+																	@if (DateTime.Now.CompareTo(item.Transaction.CompleteDate?.AddDays(3)) <= 0 && item.Transaction.Status == "Completed" && !item.IsReported)
 																	{
 																		<button type="button" data-bs-toggle="modal" data-bs-target="#reportComment" class="btn btn-danger btn-sm mt-2 btn-report" data-post="@item.Post.IdPost" data-transaction="@item.TransactionId">
 																			Báo cáo
@@ -718,7 +717,7 @@
 																</div>
 																@if (item.Transaction.Status == "Completed")
 																{
-																	<p class="fst-italic text-end mb-0 mt-5">Đánh giá sản phẩm trước: <span>@item.DeliveryDate?.AddDays(7).ToString("dd/MM/yyyy")</span></p>
+																	<p class="fst-italic text-end mb-0 mt-5">Đánh giá sản phẩm trước: <span>@item.Transaction.CompleteDate?.AddDays(7).ToString("dd/MM/yyyy")</span></p>
 																}
 															</div>
 														</div>
@@ -912,7 +911,7 @@
 																	<div class="d-flex flex-column mt-4">
 																		<a data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm" asp-action="TransactionSaleDetail" asp-controller="Home" asp-route-id="@item.TransactionId">Chi tiết</a>
 
-																		@if (DateTime.Now.CompareTo(item.DeliveryDate?.AddDays(7)) <= 0 && item.CheckFeedback && !item.CheckFeedback)
+																		@if (DateTime.Now.CompareTo(item.Transaction.CompleteDate?.AddDays(7)) <= 0 && !item.CheckFeedback)
 																		{
 																			<a data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-sm mt-2" type="button" asp-action="Feedback" asp-controller="Feedback" asp-route-idPost="@item.Post.IdPost" asp-route-idTransaction="@item.TransactionId" asp-route-url="@ViewBag.url">
 																				Đánh giá
@@ -925,14 +924,14 @@
 																			</button>
 																		}
 
-																		@if (!item.IsReported)
+																		@if (DateTime.Now.CompareTo(item.Transaction.CompleteDate?.AddDays(3)) <= 0 && !item.IsReported)
 																		{
 																			<button type="button" data-bs-toggle="modal" data-bs-target="#reportComment" class="btn btn-danger btn-sm mt-2 btn-report" data-post="@item.Post.IdPost" data-transaction="@item.TransactionId">
 																				Báo cáo
 																			</button>
 																		}
 																	</div>
-																	<p class="fst-italic text-end mb-0 mt-5">Đánh giá sản phẩm trước: <span>@item.DeliveryDate?.AddDays(7).ToString("dd/MM/yyyy")</span></p>
+																	<p class="fst-italic text-end mb-0 mt-5">Đánh giá sản phẩm trước: <span>@item.Transaction.CompleteDate?.AddDays(7).ToString("dd/MM/yyyy")</span></p>
 																</div>
 															</div>
 														</div>
