@@ -316,7 +316,7 @@ namespace FStep.Controllers.Admin
 
 			if (!string.IsNullOrEmpty(search))
 			{
-				query = query.Where(x => x.Content.Contains(search));
+				query = query.Where(x => x.Content.Contains(search) || x.IdCommentNavigation.Content.Contains(search));
 			}
 
 			var comments = query.Skip((page - 1) * pageSize).Take(pageSize).Select(x => new ReportVM
