@@ -64,7 +64,7 @@ namespace FStep.Controllers.Auth
 						string msgError = "Tài khoản đã bị khóa, vui lòng liên hệ Admin hoặc Moder";
 						if (user.PointRating <= 0)
 						{
-							msgError = "Tài khoản đã bị khóa do điểm đánh giá < 20, vui lòng liên hệ Admin hoặc Moder";
+							msgError = "Tài khoản đã bị khóa do điểm đánh giá < 0, vui lòng liên hệ Admin hoặc Moder";
 						}
 						ModelState.AddModelError("Error", msgError);
 					}

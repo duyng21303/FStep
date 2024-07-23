@@ -397,8 +397,13 @@ namespace FStep.Controllers.Admin
 				else
 				{
 					user.Role = viewModel.Role;
+					if (viewModel.Status == true && user.Status == false)
+					{
+						user.PointRating = 50;
+					}
 					user.Status = viewModel.Status;
 					user.BankName = viewModel.BankName;
+					
 					user.BankAccountNumber = viewModel.BankAccountNumber;
 					_context.Update(user);
 					_context.SaveChanges();
