@@ -1,6 +1,5 @@
 # FSTep - Real-Time Trading and Exchange Platform for FPT University Students
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## About The Project
 ![1](https://github.com/user-attachments/assets/69e6567a-f938-4e2e-a67c-e9876134efdf)
@@ -15,7 +14,6 @@
 - **SignalR Integration:** Leveraging SignalR technology for real-time updates and seamless communication between users.
 - **User-Friendly Interface:** Designed with students in mind, the platform is intuitive and easy to navigate.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Built With
 
@@ -28,7 +26,6 @@ FSTep is built using a robust technology stack to ensure reliability and perform
 - **Bootstrap:** For a responsive and user-friendly interface.
 - **jQuery:** Simplifying client-side scripting and enhancing user interactions.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Getting Started
 
@@ -59,7 +56,6 @@ To get started with FSTep, follow the instructions below to set up the project l
    dotnet run
    ```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Usage
 
@@ -94,4 +90,3 @@ Special thanks to the following resources and individuals who contributed to the
 - [SignalR Documentation](https://docs.microsoft.com/en-us/aspnet/core/signalr/)
 - [VNPAY Integration Guide](https://sandbox.vnpayment.vn/)
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
