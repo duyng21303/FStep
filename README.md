@@ -35,8 +35,8 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-       <a href="#about-the-project">
-      <img src="/FStep/wwwroot/img/Sliden/3.png" alt="About The Project" width="20" height="20" /> 
+      <a href="">
+        <img src="/FStep/wwwroot/img/Sliden/3.png" alt="About The Project" width="20" height="20" /> 
       About The Project
     </a>
       <ul>
