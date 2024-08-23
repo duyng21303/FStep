@@ -62,7 +62,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-![fstep-logo](https://github.com/user-attachments/assets/72e88336-2d4d-4393-a185-6a90ca43602e)
+![1](https://github.com/user-attachments/assets/69e6567a-f938-4e2e-a67c-e9876134efdf)
 
 There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
 
