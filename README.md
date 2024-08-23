@@ -36,7 +36,7 @@
   <ol>
     <li>
       <a href="">
-        <img src="FStep/wwwroot/img/Sliden/3.png" alt="About The Project" /> 
+        ![Uploading 1.png…]()
       About The Project
     </a>
       <ul>
