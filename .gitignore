@@ -403,6 +403,11 @@ FodyWeavers.xsd
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio
-1
 # Ignore the appsettings.json file
 appsettings.json
+.Views/
+.wwwroot/css/
+.wwwroot/dashmin-1.0.0/
+.wwwroot/detail/
+.wwwroot/lib/
+.wwwroot/vendor/
