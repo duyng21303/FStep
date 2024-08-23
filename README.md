@@ -35,7 +35,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-        ![fstep-logo](https://github.com/user-attachments/assets/72e88336-2d4d-4393-a185-6a90ca43602e)
+    ![fstep-logo](https://github.com/user-attachments/assets/72e88336-2d4d-4393-a185-6a90ca43602e)
       About The Project
       <ul>
         <li><a href="#built-with">Built With</a></li>
@@ -62,7 +62,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+![fstep-logo](https://github.com/user-attachments/assets/72e88336-2d4d-4393-a185-6a90ca43602e)
 
 There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
 
