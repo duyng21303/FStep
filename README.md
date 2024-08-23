@@ -36,7 +36,7 @@
   <ol>
     <li>
       <a href="">
-        <img src="FStep/wwwroot/img/Sliden/3.png" alt="About The Project" width="20" height="20" /> 
+        <img src="FStep/wwwroot/img/Sliden/3.png" alt="About The Project" /> 
       About The Project
     </a>
       <ul>
