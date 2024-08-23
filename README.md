@@ -35,10 +35,8 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="">
         ![fstep-logo](https://github.com/user-attachments/assets/72e88336-2d4d-4393-a185-6a90ca43602e)
       About The Project
-    </a>
       <ul>
         <li><a href="#built-with">Built With</a></li>
       </ul>
